@@ -1,5 +1,4 @@
-﻿Imports System.IO
-Imports Microsoft.EntityFrameworkCore
+﻿Imports Microsoft.EntityFrameworkCore
 
 Namespace DbContexts
     Public Class PostgreSQLDbContext
