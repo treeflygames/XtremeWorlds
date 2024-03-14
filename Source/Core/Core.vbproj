@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mirage.Core.Database\Mirage.Core.Database.vbproj" />
     <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
   </ItemGroup>
 
