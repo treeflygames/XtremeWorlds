@@ -15,8 +15,22 @@
     <DefineConstants>DATABASE</DefineConstants>
     <DefineDebug>false</DefineDebug>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.VisualBasic" Version="8.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
 
 </Project>
