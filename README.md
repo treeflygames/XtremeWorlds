@@ -1,3 +1,7 @@
+Notice
+=================
+This 2.0.0 branch is currently unstable and should not be used for anything at the moment. It is full of unstable and experimental features and changes that might be implemented in future versions. Using it can and most likely will break any games made on the 1.X.X versions.
+
 MirageWorlds Game Engine
 =================
 
