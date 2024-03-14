@@ -29,8 +29,4 @@
     <PackageReference Include="SFML.Window" Version="2.5.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
-  </ItemGroup>
-
 </Project>

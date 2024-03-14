@@ -53,6 +53,7 @@
 </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vbproj" />
+    <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
      <ProjectReference Include="..\Network\Asfw.csproj" />
   </ItemGroup>
 </Project>

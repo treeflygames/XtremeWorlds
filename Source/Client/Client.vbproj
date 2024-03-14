@@ -3296,6 +3296,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vbproj" />
     <ProjectReference Include="..\DarkUI\DarkUI.csproj" />
+    <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
     <ProjectReference Include="..\Network\Asfw.csproj" />
   </ItemGroup>
   <ItemGroup>
