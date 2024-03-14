@@ -4,6 +4,8 @@ Imports System.IO
 Imports System.Numerics
 Imports Core
 Imports Core.Database
+Imports Microsoft.EntityFrameworkCore
+Imports Mirage.Core.Database.DbContexts
 Imports Newtonsoft.Json.Linq
 
 Module S_General
@@ -51,6 +53,8 @@ Module S_General
         InitNetwork()
 
         Console.WriteLine("Creating Database...")
+        DatabaseContext = New SQLiteDbContext()
+        DatabaseContext.Database.Migrate()
         CreateDatabase("mirage")
 
         Console.WriteLine("Creating Tables...")
