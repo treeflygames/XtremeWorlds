@@ -390,6 +390,7 @@ Module S_NetworkReceive
 
             ' Everything went ok, add the character
             DatabaseContext.Characters.Add(name)
+            DatabaseContext.SaveChanges()
             AddChar(index, slot, name, sexNum, jobNum, sprite)
             Addlog("Character " & name & " added to " & GetPlayerLogin(index) & "'s account.", PLAYER_LOG)
             HandleUseChar(index)
@@ -413,6 +414,7 @@ Module S_NetworkReceive
 
             LoadCharacter(index, slot)
             DatabaseContext.Characters.Remove(GetPlayerName(index))
+            DatabaseContext.SaveChanges()
             ClearCharacter(index)
             SaveCharacter(index, slot)
 
