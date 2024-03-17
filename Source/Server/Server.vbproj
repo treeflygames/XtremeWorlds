@@ -55,6 +55,19 @@
     <ProjectReference Include="..\Core\Core.vbproj" />
     <ProjectReference Include="..\Mirage.Core.Database\Mirage.Core.Database.vbproj" />
     <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
-     <ProjectReference Include="..\Network\Asfw.csproj" />
+    <ProjectReference Include="..\Network\Asfw.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.VisualBasic" Version="8.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
 </Project>

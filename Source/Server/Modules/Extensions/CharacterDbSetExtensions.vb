@@ -5,7 +5,7 @@ Imports Mirage.Core.Database.Types
 Namespace DbContexts.Extensions
     Module CharacterDbSetExtensions
         <Extension()>
-        Public Function Add(ByVal dbset As DbSet(Of Character), ByVal name As String) As Boolean
+        Public Function Add(dbset As DbSet(Of Character), ByVal name As String) As Boolean
             If String.IsNullOrWhiteSpace(name) Then
                 Throw New ArgumentException($"'{NameOf(name)}' cannot be null or whitespace.", NameOf(name))
             End If
@@ -25,7 +25,7 @@ Namespace DbContexts.Extensions
         End Function
 
         <Extension()>
-        Public Function Exists(ByVal dbset As DbSet(Of Character), ByVal name As String) As Boolean
+        Public Function Exists(dbset As DbSet(Of Character), ByVal name As String) As Boolean
             If String.IsNullOrWhiteSpace(name) Then
                 Throw New ArgumentException($"'{NameOf(name)}' cannot be null or whitespace.", NameOf(name))
             End If
@@ -36,7 +36,7 @@ Namespace DbContexts.Extensions
         End Function
 
         <Extension()>
-        Public Function Remove(ByVal dbset As DbSet(Of Character), ByVal name As String) As Boolean
+        Public Function Remove(dbset As DbSet(Of Character), ByVal name As String) As Boolean
             If String.IsNullOrWhiteSpace(name) Then
                 Throw New ArgumentException($"'{NameOf(name)}' cannot be null or whitespace.", NameOf(name))
             End If

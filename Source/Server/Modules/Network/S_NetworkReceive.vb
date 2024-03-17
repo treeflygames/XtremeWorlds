@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports Core
-Imports Core.Database
+Imports Microsoft.EntityFrameworkCore
+Imports Server.DbContexts.Extensions
 Imports Mirage.Sharp.Asfw
 Imports Mirage.Sharp.Asfw.IO
 Imports Newtonsoft.Json.Linq
@@ -372,7 +373,7 @@ Module S_NetworkReceive
             Next
 
             ' Check if name is already in use
-            If Chars.Find(name) Then
+            If DatabaseContext.Characters.Exists(name) Then
                 AlertMsg(index, DialogueMsg.NameTaken, MenuType.NewChar)
                 Exit Sub
             End If
@@ -388,7 +389,7 @@ Module S_NetworkReceive
             End If
 
             ' Everything went ok, add the character
-            Chars.Add(name.Trim())
+            DatabaseContext.Characters.Add(name)
             AddChar(index, slot, name, sexNum, jobNum, sprite)
             Addlog("Character " & name & " added to " & GetPlayerLogin(index) & "'s account.", PLAYER_LOG)
             HandleUseChar(index)
@@ -411,7 +412,7 @@ Module S_NetworkReceive
             End If
 
             LoadCharacter(index, slot)
-            Chars.Remove(GetPlayerName(index))
+            DatabaseContext.Characters.Remove(GetPlayerName(index))
             ClearCharacter(index)
             SaveCharacter(index, slot)
 

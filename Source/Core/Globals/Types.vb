@@ -26,7 +26,6 @@ Public Module Types
     Public Party As PartyStruct
     Public MapResource() As MapResourceStruct
     Public Settings As Settings
-    Public Chars As CharList
     Public Hotbar(MAX_HOTBAR) As HotbarStruct
 
     Public Structure ResourceTypeStruct
