@@ -1381,15 +1381,15 @@ Continue1:
         Dim tempRec As RectangleStruct
         Dim i As Long
 
-        With tempRec
-            .Top = StartY + HotbarTop
-            .Right = .Left + PicX
-            .Bottom = .Top + PicY
-            .Left = StartX + HotbarLeft + ((i - 1) * HotbarOffsetX)
-        End With
-
         For i = 1 To MAX_HOTBAR
-            If Player(Myindex).Hotbar(i).Slot Then
+            With tempRec
+                .Top = StartY + HotbarTop
+                .Left = StartX + ((i - 1) * HotbarOffsetX)
+                .Right = .Left + PicX
+                .Bottom = .Top + PicY
+            End With
+
+            If Player(Myindex).Hotbar(i).Slot > 0 Then
                 If CurMouseX >= tempRec.Left And CurMouseX <= tempRec.Right Then
                     If CurMouseY >= tempRec.Top And CurMouseY <= tempRec.Bottom Then
                         IsHotbar = i
@@ -1403,7 +1403,6 @@ Continue1:
     Public Sub ShowInvDesc(x As Long, y As Long, invNum As Long)
         Dim soulBound As Boolean
 
-        ' rte9
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
 
         ' show

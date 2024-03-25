@@ -1834,6 +1834,8 @@ Module S_Player
             n = Item(InvItemNum).Data1
         End If
 
+        If n < 1 Or n > MAX_SKILLS Then Exit Sub
+
         If n > 0 Then
             ' Make sure they are the right class
             If Skill(n).JobReq = GetPlayerJob(index) OrElse Skill(n).JobReq = 0 Then

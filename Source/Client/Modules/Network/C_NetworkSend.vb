@@ -776,13 +776,14 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
-    Friend Sub SendSetHotbarSlot(type As Integer, slot As Integer, num As Integer)
+    Friend Sub SendSetHotbarSlot(type As Integer, newSlot As Integer, oldSlot As Integer, num As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
 
         buffer.WriteInt32(type)
-        buffer.WriteInt32(slot)
+        buffer.WriteInt32(newSlot)
+        buffer.WriteInt32(oldSlot)
         buffer.WriteInt32(num)
 
         Socket.SendData(buffer.Data, buffer.Head)
@@ -791,6 +792,7 @@ Module C_NetworkSend
 
     Friend Sub SendDeleteHotbar(slot As Integer)
         Dim buffer As New ByteStream(4)
+
         buffer.WriteInt32(ClientPackets.CDeleteHotbarSlot)
 
         buffer.WriteInt32(slot)
@@ -800,6 +802,12 @@ Module C_NetworkSend
     End Sub
 
     Friend Sub SendUseHotbarSlot(slot As Integer)
+        Select Case Player(Myindex).Hotbar(slot).SlotType
+            Case PartType.Skill
+                PlayerCastSkill(FindSkill(Player(Myindex).Hotbar(slot).Slot))
+                Exit Sub
+        End Select
+
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CUseHotbarSlot)
@@ -819,4 +827,18 @@ Module C_NetworkSend
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
     End Sub
+
+    Sub SendCast(skillSlot As Integer)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ClientPackets.CCast)
+        buffer.WriteInt32(skillslot)
+
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
+
+        SkillBuffer = skillslot
+        SkillBufferTimer = GetTickCount()
+    End Sub
+
 End Module

@@ -704,8 +704,6 @@ Module S_Loop
             Case SkillType.Warp
                 SendAnimation(GetPlayerMap(index), Skill(skillId).SkillAnim, 0, 0, TargetType.Player, index)
                 PlayerWarp(index, Skill(skillId).Map, Skill(skillId).X, Skill(skillId).Y)
-            Case Else
-                Throw New NotImplementedException()
         End Select
 
         ' Play our animation.

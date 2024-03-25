@@ -507,7 +507,7 @@ Module C_Player
         Dim buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If skillslot < 0 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If skillslot <= 0 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         If Player(Myindex).Skill(skillslot).CD > 0 Then
             AddText("Skill has not cooled down yet!", ColorType.BrightRed)
@@ -523,14 +523,7 @@ Module C_Player
         If Player(Myindex).Skill(skillslot).Num > 0 Then
             If GetTickCount() > Player(Myindex).AttackTimer + 1000 Then
                 If Player(Myindex).Moving = 0 Then
-                    buffer.WriteInt32(ClientPackets.CCast)
-                    buffer.WriteInt32(skillslot)
-
-                    Socket.SendData(buffer.Data, buffer.Head)
-                    buffer.Dispose()
-
-                    SkillBuffer = skillslot
-                    SkillBufferTimer = GetTickCount()
+                    SendCast(skillSlot)
                 Else
                     AddText("Cannot cast while walking!", ColorType.BrightRed)
                 End If
@@ -540,6 +533,27 @@ Module C_Player
         End If
 
     End Sub
+
+    Function FindSkill(skillNum As Integer) As Integer
+        Dim i As Integer
+
+        FindSkill = 0
+
+        ' Check for subscript out of range
+        If skillNum <= 0 OrElse skillNum > MAX_SKILLS Then
+            Exit Function
+        End If
+
+        For i = 1 To MAX_PLAYER_SKILLS
+            ' Check to see if the player has the skill
+            If GetPlayerSkill(MyIndex, i) = skillNum Then
+                FindSkill = i
+                Exit Function
+            End If
+        Next
+
+    End Function
+
 #End Region
 
 #Region "Drawing"

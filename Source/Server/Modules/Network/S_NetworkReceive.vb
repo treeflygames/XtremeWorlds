@@ -1499,7 +1499,7 @@ Module S_NetworkReceive
         n = buffer.ReadInt32
         buffer.Dispose()
 
-        ' set the skill buffer before castin
+        ' set the skill buffer before casting
         BufferSkill(index, n)
 
         buffer.Dispose()
@@ -2110,15 +2110,27 @@ Module S_NetworkReceive
     End Sub
 
     Sub Packet_SetHotBarSlot(index As Integer, ByRef data() As Byte)
-        Dim slot As Integer, skill As Integer, type As Byte
+        Dim newSlot As Integer, skill As Integer, type As Byte, oldSlot As Integer
         Dim buffer As New ByteStream(data)
 
         type = buffer.ReadInt32
+        newSlot = buffer.ReadInt32
+        oldslot = buffer.ReadInt32
         skill = buffer.ReadInt32
-        slot = buffer.ReadInt32
 
-        Player(index).Hotbar(slot).Slot = skill
-        Player(index).Hotbar(slot).SlotType = type
+        If newSlot < 1 Or newSlot > MAX_HOTBAR Then Exit Sub
+        If type = PartOriginType.Hotbar Then
+            If oldSlot < 1 Or oldSlot > MAX_HOTBAR Then Exit Sub
+
+            Player(index).Hotbar(newSlot).Slot = skill
+            Player(index).Hotbar(newSlot).SlotType = Player(index).Hotbar(oldSlot).SlotType
+
+            Player(index).Hotbar(oldSlot).Slot = 0
+            Player(index).Hotbar(oldSlot).SlotType = 0
+        Else
+            Player(index).Hotbar(newSlot).Slot = skill
+            Player(index).Hotbar(newSlot).SlotType = type
+        End If
 
         SendHotbar(index)
 
@@ -2130,6 +2142,8 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         slot = buffer.ReadInt32
+
+        If slot < 1 Or slot > MAX_HOTBAR Then Exit Sub
 
         Player(index).Hotbar(slot).Slot = 0
         Player(index).Hotbar(slot).SlotType = 0
@@ -2146,21 +2160,23 @@ Module S_NetworkReceive
         slot = buffer.ReadInt32
         buffer.Dispose()
 
+        If slot < 1 Or slot > MAX_HOTBAR Then Exit Sub
+
         If Player(index).Hotbar(slot).Slot > 0 Then
-            If Player(index).Hotbar(slot).SlotType = 1 Then 'skill
-                BufferSkill(index, Player(index).Hotbar(slot).Slot)
-            ElseIf Player(index).Hotbar(slot).SlotType = 2 Then 'item
-                UseItem(index, Player(index).Hotbar(slot).Slot)
+            If Player(index).Hotbar(slot).SlotType = PartType.Item Then
+                UseItem(index, FindItemSlot(index, Player(index).Hotbar(slot).Slot))
             End If
         End If
 
         SendHotbar(index)
-
     End Sub
 
     Sub Packet_SkillLearn(index As Integer, ByRef data() As Byte)
         Dim SkillNum As Integer
         Dim buffer As New ByteStream(data)
+
+        ' Prevent hacking
+        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
         SkillNum = buffer.ReadInt32()
 

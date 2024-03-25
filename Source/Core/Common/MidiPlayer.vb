@@ -30,7 +30,7 @@ Public Module MidiPlayer
     Public Sub Load(filePath As String)
         Initialize()
         midiPath = filePath
-        midiSequence.Load(filePath)
+        midiSequence?.Load(filePath)
     End Sub
 
     ' Play the loaded MIDI file

@@ -272,11 +272,11 @@ Module C_Graphics
     
             ' handles hotbar
             If inSmallChat Then
-                For i = 1 To 9
-                    If e.Code = 48 + i Then
+                For i = 1 To MAX_HOTBAR - 1
+                    If e.Code = 26 + i Then
                         SendUseHotbarSlot(i)
                     End If
-                    If e.Code = 48 Then SendUseHotbarSlot(10)
+                    If e.Code = 26 Then SendUseHotbarSlot(MAX_HOTBAR)
                 Next
             End If
 
@@ -398,13 +398,6 @@ Module C_Graphics
                 ' admin warp if we're pressing shift and right clicking
                 If GetPlayerAccess(Myindex) >= 2 Then AdminWarp(CurX, CurY)
             Else
-                For i = 1 To MAX_HOTBAR
-                    If Player(Myindex).Hotbar(i).Slot > 0 Then
-                        SendDeleteHotbar(i)
-                        Exit Sub
-                    End If
-                Next
-
                 ' rightclick menu
                 If PetAlive(Myindex) Then
                     If IsInBounds() AndAlso CurX = Player(Myindex).Pet.X And CurY = Player(Myindex).Pet.Y Then
@@ -2906,7 +2899,7 @@ Module C_Graphics
         xO = Windows(GetWindowIndex("winHotbar")).Window.Left
         yO = Windows(GetWindowIndex("winHotbar")).Window.Top
 
-        ' render start + end wood
+        ' Render start + end wood
         RenderTexture(InterfaceSprite(31), Window, xO - 1, yO + 3, 0, 0, 11, 26, 11, 26)
         RenderTexture(InterfaceSprite(31), Window, xO + 407, yO + 3, 0, 0, 11, 26, 11, 26)
 
@@ -2916,24 +2909,32 @@ Module C_Graphics
             Width = 36
             Height = 36
 
-            ' don't render last one
-            If i <> 10 Then
-                ' render wood
+            ' Don't render last one
+            If i <> MAX_HOTBAR Then
+                ' Render wood
                 RenderTexture(InterfaceSprite(32), Window, xO + 30, yO + 3, 0, 0, 13, 26, 13, 26)
             End If
 
-            ' render box
+            ' Render box
             RenderTexture(InterfaceSprite(30), Window, xO - 2, yO - 2, 0, 0, Width, Height, Width, Height)
 
-            ' render icon
+            ' Render icon
             If Not (DragBox.Origin = PartOriginType.Hotbar And DragBox.Slot = i) Then
                 Select Case Player(Myindex).Hotbar(i).SlotType
-                    Case 1 ' inventory
+                    Case PartOriginType.Inventory
+                        StreamItem(Player(Myindex).Hotbar(i).Slot)
                         If Len(Item(Player(Myindex).Hotbar(i).Slot).Name) > 0 And Item(Player(Myindex).Hotbar(i).Slot).Icon > 0 Then
+                            If ItemGfxInfo(Item(Player(Myindex).Hotbar(i).Slot).Icon).IsLoaded = False Then
+                                LoadTexture(Item(Player(Myindex).Hotbar(i).Slot).Icon, 4)
+                            End If
                             RenderTexture(ItemSprite(Item(Player(Myindex).Hotbar(i).Slot).Icon), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                         End If
-                    Case 2 ' Skill
+                    Case PartOriginType.Skill
+                        StreamSkill(Player(Myindex).Hotbar(i).Slot)
                         If Len(Skill(Player(Myindex).Hotbar(i).Slot).Name) > 0 And Skill(Player(Myindex).Hotbar(i).Slot).Icon > 0 Then
+                            If SkillGfxInfo(Item(Player(Myindex).Hotbar(i).Slot).Icon).IsLoaded = False Then
+                                LoadTexture(Item(Player(Myindex).Hotbar(i).Slot).Icon, 9)
+                            End If
                             RenderTexture(SkillSprite(Skill(Player(Myindex).Hotbar(i).Slot).Icon), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                             For t = 1 To MAX_PLAYER_SKILLS
                                 If GetPlayerSkill(Myindex, t) > 0 Then
@@ -2946,9 +2947,9 @@ Module C_Graphics
                 End Select
             End If
 
-            ' draw the numbers
+            ' Draw the numbers
             sS = Str(i)
-            If i = 10 Then sS = "0"
+            If i = MAX_HOTBAR Then sS = "0"
             RenderText(sS, Window, xO + 4, yO + 19, Color.White, Color.White)
         Next
     End Sub

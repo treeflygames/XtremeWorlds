@@ -532,8 +532,8 @@
     Public Enum PartOriginType
         None = 0
         Inventory
-        Hotbar
         Skill
+        Hotbar
         Bank
     End Enum
 
@@ -616,8 +616,8 @@
     Public Enum PartOriginsType
         None = 0
         Inventory
-        Hotbar
         Skill
+        Hotbar
         Bank
     End Enum
 

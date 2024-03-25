@@ -155,7 +155,7 @@ Public Class InputSettings
         Dim x As New XmlSerializer(GetType(InputSettings), New XmlRootAttribute("Inputs"))
 
         Directory.CreateDirectory(cf)
-        cf += "InputSettings.xml"
+        cf += "Inputs.xml"
 
         If Not File.Exists(cf) Then
             File.Create(cf).Dispose()
@@ -173,7 +173,7 @@ Public Class InputSettings
         Dim cf As String = Paths.Config()
 
         Directory.CreateDirectory(cf)
-        cf += "InputSettings.xml"
+        cf += "Inputs.xml"
 
         Dim x As New XmlSerializer(GetType(InputSettings), New XmlRootAttribute("Inputs"))
         Dim writer = New StreamWriter(cf)

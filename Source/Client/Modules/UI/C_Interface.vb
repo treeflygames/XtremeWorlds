@@ -2108,7 +2108,7 @@ Module C_Interface
         ' is there an item?
         invNum = IsInv(Windows(GetWindowIndex("winInventory")).Window.Left, Windows(GetWindowIndex("winInventory")).Window.Top)
 
-        If invNum Then
+        If invNum > 0 Then
             ' exit out if we're offering that item
             If InTrade > 0 Then
                 For I = 1 To MAX_INV
@@ -2186,7 +2186,7 @@ Module C_Interface
 
         itemNum = IsInv(Windows(GetWindowIndex("winInventory")).Window.Left, Windows(GetWindowIndex("winInventory")).Window.Top)
 
-        If itemNum Then
+        If itemNum > 0 Then
             ' exit out if we're offering that item
             If InTrade > 0 Then
                 For I = 1 To MAX_INV
@@ -2219,231 +2219,231 @@ Module C_Interface
 
             ' go go go
             ShowInvDesc(x, y, itemNum)
+        Else
+            Windows(GetWindowIndex("winDescription")).Window.Visible = False
         End If
     End Sub
 
-' ##############
-' ## Drag Box ##
-' ##############
-Public Sub DragBox_OnDraw()
-    Dim xO As Long, yO As Long, texNum As Long, winIndex As Long
+    ' ##############
+    ' ## Drag Box ##
+    ' ##############
+    Public Sub DragBox_OnDraw()
+        Dim xO As Long, yO As Long, texNum As Long, winIndex As Long
 
-    winIndex = GetWindowIndex("winDragBox")
-    xO = Windows(winIndex).Window.Left
-    yO = Windows(winIndex).Window.Top
-    
-    ' get texture num
-    With DragBox
-        Select Case .Type
-            Case PartType.Item
-                If .value Then
-                    texNum = Item(.value).Icon
+        winIndex = GetWindowIndex("winDragBox")
+        xO = Windows(winIndex).Window.Left
+        yO = Windows(winIndex).Window.Top
+
+        If DragBox.Type = PartType.None Then Exit Sub
+
+        ' get texture num
+        With DragBox
+            Select Case .Type
+                Case PartType.Item
+                    If .value Then
+                        texNum = Item(.value).Icon
                         
-                    ' render the icon
-                    If ItemGfxInfo(texNum).IsLoaded = False Then
-                        LoadTexture(texNum, 4)
+                        ' render the icon
+                        If ItemGfxInfo(texNum).IsLoaded = False Then
+                            LoadTexture(texNum, 4)
+                        End If
+
+                        RenderTexture(ItemSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                     End If
+                Case PartType.Skill
+                    If .value Then
+                        texNum = Skill(.value).Icon
 
-                    RenderTexture(ItemSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
-                End If
-            Case PartType.Skill
-                If .value Then
-                    texNum = Skill(.value).Icon
-
-                    ' render the icon
-                    If SkillGfxInfo(texNum).IsLoaded = False Then
-                        LoadTexture(texNum, 9)
+                        ' render the icon
+                        If SkillGfxInfo(texNum).IsLoaded = False Then
+                            LoadTexture(texNum, 9)
+                        End If
+                        RenderTexture(SkillSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                     End If
-                    RenderTexture(SkillSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
-                End If
-        End Select
-    End With
-End Sub
+            End Select
+        End With
+    End Sub
 
-Public Sub DragBox_Check()
-    Dim winIndex As Long, I As Long, curWindow As Long, curControl As Long, tmpRec As RectStruct
+    Public Sub DragBox_Check()
+        Dim winIndex As Long, I As Long, curWindow As Long, curControl As Long, tmpRec As RectStruct
     
-    winIndex = GetWindowIndex("winDragBox")
+        winIndex = GetWindowIndex("winDragBox")
     
-    ' can't drag nuthin'
-    If DragBox.Type = PartType.None Then Exit Sub
-    
-    ' check for other windows
-    For I = 1 To WindowCount
-        With Windows(I).Window
-            If .visible Then
-                ' can't drag to self
-                If .name <> "winDragBox" Then
-                    If CurMouseX >= .Left And CurMouseX <= .Left + .Width Then
-                        If CurMouseY >= .Top And CurMouseY <= .Top + .Height Then
-                            If curWindow = 0 Then curWindow = I
-                            If .zOrder > Windows(curWindow).Window.zOrder Then curWindow = I
+        If DragBox.Type = PartType.None Then Exit Sub
+
+        ' check for other windows
+        For I = 1 To WindowCount
+            With Windows(I).Window
+                If .visible Then
+                    ' can't drag to self
+                    If .name <> "winDragBox" Then
+                        If CurMouseX >= .Left And CurMouseX <= .Left + .Width Then
+                            If CurMouseY >= .Top And CurMouseY <= .Top + .Height Then
+                                If curWindow = 0 Then curWindow = I
+                                If .zOrder > Windows(curWindow).Window.zOrder Then curWindow = I
+                            End If
                         End If
                     End If
                 End If
-            End If
-        End With
-    Next
+            End With
+        Next
     
-    ' we have a window - check if we can drop
-    If curWindow Then
-        Select Case Windows(curWindow).Window.name
-            Case "winBank"
-                If DragBox.Origin = PartOriginType.Bank Then
-                    ' it's from the inventory!
-                    If DragBox.Type = PartType.Item Then
-                        ' find the slot to switch with
-                        For I = 1 To MAX_BANK
-                            With tmpRec
-                                .Top = Windows(curWindow).Window.Top + BankTop + ((BankOffsetY + 32) * ((I - 1) \ BankColumns))
-                                .bottom = .Top + 32
-                                .Left = Windows(curWindow).Window.Left + BankLeft + ((BankOffsetX + 32) * (((I - 1) Mod BankColumns)))
-                                .Right = .Left + 32
-                            End With
+        ' we have a window - check if we can drop
+        If curWindow Then
+            Select Case Windows(curWindow).Window.name
+                Case "winBank"
+                    If DragBox.Origin = PartOriginType.Bank Then
+                        If DragBox.Type = PartType.Item Then
+                            ' find the slot to switch with
+                            For I = 1 To MAX_BANK
+                                With tmpRec
+                                    .Top = Windows(curWindow).Window.Top + BankTop + ((BankOffsetY + 32) * ((I - 1) \ BankColumns))
+                                    .bottom = .Top + 32
+                                    .Left = Windows(curWindow).Window.Left + BankLeft + ((BankOffsetX + 32) * (((I - 1) Mod BankColumns)))
+                                    .Right = .Left + 32
+                                End With
     
-                            If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
-                                If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
-                                    ' switch the slots
-                                    If DragBox.Slot <> I Then
-                                        ChangeBankSlots(DragBox.Slot, I)
+                                If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
+                                    If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
+                                        ' switch the slots
+                                        If DragBox.Slot <> I Then
+                                            ChangeBankSlots(DragBox.Slot, I)
+                                            Exit For
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                
+                    If DragBox.Origin = PartOriginType.Inventory Then
+                        If DragBox.Type = PartType.Item Then
+    
+                            If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).Type <> ItemType.Currency Then
+                                DepositItem(DragBox.Slot, 1)
+                            Else
+                                Dialogue("Deposit Item", "Enter the deposit quantity.", "", DialogueType.DepositItem, DialogueStyle.Input, DragBox.Slot)
+                            End If
+    
+                        End If
+                    End If
+                
+                Case "winInventory"
+                    If DragBox.Origin = PartOriginType.Inventory Then
+                        ' it's from the inventory!
+                        If DragBox.Type = PartType.Item Then
+                            ' find the slot to switch with
+                            For I = 1 To MAX_INV
+                                With tmpRec
+                                    .Top = Windows(curWindow).Window.Top + InvTop + ((InvOffsetY + 32) * ((I - 1) \ InvColumns))
+                                    .bottom = .Top + 32
+                                    .Left = Windows(curWindow).Window.Left + InvLeft + ((InvOffsetX + 32) * (((I - 1) Mod InvColumns)))
+                                    .Right = .Left + 32
+                                End With
+                            
+                                If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
+                                    If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
+                                        ' switch the slots
+                                        If DragBox.Slot <> I Then SendChangeInvSlots(DragBox.Slot, I)
                                         Exit For
                                     End If
                                 End If
-                            End If
-                        Next
-                    End If
-                End If
-                
-                If DragBox.Origin = PartOriginType.Inventory Then
-                    If DragBox.Type = PartType.Item Then
-    
-                        If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).Type <> ItemType.Currency Then
-                            DepositItem(DragBox.Slot, 1)
-                        Else
-                            Dialogue("Deposit Item", "Enter the deposit quantity.", "", DialogueType.DepositItem, DialogueStyle.Input, DragBox.Slot)
+                            Next
                         End If
-    
                     End If
-                End If
                 
-            Case "winInventory"
-                If DragBox.Origin = PartOriginType.Inventory Then
-                    ' it's from the inventory!
-                    If DragBox.Type = PartType.Item Then
-                        ' find the slot to switch with
-                        For I = 1 To MAX_INV
-                            With tmpRec
-                                .Top = Windows(curWindow).Window.Top + InvTop + ((InvOffsetY + 32) * ((I - 1) \ InvColumns))
-                                .bottom = .Top + 32
-                                .Left = Windows(curWindow).Window.Left + InvLeft + ((InvOffsetX + 32) * (((I - 1) Mod InvColumns)))
-                                .Right = .Left + 32
-                            End With
-                            
-                            If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
-                                If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
-                                    ' switch the slots
-                                    If DragBox.Slot <> I Then SendChangeInvSlots(DragBox.Slot, I)
-                                    Exit For
-                                End If
+                    If DragBox.Origin = PartOriginType.Bank Then
+                        If DragBox.Type = PartType.Item Then
+    
+                            If Item(Bank.Item(DragBox.Slot).num).Type <> ItemType.Currency Then
+                                WithdrawItem(DragBox.Slot, 0)
+                            Else
+                                Dialogue("Withdraw Item", "Enter the amount you wish to withdraw.", "", DialogueType.WithdrawItem, DialogueStyle.Input, DragBox.Slot)
                             End If
-                        Next
-                    End If
-                End If
-                
-                ' se o item saiu do bank
-                If DragBox.Origin = PartOriginType.Bank Then
-                    If DragBox.Type = PartType.Item Then
     
-                        If Item(Bank.Item(DragBox.Slot).num).Type <> ItemType.Currency Then
-                            WithdrawItem(DragBox.Slot, 0)
-                        Else
-                            Dialogue("Withdraw Item", "Enter the amount you wish to withdraw.", "", DialogueType.WithdrawItem, DialogueStyle.Input, DragBox.Slot)
                         End If
-    
                     End If
-                End If
 
-            Case "winSkills"
-                If DragBox.Origin = PartOriginType.Skill Then
-                    ' it's from the Skills!
-                    If DragBox.Type = PartType.Skill Then
-                        ' find the slot to switch with
-                        For I = 1 To MAX_PLAYER_SKILLS
-                            With tmpRec
-                                .Top = Windows(curWindow).Window.Top + SkillTop + ((SkillOffsetY + 32) * ((I - 1) \ SkillColumns))
-                                .bottom = .Top + 32
-                                .Left = Windows(curWindow).Window.Left + SkillLeft + ((SkillOffsetX + 32) * (((I - 1) Mod SkillColumns)))
-                                .Right = .Left + 32
-                            End With
+                Case "winSkills"
+                    If DragBox.Origin = PartOriginType.Skill Then
+                        If DragBox.Type = PartType.Skill Then
+                            ' find the slot to switch with
+                            For I = 1 To MAX_PLAYER_SKILLS
+                                With tmpRec
+                                    .Top = Windows(curWindow).Window.Top + SkillTop + ((SkillOffsetY + 32) * ((I - 1) \ SkillColumns))
+                                    .bottom = .Top + 32
+                                    .Left = Windows(curWindow).Window.Left + SkillLeft + ((SkillOffsetX + 32) * (((I - 1) Mod SkillColumns)))
+                                    .Right = .Left + 32
+                                End With
                             
-                            If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
-                                If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
-                                    ' switch the slots
-                                    If DragBox.Slot <> I Then SendChangeSkillSlots(DragBox.Slot, I)
-                                    Exit For
-                                End If
-                            End If
-                        Next
-                    End If
-                End If
-
-            Case "winHotbar"
-                If DragBox.Origin <> PartOriginType.None Then
-                    If DragBox.Type <> PartType.None Then
-                        ' find the slot
-                        For I = 1 To MAX_HOTBAR
-                            With tmpRec
-                                .Top = Windows(curWindow).Window.Top + HotbarTop
-                                .bottom = .Top + 32
-                                .Left = Windows(curWindow).Window.Left + HotbarLeft + ((I - 1) * HotbarOffsetX)
-                                .Right = .Left + 32
-                            End With
-                            
-                            If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
-                                If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
-                                    ' set the hotbar slot
-                                    If DragBox.Origin <> PartOriginType.Hotbar Then
-                                        If DragBox.Type = PartType.Item Then
-                                            SendSetHotbarSlot(1, DragBox.Slot, I)
-                                        ElseIf DragBox.Type = PartType.Skill Then
-                                            SendSetHotbarSlot(2, DragBox.Slot, I)
-                                        End If
-                                    Else
-                                        If DragBox.Slot <> I Then SendSetHotbarSlot(3, DragBox.Slot, I)
+                                If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
+                                    If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
+                                        ' switch the slots
+                                        If DragBox.Slot <> I Then SendChangeSkillSlots(DragBox.Slot, I)
+                                        Exit For
                                     End If
-                                    Exit For
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
-                End If
-        End Select
-    Else
-        ' no windows found - dropping on bare map
-        Select Case DragBox.Origin
-            Case PartOriginType.Inventory
-                If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).Type <> ItemType.Currency Then
-                    SendDropItem(DragBox.Slot, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
-                Else
-                    Dialogue("Drop Item", "Please choose how many to drop", "", DialogueType.DropItem, DialogueStyle.Input, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
-                End If
-            Case PartOriginType.Skill
-                ForgetSkill(DragBox.Slot)
-            Case PartOriginType.Hotbar
-                SendSetHotbarSlot(0, 0, DragBox.Slot)
-        End Select
-    End If
-    
-    ' close window
-    HideWindow(winIndex)
 
-    With DragBox
-        .Type = PartType.None
-        .Slot = 0
-        .Origin = PartOriginType.None
-        .value = 0
-    End With
-End Sub
+                Case "winHotbar"
+                    If DragBox.Origin <> PartOriginType.None Then
+                        If DragBox.Type <> PartType.None Then
+                            ' find the slot
+                            For I = 1 To MAX_HOTBAR
+                                With tmpRec
+                                    .Top = Windows(curWindow).Window.Top + HotbarTop
+                                    .bottom = .Top + 32
+                                    .Left = Windows(curWindow).Window.Left + HotbarLeft + ((I - 1) * HotbarOffsetX)
+                                    .Right = .Left + 32
+                                End With
+                            
+                                If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
+                                    If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
+                                        ' set the hotbar slot
+                                        If DragBox.Origin <> PartOriginType.Hotbar Then
+                                            If DragBox.Type = PartType.Item Then
+                                                SendSetHotbarSlot(PartOriginsType.Inventory, I, DragBox.Slot, DragBox.Value)
+                                            ElseIf DragBox.Type = PartType.Skill Then
+                                                SendSetHotbarSlot(PartOriginsType.Skill, I, DragBox.Slot, DragBox.Value)
+                                            End If
+                                        Else
+                                            If DragBox.Slot <> I Then SendSetHotbarSlot(PartOriginsType.Hotbar, I, DragBox.Slot, DragBox.Value)
+                                        End If
+                                        Exit For
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+            End Select
+        Else
+            ' no windows found - dropping on bare map
+            Select Case DragBox.Origin
+                Case PartOriginType.Inventory
+                    If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).Type <> ItemType.Currency Then
+                        SendDropItem(DragBox.Slot, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
+                    Else
+                        Dialogue("Drop Item", "Please choose how many to drop", "", DialogueType.DropItem, DialogueStyle.Input, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
+                    End If
+                Case PartOriginType.Skill
+                    ForgetSkill(DragBox.Slot)
+                Case PartOriginType.Hotbar
+                    SendSetHotbarSlot(DragBox.Origin, DragBox.Slot, DragBox.Slot, 0)
+            End Select
+        End If
+    
+        ' close window
+        HideWindow(winIndex)
+
+        With DragBox
+            .Type = PartType.None
+            .Slot = 0
+            .Origin = PartOriginType.None
+            .value = 0
+        End With
+    End Sub
 
     ' ############
     ' ## Skills ##
@@ -2486,7 +2486,7 @@ End Sub
 
         slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
     
-        If slotNum Then
+        If slotNum > 0 Then
             PlayerCastSkill(slotNum)
         End If
     
@@ -2518,6 +2518,8 @@ End Sub
 
             ' go go go
             ShowSkillDesc(x, y, GetPlayerSkill(Myindex, slotNum), slotNum)
+        Else
+            Windows(GetWindowIndex("winDescription")).Window.Visible = False
         End If
     End Sub
 
@@ -2545,10 +2547,10 @@ End Sub
             winIndex = GetWindowIndex("winDragBox")
             With Windows(winIndex).Window
                 .State = EntState.MouseDown
-                .Left = CurX - 16
-                .Top = CurY - 16
-                .movedX = CurX - .Left
-                .movedY = CurY - .Top
+                .Left = CurMouseX - 16
+                .Top = CurMouseY - 16
+                .movedX = CurMouseX - .Left
+                .movedY = CurMouseY - .Top
             End With
             ShowWindow(winIndex, , False)
 
@@ -2602,6 +2604,8 @@ End Sub
                 Case 2 ' skill
                     ShowskillDesc(x, y, Player(Myindex).Hotbar(slotNum).Slot, 0)
             End Select
+        Else
+             Windows(GetWindowIndex("winDescription")).Window.Visible = False
         End If
     End Sub
 
@@ -2915,7 +2919,7 @@ End Sub
     Public Sub Character_MouseDown()
         Dim itemNum As Long
 
-        itemNum = IsEqItem(Windows(GetWindowIndex("winCharacter")).Window.Left, Windows(GetWindowIndex("winCharacter")).Window.Top)
+        itemNum = IsEq(Windows(GetWindowIndex("winCharacter")).Window.Left, Windows(GetWindowIndex("winCharacter")).Window.Top)
 
         If itemNum Then
             SendUnequip(itemNum)
@@ -2931,7 +2935,7 @@ End Sub
         ' exit out early if dragging
         If DragBox.Type <> PartType.None Then Exit Sub
 
-        itemNum = IsEqItem(Windows(GetWindowIndex("winCharacter")).Window.Left, Windows(GetWindowIndex("winCharacter")).Window.Top)
+        itemNum = IsEq(Windows(GetWindowIndex("winCharacter")).Window.Left, Windows(GetWindowIndex("winCharacter")).Window.Top)
 
         If itemNum Then
             ' calc position
@@ -3177,7 +3181,7 @@ End Sub
 
         ' centralize it
         CentralizeWindow(windowCount)
-End Sub
+    End Sub
 
     Public Sub CreateWindow_Skills()
         ' Create window
@@ -3253,10 +3257,9 @@ End Sub
     
         ' actually draw the icons
         For i = 1 To MAX_PLAYER_SKILLS
+            StreamSkill(Skillnum)
             Skillnum = Player(Myindex).Skill(i).Num
             If Skillnum > 0 And Skillnum <= MAX_SKILLS Then
-                StreamSkill(Skillnum)
-
                 ' not dragging?
                 If Not (DragBox.Origin = PartOriginType.Skill And DragBox.Slot = i) Then
                     SkillPic = Skill(Skillnum).Icon
