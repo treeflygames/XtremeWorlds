@@ -3,35 +3,35 @@ Imports SFML.Graphics
 
 Friend Class frmEditor_Animation
     Private Sub NudSprite0_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite0.Click
-        Animation(Editorindex).Sprite(0) = nudSprite0.Value
+        Animation(EditorIndex).Sprite(0) = nudSprite0.Value
     End Sub
 
     Private Sub NudSprite1_ValueChanged(sender As Object, e As EventArgs) Handles nudSprite1.Click
-        Animation(Editorindex).Sprite(1) = nudSprite1.Value
+        Animation(EditorIndex).Sprite(1) = nudSprite1.Value
     End Sub
 
     Private Sub NudLoopCount0_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopCount0.Click
-        Animation(Editorindex).LoopCount(0) = nudLoopCount0.Value
+        Animation(EditorIndex).LoopCount(0) = nudLoopCount0.Value
     End Sub
 
     Private Sub NudLoopCount1_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopCount1.Click
-        Animation(Editorindex).LoopCount(1) = nudLoopCount1.Value
+        Animation(EditorIndex).LoopCount(1) = nudLoopCount1.Value
     End Sub
 
     Private Sub NudFrameCount0_ValueChanged(sender As Object, e As EventArgs) Handles nudFrameCount0.Click
-        Animation(Editorindex).Frames(0) = nudFrameCount0.Value
+        Animation(EditorIndex).Frames(0) = nudFrameCount0.Value
     End Sub
 
     Private Sub NudFrameCount1_ValueChanged(sender As Object, e As EventArgs) Handles nudFrameCount1.Click
-        Animation(Editorindex).Frames(1) = nudFrameCount1.Value
+        Animation(EditorIndex).Frames(1) = nudFrameCount1.Value
     End Sub
 
     Private Sub NudLoopTime0_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopTime0.Click
-        Animation(Editorindex).LoopTime(0) = nudLoopTime0.Value
+        Animation(EditorIndex).LoopTime(0) = nudLoopTime0.Value
     End Sub
 
     Private Sub NudLoopTime1_ValueChanged(sender As Object, e As EventArgs) Handles nudLoopTime1.Click
-        Animation(Editorindex).LoopTime(1) = nudLoopTime1.Value
+        Animation(EditorIndex).LoopTime(1) = nudLoopTime1.Value
     End Sub
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -42,9 +42,9 @@ Friend Class frmEditor_Animation
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpindex As Integer
         tmpindex = lstIndex.SelectedIndex
-        Animation(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Animation(Editorindex).Name)
+        Animation(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Animation(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
@@ -55,11 +55,11 @@ Friend Class frmEditor_Animation
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearAnimation(Editorindex)
+        ClearAnimation(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Animation(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Animation(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         AnimationEditorInit()
@@ -95,7 +95,7 @@ Friend Class frmEditor_Animation
     End Sub
 
     Private Sub CmbSound_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSound.SelectedIndexChanged
-        Animation(Editorindex).Sound = cmbSound.SelectedItem.ToString
+        Animation(EditorIndex).Sound = cmbSound.SelectedItem.ToString
     End Sub
 
     Private Sub frmEditor_Animation_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing

@@ -613,7 +613,7 @@ Module S_Loop
         ' Preventative checks
         If Not IsPlaying(index) OrElse skillSlot < 0 OrElse skillSlot > MAX_PLAYER_SKILLS OrElse Not HasSkill(index, skillId) Then Exit Sub
 
-        ' Check if the player is able to cast the spell.
+        ' Check if the player is able to cast the Skill.
         If GetPlayerVital(index, VitalType.MP) < Skill(skillId).MpCost Then
             PlayerMsg(index, "Not enough mana!", ColorType.BrightRed)
             Exit Sub
@@ -654,7 +654,7 @@ Module S_Loop
         Dim centerX = GetPlayerX(index)
         Dim centerY = GetPlayerY(index)
 
-        ' Determine what kind of spell we're dealing with and process it.
+        ' Determine what kind of Skill we're dealing with and process it.
         Select Case Skill(skillId).Type
             Case SkillType.DamageHp, SkillType.DamageMp, SkillType.HealHp, SkillType.HealMp
                 HandleAoE(index, skillId, centerX, centerY)
@@ -684,7 +684,7 @@ Module S_Loop
 
         End Select
 
-        ' Determine what kind of spell we're dealing with and process it.
+        ' Determine what kind of Skill we're dealing with and process it.
         Select Case Skill(skillId).Type
             Case SkillType.HealMp, SkillType.DamageHp, SkillType.DamageMp, SkillType.HealHp
                 HandleAoE(index, skillId, centerX, centerY)
@@ -695,7 +695,7 @@ Module S_Loop
     End Sub
 
     Private Sub HandleSelfCastSkill(index As Integer, skillId As Integer)
-        ' Determine what kind of spell we're dealing with and process it.
+        ' Determine what kind of Skill we're dealing with and process it.
         Select Case Skill(skillId).Type
             Case SkillType.HealHp
                 SkillPlayer_Effect(VitalType.HP, True, index, Skill(skillId).Vital, skillId)

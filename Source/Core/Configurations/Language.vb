@@ -30,7 +30,7 @@ Public Class LanguageDef
         Public News As String = "Welcome To the MirageWorlds.
                                  This is a free open source VB.Net game engine!
                                  For help Or support please visit our site at
-                                 https://treeflygames.com."
+                                 https://giamon.com."
 
         ' Login Panel
         Public Login As String = "Login"

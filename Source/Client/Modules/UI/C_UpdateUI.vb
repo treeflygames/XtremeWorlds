@@ -62,7 +62,7 @@ Module C_UpdateUI
         If InitMapEditor Then
             With frmEditor_Map
                 Editor = EditorType.Map
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .MapEditorInit()
             End With
@@ -72,7 +72,7 @@ Module C_UpdateUI
         If InitPetEditor Then
             With frmEditor_Pet
                 Editor = EditorType.Pet
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 PetEditorInit()
@@ -83,7 +83,7 @@ Module C_UpdateUI
         If InitAnimationEditor Then
             With frmEditor_Animation
                 Editor = EditorType.Animation
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 AnimationEditorInit()
@@ -94,7 +94,7 @@ Module C_UpdateUI
         If InitItemEditor Then
             With frmEditor_Item
                 Editor = EditorType.Item
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 ItemEditorInit()
@@ -105,7 +105,7 @@ Module C_UpdateUI
         If InitJobEditor Then
             With frmEditor_Job
                 Editor = EditorType.Job
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 JobEditorInit()
@@ -116,7 +116,7 @@ Module C_UpdateUI
         If InitResourceEditor Then
             With frmEditor_Resource
                 Editor = EditorType.Resource
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 ResourceEditorInit()
@@ -127,7 +127,7 @@ Module C_UpdateUI
         If InitNPCEditor Then
             With frmEditor_NPC
                 Editor = EditorType.NPC
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 NpcEditorInit()
@@ -138,7 +138,7 @@ Module C_UpdateUI
         If InitSkillEditor Then
             With frmEditor_Skill
                 Editor = EditorType.Skill
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 SkillEditorInit()
@@ -149,7 +149,7 @@ Module C_UpdateUI
         If InitShopEditor Then
             With frmEditor_Shop
                 Editor = EditorType.Shop
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 ShopEditorInit()
@@ -160,7 +160,7 @@ Module C_UpdateUI
         If InitProjectileEditor Then
             With frmEditor_Projectile
                 Editor = EditorType.Projectile
-                Editorindex = 1
+                EditorIndex = 1
                 .Show()
                 .lstIndex.SelectedIndex = 0
                 ProjectileEditorInit()

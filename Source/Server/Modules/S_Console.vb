@@ -158,7 +158,7 @@ Module S_Console
                     Double.TryParse(parts(1), speed)
                     Core.Time.Instance.GameSpeed = speed
                     Types.Settings.TimeSpeed = speed
-                    Save()
+                    Settings.Save()
                     Console.WriteLine("Set GameSpeed to " & Core.Time.Instance.GameSpeed & " secs per seconds")
 
 #End Region

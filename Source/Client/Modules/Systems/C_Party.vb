@@ -149,7 +149,7 @@ Module C_Parties
             ' draw name
             y = 100
             x = 10
-            RenderText(theName, GameWindow, x, y, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
+            RenderText(theName, Window, x, y, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
 
             ' draw hp
             If Player(playerNum).Vital(VitalType.HP) > 0 Then
@@ -161,7 +161,7 @@ Module C_Parties
                     .Position = New Vector2f(x, y + 15),
                     .FillColor = SFML.Graphics.Color.Red
                 }
-                GameWindow.Draw(rectShape)
+                Window.Draw(rectShape)
             End If
             ' draw mp
             If Player(playerNum).Vital(VitalType.MP) > 0 Then
@@ -173,7 +173,7 @@ Module C_Parties
                     .Position = New Vector2f(x, y + 24),
                     .FillColor = SFML.Graphics.Color.Blue
                 }
-                GameWindow.Draw(rectShape2)
+                Window.Draw(rectShape2)
             End If
 
             ' draw members
@@ -187,7 +187,7 @@ Module C_Parties
                         ' draw name
                         y = 100 + ((I - 1) * 30)
 
-                        RenderText(theName, GameWindow, x, y, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
+                        RenderText(theName, Window, x, y, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
                         ' draw hp
                         y = 115 + ((I - 1) * 30)
 
@@ -200,7 +200,7 @@ Module C_Parties
                             .Position = New Vector2f(x, y),
                             .FillColor = SFML.Graphics.Color.Red
                         }
-                        GameWindow.Draw(rectShape)
+                        Window.Draw(rectShape)
                         ' draw mp
                         y = 115 + ((I - 1) * 30)
                         ' make sure we actually have the data before rendering
@@ -212,7 +212,7 @@ Module C_Parties
                             .Position = New Vector2f(x, y + 8),
                             .FillColor = SFML.Graphics.Color.Blue
                         }
-                        GameWindow.Draw(rectShape2)
+                        Window.Draw(rectShape2)
                     End If
                 End If
             Next

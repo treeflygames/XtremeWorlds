@@ -33,14 +33,14 @@ Friend Class frmEditor_Pet
         Dim tmpindex As Integer
 
         tmpindex = lstIndex.SelectedIndex
-        Pet(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Pet(Editorindex).Name)
+        Pet(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Pet(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
     Private Sub NudSprite_Click(sender As Object, e As EventArgs) Handles nudSprite.Click
-        Pet(Editorindex).Sprite = nudSprite.Value
+        Pet(EditorIndex).Sprite = nudSprite.Value
 
         EditorPet_DrawPet()
     End Sub
@@ -66,7 +66,7 @@ Friend Class frmEditor_Pet
     End Sub
 
     Private Sub NudRange_ValueChanged(sender As Object, e As EventArgs) Handles nudRange.Click
-        Pet(Editorindex).Range = nudRange.Value
+        Pet(EditorIndex).Range = nudRange.Value
     End Sub
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -89,45 +89,45 @@ End Sub
     Private Sub OptCustomStats_CheckedChanged(sender As Object, e As EventArgs) Handles optCustomStats.CheckedChanged
         If optCustomStats.Checked = True Then
             pnlCustomStats.Visible = True
-            Pet(Editorindex).StatType = 1
+            Pet(EditorIndex).StatType = 1
         Else
             pnlCustomStats.Visible = False
-            Pet(Editorindex).StatType = 0
+            Pet(EditorIndex).StatType = 0
         End If
     End Sub
 
     Private Sub OptAdoptStats_CheckedChanged(sender As Object, e As EventArgs) Handles optAdoptStats.CheckedChanged
         If optAdoptStats.Checked = True Then
             pnlCustomStats.Visible = False
-            Pet(Editorindex).StatType = 0
+            Pet(EditorIndex).StatType = 0
         Else
             pnlCustomStats.Visible = True
-            Pet(Editorindex).StatType = 1
+            Pet(EditorIndex).StatType = 1
         End If
     End Sub
 
     Private Sub NudStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.ValueChanged
-        Pet(Editorindex).Stat(StatType.Strength) = nudStrength.Value
+        Pet(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.ValueChanged
-        Pet(Editorindex).Stat(StatType.Vitality) = nudVitality.Value
+        Pet(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.ValueChanged
-        Pet(Editorindex).Stat(StatType.Luck) = nudLuck.Value
+        Pet(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.ValueChanged
-        Pet(Editorindex).Stat(StatType.Intelligence) = nudIntelligence.Value
+        Pet(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.ValueChanged
-        Pet(Editorindex).Stat(StatType.Spirit) = nudSpirit.Value
+        Pet(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub NudLevel_ValueChanged(sender As Object, e As EventArgs) Handles nudLevel.ValueChanged
-        Pet(Editorindex).Level = nudLevel.Value
+        Pet(EditorIndex).Level = nudLevel.Value
     End Sub
 
 
@@ -137,28 +137,28 @@ End Sub
 #Region "Leveling"
 
     Private Sub NudPetExp_ValueChanged(sender As Object, e As EventArgs) Handles nudPetExp.Click
-        Pet(Editorindex).ExpGain = nudPetExp.Value
+        Pet(EditorIndex).ExpGain = nudPetExp.Value
     End Sub
 
     Private Sub NudPetPnts_ValueChanged(sender As Object, e As EventArgs) Handles nudPetPnts.Click
-        Pet(Editorindex).LevelPnts = nudPetPnts.Value
+        Pet(EditorIndex).LevelPnts = nudPetPnts.Value
     End Sub
 
     Private Sub NudMaxLevel_ValueChanged(sender As Object, e As EventArgs) Handles nudMaxLevel.Click
-        Pet(Editorindex).MaxLevel = nudMaxLevel.Value
+        Pet(EditorIndex).MaxLevel = nudMaxLevel.Value
     End Sub
 
     Private Sub OptLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optLevel.Click
         If optLevel.Checked = True Then
             pnlPetlevel.Visible = True
-            Pet(Editorindex).LevelingType = 1
+            Pet(EditorIndex).LevelingType = 1
         End If
     End Sub
 
     Private Sub OptDoNotLevel_CheckedChanged(sender As Object, e As EventArgs) Handles optDoNotLevel.Click
         If optDoNotLevel.Checked = True Then
             pnlPetlevel.Visible = False
-            Pet(Editorindex).LevelingType = 0
+            Pet(EditorIndex).LevelingType = 0
 End If
     End Sub
 
@@ -169,19 +169,19 @@ End If
 #Region "Skills"
 
     Private Sub CmbSkill1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSkill1.SelectedIndexChanged
-        Pet(Editorindex).Skill(1) = cmbSkill1.SelectedIndex
+        Pet(EditorIndex).Skill(1) = cmbSkill1.SelectedIndex
     End Sub
 
     Private Sub CmbSkill2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSkill2.SelectedIndexChanged
-        Pet(Editorindex).Skill(2) = cmbSkill2.SelectedIndex
+        Pet(EditorIndex).Skill(2) = cmbSkill2.SelectedIndex
     End Sub
 
     Private Sub CmbSkill3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSkill3.SelectedIndexChanged
-        Pet(Editorindex).Skill(3) = cmbSkill3.SelectedIndex
+        Pet(EditorIndex).Skill(3) = cmbSkill3.SelectedIndex
     End Sub
 
     Private Sub CmbSkill4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSkill4.SelectedIndexChanged
-        Pet(Editorindex).Skill(4) = cmbSkill4.SelectedIndex
+        Pet(EditorIndex).Skill(4) = cmbSkill4.SelectedIndex
     End Sub
 
 
@@ -192,28 +192,28 @@ End If
 
     Private Sub ChkEvolve_CheckedChanged(sender As Object, e As EventArgs) Handles chkEvolve.CheckedChanged
         If chkEvolve.Checked = True Then
-            Pet(Editorindex).Evolvable = 1
+            Pet(EditorIndex).Evolvable = 1
         Else
-            Pet(Editorindex).Evolvable = 0
+            Pet(EditorIndex).Evolvable = 0
         End If
     End Sub
 
     Private Sub NudEvolveLvl_ValueChanged(sender As Object, e As EventArgs) Handles nudEvolveLvl.ValueChanged
-        Pet(Editorindex).EvolveLevel = nudEvolveLvl.Value
+        Pet(EditorIndex).EvolveLevel = nudEvolveLvl.Value
     End Sub
 
     Private Sub CmbEvolve_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEvolve.SelectedIndexChanged
-        Pet(Editorindex).EvolveNum = cmbEvolve.SelectedIndex
+        Pet(EditorIndex).EvolveNum = cmbEvolve.SelectedIndex
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearPet(Editorindex)
+        ClearPet(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Pet(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Pet(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         PetEditorInit()

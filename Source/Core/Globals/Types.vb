@@ -25,8 +25,8 @@ Public Module Types
     Public TradeTheirOffer(MAX_INV) As PlayerInvStruct
     Public Party As PartyStruct
     Public MapResource() As MapResourceStruct
-    Public Settings As Settings
-    Public Hotbar(MAX_HOTBAR) As HotbarStruct
+    Public Chars As CharList
+    Public Settings As Settings 
 
     Public Structure ResourceTypeStruct
         Dim SkillLevel As Integer
@@ -141,9 +141,13 @@ Public Module Types
         Dim DirBlock As Byte
     End Structure
 
+    Public Structure TileHistoryStruct
+        Dim Tile(,) As TileStruct
+    End Structure
+
     Public Structure ItemStruct
         Dim Name As String
-        Dim Pic As Integer
+        Dim Icon As Integer
         Dim Description As String
 
         Dim Type As Byte

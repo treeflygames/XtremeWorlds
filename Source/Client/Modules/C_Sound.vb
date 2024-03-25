@@ -36,7 +36,7 @@ Module C_Sound
 
         If Types.Settings.MusicExt = ".mid" Then
             MidiPlayer.Dispose()
-            MidiPlayer.LoadMidiFile(Paths.Music & fileName)
+            MidiPlayer.Load(Paths.Music & fileName)
             MidiPlayer.Play()
             CurrentMusic = fileName
             Exit Sub
@@ -62,11 +62,19 @@ Module C_Sound
     End Sub
 
     Sub StopMusic()
-        If MusicPlayer Is Nothing Then Exit Sub
-        MusicPlayer.Stop()
-        MusicPlayer.Dispose()
-        MusicPlayer = Nothing
-        CurrentMusic = ""
+        If Not MusicPlayer Is Nothing Then
+            MusicPlayer.Stop()
+            MusicPlayer.Dispose()
+            MusicPlayer = Nothing
+            CurrentMusic = ""
+        End If
+
+        If MidiPlayer.midiSequence Is Nothing Or MidiPlayer.midiSequencer Is Nothing Then
+            Exit Sub
+        Else
+            MidiPlayer.Dispose()
+            CurrentMusic = ""
+        End If
     End Sub
 
     Sub PlayPreview(fileName As String)

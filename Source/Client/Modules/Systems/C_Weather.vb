@@ -44,13 +44,13 @@ Friend Module C_Weather
 
         If DrawThunder > 0 Then
             Dim tmpSprite As Sprite
-            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(GameWindow.Size.X, GameWindow.Size.Y, SFML.Graphics.Color.White))) With {
+            tmpSprite = New Sprite(New Texture(New SFML.Graphics.Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.White))) With {
                 .Color = New Color(255, 255, 255, 150),
-                .TextureRect = New IntRect(0, 0, GameWindow.Size.X, GameWindow.Size.Y),
+                .TextureRect = New IntRect(0, 0, Window.Size.X, Window.Size.Y),
                 .Position = New Vector2f(0, 0)
             }
 
-            GameWindow.Draw(tmpSprite) '
+            Window.Draw(tmpSprite) '
 
             DrawThunder = DrawThunder - 1
 
@@ -69,7 +69,7 @@ Friend Module C_Weather
                     spriteLeft = WeatherParticle(i).Type - 1
                 End If
 
-                RenderTexture(WeatherSprite, GameWindow, ConvertMapX(WeatherParticle(i).X), ConvertMapY(WeatherParticle(i).Y), spriteLeft * 32, 0, 32, 32, 32, 32)
+                RenderTexture(WeatherSprite, Window, ConvertMapX(WeatherParticle(i).X), ConvertMapY(WeatherParticle(i).Y), spriteLeft * 32, 0, 32, 32, 32, 32)
             End If
         Next
 
@@ -94,11 +94,11 @@ Friend Module C_Weather
         FogTexture(fogNum).Smooth = True
 
         FogSprite(fogNum).Color = New Color(255, 255, 255, CurrentFogOpacity)
-        FogSprite(fogNum).TextureRect = New IntRect(0, 0, GameWindow.Size.X + 200, GameWindow.Size.Y + 200)
+        FogSprite(fogNum).TextureRect = New IntRect(0, 0, Window.Size.X + 200, Window.Size.Y + 200)
         FogSprite(fogNum).Position = New Vector2f((FogOffsetX * 2.5) - 50, (FogOffsetY * 3.5) - 50)
-        FogSprite(fogNum).Scale = (New Vector2f(CDbl((GameWindow.Size.X + 200) / FogGfxInfo(fogNum).Width), CDbl((GameWindow.Size.Y + 200) / FogGfxInfo(fogNum).Height)))
+        FogSprite(fogNum).Scale = (New Vector2f(CDbl((Window.Size.X + 200) / FogGfxInfo(fogNum).Width), CDbl((Window.Size.Y + 200) / FogGfxInfo(fogNum).Height)))
 
-        GameWindow.Draw(FogSprite(fogNum))
+        Window.Draw(FogSprite(fogNum))
 
     End Sub
 
@@ -123,12 +123,12 @@ Friend Module C_Weather
                             WeatherParticle(i).Type = CurrentWeather
                             WeatherParticle(i).Velocity = Rand(8, 14)
                             WeatherParticle(i).X = (TileView.Left * 32) - 32
-                            WeatherParticle(i).Y = ((TileView.Top * 32) + Rand(-32, GameWindow.Size.Y))
+                            WeatherParticle(i).Y = ((TileView.Top * 32) + Rand(-32, Window.Size.Y))
                         Else
                             WeatherParticle(i).InUse = 1
                             WeatherParticle(i).Type = CurrentWeather
                             WeatherParticle(i).Velocity = Rand(10, 15)
-                            WeatherParticle(i).X = ((TileView.Left * 32) + Rand(-32, GameWindow.Size.X))
+                            WeatherParticle(i).X = ((TileView.Left * 32) + Rand(-32, Window.Size.X))
                             WeatherParticle(i).Y = (TileView.Top * 32) - 32
                         End If
                         'Exit For

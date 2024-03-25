@@ -55,7 +55,7 @@ Module C_Pets
     End Sub
 
     Sub StreamPet(petNum As Integer)
-        If petNum > 0 And Pet(petNum).Name = "" And Pet_Loaded(petNum) = False Then
+        If petNum > 0 And Pet(petNum).Name = "" Or Pet_Loaded(petNum) = False Then
             Pet_Loaded(petNum) = True
             SendRequestPet(petNum)
         End If
@@ -562,7 +562,7 @@ Module C_Pets
         End If
 
         ' Draw name
-        RenderText(name, GameWindow, textX, textY, color, backcolor)
+        RenderText(name, Window, textX, textY, color, backcolor)
     End Sub
 
 #End Region
@@ -585,7 +585,7 @@ Module C_Pets
     Friend Sub PetEditorInit()
         Dim i As Integer
 
-        Editorindex = frmEditor_Pet.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Pet.lstIndex.SelectedIndex + 1
 
         With frmEditor_Pet
             'populate skill combo's
@@ -600,22 +600,22 @@ Module C_Pets
                 .cmbSkill3.Items.Add(i & ": " & Skill(i).Name)
                 .cmbSkill4.Items.Add(i & ": " & Skill(i).Name)
             Next
-            .txtName.Text = Trim$(Pet(Editorindex).Name)
-            If Pet(Editorindex).Sprite < 0 OrElse Pet(Editorindex).Sprite > .nudSprite.Maximum Then Pet(Editorindex).Sprite = 0
+            .txtName.Text = Trim$(Pet(EditorIndex).Name)
+            If Pet(EditorIndex).Sprite < 0 OrElse Pet(EditorIndex).Sprite > .nudSprite.Maximum Then Pet(EditorIndex).Sprite = 0
 
-            .nudSprite.Value = Pet(Editorindex).Sprite
+            .nudSprite.Value = Pet(EditorIndex).Sprite
             .EditorPet_DrawPet()
 
-            .nudRange.Value = Pet(Editorindex).Range
+            .nudRange.Value = Pet(EditorIndex).Range
 
-            .nudStrength.Value = Pet(Editorindex).Stat(StatType.Strength)
-            .nudVitality.Value = Pet(Editorindex).Stat(StatType.Vitality)
-            .nudLuck.Value = Pet(Editorindex).Stat(StatType.Luck)
-            .nudIntelligence.Value = Pet(Editorindex).Stat(StatType.Intelligence)
-            .nudSpirit.Value = Pet(Editorindex).Stat(StatType.Spirit)
-            .nudLevel.Value = Pet(Editorindex).Level
+            .nudStrength.Value = Pet(EditorIndex).Stat(StatType.Strength)
+            .nudVitality.Value = Pet(EditorIndex).Stat(StatType.Vitality)
+            .nudLuck.Value = Pet(EditorIndex).Stat(StatType.Luck)
+            .nudIntelligence.Value = Pet(EditorIndex).Stat(StatType.Intelligence)
+            .nudSpirit.Value = Pet(EditorIndex).Stat(StatType.Spirit)
+            .nudLevel.Value = Pet(EditorIndex).Level
 
-            If Pet(Editorindex).StatType = 1 Then
+            If Pet(EditorIndex).StatType = 1 Then
                 .optCustomStats.Checked = True
                 .pnlCustomStats.Visible = True
             Else
@@ -623,52 +623,52 @@ Module C_Pets
                 .pnlCustomStats.Visible = False
             End If
 
-            .nudPetExp.Value = Pet(Editorindex).ExpGain
+            .nudPetExp.Value = Pet(EditorIndex).ExpGain
 
-            .nudPetPnts.Value = Pet(Editorindex).LevelPnts
+            .nudPetPnts.Value = Pet(EditorIndex).LevelPnts
 
-            .nudMaxLevel.Value = Pet(Editorindex).MaxLevel
+            .nudMaxLevel.Value = Pet(EditorIndex).MaxLevel
 
             'Set skills
-            .cmbSkill1.SelectedIndex = Pet(Editorindex).Skill(1)
+            .cmbSkill1.SelectedIndex = Pet(EditorIndex).Skill(1)
 
-            .cmbSkill2.SelectedIndex = Pet(Editorindex).Skill(2)
+            .cmbSkill2.SelectedIndex = Pet(EditorIndex).Skill(2)
 
-            .cmbSkill3.SelectedIndex = Pet(Editorindex).Skill(3)
+            .cmbSkill3.SelectedIndex = Pet(EditorIndex).Skill(3)
 
-            .cmbSkill4.SelectedIndex = Pet(Editorindex).Skill(4)
+            .cmbSkill4.SelectedIndex = Pet(EditorIndex).Skill(4)
 
-            If Pet(Editorindex).LevelingType = 1 Then
+            If Pet(EditorIndex).LevelingType = 1 Then
                 .optLevel.Checked = True
 
                 .pnlPetlevel.Visible = True
                 .pnlPetlevel.BringToFront()
-                .nudPetExp.Value = Pet(Editorindex).ExpGain
-                If Pet(Editorindex).MaxLevel > 0 Then .nudMaxLevel.Value = Pet(Editorindex).MaxLevel
-                .nudPetPnts.Value = Pet(Editorindex).LevelPnts
+                .nudPetExp.Value = Pet(EditorIndex).ExpGain
+                If Pet(EditorIndex).MaxLevel > 0 Then .nudMaxLevel.Value = Pet(EditorIndex).MaxLevel
+                .nudPetPnts.Value = Pet(EditorIndex).LevelPnts
             Else
                 .optDoNotLevel.Checked = True
 
                 .pnlPetlevel.Visible = False
-                .nudPetExp.Value = Pet(Editorindex).ExpGain
-                .nudMaxLevel.Value = Pet(Editorindex).MaxLevel
-                .nudPetPnts.Value = Pet(Editorindex).LevelPnts
+                .nudPetExp.Value = Pet(EditorIndex).ExpGain
+                .nudMaxLevel.Value = Pet(EditorIndex).MaxLevel
+                .nudPetPnts.Value = Pet(EditorIndex).LevelPnts
             End If
 
-            If Pet(Editorindex).Evolvable = 1 Then
+            If Pet(EditorIndex).Evolvable = 1 Then
                 .chkEvolve.Checked = True
             Else
                 .chkEvolve.Checked = False
             End If
 
-            .nudEvolveLvl.Value = Pet(Editorindex).EvolveLevel
-            .cmbEvolve.SelectedIndex = Pet(Editorindex).EvolveNum
+            .nudEvolveLvl.Value = Pet(EditorIndex).EvolveLevel
+            .cmbEvolve.SelectedIndex = Pet(EditorIndex).EvolveNum
 
             .EditorPet_DrawPet()
         End With
 
         ClearChanged_Pet()
-        Pet_Changed(Editorindex) = True
+        Pet_Changed(EditorIndex) = True
     End Sub
 
     Friend Sub PetEditorOk()

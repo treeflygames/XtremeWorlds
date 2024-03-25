@@ -469,43 +469,6 @@ Module S_Player
         If nVal <= range Then IsInRange = True
     End Function
 
-    Friend Sub SpellPlayer_Effect(Vital As Byte, increment As Boolean, index As Integer, Damage As Integer, Skillnum As Integer)
-        Dim sSymbol As String
-        Dim Color As Integer
-
-        If Damage > 0 Then
-            If increment Then
-                sSymbol = "+"
-                If Vital = VitalType.HP Then Color = ColorType.BrightGreen
-                If Vital = VitalType.MP Then Color = ColorType.BrightBlue
-            Else
-                sSymbol = "-"
-                Color = ColorType.Blue
-            End If
-
-            SendAnimation(GetPlayerMap(index), Skill(Skillnum).SkillAnim, 0, 0, TargetType.Player, index)
-            SendActionMsg(GetPlayerMap(index), sSymbol & Damage, Color, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
-
-            ' send the sound
-            'SendMapSound Index, GetPlayerX(Index), GetPlayerY(Index), SoundEntity.seSpell, Spellnum
-
-            If increment Then
-                SetPlayerVital(index, Vital, GetPlayerVital(index, Vital) + Damage)
-
-                If Skill(Skillnum).Duration > 0 Then
-                    'AddHoT_Player(Index, Spellnum)
-                End If
-
-            ElseIf Not increment Then
-                SetPlayerVital(index, Vital, GetPlayerVital(index, Vital) - Damage)
-            End If
-
-            SendVital(index, Vital)
-
-        End If
-
-    End Sub
-
     Friend Function CanPlayerDodge(index As Integer) As Boolean
         Dim rate As Integer, rndNum As Integer
 
@@ -1569,7 +1532,7 @@ Module S_Player
 
                         If Item(InvItemNum).TwoHanded > 0 Then
                             If GetPlayerEquipment(index, EquipmentType.Shield) > 0 Then
-                                PlayerMsg(index, "This is a 2Handed weapon! Please unequip shield first.", ColorType.BrightRed)
+                                PlayerMsg(index, "This is a 2-Handed weapon! Please unequip shield first.", ColorType.BrightRed)
                                 Exit Sub
                             End If
                         End If
@@ -1793,7 +1756,7 @@ Module S_Player
                         ' send vitals to party if in one
                         If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
 
-                    Case ConsumableType.MP
+                    Case ConsumableType.SP
                         SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
                         SetPlayerVital(index, VitalType.SP, GetPlayerVital(index, VitalType.SP) + Item(InvItemNum).Data1)
                         If Item(InvItemNum).Stackable = 1 Then
@@ -1807,7 +1770,16 @@ Module S_Player
                         If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
 
                     Case ConsumableType.Exp
+                        SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
+                        SetPlayerExp(index, GetPlayerExp(index) + Item(InvItemNum).Data1)
+                        If Item(InvItemNum).Stackable = 1 Then
+                            TakeInvItem(index, InvItemNum, 1)
+                        Else
+                            TakeInvItem(index, InvItemNum, 0)
+                        End If
 
+                        ' send vitals to party if in one
+                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End Select
 
             Case ItemType.Projectile
@@ -1839,44 +1811,7 @@ Module S_Player
                 End Select
 
             Case ItemType.Skill
-                ' Get the skill num
-                n = Item(InvItemNum).Data1
-
-                If n > 0 Then
-
-                    ' Make sure they are the right class
-                    If Skill(n).JobReq = GetPlayerJob(index) OrElse Skill(n).JobReq = 0 Then
-                        ' Make sure they are the right level
-                        i = Skill(n).LevelReq
-
-                        If i <= GetPlayerLevel(index) Then
-                            i = FindOpenSkill(index)
-
-                            ' Make sure they have an open skill slot
-                            If i > 0 Then
-
-                                ' Make sure they dont already have the skill
-                                If Not HasSkill(index, n) Then
-                                    SetPlayerSkill(index, i, n)
-                                    SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                                    TakeInvItem(index, InvItemNum, 0)
-                                    PlayerMsg(index, "You study the skill carefully.", ColorType.Yellow)
-                                    PlayerMsg(index, "You have learned a new skill!", ColorType.BrightGreen)
-                                Else
-                                    PlayerMsg(index, "You have already learned this skill!", ColorType.BrightRed)
-                                End If
-                            Else
-                                PlayerMsg(index, "You have learned all that you can learn!", ColorType.BrightRed)
-                            End If
-                        Else
-                            PlayerMsg(index, "You must be level " & i & " to learn this skill.", ColorType.Yellow)
-                        End If
-                    Else
-                        PlayerMsg(index, "This skill can only be learned by " & CheckGrammar(Job(Skill(n).JobReq).Name.Trim) & ".", ColorType.Yellow)
-                    End If
-                Else
-                    PlayerMsg(index, "This scroll is not connected to a skill, please inform an admin!", ColorType.BrightRed)
-                End If
+                PlayerLearnSkill(index, InvItemNum)
 
             Case ItemType.Pet
                 If Item(InvItemNum).Stackable = 1 Then
@@ -1889,13 +1824,58 @@ Module S_Player
         End Select
     End Sub
 
+    Sub PlayerLearnSkill(Index As Integer, InvItemNum As Integer, Optional SkillNum As Integer = 0)
+        Dim n As Integer, i As Integer
+
+        ' Get the skill num
+        If SkillNum > 0 Then
+            n = SkillNum
+        Else
+            n = Item(InvItemNum).Data1
+        End If
+
+        If n > 0 Then
+            ' Make sure they are the right class
+            If Skill(n).JobReq = GetPlayerJob(index) OrElse Skill(n).JobReq = 0 Then
+                ' Make sure they are the right level
+                i = Skill(n).LevelReq
+
+                If i <= GetPlayerLevel(index) Then
+                    i = FindOpenSkill(index)
+
+                    ' Make sure they have an open skill slot
+                    If i > 0 Then
+
+                        ' Make sure they dont already have the skill
+                        If Not HasSkill(index, n) Then
+                            SetPlayerSkill(index, i, n)
+                            SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
+                            TakeInvItem(index, InvItemNum, 0)
+                            PlayerMsg(index, "You study the skill carefully.", ColorType.Yellow)
+                            PlayerMsg(index, "You have learned a new skill!", ColorType.BrightGreen)
+                            SendPlayerSkills(Index)
+                        Else
+                            PlayerMsg(index, "You have already learned this skill!", ColorType.BrightRed)
+                        End If
+                    Else
+                        PlayerMsg(index, "You have learned all that you can learn!", ColorType.BrightRed)
+                    End If
+                Else
+                    PlayerMsg(index, "You must be level " & i & " to learn this skill.", ColorType.Yellow)
+                End If
+            Else
+                PlayerMsg(index, "This skill can only be learned by " & CheckGrammar(Job(Skill(n).JobReq).Name.Trim) & ".", ColorType.Yellow)
+            End If
+        Else
+            PlayerMsg(index, "This scroll is not connected to a skill, please inform an admin!", ColorType.BrightRed)
+        End If
+    End Sub
+
     Sub PlayerSwitchInvSlots(index As Integer, OldSlot As Integer, NewSlot As Integer)
         Dim OldNum As Integer, OldValue As Integer, OldRarity As Integer, OldPrefix As String
         Dim OldSuffix As String, OldSpeed As Integer, OldDamage As Integer
         Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
         Dim NewSuffix As String, NewSpeed As Integer, NewDamage As Integer
-        Dim NewStats(StatType.Count - 1) As Integer
-        Dim OldStats(StatType.Count - 1) As Integer
 
         If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
 
@@ -1917,6 +1897,34 @@ Module S_Player
         End If
 
         SendInventory(index)
+    End Sub
+
+     Sub PlayerSwitchSkillSlots(index As Integer, OldSlot As Integer, NewSlot As Integer)
+        Dim OldNum As Integer, OldValue As Integer, OldRarity As Integer, OldPrefix As String
+        Dim OldSuffix As String, OldSpeed As Integer, OldDamage As Integer
+        Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
+        Dim NewSuffix As String, NewSpeed As Integer, NewDamage As Integer
+
+        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
+
+        OldNum = GetPlayerSkill(index, OldSlot)
+        OldValue = GetPlayerSkillCD(index, OldSlot)
+        NewNum = GetPlayerSkill(index, NewSlot)
+        NewValue = GetPlayerSkillCD(index, NewSlot)
+
+        If OldNum = NewNum AndAlso Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
+            SetPlayerSkill(index, NewSlot, NewNum)
+            SetPlayerSkillCD(index, NewSlot, NewValue)
+            SetPlayerSkill(index, OldSlot, 0)
+            SetPlayerSkillCD(index, OldSlot, 0)
+        Else
+            SetPlayerSkill(index, NewSlot, OldNum)
+            SetPlayerSkillCD(index, NewSlot, OldValue)
+            SetPlayerSkill(index, OldSlot, NewNum)
+            SetPlayerSkillCD(index, OldSlot, NewValue)
+        End If
+
+        SendPlayerSkills(index)
     End Sub
 
 #End Region

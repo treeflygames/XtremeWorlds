@@ -7,14 +7,14 @@ Friend Class frmEditor_Shop
         Dim tmpindex As Integer
 
         tmpindex = lstIndex.SelectedIndex
-        Shop(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Shop(Editorindex).Name)
+        Shop(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Shop(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
     Private Sub ScrlBuy_Scroll(sender As Object, e As EventArgs) Handles nudBuy.ValueChanged
-        Shop(Editorindex).BuyRate = nudBuy.Value
+        Shop(EditorIndex).BuyRate = nudBuy.Value
     End Sub
 
     Private Sub BtnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
@@ -22,7 +22,7 @@ Friend Class frmEditor_Shop
 
         index = lstTradeItem.SelectedIndex + 1
 
-        With Shop(Editorindex).TradeItem(index)
+        With Shop(EditorIndex).TradeItem(index)
             .Item = cmbItem.SelectedIndex + 1
             .ItemValue = nudItemValue.Value
             .CostItem = cmbCostItem.SelectedIndex + 1
@@ -35,7 +35,7 @@ Friend Class frmEditor_Shop
         Dim index As Integer
 
         index = lstTradeItem.SelectedIndex + 1
-        With Shop(Editorindex).TradeItem(index)
+        With Shop(EditorIndex).TradeItem(index)
             .Item = 0
             .ItemValue = 0
             .CostItem = 0
@@ -61,11 +61,11 @@ Friend Class frmEditor_Shop
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearShop(Editorindex)
+        ClearShop(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Shop(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Shop(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         ShopEditorInit()
@@ -79,7 +79,7 @@ Friend Class frmEditor_Shop
             picFace.BackgroundImage = Nothing
         End If
 
-        Shop(Editorindex).Face = nudFace.Value
+        Shop(EditorIndex).Face = nudFace.Value
     End Sub
 
     Private Sub frmEditor_Shop_Load(sender As Object, e As EventArgs) Handles MyBase.Load

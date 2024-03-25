@@ -84,7 +84,7 @@ Module C_Text
         End If
 
         ' Draw name
-        RenderText(NPC(npcNum).Name, GameWindow, textX, textY, color, backcolor)
+        RenderText(NPC(npcNum).Name, Window, textX, textY, color, backcolor)
     End Sub
 
     Friend Sub DrawEventName(index As Integer)
@@ -119,7 +119,7 @@ Module C_Text
         End If
 
         ' Draw name
-        RenderText(name, GameWindow, textX, textY, color, backcolor)
+        RenderText(name, Window, textX, textY, color, backcolor)
     End Sub
 
     Public Sub DrawMapAttributes()
@@ -137,29 +137,29 @@ Module C_Text
                             tY = ((ConvertMapY(y * PicY)) - 7) + (PicY * 0.5)
                             Select Case .Type
                                 Case [Enum].TileType.Blocked
-                                    RenderText("B", GameWindow, tX, tY, (Color.Red), (Color.Black))
+                                    RenderText("B", Window, tX, tY, (Color.Red), (Color.Black))
                                 Case TileType.Warp
-                                    RenderText("W", GameWindow, tX, tY, (Color.Blue), (Color.Black))
+                                    RenderText("W", Window, tX, tY, (Color.Blue), (Color.Black))
                                 Case TileType.Item
-                                    RenderText("I", GameWindow, tX, tY, (Color.White), (Color.Black))
+                                    RenderText("I", Window, tX, tY, (Color.White), (Color.Black))
                                 Case TileType.NpcAvoid
-                                    RenderText("N", GameWindow, tX, tY, (Color.White), (Color.Black))
+                                    RenderText("N", Window, tX, tY, (Color.White), (Color.Black))
                                 Case TileType.Resource
-                                    RenderText("R", GameWindow, tX, tY, (Color.Green), (Color.Black))
+                                    RenderText("R", Window, tX, tY, (Color.Green), (Color.Black))
                                 Case TileType.NpcSpawn
-                                    RenderText("S", GameWindow, tX, tY, (Color.Yellow), (Color.Black))
+                                    RenderText("S", Window, tX, tY, (Color.Yellow), (Color.Black))
                                 Case TileType.Shop
-                                    RenderText("S", GameWindow, tX, tY, (Color.Blue), (Color.Black))
+                                    RenderText("S", Window, tX, tY, (Color.Blue), (Color.Black))
                                 Case TileType.Bank
-                                    RenderText("B", GameWindow, tX, tY, (Color.Blue), (Color.Black))
+                                    RenderText("B", Window, tX, tY, (Color.Blue), (Color.Black))
                                 Case TileType.Heal
-                                    RenderText("H", GameWindow, tX, tY, (Color.Green), (Color.Black))
+                                    RenderText("H", Window, tX, tY, (Color.Green), (Color.Black))
                                 Case TileType.Trap
-                                    RenderText("T", GameWindow, tX, tY, (Color.Red), (Color.Black))
+                                    RenderText("T", Window, tX, tY, (Color.Red), (Color.Black))
                                 Case TileType.Light
-                                    RenderText("L", GameWindow, tX, tY, (Color.Yellow), (Color.Black))
+                                    RenderText("L", Window, tX, tY, (Color.Yellow), (Color.Black))
                                 Case TileType.Animation
-                                    RenderText("A", GameWindow, tX, tY, (Color.Red), (Color.Black))
+                                    RenderText("A", Window, tX, tY, (Color.Red), (Color.Black))
                             End Select
                         End With
                     End If
@@ -210,7 +210,7 @@ Module C_Text
                         End If
                     End If
                 Next
-                x = (Types.Settings.ScreenWidth \ 2) - ((Len(Trim$(ActionMsg(index).Message)) \ 2) * 8)
+                x = (ResolutionWidth \ 2) - ((Len(Trim$(ActionMsg(index).Message)) \ 2) * 8)
                 y = 425
 
         End Select
@@ -219,7 +219,7 @@ Module C_Text
         y = ConvertMapY(y)
 
         If GetTickCount() < ActionMsg(index).Created + time Then
-            RenderText(ActionMsg(index).Message, GameWindow, x, y, GetSfmlColor(ActionMsg(index).Color), (Color.Black))
+            RenderText(ActionMsg(index).Message, Window, x, y, GetSfmlColor(ActionMsg(index).Color), (Color.Black))
         Else
             ClearActionMsg(index)
         End If
@@ -233,7 +233,7 @@ Module C_Text
 
         ' set the position
         xO = 19
-        yO = Types.Settings.ScreenHeight - 40
+        yO = ResolutionHeight - 40
 
         ' loop through chat
         rLines = 1
@@ -270,7 +270,7 @@ Module C_Text
 
                     ' continue on
                     yOffset = yOffset - (14 * lineCount)
-                    RenderText(tmpText, GameWindow, xO, yO + yOffset, Color2, Color2)
+                    RenderText(tmpText, Window, xO, yO + yOffset, Color2, Color2)
                     rLines = rLines + lineCount
 
                     ' set the top width
@@ -282,7 +282,7 @@ Module C_Text
                     ' normal
                     yOffset = yOffset - 14
 
-                    RenderText(Chat(i).Text, GameWindow, xO, yO + yOffset, Color2, Color2)
+                    RenderText(Chat(i).Text, Window, xO, yO + yOffset, Color2, Color2)
                     rLines = rLines + 1
 
                     ' set the top width

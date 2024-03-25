@@ -24,7 +24,7 @@ Friend Class frmEditor_Job
         lstStartItems.Items.Clear()
 
         For i = 1 To MAX_DROP_ITEMS
-            lstStartItems.Items.Add(Item(Job(Editorindex).StartItem(i)).Name & " X " & Job(Editorindex).StartValue(i))
+            lstStartItems.Items.Add(Item(Job(EditorIndex).StartItem(i)).Name & " X " & Job(EditorIndex).StartValue(i))
         Next
 
         lstStartItems.SelectedIndex = 0
@@ -41,16 +41,16 @@ Friend Class frmEditor_Job
     End Sub
 
     Private Sub TxtDescription_TextChanged(sender As Object, e As EventArgs) Handles txtDescription.TextChanged
-        Job(Editorindex).Desc = txtDescription.Text
+        Job(EditorIndex).Desc = txtDescription.Text
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpindex As Integer
 
         tmpindex = lstIndex.SelectedIndex
-        Job(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Job(Editorindex).Name)
+        Job(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Job(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
@@ -83,31 +83,31 @@ Friend Class frmEditor_Job
 #Region "Stats"
 
     Private Sub NumStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.Click
-        Job(Editorindex).Stat(StatType.Strength) = nudStrength.Value
+        Job(EditorIndex).Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NumLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.Click
-        Job(Editorindex).Stat(StatType.Luck) = nudLuck.Value
+        Job(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.Click
-        Job(Editorindex).Stat(StatType.Luck) = nudEndurance.Value
+        Job(EditorIndex).Stat(StatType.Luck) = nudEndurance.Value
     End Sub
 
     Private Sub NumIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.Click
-        Job(Editorindex).Stat(StatType.Intelligence) = nudIntelligence.Value
+        Job(EditorIndex).Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NumVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.Click
-        Job(Editorindex).Stat(StatType.Vitality) = nudVitality.Value
+        Job(EditorIndex).Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NumSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.Click
-        Job(Editorindex).Stat(StatType.Spirit) = nudSpirit.Value
+        Job(EditorIndex).Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub NumBaseExp_ValueChanged(sender As Object, e As EventArgs) Handles nudBaseExp.Click
-        Job(Editorindex).BaseExp = nudBaseExp.Value
+        Job(EditorIndex).BaseExp = nudBaseExp.Value
     End Sub
 
 #End Region
@@ -117,12 +117,12 @@ Friend Class frmEditor_Job
     Private Sub BtnItemAdd_Click(sender As Object, e As EventArgs) Handles btnItemAdd.Click
         If lstStartItems.SelectedIndex < 0 Then Exit Sub
 
-        Job(Editorindex).StartItem(lstStartItems.SelectedIndex + 1) = cmbItems.SelectedIndex + 1
-        Job(Editorindex).StartValue(lstStartItems.SelectedIndex + 1) = nudItemAmount.Value
+        Job(EditorIndex).StartItem(lstStartItems.SelectedIndex + 1) = cmbItems.SelectedIndex + 1
+        Job(EditorIndex).StartValue(lstStartItems.SelectedIndex + 1) = nudItemAmount.Value
 
         lstStartItems.Items.Clear()
         For i = 1 To MAX_DROP_ITEMS
-            lstStartItems.Items.Add(Item(Job(Editorindex).StartItem(i)).Name & " X " & Job(Editorindex).StartValue(i))
+            lstStartItems.Items.Add(Item(Job(EditorIndex).StartItem(i)).Name & " X " & Job(EditorIndex).StartValue(i))
         Next
         lstStartItems.SelectedIndex = 0
     End Sub
@@ -132,15 +132,15 @@ Friend Class frmEditor_Job
 #Region "Starting Point"
 
     Private Sub NumStartMap_Click(sender As Object, e As EventArgs) Handles nudStartMap.Click
-        Job(Editorindex).StartMap = nudStartMap.Value
+        Job(EditorIndex).StartMap = nudStartMap.Value
     End Sub
 
     Private Sub NumStartX_Click(sender As Object, e As EventArgs) Handles nudStartX.Click
-        Job(Editorindex).StartX = nudStartX.Value
+        Job(EditorIndex).StartX = nudStartX.Value
     End Sub
 
     Private Sub NumStartY_Click(sender As Object, e As EventArgs) Handles nudStartY.Click
-        Job(Editorindex).StartY = nudStartY.Value
+        Job(EditorIndex).StartY = nudStartY.Value
     End Sub
 
     Private Sub lstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
@@ -154,23 +154,23 @@ Friend Class frmEditor_Job
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearJob(Editorindex)
+        ClearJob(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Job(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Job(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         JobEditorInit()
     End Sub
 
     Private Sub nudFemaleSprite_Click(sender As Object, e As EventArgs) Handles nudFemaleSprite.Click
-        Job(Editorindex).FemaleSprite = nudFemaleSprite.Value
+        Job(EditorIndex).FemaleSprite = nudFemaleSprite.Value
         DrawPreview
     End Sub
 
     Private Sub nudMaleSprite_Click(sender As Object, e As EventArgs) Handles nudMaleSprite.Click
-        Job(Editorindex).MaleSprite = nudMaleSprite.Value
+        Job(EditorIndex).MaleSprite = nudMaleSprite.Value
         DrawPreview
     End Sub
 

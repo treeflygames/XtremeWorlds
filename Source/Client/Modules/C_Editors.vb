@@ -6,10 +6,10 @@ Module C_Editors
 #Region "Animation Editor"
 
     Friend Sub AnimationEditorInit()
-        Editorindex = frmEditor_Animation.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Animation.lstIndex.SelectedIndex + 1
 
-        With Animation(Editorindex)
-            If Trim$(Animation(Editorindex).Sound) = "" Then
+        With Animation(EditorIndex)
+            If Trim$(Animation(EditorIndex).Sound) = "" Then
                 frmEditor_Animation.cmbSound.SelectedIndex = 0
             Else
                 For i = 0 To frmEditor_Animation.cmbSound.Items.Count
@@ -23,20 +23,20 @@ Module C_Editors
 
             frmEditor_Animation.nudSprite0.Value = .Sprite(0)
             frmEditor_Animation.nudFrameCount0.Value = .Frames(0)
-            If Animation(Editorindex).LoopCount(0) = 0 Then Animation(Editorindex).LoopCount(0) = 1
+            If Animation(EditorIndex).LoopCount(0) = 0 Then Animation(EditorIndex).LoopCount(0) = 1
             frmEditor_Animation.nudLoopCount0.Value = .LoopCount(0)
-            If Animation(Editorindex).LoopTime(0) = 0 Then Animation(Editorindex).LoopTime(0) = 1
+            If Animation(EditorIndex).LoopTime(0) = 0 Then Animation(EditorIndex).LoopTime(0) = 1
             frmEditor_Animation.nudLoopTime0.Value = .LoopTime(0)
 
             frmEditor_Animation.nudSprite1.Value = .Sprite(1)
             frmEditor_Animation.nudFrameCount1.Value = .Frames(1)
-            If Animation(Editorindex).LoopCount(1) = 0 Then Animation(Editorindex).LoopCount(1) = 1
+            If Animation(EditorIndex).LoopCount(1) = 0 Then Animation(EditorIndex).LoopCount(1) = 1
             frmEditor_Animation.nudLoopCount1.Value = .LoopCount(1)
-            If Animation(Editorindex).LoopTime(1) = 0 Then Animation(Editorindex).LoopTime(1) = 1
+            If Animation(EditorIndex).LoopTime(1) = 0 Then Animation(EditorIndex).LoopTime(1) = 1
             frmEditor_Animation.nudLoopTime1.Value = .LoopTime(1)
         End With
 
-        Animation_Changed(Editorindex) = True
+        Animation_Changed(EditorIndex) = True
     End Sub
 
     Friend Sub AnimationEditorOk()
@@ -72,47 +72,47 @@ Module C_Editors
 
     Friend Sub NpcEditorInit()
         With frmEditor_NPC
-            Editorindex = .lstIndex.SelectedIndex + 1
+            EditorIndex = .lstIndex.SelectedIndex + 1
 
             .cmbDropSlot.SelectedIndex = 0
 
-            .txtName.Text = NPC(Editorindex).Name
-            .txtAttackSay.Text = NPC(Editorindex).AttackSay
-            .nudSprite.Value = NPC(Editorindex).Sprite
-            .nudSpawnSecs.Value = NPC(Editorindex).SpawnSecs
-            .cmbBehaviour.SelectedIndex = NPC(Editorindex).Behaviour
-            .cmbFaction.SelectedIndex = NPC(Editorindex).Faction
-            .nudRange.Value = NPC(Editorindex).Range
-            .nudChance.Value = NPC(Editorindex).DropChance(frmEditor_NPC.cmbDropSlot.SelectedIndex)
-            .cmbItem.SelectedIndex = NPC(Editorindex).DropItem(frmEditor_NPC.cmbDropSlot.SelectedIndex)
+            .txtName.Text = NPC(EditorIndex).Name
+            .txtAttackSay.Text = NPC(EditorIndex).AttackSay
+            .nudSprite.Value = NPC(EditorIndex).Sprite
+            .nudSpawnSecs.Value = NPC(EditorIndex).SpawnSecs
+            .cmbBehaviour.SelectedIndex = NPC(EditorIndex).Behaviour
+            .cmbFaction.SelectedIndex = NPC(EditorIndex).Faction
+            .nudRange.Value = NPC(EditorIndex).Range
+            .nudChance.Value = NPC(EditorIndex).DropChance(frmEditor_NPC.cmbDropSlot.SelectedIndex)
+            .cmbItem.SelectedIndex = NPC(EditorIndex).DropItem(frmEditor_NPC.cmbDropSlot.SelectedIndex)
 
-            .nudAmount.Value = NPC(Editorindex).DropItemValue(frmEditor_NPC.cmbDropSlot.SelectedIndex)
+            .nudAmount.Value = NPC(EditorIndex).DropItemValue(frmEditor_NPC.cmbDropSlot.SelectedIndex)
 
-            .nudHp.Value = NPC(Editorindex).HP
-            .nudExp.Value = NPC(Editorindex).Exp
-            .nudLevel.Value = NPC(Editorindex).Level
-            .nudDamage.Value = NPC(Editorindex).Damage
+            .nudHp.Value = NPC(EditorIndex).HP
+            .nudExp.Value = NPC(EditorIndex).Exp
+            .nudLevel.Value = NPC(EditorIndex).Level
+            .nudDamage.Value = NPC(EditorIndex).Damage
 
-            .cmbSpawnPeriod.SelectedIndex = NPC(Editorindex).SpawnTime
+            .cmbSpawnPeriod.SelectedIndex = NPC(EditorIndex).SpawnTime
 
-            .cmbAnimation.SelectedIndex = NPC(Editorindex).Animation
+            .cmbAnimation.SelectedIndex = NPC(EditorIndex).Animation
 
-            .nudStrength.Value = NPC(Editorindex).Stat(StatType.Strength)
-            .nudIntelligence.Value = NPC(Editorindex).Stat(StatType.Intelligence)
-            .nudSpirit.Value = NPC(Editorindex).Stat(StatType.Spirit)
-            .nudLuck.Value = NPC(Editorindex).Stat(StatType.Luck)
-            .nudVitality.Value = NPC(Editorindex).Stat(StatType.Vitality)
+            .nudStrength.Value = NPC(EditorIndex).Stat(StatType.Strength)
+            .nudIntelligence.Value = NPC(EditorIndex).Stat(StatType.Intelligence)
+            .nudSpirit.Value = NPC(EditorIndex).Stat(StatType.Spirit)
+            .nudLuck.Value = NPC(EditorIndex).Stat(StatType.Luck)
+            .nudVitality.Value = NPC(EditorIndex).Stat(StatType.Vitality)
 
-            .cmbSkill1.SelectedIndex = NPC(Editorindex).Skill(1)
-            .cmbSkill2.SelectedIndex = NPC(Editorindex).Skill(2)
-            .cmbSkill3.SelectedIndex = NPC(Editorindex).Skill(3)
-            .cmbSkill4.SelectedIndex = NPC(Editorindex).Skill(4)
-            .cmbSkill5.SelectedIndex = NPC(Editorindex).Skill(5)
-            .cmbSkill6.SelectedIndex = NPC(Editorindex).Skill(6)
+            .cmbSkill1.SelectedIndex = NPC(EditorIndex).Skill(1)
+            .cmbSkill2.SelectedIndex = NPC(EditorIndex).Skill(2)
+            .cmbSkill3.SelectedIndex = NPC(EditorIndex).Skill(3)
+            .cmbSkill4.SelectedIndex = NPC(EditorIndex).Skill(4)
+            .cmbSkill5.SelectedIndex = NPC(EditorIndex).Skill(5)
+            .cmbSkill6.SelectedIndex = NPC(EditorIndex).Skill(6)
         End With
 
         EditorNpc_DrawSprite()
-        NPC_Changed(Editorindex) = True
+        NPC_Changed(EditorIndex) = True
     End Sub
 
     Friend Sub NpcEditorOk()
@@ -152,29 +152,29 @@ Module C_Editors
     Friend Sub ResourceEditorInit()
         Dim i As Integer
 
-        Editorindex = frmEditor_Resource.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Resource.lstIndex.SelectedIndex + 1
 
         With frmEditor_Resource
-            .txtName.Text = Trim$(Resource(Editorindex).Name)
-            .txtMessage.Text = Trim$(Resource(Editorindex).SuccessMessage)
-            .txtMessage2.Text = Trim$(Resource(Editorindex).EmptyMessage)
-            .cmbType.SelectedIndex = Resource(Editorindex).ResourceType
-            .nudNormalPic.Value = Resource(Editorindex).ResourceImage
-            .nudExhaustedPic.Value = Resource(Editorindex).ExhaustedImage
-            .cmbRewardItem.SelectedIndex = Resource(Editorindex).ItemReward
-            .nudRewardExp.Value = Resource(Editorindex).ExpReward
-            .cmbTool.SelectedIndex = Resource(Editorindex).ToolRequired
-            .nudHealth.Value = Resource(Editorindex).Health
-            .nudRespawn.Value = Resource(Editorindex).RespawnTime
-            .cmbAnimation.SelectedIndex = Resource(Editorindex).Animation
-            .nudLvlReq.Value = Resource(Editorindex).LvlRequired
+            .txtName.Text = Trim$(Resource(EditorIndex).Name)
+            .txtMessage.Text = Trim$(Resource(EditorIndex).SuccessMessage)
+            .txtMessage2.Text = Trim$(Resource(EditorIndex).EmptyMessage)
+            .cmbType.SelectedIndex = Resource(EditorIndex).ResourceType
+            .nudNormalPic.Value = Resource(EditorIndex).ResourceImage
+            .nudExhaustedPic.Value = Resource(EditorIndex).ExhaustedImage
+            .cmbRewardItem.SelectedIndex = Resource(EditorIndex).ItemReward
+            .nudRewardExp.Value = Resource(EditorIndex).ExpReward
+            .cmbTool.SelectedIndex = Resource(EditorIndex).ToolRequired
+            .nudHealth.Value = Resource(EditorIndex).Health
+            .nudRespawn.Value = Resource(EditorIndex).RespawnTime
+            .cmbAnimation.SelectedIndex = Resource(EditorIndex).Animation
+            .nudLvlReq.Value = Resource(EditorIndex).LvlRequired
         End With
 
         frmEditor_Resource.Visible = True
 
         EditorResource_DrawSprite()
 
-        Resource_Changed(Editorindex) = True
+        Resource_Changed(EditorIndex) = True
     End Sub
 
     Friend Sub ResourceEditorOk()
@@ -204,54 +204,54 @@ Module C_Editors
 
     Friend Sub SkillEditorInit()
         With frmEditor_Skill
-            Editorindex = .lstIndex.SelectedIndex + 1
+            EditorIndex = .lstIndex.SelectedIndex + 1
 
             .cmbAnimCast.SelectedIndex = 0
             .cmbAnim.SelectedIndex = 0
 
             ' set values
-            .txtName.Text = Trim$(Skill(Editorindex).Name)
-            .cmbType.SelectedIndex = Skill(Editorindex).Type
-            .nudMp.Value = Skill(Editorindex).MpCost
-            .nudLevel.Value = Skill(Editorindex).LevelReq
-            .cmbAccessReq.SelectedIndex = Skill(Editorindex).AccessReq
-            .cmbJob.SelectedIndex = Skill(Editorindex).JobReq
-            .nudCast.Value = Skill(Editorindex).CastTime
-            .nudCool.Value = Skill(Editorindex).CdTime
-            .nudIcon.Value = Skill(Editorindex).Icon
-            .nudMap.Value = Skill(Editorindex).Map
-            .nudX.Value = Skill(Editorindex).X
-            .nudY.Value = Skill(Editorindex).Y
-            .cmbDir.SelectedIndex = Skill(Editorindex).Dir
-            .nudVital.Value = Skill(Editorindex).Vital
-            .nudDuration.Value = Skill(Editorindex).Duration
-            .nudInterval.Value = Skill(Editorindex).Interval
-            .nudRange.Value = Skill(Editorindex).Range
+            .txtName.Text = Trim$(Skill(EditorIndex).Name)
+            .cmbType.SelectedIndex = Skill(EditorIndex).Type
+            .nudMp.Value = Skill(EditorIndex).MpCost
+            .nudLevel.Value = Skill(EditorIndex).LevelReq
+            .cmbAccessReq.SelectedIndex = Skill(EditorIndex).AccessReq
+            .cmbJob.SelectedIndex = Skill(EditorIndex).JobReq
+            .nudCast.Value = Skill(EditorIndex).CastTime
+            .nudCool.Value = Skill(EditorIndex).CdTime
+            .nudIcon.Value = Skill(EditorIndex).Icon
+            .nudMap.Value = Skill(EditorIndex).Map
+            .nudX.Value = Skill(EditorIndex).X
+            .nudY.Value = Skill(EditorIndex).Y
+            .cmbDir.SelectedIndex = Skill(EditorIndex).Dir
+            .nudVital.Value = Skill(EditorIndex).Vital
+            .nudDuration.Value = Skill(EditorIndex).Duration
+            .nudInterval.Value = Skill(EditorIndex).Interval
+            .nudRange.Value = Skill(EditorIndex).Range
 
-            .chkAoE.Checked = Skill(Editorindex).IsAoE
+            .chkAoE.Checked = Skill(EditorIndex).IsAoE
 
-            .nudAoE.Value = Skill(Editorindex).AoE
-            .cmbAnimCast.SelectedIndex = Skill(Editorindex).CastAnim
-            .cmbAnim.SelectedIndex = Skill(Editorindex).SkillAnim
-            .nudStun.Value = Skill(Editorindex).StunDuration
+            .nudAoE.Value = Skill(EditorIndex).AoE
+            .cmbAnimCast.SelectedIndex = Skill(EditorIndex).CastAnim
+            .cmbAnim.SelectedIndex = Skill(EditorIndex).SkillAnim
+            .nudStun.Value = Skill(EditorIndex).StunDuration
 
-            If Skill(Editorindex).IsProjectile = 1 Then
+            If Skill(EditorIndex).IsProjectile = 1 Then
                 .chkProjectile.Checked = True
             Else
                 .chkProjectile.Checked = False
             End If
-            .cmbProjectile.SelectedIndex = Skill(Editorindex).Projectile
+            .cmbProjectile.SelectedIndex = Skill(EditorIndex).Projectile
 
-            If Skill(Editorindex).KnockBack = 1 Then
+            If Skill(EditorIndex).KnockBack = 1 Then
                 .chkKnockBack.Checked = True
             Else
                 .chkKnockBack.Checked = False
             End If
-            .cmbKnockBackTiles.SelectedIndex = Skill(Editorindex).KnockBackTiles
+            .cmbKnockBackTiles.SelectedIndex = Skill(EditorIndex).KnockBackTiles
         End With
 
+        Skill_Changed(EditorIndex) = True
         EditorSkill_DrawIcon()
-        Skill_Changed(Editorindex) = True
     End Sub
 
     Friend Sub SkillEditorOk()
@@ -285,20 +285,20 @@ Module C_Editors
 
 #Region "Shop editor"
     Friend Sub ShopEditorInit()
-        Editorindex = frmEditor_Shop.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Shop.lstIndex.SelectedIndex + 1
 
         With frmEditor_Shop
-            .txtName.Text = Trim$(Shop(Editorindex).Name)
+            .txtName.Text = Trim$(Shop(EditorIndex).Name)
 
-            If Shop(Editorindex).BuyRate > 0 Then
-                .nudBuy.Value = Shop(Editorindex).BuyRate
+            If Shop(EditorIndex).BuyRate > 0 Then
+                .nudBuy.Value = Shop(EditorIndex).BuyRate
             Else
                 .nudBuy.Value = 100
             End If
 
-            .nudFace.Value = Shop(Editorindex).Face
-            If File.Exists(Paths.Graphics & "Faces\" & Shop(Editorindex).Face & GfxExt) Then
-                .picFace.BackgroundImage = Drawing.Image.FromFile(Paths.Graphics & "Faces\" & Shop(Editorindex).Face & GfxExt)
+            .nudFace.Value = Shop(EditorIndex).Face
+            If File.Exists(Paths.Graphics & "Faces\" & Shop(EditorIndex).Face & GfxExt) Then
+                .picFace.BackgroundImage = Drawing.Image.FromFile(Paths.Graphics & "Faces\" & Shop(EditorIndex).Face & GfxExt)
             Else
                 .picFace.BackgroundImage = Nothing
             End If
@@ -308,7 +308,7 @@ Module C_Editors
         End With
 
         UpdateShopTrade()
-        Shop_Changed(Editorindex) = True
+        Shop_Changed(EditorIndex) = True
     End Sub
 
     Friend Sub UpdateShopTrade()
@@ -317,7 +317,7 @@ Module C_Editors
         frmEditor_Shop.lstTradeItem.Items.Clear()
 
         For i = 1 To MAX_TRADES
-            With Shop(Editorindex).TradeItem(i)
+            With Shop(EditorIndex).TradeItem(i)
                 ' if none, show as none
                 If .Item = 0 AndAlso .CostItem = 0 Then
                     frmEditor_Shop.lstTradeItem.Items.Add("Empty Trade Slot")
@@ -381,35 +381,35 @@ Module C_Editors
         Dim i As Integer
 
         With frmEditor_Job
-            Editorindex = .lstIndex.SelectedIndex + 1
+            EditorIndex = .lstIndex.SelectedIndex + 1
 
-            .txtName.Text = Job(Editorindex).Name
-            .txtDescription.Text = Job(Editorindex).Desc
+            .txtName.Text = Job(EditorIndex).Name
+            .txtDescription.Text = Job(EditorIndex).Desc
 
-            If Job(Editorindex).MaleSprite = 0 Then Job(Editorindex).MaleSprite = 1
-            .nudMaleSprite.Value = Job(Editorindex).MaleSprite
-            If Job(Editorindex).FemaleSprite = 0 Then Job(Editorindex).FemaleSprite = 1
-            .nudFemaleSprite.Value = Job(Editorindex).FemaleSprite
+            If Job(EditorIndex).MaleSprite = 0 Then Job(EditorIndex).MaleSprite = 1
+            .nudMaleSprite.Value = Job(EditorIndex).MaleSprite
+            If Job(EditorIndex).FemaleSprite = 0 Then Job(EditorIndex).FemaleSprite = 1
+            .nudFemaleSprite.Value = Job(EditorIndex).FemaleSprite
 
             .cmbItems.SelectedIndex = 0
 
             For i = 1 To StatType.Count - 1
-                If Job(Editorindex).Stat(i) = 0 Then Job(Editorindex).Stat(i) = 1
+                If Job(EditorIndex).Stat(i) = 0 Then Job(EditorIndex).Stat(i) = 1
             Next
 
-            .nudStrength.Value = Job(Editorindex).Stat(StatType.Strength)
-            .nudLuck.Value = Job(Editorindex).Stat(StatType.Luck)
-            .nudIntelligence.Value = Job(Editorindex).Stat(StatType.Intelligence)
-            .nudVitality.Value = Job(Editorindex).Stat(StatType.Vitality)
-            .nudSpirit.Value = Job(Editorindex).Stat(StatType.Spirit)
-            .nudBaseExp.Value = Job(Editorindex).BaseExp
+            .nudStrength.Value = Job(EditorIndex).Stat(StatType.Strength)
+            .nudLuck.Value = Job(EditorIndex).Stat(StatType.Luck)
+            .nudIntelligence.Value = Job(EditorIndex).Stat(StatType.Intelligence)
+            .nudVitality.Value = Job(EditorIndex).Stat(StatType.Vitality)
+            .nudSpirit.Value = Job(EditorIndex).Stat(StatType.Spirit)
+            .nudBaseExp.Value = Job(EditorIndex).BaseExp
 
-            If Job(Editorindex).StartMap = 0 Then Job(Editorindex).StartMap = 1
-            .nudStartMap.Value = Job(Editorindex).StartMap
-            .nudStartX.Value = Job(Editorindex).StartX
-            .nudStartY.Value = Job(Editorindex).StartY
+            If Job(EditorIndex).StartMap = 0 Then Job(EditorIndex).StartMap = 1
+            .nudStartMap.Value = Job(EditorIndex).StartMap
+            .nudStartX.Value = Job(EditorIndex).StartX
+            .nudStartY.Value = Job(EditorIndex).StartY
 
-            Job_Changed(Editorindex) = True
+            Job_Changed(EditorIndex) = True
             .DrawPreview()
         End With
     End Sub
@@ -428,14 +428,14 @@ Module C_Editors
     Friend Sub ItemEditorInit()
         Dim i As Integer
 
-        Editorindex = frmEditor_Item.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Item.lstIndex.SelectedIndex + 1
 
-        With Item(Editorindex)
+        With Item(EditorIndex)
             frmEditor_Item.txtName.Text = Trim$(.Name)
             frmEditor_Item.txtDescription.Text = Trim$(.Description)
 
-            If .Pic > frmEditor_Item.nudPic.Maximum Then .Pic = 0
-            frmEditor_Item.nudPic.Value = .Pic
+            If .Icon > frmEditor_Item.nudPic.Maximum Then .Icon = 0
+            frmEditor_Item.nudPic.Value = .Icon
             If .Type > ItemType.Count - 1 Then .Type = 0
             frmEditor_Item.cmbType.SelectedIndex = .Type
             frmEditor_Item.cmbAnimation.SelectedIndex = .Animation
@@ -532,7 +532,6 @@ Module C_Editors
             frmEditor_Item.nudStrReq.Value = .Stat_Req(StatType.Strength)
             frmEditor_Item.nudVitReq.Value = .Stat_Req(StatType.Vitality)
             frmEditor_Item.nudLuckReq.Value = .Stat_Req(StatType.Luck)
-            frmEditor_Item.nudEndReq.Value = .Stat_Req(StatType.Luck)
             frmEditor_Item.nudIntReq.Value = .Stat_Req(StatType.Intelligence)
             frmEditor_Item.nudSprReq.Value = .Stat_Req(StatType.Spirit)
 
@@ -555,9 +554,9 @@ Module C_Editors
             End If
         End With
 
-        EditorItem_DrawItem()
+        Item_Changed(EditorIndex) = True
+        EditorItem_DrawIcon()
         EditorItem_DrawPaperdoll()
-        Item_Changed(Editorindex) = True
     End Sub
 
     Friend Sub ItemEditorCancel()

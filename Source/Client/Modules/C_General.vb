@@ -1,8 +1,6 @@
 ﻿Imports Core
 
 Module C_General
-    Friend Started As Boolean
-
     Friend Function GetTickCount() As Integer
         Return Environment.TickCount
     End Function
@@ -15,15 +13,59 @@ Module C_General
     End Sub
 
     Friend Sub LoadGame()
-        SettingsManager.Load()
+        Settings.Load()
         LoadLanguage()
-        InputManager.Load()
+        InputSettings.Load()
         MidiPlayer.Initialize()
         LoadGraphics()
         InitNetwork()
         InitInterface()
         Ping = -1
     End Sub
+
+    Function GetResolutionSize(Resolution As Byte, ByRef Width As Long, ByRef Height As Long)
+        Select Case Resolution
+            Case 1
+                Width = 1920
+                Height = 1080
+            Case 2
+                Width = 1680
+                Height = 1050
+            Case 3
+                Width = 1600
+                Height = 900
+            Case 4
+                Width = 1440
+                Height = 900
+            Case 5
+                Width = 1440
+                Height = 1050
+            Case 6
+                Width = 1366
+                Height = 768
+            Case 7
+                Width = 1360
+                Height = 1024
+            Case 8
+                Width = 1360
+                Height = 768
+            Case 9
+                Width = 1280
+                Height = 1024
+            Case 10
+                Width = 1280
+                Height = 800
+            Case 11
+                Width = 1280
+                Height = 768
+            Case 12
+                Width = 1280
+                Height = 720
+            Case 13
+                Width = 1024
+                Height = 768
+        End Select
+    End Function
 
     Friend Sub LoadGraphics()
         Started = True

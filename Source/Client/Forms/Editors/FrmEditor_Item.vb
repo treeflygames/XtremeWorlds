@@ -18,11 +18,11 @@ Friend Class frmEditor_Item
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearItem(Editorindex)
+        ClearItem(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Item(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Item(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         ItemEditorInit()
@@ -86,21 +86,21 @@ Friend Class frmEditor_Item
 
 #Region "Basics"
 
-    Private Sub NudPic_ValueChanged(sender As Object, e As EventArgs) Handles nudPic.Click
-        Item(Editorindex).Pic = nudPic.Value
-        EditorItem_DrawItem()
+    Private Sub NudPic_Click(sender As Object, e As EventArgs) Handles nudPic.Click
+        Item(EditorIndex).Icon = nudPic.Value
+        EditorItem_DrawIcon()
     End Sub
 
     Private Sub CmbBind_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBind.SelectedIndexChanged
-        Item(Editorindex).BindType = cmbBind.SelectedIndex
+        Item(EditorIndex).BindType = cmbBind.SelectedIndex
     End Sub
 
     Private Sub NudRarity_ValueChanged(sender As Object, e As EventArgs) Handles nudRarity.Click
-        Item(Editorindex).Rarity = nudRarity.Value
+        Item(EditorIndex).Rarity = nudRarity.Value
     End Sub
 
     Private Sub CmbAnimation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbAnimation.SelectedIndexChanged
-        Item(Editorindex).Animation = cmbAnimation.SelectedIndex
+        Item(EditorIndex).Animation = cmbAnimation.SelectedIndex
     End Sub
 
     Private Sub CmbType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbType.SelectedIndexChanged
@@ -120,9 +120,9 @@ Friend Class frmEditor_Item
             cmbSubType.Items.Add("Gloves")
 
             cmbSubType.Enabled = True
-            cmbSubType.SelectedIndex = Item(Editorindex).SubType
+            cmbSubType.SelectedIndex = Item(EditorIndex).SubType
 
-            If Item(Editorindex).SubType = EquipmentType.Weapon Then
+            If Item(EditorIndex).SubType = EquipmentType.Weapon Then
                 fraProjectile.Visible = True
             Else
                 fraProjectile.Visible = False
@@ -143,7 +143,7 @@ Friend Class frmEditor_Item
             cmbSubType.Items.Add("Exp")
 
             cmbSubType.Enabled = True
-            cmbSubType.SelectedIndex = Item(Editorindex).SubType
+            cmbSubType.SelectedIndex = Item(EditorIndex).SubType
         Else
             fraVitals.Visible = False
         End If
@@ -180,52 +180,52 @@ Friend Class frmEditor_Item
             cmbSubType.Items.Add("Key")
 
             cmbSubType.Enabled = True
-            cmbSubType.SelectedIndex = Item(Editorindex).SubType
+            cmbSubType.SelectedIndex = Item(EditorIndex).SubType
         Else
             fraEvents.Visible = false
         End If
 
-        Item(Editorindex).Type = cmbType.SelectedIndex
+        Item(EditorIndex).Type = cmbType.SelectedIndex
     End Sub
 
-    Private Sub NudVitalMod_ValueChanged(sender As Object, e As EventArgs) Handles nudVitalMod.Click
-        Item(Editorindex).Data1 = nudVitalMod.Value
+    Private Sub NudVitalMod_Click(sender As Object, e As EventArgs) Handles nudVitalMod.Click
+        Item(EditorIndex).Data1 = nudVitalMod.Value
     End Sub
 
     Private Sub CmbSkills_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSkills.SelectedIndexChanged
-        Item(Editorindex).Data1 = cmbSkills.SelectedIndex
+        Item(EditorIndex).Data1 = cmbSkills.SelectedIndex
     End Sub
 
     Private Sub TxtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         Dim tmpindex As Integer
 
         tmpindex = lstIndex.SelectedIndex
-        Item(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Item(Editorindex).Name)
+        Item(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Item(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
     Private Sub NudPrice_ValueChanged(sender As Object, e As EventArgs) Handles nudPrice.Click
-        Item(Editorindex).Price = nudPrice.Value
+        Item(EditorIndex).Price = nudPrice.Value
     End Sub
 
     Private Sub ChkStackable_CheckedChanged(sender As Object, e As EventArgs) Handles chkStackable.CheckedChanged
         If chkStackable.Checked = True Then
-            Item(Editorindex).Stackable = 1
+            Item(EditorIndex).Stackable = 1
         Else
-            Item(Editorindex).Stackable = 0
+            Item(EditorIndex).Stackable = 0
         End If
     End Sub
 
     Private Sub TxtDescription_TextChanged(sender As Object, e As EventArgs) Handles txtDescription.TextChanged
-        Item(Editorindex).Description = Trim$(txtDescription.Text)
+        Item(EditorIndex).Description = Trim$(txtDescription.Text)
     End Sub
 
     Private Sub CmbSubType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubType.SelectedIndexChanged
-        Item(Editorindex).SubType = cmbSubType.SelectedIndex
+        Item(EditorIndex).SubType = cmbSubType.SelectedIndex
 
-        If Item(Editorindex).SubType = EquipmentType.Weapon Then
+        If Item(EditorIndex).SubType = EquipmentType.Weapon Then
             fraProjectile.Visible = True
         Else
             fraProjectile.Visible = False
@@ -233,15 +233,15 @@ Friend Class frmEditor_Item
     End Sub
 
     Private Sub NudItemLvl_ValueChanged(sender As Object, e As EventArgs) Handles nudItemLvl.Click
-        Item(Editorindex).ItemLevel = nudItemLvl.Value
+        Item(EditorIndex).ItemLevel = nudItemLvl.Value
     End Sub
 
     Private Sub CmbPet_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPet.SelectedIndexChanged
-        Item(Editorindex).Data1 = cmbPet.SelectedIndex
+        Item(EditorIndex).Data1 = cmbPet.SelectedIndex
     End Sub
 
-     Private Sub nudEvents_ValueChanged(sender As Object, e As EventArgs) Handles nudEvent.ValueChanged
-         Item(Editorindex).Data1 = nudVitalMod.Value
+    Private Sub nudEvents_ValueChanged(sender As Object, e As EventArgs) Handles nudEvent.ValueChanged
+        Item(EditorIndex).Data1 = nudVitalMod.Value
     End Sub
 
 #End Region
@@ -249,35 +249,35 @@ Friend Class frmEditor_Item
 #Region "Requirements"
 
     Private Sub CmbJobReq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbJobReq.SelectedIndexChanged
-        Item(Editorindex).JobReq = cmbJobReq.SelectedIndex
+        Item(EditorIndex).JobReq = cmbJobReq.SelectedIndex
     End Sub
 
     Private Sub CmbAccessReq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbAccessReq.SelectedIndexChanged
-        Item(Editorindex).AccessReq = cmbAccessReq.SelectedIndex
+        Item(EditorIndex).AccessReq = cmbAccessReq.SelectedIndex
     End Sub
 
     Private Sub NudLevelReq_ValueChanged(sender As Object, e As EventArgs) Handles nudLevelReq.Click
-        Item(Editorindex).LevelReq = nudLevelReq.Value
+        Item(EditorIndex).LevelReq = nudLevelReq.Value
     End Sub
 
     Private Sub NudStrReq_ValueChanged(sender As Object, e As EventArgs) Handles nudStrReq.Click
-        Item(Editorindex).Stat_Req(StatType.Strength) = nudStrReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Strength) = nudStrReq.Value
     End Sub
 
     Private Sub NudVitReq_ValueChanged(sender As Object, e As EventArgs) Handles nudVitReq.Click
-        Item(Editorindex).Stat_Req(StatType.Vitality) = nudVitReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Vitality) = nudVitReq.Value
     End Sub
 
     Private Sub NudLuckReq_ValueChanged(sender As Object, e As EventArgs) Handles nudLuckReq.Click
-        Item(Editorindex).Stat_Req(StatType.Luck) = nudLuckReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Luck) = nudLuckReq.Value
     End Sub
 
     Private Sub NudIntReq_ValueChanged(sender As Object, e As EventArgs) Handles nudIntReq.Click
-        Item(Editorindex).Stat_Req(StatType.Intelligence) = nudIntReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Intelligence) = nudIntReq.Value
     End Sub
 
     Private Sub NudSprReq_ValueChanged(sender As Object, e As EventArgs) Handles nudSprReq.Click
-        Item(Editorindex).Stat_Req(StatType.Spirit) = nudSprReq.Value
+        Item(EditorIndex).Stat_Req(StatType.Spirit) = nudSprReq.Value
     End Sub
 
 #End Region
@@ -285,74 +285,74 @@ Friend Class frmEditor_Item
 #Region "Equipment"
 
     Private Sub CmbTool_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbTool.SelectedIndexChanged
-        Item(Editorindex).Data3 = cmbTool.SelectedIndex
+        Item(EditorIndex).Data3 = cmbTool.SelectedIndex
     End Sub
 
     Private Sub NudDamage_ValueChanged(sender As Object, e As EventArgs) Handles nudDamage.Click
 
-        Item(Editorindex).Data2 = nudDamage.Value
+        Item(EditorIndex).Data2 = nudDamage.Value
     End Sub
 
     Private Sub NudSpeed_ValueChanged(sender As Object, e As EventArgs) Handles nudSpeed.Click
         lblSpeed.Text = "Speed: " & nudSpeed.Value / 1000 & " sec"
-        Item(Editorindex).Speed = nudSpeed.Value
+        Item(EditorIndex).Speed = nudSpeed.Value
     End Sub
 
     Private Sub NudPaperdoll_ValueChanged(sender As Object, e As EventArgs) Handles nudPaperdoll.Click
-        Item(Editorindex).Paperdoll = nudPaperdoll.Value
+        Item(EditorIndex).Paperdoll = nudPaperdoll.Value
         EditorItem_DrawPaperdoll()
     End Sub
 
     Private Sub NudStrength_ValueChanged(sender As Object, e As EventArgs) Handles nudStrength.Click
-        Item(Editorindex).Add_Stat(StatType.Strength) = nudStrength.Value
+        Item(EditorIndex).Add_Stat(StatType.Strength) = nudStrength.Value
     End Sub
 
     Private Sub NudLuck_ValueChanged(sender As Object, e As EventArgs) Handles nudLuck.Click
-        Item(Editorindex).Add_Stat(StatType.Luck) = nudLuck.Value
+        Item(EditorIndex).Add_Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
     Private Sub NudIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nudIntelligence.Click
-        Item(Editorindex).Add_Stat(StatType.Intelligence) = nudIntelligence.Value
+        Item(EditorIndex).Add_Stat(StatType.Intelligence) = nudIntelligence.Value
     End Sub
 
     Private Sub NudVitality_ValueChanged(sender As Object, e As EventArgs) Handles nudVitality.Click
-        Item(Editorindex).Add_Stat(StatType.Vitality) = nudVitality.Value
+        Item(EditorIndex).Add_Stat(StatType.Vitality) = nudVitality.Value
     End Sub
 
     Private Sub NudSpirit_ValueChanged(sender As Object, e As EventArgs) Handles nudSpirit.Click
-        Item(Editorindex).Add_Stat(StatType.Spirit) = nudSpirit.Value
+        Item(EditorIndex).Add_Stat(StatType.Spirit) = nudSpirit.Value
     End Sub
 
     Private Sub ChkKnockBack_CheckedChanged(sender As Object, e As EventArgs) Handles chkKnockBack.CheckedChanged
         If chkKnockBack.Checked = True Then
-            Item(Editorindex).KnockBack = 1
+            Item(EditorIndex).KnockBack = 1
         Else
-            Item(Editorindex).KnockBack = 0
+            Item(EditorIndex).KnockBack = 0
         End If
     End Sub
 
     Private Sub CmbKnockBackTiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbKnockBackTiles.SelectedIndexChanged
-        Item(Editorindex).KnockBackTiles = cmbKnockBackTiles.SelectedIndex
+        Item(EditorIndex).KnockBackTiles = cmbKnockBackTiles.SelectedIndex
     End Sub
 
     Private Sub ChkRandomize_CheckedChanged(sender As Object, e As EventArgs) Handles chkRandomize.CheckedChanged
         If chkRandomize.Checked = True Then
-            Item(Editorindex).Randomize = 1
+            Item(EditorIndex).Randomize = 1
         Else
-            Item(Editorindex).Randomize = 0
+            Item(EditorIndex).Randomize = 0
         End If
     End Sub
 
     Private Sub CmbProjectile_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbProjectile.SelectedIndexChanged
-        Item(Editorindex).Projectile = cmbProjectile.SelectedIndex
+        Item(EditorIndex).Projectile = cmbProjectile.SelectedIndex
     End Sub
 
     Private Sub CmbAmmo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbAmmo.SelectedIndexChanged
-        Item(Editorindex).Ammo = cmbAmmo.SelectedIndex
+        Item(EditorIndex).Ammo = cmbAmmo.SelectedIndex
     End Sub
 
     Private Sub btnSpawn_Click(sender As Object, e As EventArgs) Handles btnSpawn.Click
-        SendSpawnItem(Editorindex, nudSpanwAmount.Value)
+        SendSpawnItem(EditorIndex, nudSpanwAmount.Value)
     End Sub
 
 #End Region

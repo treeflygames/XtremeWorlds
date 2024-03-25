@@ -15,8 +15,7 @@ Public Class Settings
     Public MusicExt As String = ".mid"
     Public SoundExt As String = ".wav"
 
-    Public ScreenWidth As String = "1024"
-    Public ScreenHeight As String = "768"
+    Public Resolution As Byte = 13
     Public Vsync As Byte = 1
     Public ShowNpcBar As Byte = 1
     Public CameraType As Byte = 0
@@ -40,10 +39,10 @@ Public Class Settings
     Public TimeSpeed As Integer = 1
 
     Public MaxFps As Integer = 60
-End Class
 
-Public Module SettingsManager
-    Public Sub Load()
+    Public Autotile As Boolean = True
+
+    Public Shared Sub Load()
         Dim cf As String = Paths.Config()
         Dim x As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
 
@@ -66,7 +65,7 @@ Public Module SettingsManager
         End Try
     End Sub
 
-    Public Sub Save()
+    Public Shared Sub Save()
         Dim cf As String = Paths.Config()
 
         Directory.CreateDirectory(cf)
@@ -83,5 +82,4 @@ Public Module SettingsManager
         End Try
 
     End Sub
-
-End Module
+End Class

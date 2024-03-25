@@ -953,41 +953,6 @@ Module S_Npc
 
     End Function
 
-    Friend Sub SpellNpc_Effect(Vital As Byte, increment As Boolean, index As Integer, Damage As Integer, Skillnum As Integer, mapNum As Integer)
-        Dim sSymbol As String
-        Dim Color As Integer
-
-        If Damage > 0 Then
-            If increment Then
-                sSymbol = "+"
-                If Vital = VitalType.HP Then Color = ColorType.BrightGreen
-                If Vital = VitalType.MP Then Color = ColorType.BrightBlue
-            Else
-                sSymbol = "-"
-                Color = ColorType.Blue
-            End If
-
-            SendAnimation(mapNum, Skill(Skillnum).SkillAnim, 0, 0, TargetType.Npc, index)
-            SendActionMsg(mapNum, sSymbol & Damage, Color, ActionMsgType.Scroll, MapNPC(mapNum).Npc(index).X * 32, MapNPC(mapNum).Npc(index).Y * 32)
-
-            ' send the sound
-            'SendMapSound(Index, MapNpc(MapNum).Npc(Index).x, MapNpc(MapNum).Npc(Index).y, SoundEntity.seSpell, Skillnum)
-
-            If increment Then
-                MapNPC(mapNum).Npc(index).Vital(Vital) = MapNPC(mapNum).Npc(index).Vital(Vital) + Damage
-
-                If Skill(Skillnum).Duration > 0 Then
-                    'AddHoT_Npc(MapNum, Index, Skillnum, 0)
-                End If
-
-            ElseIf Not increment Then
-                MapNPC(mapNum).Npc(index).Vital(Vital) = MapNPC(mapNum).Npc(index).Vital(Vital) - Damage
-            End If
-
-        End If
-
-    End Sub
-
     Friend Function IsNpcDead(mapNum As Integer, MapNpcNum As Integer)
         IsNpcDead = False
         If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS Then Exit Function

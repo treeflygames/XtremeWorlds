@@ -840,7 +840,7 @@ Friend Module C_AutoTiles
         End Select
 
         If Map.Tile(x, y).Layer Is Nothing Then Exit Sub
-        RenderTexture(TileSetSprite(Map.Tile(x, y).Layer(layerNum).Tileset), GameWindow, dX, dY, Autotile(x, y).Layer(layerNum).SrcX(quarterNum) + xOffset, Autotile(x, y).Layer(layerNum).SrcY(quarterNum) + yOffset, 16, 16, 16, 16)
+        RenderTexture(TileSetSprite(Map.Tile(x, y).Layer(layerNum).Tileset), Window, dX, dY, Autotile(x, y).Layer(layerNum).SrcX(quarterNum) + xOffset, Autotile(x, y).Layer(layerNum).SrcY(quarterNum) + yOffset, 16, 16, 16, 16)
     End Sub
 
 End Module

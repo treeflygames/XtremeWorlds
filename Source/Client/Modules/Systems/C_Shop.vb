@@ -35,7 +35,7 @@ Module C_Shops
     End Sub
 
     Sub StreamShop(shopNum As Integer)
-        If shopNum > 0 and Shop(shopNum).Name = "" And Shop_Loaded(shopNum) = False Then
+        If shopNum > 0 and Shop(shopNum).Name = "" Or Shop_Loaded(shopNum) = False Then
             Shop_Loaded(shopNum) = True
             SendRequestItem(shopNum)
         End If

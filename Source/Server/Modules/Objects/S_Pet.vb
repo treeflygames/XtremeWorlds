@@ -278,7 +278,7 @@ Module S_Pet
 
     End Sub
 
-    Sub SendClearPetSpellBuffer(index As Integer)
+    Sub SendClearPetSkillBuffer(index As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ServerPackets.SClearPetSkillBuffer)
@@ -1780,7 +1780,7 @@ Module S_Pet
 
     End Sub
 
-    Friend Sub PetFireProjectile(index As Integer, spellnum As Integer)
+    Friend Sub PetFireProjectile(index As Integer, Skillnum As Integer)
         Dim projectileSlot As Integer, projectileNum As Integer
         Dim mapNum As Integer, i As Integer
 
@@ -1799,9 +1799,9 @@ Module S_Pet
         'Check for no projectile, if so just overwrite the first slot
         If projectileSlot = 0 Then projectileSlot = 1
 
-        If spellnum <= 0 OrElse spellnum > MAX_SKILLS Then Exit Sub
+        If Skillnum <= 0 OrElse Skillnum > MAX_SKILLS Then Exit Sub
 
-        projectileNum = Skill(spellnum).Projectile
+        projectileNum = Skill(Skillnum).Projectile
 
         With MapProjectile(mapNum, projectileSlot)
             .ProjectileNum = projectileNum
@@ -1873,7 +1873,7 @@ Module S_Pet
 
     End Sub
 
-    Friend Function CanPetAttackNpc(attacker As Integer, mapnpcnum As Integer, Optional isSpell As Boolean = False) As Boolean
+    Friend Function CanPetAttackNpc(attacker As Integer, mapnpcnum As Integer, Optional isSkill As Boolean = False) As Boolean
         Dim mapNum As Integer
         Dim npcnum As Integer
         Dim npcX As Integer
@@ -1896,10 +1896,10 @@ Module S_Pet
         ' Make sure they are on the same map
         If IsPlaying(attacker) Then
 
-            If TempPlayer(attacker).PetskillBuffer.Skill > 0 AndAlso isSpell = False Then Exit Function
+            If TempPlayer(attacker).PetskillBuffer.Skill > 0 AndAlso isSkill = False Then Exit Function
 
             ' exit out early
-            If isSpell AndAlso npcnum > 0 Then
+            If isSkill AndAlso npcnum > 0 Then
                 If NPC(npcnum).Behaviour <> NpcBehavior.Friendly AndAlso NPC(npcnum).Behaviour <> NpcBehavior.ShopKeeper Then
                     CanPetAttackNpc = True
                     Exit Function
@@ -2005,14 +2005,14 @@ Module S_Pet
             ' clear DoTs and HoTs
             'For i = 1 To MAX_COTS
             '    With MapNpc(MapNum).Npc(mapnpcnum).DoT(i)
-            '        .Spell = 0
+            '        .Skill = 0
             '        .Timer = 0
             '        .Caster = 0
             '        .StartTime = 0
             '        .Used = False
             '    End With
             '    With MapNpc(MapNum).Npc(mapnpcnum).HoT(i)
-            '        .Spell = 0
+            '        .Skill = 0
             '        .Timer = 0
             '        .Caster = 0
             '        .StartTime = 0
@@ -2054,7 +2054,7 @@ Module S_Pet
             SendBlood(GetPlayerMap(attacker), MapNPC(mapNum).Npc(mapnpcnum).X, MapNPC(mapNum).Npc(mapnpcnum).Y)
 
             ' send the sound
-            'If Spellnum > 0 Then SendMapSound Attacker, MapNpc(MapNum).Npc(mapnpcnum).x, MapNpc(MapNum).Npc(mapnpcnum).y, SoundEntity.seSpell, Spellnum
+            'If Skillnum > 0 Then SendMapSound Attacker, MapNpc(MapNum).Npc(mapnpcnum).x, MapNpc(MapNum).Npc(mapnpcnum).y, SoundEntity.seSkill, Skillnum
 
             ' Set the NPC target to the player
             MapNPC(mapNum).Npc(mapnpcnum).TargetType = TargetType.Pet ' player's pet
@@ -2076,7 +2076,7 @@ Module S_Pet
             MapNPC(mapNum).Npc(mapnpcnum).StopRegen = True
             MapNPC(mapNum).Npc(mapnpcnum).StopRegenTimer = GetTimeMs()
 
-            ' if stunning spell, stun the npc
+            ' if stunning Skill, stun the npc
             If skillnum > 0 Then
                 If Skill(skillnum).StunDuration > 0 Then StunNPC(mapnpcnum, mapNum, skillnum)
                 ' DoT
@@ -2341,7 +2341,7 @@ Module S_Pet
             SendActionMsg(GetPlayerMap(victim), "-" & GetPlayerVital(victim, VitalType.HP), ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
 
             ' send the sound
-            'If SkillNum > 0 Then SendMapSound(Victim, GetPlayerX(Victim), GetPlayerY(Victim), SoundEntity.seSpell, SkillNum)
+            'If SkillNum > 0 Then SendMapSound(Victim, GetPlayerX(Victim), GetPlayerY(Victim), SoundEntity.seSkill, SkillNum)
 
             ' Player is dead
             GlobalMsg(GetPlayerName(victim) & " has been killed by " & GetPlayerName(attacker) & "'s " & Trim$(GetPetName(attacker)) & ".")
@@ -2417,7 +2417,7 @@ Module S_Pet
             If TempPlayer(victim).InParty > 0 Then SendPartyVitals(TempPlayer(victim).InParty, victim)
 
             ' send the sound
-            'If SkillNum > 0 Then SendMapSound(Victim, GetPlayerX(Victim), GetPlayerY(Victim), SoundEntity.seSpell, SkillNum)
+            'If SkillNum > 0 Then SendMapSound(Victim, GetPlayerX(Victim), GetPlayerY(Victim), SoundEntity.seSkill, SkillNum)
 
             SendActionMsg(GetPlayerMap(victim), "-" & damage, ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
             SendBlood(GetPlayerMap(victim), GetPlayerX(victim), GetPlayerY(victim))
@@ -2426,7 +2426,7 @@ Module S_Pet
             TempPlayer(victim).StopRegen = True
             TempPlayer(victim).StopRegenTimer = GetTimeMs()
 
-            'if a stunning spell, stun the player
+            'if a stunning Skill, stun the player
             If skillNum > 0 Then
                 If Skill(skillNum).StunDuration > 0 Then StunPlayer(victim, skillNum)
 
@@ -2601,7 +2601,7 @@ Module S_Pet
             SendActionMsg(GetPlayerMap(victim), "-" & GetPetVital(victim, VitalType.HP), ColorType.BrightRed, ActionMsgType.Scroll, (GetPetX(victim) * 32), (GetPetY(victim) * 32))
 
             ' send the sound
-            'If Spellnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSpell, Spellnum
+            'If Skillnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSkill, Skillnum
 
             ' Player is dead
             GlobalMsg(GetPlayerName(victim) & " has been killed by " & GetPlayerName(attacker) & "'s " & Trim$(GetPetName(attacker)) & ".")
@@ -2680,7 +2680,7 @@ Module S_Pet
             End If
 
             ' send the sound
-            'If Spellnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSpell, Spellnum
+            'If Skillnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSkill, Skillnum
 
             SendActionMsg(GetPlayerMap(victim), "-" & damage, ColorType.BrightRed, 1, (GetPetX(victim) * 32), (GetPetY(victim) * 32))
             SendBlood(GetPlayerMap(victim), GetPetX(victim), GetPetY(victim))
@@ -2689,7 +2689,7 @@ Module S_Pet
             TempPlayer(victim).PetstopRegen = True
             TempPlayer(victim).PetstopRegenTimer = GetTimeMs()
 
-            'if a stunning spell, stun the player
+            'if a stunning Skill, stun the player
             If skillnum > 0 Then
                 If Skill(skillnum).StunDuration > 0 Then StunPet(victim, skillnum)
                 ' DoT
@@ -2797,11 +2797,11 @@ Module S_Pet
 
         ' make sure they have the right access
         If accessReq > GetPlayerAccess(index) Then
-            PlayerMsg(index, "You must be an administrator to cast this spell, even as a pet owner.", ColorType.BrightRed)
+            PlayerMsg(index, "You must be an administrator to cast this Skill, even as a pet owner.", ColorType.BrightRed)
             Exit Sub
         End If
 
-        ' find out what kind of spell it is! self cast, target or AOE
+        ' find out what kind of Skill it is! self cast, target or AOE
         If Skill(skillnum).Range > 0 Then
 
             ' ranged attack, single target or aoe?
@@ -2847,7 +2847,7 @@ Module S_Pet
                     If Not IsInRange(range, GetPetX(index), GetPetY(index), GetPlayerX(target), GetPlayerY(target)) Then
                         PlayerMsg(index, "Target not in range of " & Trim$(GetPetName(index)) & ".", ColorType.Yellow)
                     Else
-                        ' go through spell types
+                        ' go through Skill types
                         If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
@@ -2864,7 +2864,7 @@ Module S_Pet
                         PlayerMsg(index, "Target not in range of " & Trim$(GetPetName(index)) & ".", ColorType.Yellow)
                         hasBuffered = False
                     Else
-                        ' go through spell types
+                        ' go through Skill types
                         If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
@@ -2882,7 +2882,7 @@ Module S_Pet
                         PlayerMsg(index, "Target not in range of " & GetPetName(index).Trim & ".", ColorType.Yellow)
                         hasBuffered = False
                     Else
-                        ' go through spell types
+                        ' go through Skill types
                         If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
@@ -2903,7 +2903,7 @@ Module S_Pet
             TempPlayer(index).PetskillBuffer.TargetTypes = targetTypes
             Exit Sub
         Else
-            SendClearPetSpellBuffer(index)
+            SendClearPetSkillBuffer(index)
         End If
 
     End Sub
@@ -2936,7 +2936,7 @@ Module S_Pet
 
         ' Make sure they are the right level
         If levelReq > Player(index).Pet.Level Then
-            PlayerMsg(index, Trim$(GetPetName(index)) & " must be level " & levelReq & " to cast this spell.", ColorType.BrightRed)
+            PlayerMsg(index, Trim$(GetPetName(index)) & " must be level " & levelReq & " to cast this Skill.", ColorType.BrightRed)
             Exit Sub
         End If
 
@@ -2944,11 +2944,11 @@ Module S_Pet
 
         ' make sure they have the right access
         If accessReq > GetPlayerAccess(index) Then
-            PlayerMsg(index, "You must be an administrator for even your pet to cast this spell.", ColorType.BrightRed)
+            PlayerMsg(index, "You must be an administrator for even your pet to cast this Skill.", ColorType.BrightRed)
             Exit Sub
         End If
 
-        ' find out what kind of spell it is! self cast, target or AOE
+        ' find out what kind of Skill it is! self cast, target or AOE
         If Skill(skillnum).IsProjectile = True Then
             skillCastType = 4 ' Projectile
         ElseIf Skill(skillnum).Range > 0 Then
@@ -3005,7 +3005,7 @@ Module S_Pet
 
                     If Not IsInRange(range, GetPetX(index), GetPetY(index), x, y) Then
                         PlayerMsg(index, Trim$(GetPetName(index)) & "'s target not in range.", ColorType.Yellow)
-                        SendClearPetSpellBuffer(index)
+                        SendClearPetSkillBuffer(index)
                     End If
                 End If
 
@@ -3066,7 +3066,7 @@ Module S_Pet
                         For i = 1 To Socket.HighIndex()
                             If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
                                 If IsInRange(aoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
-                                    SpellPlayer_Effect(vitalType, increment, i, vital, skillnum)
+                                    SkillPlayer_Effect(vitalType, increment, i, vital, skillnum)
                                 End If
 
                                 If PetAlive(i) Then
@@ -3096,7 +3096,7 @@ Module S_Pet
 
                 If Not IsInRange(range, GetPetX(index), GetPetY(index), x, y) Then
                     PlayerMsg(index, "Target is not in range of your " & Trim$(GetPetName(index)) & "!", ColorType.Yellow)
-                    SendClearPetSpellBuffer(index)
+                    SendClearPetSkillBuffer(index)
                     Exit Sub
                 End If
 
@@ -3146,23 +3146,23 @@ Module S_Pet
                         If targetTypes = TargetType.Player Then
                             If Skill(skillnum).Type = SkillType.DamageMp Then
                                 If CanPetAttackPlayer(index, target, True) Then
-                                    SpellPlayer_Effect(vitalType, increment, target, vital, skillnum)
+                                    SkillPlayer_Effect(vitalType, increment, target, vital, skillnum)
                                 End If
                             Else
-                                SpellPlayer_Effect(vitalType, increment, target, vital, skillnum)
+                                SkillPlayer_Effect(vitalType, increment, target, vital, skillnum)
                             End If
 
                         ElseIf targetTypes = TargetType.Npc Then
 
                             If Skill(skillnum).Type = SkillType.DamageMp Then
                                 If CanPetAttackNpc(index, target, True) Then
-                                    SpellNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
+                                    SkillNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
                                 End If
                             Else
                                 If Skill(skillnum).Type = SkillType.HealHp OrElse Skill(skillnum).Type = SkillType.HealMp Then
                                     SkillPet_Effect(vitalType, increment, index, vital, skillnum)
                                 Else
-                                    SpellNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
+                                    SkillNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
                                 End If
                             End If
 
@@ -3214,7 +3214,7 @@ Module S_Pet
             SendActionMsg(GetPlayerMap(index), sSymbol & damage, Color, ActionMsgType.Scroll, GetPetX(index) * 32, GetPetY(index) * 32)
 
             ' send the sound
-            'SendMapSound(Index, Player(index).Pet.x, Player(index).Pet.y, SoundEntity.seSpell, Skillnum)
+            'SendMapSound(Index, Player(index).Pet.x, Player(index).Pet.y, SoundEntity.seSkill, Skillnum)
 
             If increment Then
                 SetPetVital(index, VitalType.HP, GetPetVital(index, VitalType.HP) + damage)
@@ -3292,7 +3292,7 @@ Module S_Pet
     End Sub
 
     Friend Sub StunPet(index As Integer, skillnum As Integer)
-        ' check if it's a stunning spell
+        ' check if it's a stunning Skill
 
         If PetAlive(index) Then
             If Skill(skillnum).StunDuration > 0 Then
@@ -3527,7 +3527,7 @@ Module S_Pet
             SendActionMsg(GetPlayerMap(victim), "-" & GetPetVital(victim, VitalType.HP), ColorType.BrightRed, 1, (GetPetX(victim) * 32), (GetPetY(victim) * 32))
 
             ' send the sound
-            'If Spellnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSpell, Spellnum
+            'If Skillnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSkill, Skillnum
 
             ' Calculate exp to give attacker
             exp = (GetPlayerExp(victim) \ 10)
@@ -3578,7 +3578,7 @@ Module S_Pet
             End If
 
             ' send the sound
-            'If Spellnum > 0 Then SendMapSound Victim, GetPetX(Victim), GetPety(Victim), SoundEntity.seSpell, Spellnum
+            'If Skillnum > 0 Then SendMapSound Victim, GetPetX(Victim), GetPety(Victim), SoundEntity.seSkill, Skillnum
 
             SendActionMsg(GetPlayerMap(victim), "-" & damage, ColorType.BrightRed, 1, (GetPetX(victim) * 32), (GetPetY(victim) * 32))
             SendBlood(GetPlayerMap(victim), GetPetX(victim), GetPetY(victim))
@@ -3587,7 +3587,7 @@ Module S_Pet
             TempPlayer(victim).PetstopRegen = True
             TempPlayer(victim).PetstopRegenTimer = GetTimeMs()
 
-            'if a stunning spell, stun the player
+            'if a stunning Skill, stun the player
             If skillnum > 0 Then
                 If Skill(skillnum).StunDuration > 0 Then StunPet(victim, skillnum)
 

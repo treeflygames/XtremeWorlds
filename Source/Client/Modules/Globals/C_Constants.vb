@@ -2,6 +2,9 @@
 Imports Core
 
 Public Module C_Constants
+    Public LastLeftClickTime As Integer
+    Public DoubleClickTImer As Integer = 500 ' Time in milliseconds for double-click detection
+
     Public Const ChatBubbleWidth As Integer = 300
 
     Public Const Chat_Timer As Long = 20000

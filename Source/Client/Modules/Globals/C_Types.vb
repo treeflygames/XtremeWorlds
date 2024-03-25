@@ -2,7 +2,7 @@
 Imports SFML.Graphics
 Imports SFML.System
 
-Module C_Types
+Public Module C_Types
     Public ActionMsg(Byte.MaxValue) As ActionMsgStruct
     Public Blood(Byte.MaxValue) As BloodStruct
     Public Chat(ChatLines) As ChatStruct

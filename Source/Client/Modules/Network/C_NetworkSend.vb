@@ -327,6 +327,17 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
+    Sub SendChangeSkillSlots(oldSlot As Integer, newSlot As Integer)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ClientPackets.CSwapSkillSlots)
+        buffer.WriteInt32(oldSlot)
+        buffer.WriteInt32(newSlot)
+
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
     Friend Sub SendUseItem(invNum As Integer)
         Dim buffer As New ByteStream(4)
 
@@ -717,7 +728,7 @@ Module C_NetworkSend
         buffer.WriteInt32(Item(itemNum).Mastery)
         buffer.WriteString((Trim$(Item(itemNum).Name)))
         buffer.WriteInt32(Item(itemNum).Paperdoll)
-        buffer.WriteInt32(Item(itemNum).Pic)
+        buffer.WriteInt32(Item(itemNum).Icon)
         buffer.WriteInt32(Item(itemNum).Price)
         buffer.WriteInt32(Item(itemNum).Rarity)
         buffer.WriteInt32(Item(itemNum).Speed)
@@ -765,14 +776,14 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
-    Friend Sub SendSetHotbarSlot(slot As Integer, num As Integer, type As Integer)
+    Friend Sub SendSetHotbarSlot(type As Integer, slot As Integer, num As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CSetHotbarSlot)
 
+        buffer.WriteInt32(type)
         buffer.WriteInt32(slot)
         buffer.WriteInt32(num)
-        buffer.WriteInt32(type)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
@@ -794,6 +805,16 @@ Module C_NetworkSend
         buffer.WriteInt32(ClientPackets.CUseHotbarSlot)
 
         buffer.WriteInt32(slot)
+
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
+    Sub SendLearnSkill(tmpSkill As Integer)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ClientPackets.CSkillLearn)
+        buffer.WriteInt32(tmpSkill)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()

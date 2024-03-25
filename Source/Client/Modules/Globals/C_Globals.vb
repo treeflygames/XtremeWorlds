@@ -2,6 +2,10 @@
 Imports Mirage.Sharp.Asfw.IO.Encryption
 
 Module C_Globals
+    Public Started As Boolean
+    Public ResolutionHeight As Integer
+    Public ResolutionWidth As Integer
+
     ' Global dialogue index
     Public diaHeader As String
     Public diaBody As String
@@ -174,7 +178,7 @@ Module C_Globals
 
     ' Game editors
     Public Editor As Integer
-    Public Editorindex As Integer
+    Public EditorIndex As Integer
 
     ' Spawn
     Public SpawnNpcNum As Integer

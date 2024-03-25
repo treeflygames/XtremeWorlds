@@ -88,13 +88,35 @@
         Count
     End Enum
 
-    ''' <Summary> Consumable Constant </Summary>
+    ''' <Summary> Consume Constant </Summary>
     Enum ConsumableType As Byte
-        None = 0
-        HP
+        HP = 0
         MP
-        Sp
+        SP
         Exp
+    End Enum
+    
+    ''' <Summary> Sub Constant </Summary>
+    Enum ItemSubType As Byte
+        None = 0
+        Weapon
+        Armor
+        Helmet
+        Shield
+        Shoes
+        Gloves
+        AddHP
+        AddMP
+        AddSP
+        SubHP
+        SubMP
+        SubSP
+        Exp
+        CommonEvent
+        Currency
+        Skill
+
+        Count
     End Enum
 
     ''' <Summary> Direction Constant </Summary>
@@ -504,14 +526,14 @@
     Public Enum PartType
         None = 0
         Item
-        Spell
+        Skill
     End Enum
 
     Public Enum PartOriginType
         None = 0
         Inventory
         Hotbar
-        Spells
+        Skill
         Bank
     End Enum
 
@@ -595,7 +617,7 @@
         None = 0
         Inventory
         Hotbar
-        Spell
+        Skill
         Bank
     End Enum
 

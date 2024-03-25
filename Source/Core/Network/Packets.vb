@@ -39,6 +39,7 @@
         CCast
         CQuit
         CSwapInvSlots
+        CSwapSkillSlots
 
         CCheckPing
         CUnequip
@@ -111,6 +112,8 @@
         CPetSkill
         CPetUseStatPoint
         CRequestPet
+
+        CSkillLearn
 
         '*************************
         '***   EDITOR PACKETS  ***

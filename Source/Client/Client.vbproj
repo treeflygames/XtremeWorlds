@@ -107,9 +107,6 @@
     <Compile Update="Forms\Game\frmGame.Designer.vb">
       <DependentUpon>FrmGame.vb</DependentUpon>
     </Compile>
-    <Compile Update="Forms\Game\frmOptions.Designer.vb">
-      <DependentUpon>FrmOptions.vb</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="Contents\Graphics\Pictures\1.png">

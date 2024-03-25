@@ -4,6 +4,7 @@ Imports System.Management
 Imports System.Reflection.Metadata.Ecma335
 Imports System.Runtime.Versioning
 Imports System.Security.AccessControl
+Imports System.Security.Principal
 Imports System.Windows.Forms.Design.AxImporter
 Imports Core
 Imports Core.Enum
@@ -203,7 +204,7 @@ Module C_Interface
 
                     ' render image
                     If .Image(.State) > 0 Then
-                        RenderTexture(InterfaceSprite(.Image(.State)), GameWindow, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
+                        RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
                     End If
 
                 ' textbox
@@ -215,7 +216,7 @@ Module C_Interface
 
                     ' render image
                     If .Image(.State) > 0 Then
-                        RenderTexture(InterfaceSprite(.Image(.State)), GameWindow, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
+                        RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
                     End If
 
                     If activeWindow = winNum And Windows(winNum).ActiveControl = entNum Then
@@ -224,9 +225,9 @@ Module C_Interface
 
                     ' render text
                     If Not .Censor Then
-                        RenderText(.Text & taddText, GameWindow, .Left + xO + .xOffset, .Top + yO + .yOffset, .Color, Color.Black)
+                        RenderText(.Text & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, .Color, Color.Black)
                     Else
-                        RenderText(CensorText(.Text) & taddText, GameWindow, .Left + xO + .xOffset, .Top + yO + .yOffset, Color.White, Color.Black)
+                        RenderText(CensorText(.Text) & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, Color.White, Color.Black)
                     End If
 
                 ' buttons
@@ -241,7 +242,7 @@ Module C_Interface
                     ' render image
                     If .Image(.State) > 0 Then
                         If .Image(.State) > 0 Then
-                            RenderTexture(InterfaceSprite(.Image(.State)), GameWindow, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height)
+                            RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height)
                         End If
                     End If
 
@@ -255,7 +256,7 @@ Module C_Interface
                             LoadTexture(.Icon, 4)
                         End If
 
-                        RenderTexture(ItemSprite(.Icon), GameWindow, .Left + xO + .xOffset, .Top + yO + .yOffset, 0, 0, Width, Height, Width, Height)
+                        RenderTexture(ItemSprite(.Icon), Window, .Left + xO + .xOffset, .Top + yO + .yOffset, 0, 0, Width, Height, Width, Height)
                     End If
 
                     ' for changing the text space
@@ -277,7 +278,7 @@ Module C_Interface
                         hor_centre = .Left + xO + xOffset + ((.Width - width - xOffset) \ 2) - 2
                     End If
 
-                    RenderText(.Text, GameWindow, hor_centre, ver_centre, .Color, Color.Black)
+                    RenderText(.Text, Window, hor_centre, ver_centre, .Color, Color.Black)
 
                 ' labels
                 Case EntityType.Label
@@ -293,12 +294,12 @@ Module C_Interface
                                     count = UBound(textArray)
 
                                     For i = 1 To count
-                                        RenderText(textArray(i), GameWindow, .Left - xO, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, .Left - xO, .Top + yO + yOffset, .Color, Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' just one line
-                                    RenderText(.Text, GameWindow, .Left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, .Left + xO, .Top + yO, .Color, Color.Black)
                                 End If
 
                             Case AlignmentType.Right
@@ -312,13 +313,13 @@ Module C_Interface
 
                                     For i = 1 To count
                                         left = .Left + .Width - TextWidth(textArray(i))
-                                        RenderText(textArray(i), GameWindow, left + xO - FontSize, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, left + xO - FontSize, .Top + yO + yOffset, .Color, Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' just one line
                                     left = .Left + .Width - TextWidth(.Text)
-                                    RenderText(.Text, GameWindow, left + xO - FontSize, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, left + xO - FontSize, .Top + yO, .Color, Color.Black)
                                 End If
 
                             Case AlignmentType.Center
@@ -332,13 +333,13 @@ Module C_Interface
 
                                     For i = 1 To count
                                         left = .Left + (.Width \ 2) - (TextWidth(textArray(i)) \ 2) - 4
-                                        RenderText(textArray(i), GameWindow, left + xO, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, left + xO, .Top + yO + yOffset, .Color, Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' Just one line
                                     left = .Left + (.Width \ 2) - (TextWidth(.Text) \ 2) - FontSize
-                                    RenderText(.Text, GameWindow, left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, left + xO, .Top + yO, .Color, Color.Black)
                                 End If
                         End Select
                     End If
@@ -351,7 +352,7 @@ Module C_Interface
                             If .Value = 0 Then sprite = InterfaceSprite(2) Else sprite = InterfaceSprite(3)
 
                             ' render box
-                            RenderTexture(sprite, GameWindow, .Left + xO, .Top + yO, 0, 0, 16, 16, 16, 16)
+                            RenderTexture(sprite, Window, .Left + xO, .Top + yO, 0, 0, 16, 16, 16, 16)
 
                             ' find text position
                             Select Case .Align
@@ -364,25 +365,25 @@ Module C_Interface
                             End Select
 
                             ' render text
-                            RenderText(.Text, GameWindow, left, .Top + yO, .Color, Color.Black)
+                            RenderText(.Text, Window, left, .Top + yO, .Color, Color.Black)
 
                         Case DesignType.ChkChat
                             If .Value = 0 Then .Alpha = 150 Else .Alpha = 255
 
                             ' render box
-                            RenderTexture(InterfaceSprite(51), GameWindow, .Left + xO, .Top + yO, 0, 0, 49, 23, 49, 23)
+                            RenderTexture(InterfaceSprite(51), Window, .Left + xO, .Top + yO, 0, 0, 49, 23, 49, 23)
 
                             ' render text
                             left = .Left + 22 - (TextWidth(.Text) / 2) + xO
-                            RenderText(.Text, GameWindow, left, .Top + yO + 4, .Color, Color.Black)
+                            RenderText(.Text, Window, left, .Top + yO + 4, .Color, Color.Black)
 
                         Case DesignType.ChkCustom_Buying
                             If .Value = 0 Then sprite = InterfaceSprite(58) Else sprite = InterfaceSprite(56)
-                            RenderTexture(sprite, GameWindow, .Left + xO, .Top + yO, 0, 0, 49, 20, 49, 20)
+                            RenderTexture(sprite, Window, .Left + xO, .Top + yO, 0, 0, 49, 20, 49, 20)
 
                         Case DesignType.ChkCustom_Selling
                             If .Value = 0 Then sprite = InterfaceSprite(59) Else sprite = InterfaceSprite(57)
-                            RenderTexture(sprite, GameWindow, .Left + xO, .Top + yO, 0, 0, 49, 20, 49, 20)
+                            RenderTexture(sprite, Window, .Left + xO, .Top + yO, 0, 0, 49, 20, 49, 20)
                     End Select
 
                 ' comboboxes
@@ -395,12 +396,12 @@ Module C_Interface
                             ' render the text
                             If .Value > 0 Then
                                 If .Value <= UBound(.List) Then
-                                    RenderText(.List(.Value), GameWindow, .Left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.List(.Value), Window, .Left + xO, .Top + yO, .Color, Color.Black)
                                 End If
                             End If
 
                             ' draw the little arow
-                            RenderTexture(InterfaceSprite(66), GameWindow, .Left + xO + .Width, .Top + yO, 0, 0, 5, 4, 5, 4)
+                            RenderTexture(InterfaceSprite(66), Window, .Left + xO + .Width, .Top + yO, 0, 0, 5, 4, 5, 4)
                     End Select
             End Select
 
@@ -427,7 +428,7 @@ Module C_Interface
 
             Select Case .Design(0)
                 Case DesignType.ComboMenuNorm
-                    RenderTexture(InterfaceSprite(1), GameWindow, .Left, .Top, 0, 0, .Width, .Height, 157, 0, 0, 0)
+                    RenderTexture(InterfaceSprite(1), Window, .Left, .Top, 0, 0, .Width, .Height, 157, 0, 0, 0)
 
                     ' text
                     If UBound(.List) > 0 Then
@@ -437,16 +438,16 @@ Module C_Interface
                         For i = 1 To UBound(.List)
                             ' render select
                             If i = .Value Or i = .Group Then
-                                RenderTexture(InterfaceSprite(1), GameWindow, x, y - 1, 0, 0, .Width, 15, 255, 0, 0, 0)
+                                RenderTexture(InterfaceSprite(1), Window, x, y - 1, 0, 0, .Width, 15, 255, 0, 0, 0)
                             End If
 
                             ' render text
                             left = x + (.Width \ 2) - (TextWidth(.List(i)) \ 2)
 
                             If i = .Value Or i = .Group Then
-                                RenderText(.List(i), GameWindow, left, y, Color.White, Color.Black)
+                                RenderText(.List(i), Window, left, y, Color.White, Color.Black)
                             Else
-                                RenderText(.List(i), GameWindow, left, y, Color.White, Color.Black)
+                                RenderText(.List(i), Window, left, y, Color.White, Color.Black)
                             End If
                             y = y + 16
                         Next
@@ -457,7 +458,7 @@ Module C_Interface
             Select Case .Design(.State)
 
                 Case DesignType.Win_Black
-                    RenderTexture(InterfaceSprite(61), GameWindow, .Left, .Top, 0, 0, .Width, .Height, 190, 255, 255, 255)
+                    RenderTexture(InterfaceSprite(61), Window, .Left, .Top, 0, 0, .Width, .Height, 190, 255, 255, 255)
 
                 Case DesignType.Win_Norm
                     ' render window
@@ -468,10 +469,10 @@ Module C_Interface
                     If ItemGfxInfo(.Icon).IsLoaded = False Then
                         LoadTexture(.Icon, 4)
                     End If
-                    RenderTexture(ItemSprite(.Icon), GameWindow, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
+                    RenderTexture(ItemSprite(.Icon), Window, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
 
                     ' render the caption
-                    RenderText(Trim$(.Text), GameWindow, .Left + 32, .Top + 4, Color.White, Color.Black)
+                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, Color.White, Color.Black)
 
                 Case DesignType.Win_NoBar
                     ' render window
@@ -486,10 +487,10 @@ Module C_Interface
                     If ItemGfxInfo(.Icon).IsLoaded = False Then
                         LoadTexture(.Icon, 4)
                     End If
-                    RenderTexture(ItemSprite(.Icon), GameWindow, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
+                    RenderTexture(ItemSprite(.Icon), Window, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
 
                     ' render the caption
-                    RenderText(Trim$(.Text), GameWindow, .Left + 32, .Top + 4, Color.White, Color.Black)
+                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, Color.White, Color.Black)
 
                 Case DesignType.Win_Desc
                     RenderDesign(DesignType.Win_Desc, .Left, .Top, .Width, .Height)
@@ -512,11 +513,11 @@ Module C_Interface
         Select Case design
             Case DesignType.MenuHeader
                 ' render the header
-                RenderTexture(InterfaceSprite(61), GameWindow, left, top, 0, 0, width, height, width, height, 200, 47, 77, 29)
+                RenderTexture(InterfaceSprite(61), Window, left, top, 0, 0, width, height, width, height, 200, 47, 77, 29)
 
             Case DesignType.MenuOption
                 ' render the option
-                RenderTexture(InterfaceSprite(61), GameWindow, left, top, 0, 0, width, height, width, height, 200, 98, 98, 98)
+                RenderTexture(InterfaceSprite(61), Window, left, top, 0, 0, width, height, width, height, 200, 98, 98, 98)
 
             Case DesignType.Wood
                 bs = 4
@@ -524,7 +525,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(1), left, top, width, height, bs, alpha)
 
                 ' render wood texture
-                RenderTexture(InterfaceSprite(1), GameWindow, Left + bs, Top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2), alpha)
+                RenderTexture(InterfaceSprite(1), Window, Left + bs, Top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2), alpha)
 
             Case DesignType.Wood_Small
                 bs = 2
@@ -532,7 +533,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(8),Left + bs, Top + bs, width, height, bs, alpha)
 
                 ' render wood texture
-                RenderTexture(InterfaceSprite(1), GameWindow, left + bs, top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2))
+                RenderTexture(InterfaceSprite(1), Window, left + bs, top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2))
 
             Case DesignType.Wood_Empty
                 bs = 4
@@ -545,7 +546,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(2), left, top, width, height, bs, alpha)
 
                 ' render green gradient overlay
-                RenderTexture(GradientSprite(1), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(1), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Green_Hover
                 bs = 2
@@ -553,7 +554,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(2), left, top, width, height, bs, alpha)
 
                 ' render green gradient overlay
-                RenderTexture(GradientSprite(2), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(2), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Green_Click
                 bs = 2
@@ -561,7 +562,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(2), left, top, width, height, bs, alpha)
 
                 ' render green gradient overlay
-                RenderTexture(GradientSprite(3), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(3), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Red
                 bs = 2
@@ -569,7 +570,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(3), left, top, width, height, bs, alpha)
 
                 ' render red gradient overlay
-                RenderTexture(GradientSprite(4), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(4), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Red_Hover
                 bs = 2
@@ -577,7 +578,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(3), left, top, width, height, bs, alpha)
 
                 ' render red gradient overlay
-                RenderTexture(GradientSprite(5), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(5), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Red_Click
                 bs = 2
@@ -585,7 +586,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(3), left, top, width, height, bs, alpha)
 
                 ' render red gradient overlay
-                RenderTexture(GradientSprite(6), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(6), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Blue
                 bs = 2
@@ -593,7 +594,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(14), left, top, width, height, bs, alpha)
 
                 ' render Blue gradient overlay
-                RenderTexture(GradientSprite(8), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(8), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Blue_Hover
                 bs = 2
@@ -601,7 +602,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(14), left, top, width, height, bs, alpha)
 
                 ' render Blue gradient overlay
-                RenderTexture(GradientSprite(9), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(9), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Blue_Click
                 bs = 2
@@ -609,7 +610,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(14), left, top, width, height, bs, alpha)
 
                 ' render Blue gradient overlay
-                RenderTexture(GradientSprite(10), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(10), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Orange
                 bs = 2
@@ -617,7 +618,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(15), left, top, width, height, bs, alpha)
 
                 ' render Orange gradient overlay
-                RenderTexture(GradientSprite(11), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(11), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Orange_Hover
                 bs = 2
@@ -625,7 +626,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(15), left, top, width, height, bs, alpha)
 
                 ' render Orange gradient overlay
-                RenderTexture(GradientSprite(12), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(12), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Orange_Click
                 bs = 2
@@ -633,7 +634,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(15), left, top, width, height, bs, alpha)
 
                 ' render Orange gradient overlay
-                RenderTexture(GradientSprite(13), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(13), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Grey
                 bs = 2
@@ -641,7 +642,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(17), left, top, width, height, bs, alpha)
 
                 ' render Orange gradient overlay
-                RenderTexture(GradientSprite(14), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(14), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Parchment
                 bs = 20
@@ -679,7 +680,7 @@ Module C_Interface
                 RenderEntity_Square(DesignSprite(12), left, top, width, height, bs, alpha)
 
                 ' render green gradient overlay
-                RenderTexture(GradientSprite(7), GameWindow, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
+                RenderTexture(GradientSprite(7), Window, left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, alpha)
 
             Case DesignType.Win_Shadow
                 bs = 35
@@ -706,31 +707,31 @@ Module C_Interface
         bs = borderSize
 
         ' Draw centre
-        RenderTexture(sprite, GameWindow, x + bs, y + bs, bs + 1, bs + 1, width - (bs * 2), height - (bs * 2), , , , alpha)
+        RenderTexture(sprite, Window, x + bs, y + bs, bs + 1, bs + 1, width - (bs * 2), height - (bs * 2), , , , alpha)
 
         ' Draw top side
-        RenderTexture(sprite, GameWindow, x + bs, y, bs, 0, width - (bs * 2), bs, 1, bs, alpha)
+        RenderTexture(sprite, Window, x + bs, y, bs, 0, width - (bs * 2), bs, 1, bs, alpha)
 
         ' Draw left side
-        RenderTexture(sprite, GameWindow, x, y + bs, 0, bs, bs, height - (bs * 2), bs, , alpha)
+        RenderTexture(sprite, Window, x, y + bs, 0, bs, bs, height - (bs * 2), bs, , alpha)
 
         ' Draw right side
-        RenderTexture(sprite, GameWindow, x + width - bs, y + bs, bs + 3, bs, bs, height - (bs * 2), bs, , alpha)
+        RenderTexture(sprite, Window, x + width - bs, y + bs, bs + 3, bs, bs, height - (bs * 2), bs, , alpha)
 
         ' Draw bottom side
-        RenderTexture(sprite, GameWindow, x + bs, y + height - bs, bs, bs + 3, width - (bs * 2), bs, 1, bs, alpha)
+        RenderTexture(sprite, Window, x + bs, y + height - bs, bs, bs + 3, width - (bs * 2), bs, 1, bs, alpha)
 
         ' Draw top left corner
-        RenderTexture(sprite, GameWindow, x, y, 0, 0, bs, bs, bs, bs, alpha)
+        RenderTexture(sprite, Window, x, y, 0, 0, bs, bs, bs, bs, alpha)
 
         ' Draw top right corner
-        RenderTexture(sprite, GameWindow, x + width - bs, y, bs + 3, 0, bs, bs, bs, bs, alpha)
+        RenderTexture(sprite, Window, x + width - bs, y, bs + 3, 0, bs, bs, bs, bs, alpha)
 
         ' Draw bottom left corner
-        RenderTexture(sprite, GameWindow, x, y + height - bs, 0, bs + 3, bs, bs, bs, bs, alpha)
+        RenderTexture(sprite, Window, x, y + height - bs, 0, bs + 3, bs, bs, bs, bs, alpha)
 
         ' Draw bottom right corner
-        RenderTexture(sprite, GameWindow, x + width - bs, y + height - bs, bs + 3, bs + 3, bs, bs, bs, bs, alpha)
+        RenderTexture(sprite, Window, x + width - bs, y + height - bs, bs + 3, bs + 3, bs, bs, bs, bs, alpha)
     End Sub
 
     Sub Combobox_AddItem(winIndex As Long, controlIndex As Long, text As String)
@@ -996,8 +997,8 @@ Module C_Interface
 
     Public Sub CentralizeWindow(curWindow As Long)
         With Windows(curWindow).Window
-            .Left = (Types.Settings.ScreenWidth / 2) - (.Width / 2)
-            .Top = (Types.Settings.ScreenHeight / 2) - (.Height / 2)
+            .Left = (ResolutionWidth / 2) - (.Width / 2)
+            .Top = (ResolutionHeight / 2) - (.Height / 2)
             .OrigLeft = .Left
             .OrigTop = .Top
         End With
@@ -1026,6 +1027,7 @@ Module C_Interface
             With Windows(curWindow).Window
                 .Left = .OrigLeft
                 .Top = .OrigTop
+                .Visible = True
             End With
         End If
     End Sub
@@ -1112,6 +1114,7 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picShadow_3", 67, 115, 142, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
         'CreatePictureBox(WindowCount, "picShadow_4", 67, 151, 142, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
         'CreatePictureBox(WindowCount, "picShadow_5", 67, 187, 142, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
+
 
         ' Buttons
         CreateButton(WindowCount, "btnAccept", 68, 152, 67, 22, "Create", Arial, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnSendRegister_Click))
@@ -1321,6 +1324,8 @@ Module C_Interface
         CreateWindow_Bars()
         CreateWindow_Dialogue()
         CreateWindow_DragBox()
+        CreateWindow_Options()
+        CreateWindow_Combobox()
     End Sub
 
     Public Function HandleInterfaceEvents(entState As EntState) As Boolean
@@ -1337,9 +1342,9 @@ Module C_Interface
                             If .Design(0) = DesignType.ComboMenuNorm Then
                                 ' set the hover menu
                                 If entState = EntState.MouseMove Or entState = EntState.Hover Then
-                                    'ComboMenu_MouseMove(i)
+                                    ComboMenu_MouseMove(i)
                                 ElseIf entState = EntState.MouseDown Then
-                                    'ComboMenu_MouseDown(i)
+                                    ComboMenu_MouseDown(i)
                                 End If
                             End If
 
@@ -1352,8 +1357,8 @@ Module C_Interface
                     If entState = EntState.MouseMove Then
                         If .CanDrag Then
                             If .State = EntState.MouseDown Then
-                                .Left = Math.Clamp(.Left + ((CurMouseX - .Left) - .movedX), 0, Types.Settings.ScreenWidth - .Width)
-                                .Top = Math.Clamp(.Top + ((CurMouseY - .Top) - .movedY), 0, Types.Settings.ScreenHeight - .Height)
+                                .Left = Math.Clamp(.Left + ((CurMouseX - .Left) - .movedX), 0, ResolutionWidth - .Width)
+                                .Top = Math.Clamp(.Top + ((CurMouseY - .Top) - .movedY), 0, ResolutionHeight - .Height)
                             End If
                         End If
                     End If
@@ -1435,7 +1440,7 @@ Module C_Interface
                                     End If
                                 End If
                             Case EntityType.Combobox
-                                'ShowComboMenu(curWindow, curControl)
+                                ShowComboMenu(curWindow, curControl)
                         End Select
 
                         ' set active input
@@ -1520,9 +1525,66 @@ Module C_Interface
         HideWindow(GetWindowIndex("winComboMenu"))
     End Sub
 
-    Sub ShowComboMenu()
-        ShowWindow(GetWindowIndex("winComboMenuBG"))
-        ShowWindow(GetWindowIndex("winComboMenu"))
+    Sub ShowComboMenu(curWindow As Long, curControl As Long)
+        Dim Top As Long
+
+        With Windows(curWindow).Controls(curControl)
+            ' linked to
+            Windows(GetWindowIndex("winComboMenu")).Window.linkedToWin = curWindow
+            Windows(GetWindowIndex("winComboMenu")).Window.linkedToCon = curControl
+        
+            ' set the size
+            Windows(GetWindowIndex("winComboMenu")).Window.Height = 2 + (UBound(.list) * 16)
+            Windows(GetWindowIndex("winComboMenu")).Window.Left = Windows(curWindow).Window.Left + .Left + 2
+            Top = Windows(curWindow).Window.Top + .Top + .Height
+            If Top + Windows(GetWindowIndex("winComboMenu")).Window.Height > ResolutionHeight Then Top = ResolutionHeight - Windows(GetWindowIndex("winComboMenu")).Window.Height
+            Windows(GetWindowIndex("winComboMenu")).Window.Top = Top
+            Windows(GetWindowIndex("winComboMenu")).Window.Width = .Width - 4
+        
+            ' set the values
+            Windows(GetWindowIndex("winComboMenu")).Window.List = .List
+            Windows(GetWindowIndex("winComboMenu")).Window.Value = .Value
+            Windows(GetWindowIndex("winComboMenu")).Window.Group = 0
+        
+            ' load the menu
+            Windows(GetWindowIndex("winComboMenu")).Window.Visible = True
+            Windows(GetWindowIndex("winComboMenuBG")).Window.Visible = True
+            ShowWindow(GetWindowIndex("winComboMenuBG"), True, False)
+            ShowWindow(GetWindowIndex("winComboMenu"), True, False)
+        End With
+    End Sub
+
+    Sub ComboMenu_MouseMove(curWindow As Long)
+        Dim y As Long, i As Long
+        With Windows(curWindow).Window
+            y = curMouseY - .Top
+
+            ' find the option we're hovering over
+            If UBound(.list) > 0 Then
+                For i = 1 To UBound(.list)
+                    If y >= (16 * (i - 1)) And y <= (16 * (i)) Then
+                        .group = i
+                    End If
+                Next
+            End If
+        End With
+    End Sub
+
+    Sub ComboMenu_MouseDown(curWindow As Long)
+    Dim y As Long, i As Long
+        With Windows(curWindow).Window
+            y = curMouseY - .Top
+
+            ' find the option we're hovering over
+            If UBound(.list) > 0 Then
+                For i = 1 To UBound(.list)
+                    If y >= (16 * (i - 1)) And y <= (16 * (i)) Then
+                        Windows(.linkedToWin).Controls(.linkedToCon).value = i
+                        CloseComboMenu
+                    End If
+                Next
+            End If
+        End With
     End Sub
 
     Public Sub chkSaveUser_Click()
@@ -1530,10 +1592,10 @@ Module C_Interface
             If .Value = 0 Then ' set as false
                 Types.Settings.SaveUsername = 0
                 Types.Settings.Username = ""
-                SettingsManager.Save()
+                Types.Settings.Save()
             Else
                 Types.Settings.SaveUsername = 1
-                SettingsManager.Save()
+                Types.Settings.Save()
             End If
         End With
     End Sub
@@ -1653,8 +1715,7 @@ Module C_Interface
 
     Public Sub btnEscMenu_Options()
         HideWindow(GetWindowIndex("winEscMenu"))
-        'ShowWindow(GetWindowIndex("winOptions"), True, True)
-        FrmOptions.Show()
+        ShowWindow(GetWindowIndex("winOptions"), True, True)
     End Sub
 
     Public Sub btnEscMenu_MainMenu()
@@ -1678,9 +1739,9 @@ Module C_Interface
         yO = Windows(GetWindowIndex("winBars")).Window.Top
 
         ' Bars
-        RenderTexture(InterfaceSprite(27), GameWindow, xO + 15, yO + 15, 0, 0, BarWidth_GuiHP, 13, BarWidth_GuiHP, 13)
-        RenderTexture(InterfaceSprite(28), GameWindow, xO + 15, yO + 32, 0, 0, BarWidth_GuiSP, 13, BarWidth_GuiSP, 13)
-        RenderTexture(InterfaceSprite(29), GameWindow, xO + 15, yO + 49, 0, 0, BarWidth_GuiEXP, 13, BarWidth_GuiEXP, 13)
+        RenderTexture(InterfaceSprite(27), Window, xO + 15, yO + 15, 0, 0, BarWidth_GuiHP, 13, BarWidth_GuiHP, 13)
+        RenderTexture(InterfaceSprite(28), Window, xO + 15, yO + 32, 0, 0, BarWidth_GuiSP, 13, BarWidth_GuiSP, 13)
+        RenderTexture(InterfaceSprite(29), Window, xO + 15, yO + 49, 0, 0, BarWidth_GuiEXP, 13, BarWidth_GuiEXP, 13)
     End Sub
 
     ' #######################
@@ -1705,7 +1766,7 @@ Module C_Interface
 
                     If Not CharSprite(I) > NumCharacters And Not CharSprite(I) > NumFaces Then
                         ' render char
-                        RenderTexture(CharacterSprite(CharSprite(I)), GameWindow, x + 24, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
+                        RenderTexture(CharacterSprite(CharSprite(I)), Window, x + 24, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
                     End If
                 End If
             End If
@@ -1783,7 +1844,7 @@ Module C_Interface
         End If
 
         ' render face
-        RenderTexture(FaceSprite(imageFace), GameWindow, xO + 30, yO + 75, 0, 0, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height)
+        RenderTexture(FaceSprite(imageFace), Window, xO + 30, yO + 75, 0, 0, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height)
     End Sub
 
     Public Sub Jobs_DrawText()
@@ -1813,7 +1874,7 @@ Module C_Interface
         y = yO + 60
         For I = 1 To count
             x = xO + 118 + (200 \ 2) - (TextWidth(textArray(I)) \ 2)
-            RenderText(textArray(I), GameWindow, x, y, Color.White, Color.White)
+            RenderText(textArray(I), Window, x, y, Color.White, Color.White)
             y = y + 14
         Next
     End Sub
@@ -1865,8 +1926,8 @@ Module C_Interface
         RenderDesign(DesignType.Win_Desc, xO, yO, 352, 152)
 
         ' draw the input box
-        RenderTexture(InterfaceSprite(46), GameWindow, xO + 7, yO + 123, 0, 0, 171, 22, 171, 22)
-        RenderTexture(InterfaceSprite(46), GameWindow, xO + 174, yO + 123, 0, 22, 171, 22, 171, 22)
+        RenderTexture(InterfaceSprite(46), Window, xO + 7, yO + 123, 0, 0, 171, 22, 171, 22)
+        RenderTexture(InterfaceSprite(46), Window, xO + 174, yO + 123, 0, 22, 171, 22, 171, 22)
 
         ' call the chat render
         RenderChat()
@@ -1881,7 +1942,7 @@ Module C_Interface
         If actChatHeight < 10 Then actChatHeight = 10
 
         xO = Windows(winIndex).Window.Left + 10
-        yO = Types.Settings.ScreenHeight - 10
+        yO = ResolutionHeight - 10
 
         ' draw the background
         RenderDesign(DesignType.Win_Shadow, xO, yO, 160, 10)
@@ -1959,7 +2020,7 @@ Module C_Interface
 
 
         ' render char
-        RenderTexture(CharacterSprite(imageChar), GameWindow, xO + 190, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
+        RenderTexture(CharacterSprite(imageChar), Window, xO + 190, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
     End Sub
 
     Public Sub btnNewChar_Left()
@@ -2086,10 +2147,10 @@ Module C_Interface
             winIndex = GetWindowIndex("winDragBox")
             With Windows(winIndex).Window
                 .State = EntState.MouseDown
-                .Left = CurX - 16
-                .Top = CurY - 16
-                .movedX = CurX - .Left
-                .movedY = CurY - .Top
+                .Left = CurMouseX - 16
+                .Top = CurMouseY - 16
+                .movedX = CurMouseX - .Left
+                .movedY = CurMouseY - .Top
             End With
 
             ShowWindow(winIndex, , False)
@@ -2109,7 +2170,7 @@ Module C_Interface
 
         itemNum = IsInv(Windows(GetWindowIndex("winInventory")).Window.Left, Windows(GetWindowIndex("winInventory")).Window.Top)
 
-        If itemNum Then
+        If itemNum > 0 Then
             SendUseItem(itemNum)
         End If
 
@@ -2155,6 +2216,7 @@ Module C_Interface
                 ' switch to right
                 x = Windows(GetWindowIndex("winInventory")).Window.Left + Windows(GetWindowIndex("winInventory")).Window.Width
             End If
+
             ' go go go
             ShowInvDesc(x, y, itemNum)
         End If
@@ -2175,13 +2237,24 @@ Public Sub DragBox_OnDraw()
         Select Case .Type
             Case PartType.Item
                 If .value Then
-                    texNum = Item(.value).Pic
-                    RenderTexture(ItemSprite(texNum), GameWindow, xO, yO, 0, 0, 32, 32, 32, 32)
+                    texNum = Item(.value).Icon
+                        
+                    ' render the icon
+                    If ItemGfxInfo(texNum).IsLoaded = False Then
+                        LoadTexture(texNum, 4)
+                    End If
+
+                    RenderTexture(ItemSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                 End If
-            Case PartType.Spell
+            Case PartType.Skill
                 If .value Then
                     texNum = Skill(.value).Icon
-                    RenderTexture(SkillSprite(texNum), GameWindow, xO, yO, 0, 0, 32, 32, 32, 32)
+
+                    ' render the icon
+                    If SkillGfxInfo(texNum).IsLoaded = False Then
+                        LoadTexture(texNum, 9)
+                    End If
+                    RenderTexture(SkillSprite(texNum), Window, xO, yO, 0, 0, 32, 32, 32, 32)
                 End If
         End Select
     End With
@@ -2241,7 +2314,6 @@ Public Sub DragBox_Check()
                     End If
                 End If
                 
-                ' se o item saiu do inventario
                 If DragBox.Origin = PartOriginType.Inventory Then
                     If DragBox.Type = PartType.Item Then
     
@@ -2292,9 +2364,9 @@ Public Sub DragBox_Check()
                 End If
 
             Case "winSkills"
-                If DragBox.Origin = PartOriginType.Spells Then
-                    ' it's from the spells!
-                    If DragBox.Type = PartType.Spell Then
+                If DragBox.Origin = PartOriginType.Skill Then
+                    ' it's from the Skills!
+                    If DragBox.Type = PartType.Skill Then
                         ' find the slot to switch with
                         For I = 1 To MAX_PLAYER_SKILLS
                             With tmpRec
@@ -2307,7 +2379,7 @@ Public Sub DragBox_Check()
                             If CurMouseX >= tmpRec.Left And CurMouseX <= tmpRec.Right Then
                                 If CurMouseY >= tmpRec.Top And CurMouseY <= tmpRec.bottom Then
                                     ' switch the slots
-                                    'If DragBox.Slot <> I Then SendChangeSpellSlots(DragBox.Slot, I)
+                                    If DragBox.Slot <> I Then SendChangeSkillSlots(DragBox.Slot, I)
                                     Exit For
                                 End If
                             End If
@@ -2332,15 +2404,13 @@ Public Sub DragBox_Check()
                                     ' set the hotbar slot
                                     If DragBox.Origin <> PartOriginType.Hotbar Then
                                         If DragBox.Type = PartType.Item Then
-                                            'SendHotbarChange(1, DragBox.Slot, I)
-                                        ElseIf DragBox.Type = PartType.Spell Then
-                                            'SendHotbarChange(2, DragBox.Slot, I)
+                                            SendSetHotbarSlot(1, DragBox.Slot, I)
+                                        ElseIf DragBox.Type = PartType.Skill Then
+                                            SendSetHotbarSlot(2, DragBox.Slot, I)
                                         End If
                                     Else
-                                        ' SWITCH the hotbar slots
-                                        'If DragBox.Slot <> I Then SwitchHotbar(DragBox.Slot, I)
+                                        If DragBox.Slot <> I Then SendSetHotbarSlot(3, DragBox.Slot, I)
                                     End If
-                                    ' exit early
                                     Exit For
                                 End If
                             End If
@@ -2357,10 +2427,10 @@ Public Sub DragBox_Check()
                 Else
                     Dialogue("Drop Item", "Please choose how many to drop", "", DialogueType.DropItem, DialogueStyle.Input, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
                 End If
-            Case PartOriginType.Spells
-                ' dialogue
+            Case PartOriginType.Skill
+                ForgetSkill(DragBox.Slot)
             Case PartOriginType.Hotbar
-                'SendHotbarChange(0, 0, DragBox.Slot)
+                SendSetHotbarSlot(0, 0, DragBox.Slot)
         End Select
     End If
     
@@ -2375,78 +2445,81 @@ Public Sub DragBox_Check()
     End With
 End Sub
 
-' ############
-' ## Skills ##
-' ############
-Public Sub Skills_MouseDown()
-Dim slotNum As Long, winIndex As Long
+    ' ############
+    ' ## Skills ##
+    ' ############
+    Public Sub Skills_MouseDown()
+    Dim slotNum As Long, winIndex As Long
     
-    ' is there an item?
-    slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
+        ' is there an item?
+        slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
     
-    If slotNum Then
-        With DragBox
-            .Type = PartType.Spell
-            .value = Player(Myindex).Skill(slotNum).Num
-            .Origin = PartOriginType.Spells
-            .Slot = slotNum
-        End With
+        If slotNum Then
+            With DragBox
+                .Type = PartType.Skill
+                .value = Player(Myindex).Skill(slotNum).Num
+                .Origin = PartOriginType.Skill
+                .Slot = slotNum
+            End With
         
-        winIndex = GetWindowIndex("winDragBox")
-        With Windows(winIndex).Window
-            .state = EntState.MouseDown
-            .Left = CurMouseX - 16
-            .Top = CurMouseY - 16
-            .movedX = CurMouseX - .Left
-            .movedY = CurMouseY - .Top
-        End With
+            winIndex = GetWindowIndex("winDragBox")
+            With Windows(winIndex).Window
+                .state = EntState.MouseDown
+                .Left = CurMouseX - 16
+                .Top = CurMouseY - 16
+                .movedX = CurMouseX - .Left
+                .movedY = CurMouseY - .Top
+            End With
 
-        ShowWindow(winIndex, , False)
+            ShowWindow(winIndex, , False)
 
-        ' stop dragging inventory
-        Windows(GetWindowIndex("winSkills")).Window.state = EntState.Normal
-    End If
-
-    ' show desc. if needed
-    Skills_MouseMove
-End Sub
-
-Public Sub Skills_DblClick()
-    Dim slotNum As Long
-
-    slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
-    
-    If slotNum Then
-        PlayerCastSkill(slotNum)
-    End If
-    
-    ' show desc. if needed
-    Skills_MouseMove
-End Sub
-
-Public Sub Skills_MouseMove()
-    Dim slotNum As Long, x As Long, y As Long
-
-    ' exit out early if dragging
-    If DragBox.Type <> PartType.None Then Exit Sub
-
-    slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
-    
-    If slotNum Then
-        ' make sure we're not dragging the item
-        If DragBox.Type = PartType.Item And DragBox.value = slotNum Then Exit Sub
-        ' calc position
-        x = Windows(GetWindowIndex("winSkills")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
-        y = Windows(GetWindowIndex("winSkills")).Window.Top - 4
-        ' offscreen?
-        If x < 0 Then
-            ' switch to right
-            x = Windows(GetWindowIndex("winSkills")).Window.Left + Windows(GetWindowIndex("winSkills")).Window.Width
+            ' stop dragging inventory
+            Windows(GetWindowIndex("winSkills")).Window.state = EntState.Normal
         End If
-        ' go go go
-        'ShowPlayerSpellDesc(x, y, slotNum)
-    End If
-End Sub
+
+        ' show desc. if needed
+        Skills_MouseMove
+    End Sub
+
+    Public Sub Skills_DblClick()
+        Dim slotNum As Long
+
+        slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
+    
+        If slotNum Then
+            PlayerCastSkill(slotNum)
+        End If
+    
+        ' show desc. if needed
+        Skills_MouseMove
+    End Sub
+
+    Public Sub Skills_MouseMove()
+        Dim slotNum As Long, x As Long, y As Long
+
+        ' exit out early if dragging
+        If DragBox.Type <> PartType.None Then Exit Sub
+
+        slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
+    
+        If slotNum > 0 Then
+            ' make sure we're not dragging the item
+            If DragBox.Type = PartType.Item And DragBox.value = slotNum Then Exit Sub
+            
+            ' calc position
+            x = Windows(GetWindowIndex("winSkills")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
+            y = Windows(GetWindowIndex("winSkills")).Window.Top - 4
+            
+            ' offscreen?
+            If x < 0 Then
+                ' switch to right
+                x = Windows(GetWindowIndex("winSkills")).Window.Left + Windows(GetWindowIndex("winSkills")).Window.Width
+            End If
+
+            ' go go go
+            ShowSkillDesc(x, y, GetPlayerSkill(Myindex, slotNum), slotNum)
+        End If
+    End Sub
 
     ' ############
     ' ## Hotbar ##
@@ -2457,14 +2530,14 @@ End Sub
         ' is there an item?
         slotNum = IsHotbar(Windows(GetWindowIndex("winHotbar")).Window.Left, Windows(GetWindowIndex("winHotbar")).Window.Top)
 
-        If slotNum Then
+        If slotNum > 0 Then
             With DragBox
-                If Hotbar(slotNum).SlotType = 1 Then ' inventory
+                If Player(Myindex).Hotbar(slotNum).SlotType = 1 Then ' inventory
                     .Type = PartOriginsType.Inventory
-                ElseIf Hotbar(slotNum).SlotType = 2 Then ' spell
-                    .Type = PartOriginsType.Spell
+                ElseIf Player(Myindex).Hotbar(slotNum).SlotType = 2 Then ' Skill
+                    .Type = PartOriginsType.Skill
                 End If
-                .Value = Hotbar(slotNum).Slot
+                .Value = Player(Myindex).Hotbar(slotNum).Slot
                 .Origin = PartOriginType.Hotbar
                 .Slot = slotNum
             End With
@@ -2492,7 +2565,7 @@ End Sub
 
         slotNum = IsHotbar(Windows(GetWindowIndex("winHotbar")).Window.Left, Windows(GetWindowIndex("winHotbar")).Window.Top)
 
-        If slotNum Then
+        If slotNum > 0 Then
             SendUseHotbarSlot(slotNum)
         End If
 
@@ -2508,7 +2581,7 @@ End Sub
 
         slotNum = IsHotbar(Windows(GetWindowIndex("winHotbar")).Window.Left, Windows(GetWindowIndex("winHotbar")).Window.Top)
 
-        If slotNum Then
+        If slotNum > 0 Then
             ' make sure we're not dragging the item
             If DragBox.Origin = PartOriginType.Hotbar And DragBox.Slot = slotNum Then Exit Sub
 
@@ -2523,11 +2596,11 @@ End Sub
             End If
 
             ' go go go
-            Select Case Hotbar(slotNum).SlotType
+            Select Case Player(Myindex).Hotbar(slotNum).SlotType
                 Case 1 ' inventory
-                    'ShowItemDesc(x, y, Hotbar(slotNum).Slot, False)
-                Case 2 ' spells
-                    'ShowSpellDesc(x, y, Hotbar(slotNum).Slot, 0)
+                    ShowItemDesc(x, y, Player(Myindex).Hotbar(slotNum).Slot)
+                Case 2 ' skill
+                    ShowskillDesc(x, y, Player(Myindex).Hotbar(slotNum).Slot, 0)
             End Select
         End If
     End Sub
@@ -2615,7 +2688,7 @@ End Sub
 
     Public Sub CreateWindow_Chat()
         ' Create window
-        CreateWindow("winChat", "", Georgia, zOrder_Win, 8, Types.Settings.ScreenHeight - 178, 352, 152, 0, False, , , , , , , , , , , , , , , , False)
+        CreateWindow("winChat", "", Georgia, zOrder_Win, 8, ResolutionHeight - 178, 352, 152, 0, False, , , , , , , , , , , , , , , , False)
 
         ' Set the index for spawning controls
         zOrder_Con = 1
@@ -2667,7 +2740,7 @@ End Sub
         zOrder_Con = 1
 
         ' Chat Label
-        CreateLabel(WindowCount, "lblMsg", 10, Types.Settings.ScreenHeight - 28, 160, FontSize, "Press 'Enter' to open chatbox.", Verdana, Color.White)
+        CreateLabel(WindowCount, "lblMsg", 10, ResolutionHeight - 28, 160, FontSize, "Press 'Enter' to open chatbox.", Verdana, Color.White)
     End Sub
 
     Public Sub CreateWindow_Hotbar()
@@ -2677,7 +2750,7 @@ End Sub
 
     Public Sub CreateWindow_Menu()
         ' Create window
-        CreateWindow("winMenu", "", Georgia, zOrder_Win, Types.Settings.ScreenWidth - 229, Types.Settings.ScreenHeight - 31, 229, 31, 0, False, , , , , , , , , , , , , , , , , False, False)
+        CreateWindow("winMenu", "", Georgia, zOrder_Win, ResolutionWidth - 229, ResolutionHeight - 31, 229, 31, 0, False, , , , , , , , , , , , , , , , , False, False)
 
         ' Set the index for spawning controls
         zOrder_Con = 1
@@ -2812,13 +2885,13 @@ End Sub
         yO = Windows(GetWindowIndex("winCharacter")).Window.Top
 
         ' Render bottom
-        RenderTexture(InterfaceSprite(37), GameWindow, xO + 4, yO + 314, 0, 0, 40, 38, 40, 38)
-        RenderTexture(InterfaceSprite(37), GameWindow, xO + 44, yO + 314, 0, 0, 40, 38, 40, 38)
-        RenderTexture(InterfaceSprite(37), GameWindow, xO + 84, yO + 314, 0, 0, 40, 38, 40, 38)
-        RenderTexture(InterfaceSprite(37), GameWindow, xO + 124, yO + 314, 0, 0, 46, 38, 46, 38)
+        RenderTexture(InterfaceSprite(37), Window, xO + 4, yO + 314, 0, 0, 40, 38, 40, 38)
+        RenderTexture(InterfaceSprite(37), Window, xO + 44, yO + 314, 0, 0, 40, 38, 40, 38)
+        RenderTexture(InterfaceSprite(37), Window, xO + 84, yO + 314, 0, 0, 40, 38, 40, 38)
+        RenderTexture(InterfaceSprite(37), Window, xO + 124, yO + 314, 0, 0, 46, 38, 46, 38)
 
         ' render top wood
-        RenderTexture(InterfaceSprite(1), GameWindow, xO + 4, yO + 23, 100, 100, 166, 291, 166, 291)
+        RenderTexture(InterfaceSprite(1), Window, xO + 4, yO + 23, 100, 100, 166, 291, 166, 291)
 
         ' loop through equipment
         For i = 1 To EquipmentType.Count - 1
@@ -2826,7 +2899,7 @@ End Sub
 
             ' get the item sprite
             If itemNum > 0 Then
-                ItemPic = Item(itemNum).Pic
+                ItemPic = Item(itemNum).Icon
             Else
                 ' no item equiped - use blank image
                 ItemPic = 37 + i
@@ -2835,7 +2908,7 @@ End Sub
             yO = Windows(GetWindowIndex("winCharacter")).Window.Top + EqTop
             xO = Windows(GetWindowIndex("winCharacter")).Window.Left + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
 
-            RenderTexture(ItemSprite(ItemPic), GameWindow, xO, yO, 0, 0, 32, 32, 32, 32)
+            RenderTexture(ItemSprite(ItemPic), Window, xO, yO, 0, 0, 32, 32, 32, 32)
         Next
     End Sub
 
@@ -2896,7 +2969,7 @@ End Sub
 
     Public Sub DrawInventory()
         Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, itemNum As Long, ItemPic As Long, x As Long, Top As Long, Left As Long, Amount As String
-        Dim Colour As Color, skipItem As Boolean, amountModifier As Long, tmpItem As Long
+        Dim Color As Color, skipItem As Boolean, amountModifier As Long, tmpItem As Long
 
         xO = Windows(GetWindowIndex("winInventory")).Window.Left
         yO = Windows(GetWindowIndex("winInventory")).Window.Top
@@ -2904,7 +2977,7 @@ End Sub
         Height = Windows(GetWindowIndex("winInventory")).Window.Height
 
         ' render green
-        RenderTexture(InterfaceSprite(34), GameWindow, xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4)
+        RenderTexture(InterfaceSprite(34), Window, xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4)
 
         Width = 76
         Height = 76
@@ -2913,14 +2986,14 @@ End Sub
         ' render grid - row
         For i = 1 To 4
             If i = 4 Then Height = 38
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 4, y, 0, 0, Width, Height, Width, Height)
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 80, y, 0, 0, Width, Height, Width, Height)
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 156, y, 0, 0, 42, Height, 42, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 4, y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 80, y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 156, y, 0, 0, 42, Height, 42, Height)
             y = y + 76
         Next
 
         ' render bottom wood
-        RenderTexture(InterfaceSprite(1), GameWindow, xO + 4, yO + 289, 100, 100, 194, 26, 194, 26)
+        RenderTexture(InterfaceSprite(1), Window, xO + 4, yO + 289, 100, 100, 194, 26, 194, 26)
 
         ' actually draw the icons
         For i = 1 To MAX_INV
@@ -2930,7 +3003,7 @@ End Sub
             If itemNum > 0 And itemNum <= MAX_ITEMS Then
                 ' not dragging?
                 If Not (DragBox.Origin = PartOriginType.Inventory And DragBox.Slot = i) Then
-                    ItemPic = Item(itemNum).Pic
+                    ItemPic = Item(itemNum).Icon
 
                     ' exit out if we're offering item in a trade.
                     amountModifier = 0
@@ -2961,7 +3034,7 @@ End Sub
                             Left = xO + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
 
                             ' draw icon
-                            RenderTexture(ItemSprite(ItemPic), GameWindow, Left, Top, 0, 0, 32, 32, 32, 32)
+                            RenderTexture(ItemSprite(ItemPic), Window, Left, Top, 0, 0, 32, 32, 32, 32)
 
                             ' If item is a stack - draw the amount you have
                             If GetPlayerInvItemValue(Myindex, i) > 1 Then
@@ -2971,14 +3044,14 @@ End Sub
 
                                 ' Draw currency but with k, m, b etc. using a convertion function
                                 If CLng(Amount) < 1000000 Then
-                                    Colour = GetSfmlColor(ColorType.White)
+                                    Color = GetSfmlColor(ColorType.White)
                                 ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
-                                    Colour = GetSfmlColor(ColorType.Yellow)
+                                    Color = GetSfmlColor(ColorType.Yellow)
                                 ElseIf CLng(Amount) > 10000000 Then
-                                    Colour = GetSfmlColor(ColorType.BrightGreen)
+                                    Color = GetSfmlColor(ColorType.BrightGreen)
                                 End If
 
-                                RenderText(ConvertCurrency(Amount), GameWindow, x, y, Colour, Colour, , Verdana)
+                                RenderText(ConvertCurrency(Amount), Window, x, y, Color, Color, , Verdana)
                             End If
                         End If
                     End If
@@ -3027,31 +3100,28 @@ End Sub
 
         Select Case descType
             Case 1 ' Inventory Item
-                texNum = Item(descItem).Pic
+                texNum = Item(descItem).Icon
 
                 ' render sprite
-                RenderTexture(ItemSprite(texNum), GameWindow, xO + 20, yO + 34, 0, 0, 64, 64, 32, 32)
+                RenderTexture(ItemSprite(texNum), Window, xO + 20, yO + 34, 0, 0, 64, 64, 32, 32)
             Case 2 ' Skill Icon
                 texNum = Skill(descItem).Icon
                 ' render bar
                 With Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "picBar"))
-                    If .Visible Then RenderTexture(InterfaceSprite(45), GameWindow, xO + .Left, yO + .Top, 0, 12, .Value, 12, .Value, 12)
+                    If .Visible Then RenderTexture(InterfaceSprite(45), Window, xO + .Left, yO + .Top, 0, 12, .Value, 12, .Value, 12)
                 End With
 
                 ' render sprite
-                RenderTexture(SkillSprite(texNum), GameWindow, xO + 20, yO + 34, 0, 0, 64, 64, 32, 32)
+                RenderTexture(SkillSprite(texNum), Window, xO + 20, yO + 34, 0, 0, 64, 64, 32, 32)
         End Select
 
         ' render text array
         y = 18
         count = UBound(descText)
         For I = 1 To count
-            RenderText(descText(I).Text, GameWindow, xO + 141 - (TextWidth(descText(I).Text) \ 2), yO + y, descText(I).Color, Color.Black)
+            RenderText(descText(I).Text, Window, xO + 141 - (TextWidth(descText(I).Text) \ 2), yO + y, descText(I).Color, Color.Black)
             y = y + 12
         Next
-
-        ' close
-        HideWindow(GetWindowIndex("winDescription"))
     End Sub
 
     Public Sub CreateWindow_DragBox()
@@ -3061,6 +3131,53 @@ End Sub
         ' Need to set up unique mouseup event
         Windows(WindowCount).Window.CallBack(entState.MouseUp) = New Action(AddressOf DragBox_Check)
     End Sub
+
+    Public Sub CreateWindow_Options()
+        CreateWindow("winOptions", "", Georgia, zOrder_Win, 0, 0, 210, 212, 0, 0, , , DesignType.Win_NoBar, DesignType.Win_NoBar, DesignType.Win_NoBar, , , , , , , , , , , ,False, False)
+
+        ' Centralize it
+        CentralizeWindow(windowCount)
+
+        ' Set the index for spawning controls
+        zOrder_Con = 1
+
+        ' Parchment
+        CreatePictureBox(windowCount, "picParchment", 6, 6, 198, 200, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+
+        ' General
+        CreatePictureBox(windowCount, "picBlank", 35, 25, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+        CreateLabel(windowCount, "lblBlank", 35, 22, 140, 0, "General Options", Verdana, Color.White, AlignmentType.Center)
+    
+        ' Check boxes
+        CreateCheckbox(windowCount, "chkMusic", 35, 40, 80, , , "Music", Verdana, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkSound", 115, 40, 80, , , "Sound", Verdana, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkAutotile", 35, 60, 80, , , "Autotile", Verdana, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkFullscreen", 115, 60, 80, , , "Fullscreen", Verdana, , , , DesignType.ChkNorm)
+
+        ' Resolution
+        CreatePictureBox(windowCount, "picBlank", 35, 85, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+        CreateLabel(windowCount, "lblBlank", 35, 92, 140, FontSize, "Select Resolution", Verdana, Color.White, AlignmentType.Center)
+
+        ' combobox
+        CreateComboBox(windowCount, "cmbRes", 30, 100, 150, 18, DesignType.ComboNorm)
+
+        ' Button
+        CreateButton(windowCount, "btnConfirm", 65, 168, 80, 22, "Confirm", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , AddressOf btnOptions_Confirm)
+
+        ' Populate the options screen
+        SetOptionsScreen
+    End Sub
+
+    Public Sub CreateWindow_Combobox()
+        ' background window
+        CreateWindow("winComboMenuBG", "ComboMenuBG", Georgia, zOrder_Win, 0, 0, 800, 600, 0, False, , , , , , , , , , , , , New Action(AddressOf CloseComboMenu), , , False, False)
+
+        ' window
+        CreateWindow("winComboMenu", "ComboMenu", Georgia, zOrder_Win, 0, 0, 100, 100, 0, False, , , DesignType.ComboMenuNorm, , , , , , , , , , , , , , False, False)
+
+        ' centralize it
+        CentralizeWindow(windowCount)
+End Sub
 
     Public Sub CreateWindow_Skills()
         ' Create window
@@ -3080,37 +3197,37 @@ End Sub
         Dim Top As Long
 
         ' move hotbar
-        Windows(GetWindowIndex("winHotbar")).Window.Left = GameWindow.Size.X - 462
+        Windows(GetWindowIndex("winHotbar")).Window.Left = Window.Size.X - 462
 
         ' move menu
-        Windows(GetWindowIndex("winMenu")).Window.Left = GameWindow.Size.X - 264
-        Windows(GetWindowIndex("winMenu")).Window.Top = GameWindow.Size.Y - 48
+        Windows(GetWindowIndex("winMenu")).Window.Left = Window.Size.X - 264
+        Windows(GetWindowIndex("winMenu")).Window.Top = Window.Size.Y - 48
 
         ' move invitations
-        Windows(GetWindowIndex("winInvite_Party")).Window.Left = GameWindow.Size.X - 234
-        Windows(GetWindowIndex("winInvite_Party")).Window.Top = GameWindow.Size.Y - 80
+        Windows(GetWindowIndex("winInvite_Party")).Window.Left = Window.Size.X - 234
+        Windows(GetWindowIndex("winInvite_Party")).Window.Top = Window.Size.Y - 80
 
         ' loop through
-        Top = GameWindow.Size.Y - 80
+        Top = Window.Size.Y - 80
 
         If Windows(GetWindowIndex("winInvite_Party")).Window.visible Then
             Top = Top - 37
         End If
 
-        Windows(GetWindowIndex("winInvite_Trade")).Window.Left = GameWindow.Size.X - 234
+        Windows(GetWindowIndex("winInvite_Trade")).Window.Left = Window.Size.X - 234
         Windows(GetWindowIndex("winInvite_Trade")).Window.Top = Top
 
         ' re-size right-click background
-        Windows(GetWindowIndex("winRightClickBG")).Window.Width = GameWindow.Size.X
-        Windows(GetWindowIndex("winRightClickBG")).Window.Height = GameWindow.Size.Y
+        Windows(GetWindowIndex("winRightClickBG")).Window.Width = Window.Size.X
+        Windows(GetWindowIndex("winRightClickBG")).Window.Height = Window.Size.Y
 
         ' re-size combo background
-        Windows(GetWindowIndex("winComboMenuBG")).Window.Width = GameWindow.Size.X
-        Windows(GetWindowIndex("winComboMenuBG")).Window.Height = GameWindow.Size.Y
+        Windows(GetWindowIndex("winComboMenuBG")).Window.Width = Window.Size.X
+        Windows(GetWindowIndex("winComboMenuBG")).Window.Height = Window.Size.Y
     End Sub
 
     Public Sub DrawSkills()
-        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, spellnum As Long, spellPic As Long, x As Long, Top As Long, Left As Long
+        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, Skillnum As Long, SkillPic As Long, x As Long, Top As Long, Left As Long
 
         xO = Windows(GetWindowIndex("winSkills")).Window.Left
         yO = Windows(GetWindowIndex("winSkills")).Window.Top
@@ -3119,7 +3236,7 @@ End Sub
         Height = Windows(GetWindowIndex("winSkills")).Window.Height
     
         ' render green
-        RenderTexture(InterfaceSprite(34), GameWindow, xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4)
+        RenderTexture(InterfaceSprite(34), Window, xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4)
     
         Width = 76
         Height = 76
@@ -3128,29 +3245,121 @@ End Sub
         ' render grid - row
         For i = 1 To 4
             If i = 4 Then Height = 42
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 4, y, 0, 0, Width, Height, Width, Height)
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 80, y, 0, 0, Width, Height, Width, Height)
-            RenderTexture(InterfaceSprite(35), GameWindow, xO + 156, y, 0, 0, 42, Height, 42, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 4, y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 80, y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, xO + 156, y, 0, 0, 42, Height, 42, Height)
             y = y + 76
         Next
     
         ' actually draw the icons
         For i = 1 To MAX_PLAYER_SKILLS
-            spellnum = Player(Myindex).Skill(i).Num
-            If spellnum > 0 And spellnum <= MAX_SKILLS Then
+            Skillnum = Player(Myindex).Skill(i).Num
+            If Skillnum > 0 And Skillnum <= MAX_SKILLS Then
+                StreamSkill(Skillnum)
+
                 ' not dragging?
-                If Not (DragBox.Origin = PartOriginType.Spells And DragBox.Slot = i) Then
-                    spellPic = Skill(spellnum).Icon
+                If Not (DragBox.Origin = PartOriginType.Skill And DragBox.Slot = i) Then
+                    SkillPic = Skill(Skillnum).Icon
+
+                    If SkillPic > 0 And SkillPic <= NumSkills Then
+                        If SkillGfxInfo(SkillPic).IsLoaded = False Then
+                            LoadTexture(SkillPic, 9)
+                        End If
+
+                        Top = yO + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
+                        Left = xO + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
     
-                    If spellPic > 0 And spellPic <= NumSkills Then
-                        Top = yO + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                        Left = xO + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
-    
-                        RenderTexture(SkillSprite(spellPic), GameWindow, Left, Top, 0, 0, 32, 32, 32, 32)
+                        RenderTexture(SkillSprite(SkillPic), Window, Left, Top, 0, 0, 32, 32, 32, 32)
                     End If
                 End If
             End If
         Next
+    End Sub
+
+    ' Options
+    Public Sub btnOptions_Close()
+        HideWindow(GetWindowIndex("winOptions"))
+        ShowWindow(GetWindowIndex("winEscMenu"))
+    End Sub
+
+    Sub btnOptions_Confirm()
+        Dim i As Long, Value As Long, Width As Long, Height As Long, message As Boolean, musicFile As String
+
+        ' music
+        Value = Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "chkMusic")).Value
+        If Types.Settings.Music <> Value Then
+            Types.Settings.Music = Value
+
+            ' let them know
+            If Value = 0 Then
+                AddText("Music turned off.", ColorType.BrightGreen)
+                StopMusic
+            Else
+                AddText("Music tured on.", ColorType.BrightGreen)
+                ' play music
+                If InGame Then musicFile = Trim$(Map.Music) Else musicFile = Trim$(Types.Settings.Music)
+                If Not musicFile = "None." Then
+                    PlayMusic(musicFile)
+                Else
+                    StopMusic
+                End If
+            End If
+        End If
+    
+        ' sound
+        Value = Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "chkSound")).Value
+        If Types.Settings.Sound <> Value Then
+            Types.Settings.Sound = Value
+            ' let them know
+            If Value = 0 Then
+                AddText("Sound turned off.", ColorType.BrightGreen)
+            Else
+                AddText("Sound tured on.", ColorType.BrightGreen)
+            End If
+        End If
+    
+        ' autotiles
+        Value = Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "chkAutotile")).Value
+        If Types.Settings.Autotile <> Value Then
+            Types.Settings.Autotile = Value
+            ' let them know
+            If Value = 0 Then
+                If InGame Then
+                    AddText("Autotiles turned off.", ColorType.BrightGreen)
+                    initAutotiles
+                End If
+            Else
+                If InGame Then
+                    AddText("Autotiles turned on.", ColorType.BrightGreen)
+                    initAutotiles
+                End If
+            End If
+        End If
+    
+        ' fullscreen
+        Value = Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "chkFullscreen")).Value
+        If Types.Settings.Fullscreen <> Value Then
+            Types.Settings.Fullscreen = Value
+            message = True
+        End If
+    
+        ' resolution
+        With Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "cmbRes"))
+            If .Value > 0 And .Value <= 13 Then
+                message = True
+            End If
+        End With
+    
+        ' save options
+        Types.Settings.Save()
+
+        ' let them know
+        If InGame Then
+            If message Then AddText("Some changes will take effect next time you load the game.", ColorType.BrightGreen)
+        End If
+
+        ' close
+        btnOptions_Close
     End Sub
 End Module
 

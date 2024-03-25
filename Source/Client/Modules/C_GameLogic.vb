@@ -128,7 +128,7 @@ Module C_GameLogic
                     End If
                 End If
 
-                ' check if we need to unlock the pets's spell casting restriction
+                ' check if we need to unlock the pets's Skill casting restriction
                 If PetSkillBuffer > 0 Then
                     If PetSkillBufferTimer + (Skill(Pet(Player(Myindex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000) < tick Then
                         PetSkillBuffer = 0
@@ -272,7 +272,11 @@ Module C_GameLogic
                 fadetmr = tick + 30
             End If
 
-            Render_Graphics()
+            if InGame Then
+                Render_Graphics()
+            Else
+                Render_Menu()
+            End If
 
             ' Calculate fps
             If TickFPS < tick Then
@@ -291,7 +295,7 @@ Module C_GameLogic
                 EditorAnim_DrawAnim()
             End If
 
-            GameWindow.DispatchEvents()
+            Window.DispatchEvents()
             UpdateWindow()
             Application.DoEvents()
             ResizeGUI()
@@ -1356,7 +1360,7 @@ Continue1:
     End Sub
 
     Public Sub UpdateChat()
-        SettingsManager.Save()
+        Settings.Save()
     End Sub
 
     Public Sub ScrollChatBox(ByVal direction As Byte)
@@ -1385,7 +1389,7 @@ Continue1:
         End With
 
         For i = 1 To MAX_HOTBAR
-            If Hotbar(i).Slot Then
+            If Player(Myindex).Hotbar(i).Slot Then
                 If CurMouseX >= tempRec.Left And CurMouseX <= tempRec.Right Then
                     If CurMouseY >= tempRec.Top And CurMouseY <= tempRec.Bottom Then
                         IsHotbar = i
@@ -1405,12 +1409,12 @@ Continue1:
         ' show
         If GetPlayerInvItemNum(Myindex, invNum) Then
             If Item(GetPlayerInvItemNum(Myindex, invNum)).BindType > 0 And Player(Myindex).Inv(invNum).Bound > 0 Then soulBound = True
-            'ShowItemDesc(x, y, GetPlayerInvItemNum(Myindex, invNum), soulBound)
+            ShowItemDesc(x, y, GetPlayerInvItemNum(Myindex, invNum))
         End If
     End Sub
 
     Public Sub ShowItemDesc(x As Long, y As Long, itemNum As Long)
-        Dim Color As Color, theName As String, className As String, levelTxt As String, i As Long
+        Dim Color As Color, theName As String, jobName As String, levelTxt As String, i As Long
 
         ' set globals
         descType = 1 ' inventory
@@ -1462,7 +1466,7 @@ Continue1:
 
             ' class req
             If Item(itemNum).JobReq > 0 Then
-                className = Trim$(Job(Item(itemNum).JobReq).Name)
+                jobName = Trim$(Job(Item(itemNum).JobReq).Name)
                 ' do we match it?
                 If GetPlayerJob(Myindex) = Item(itemNum).JobReq Then
                     Color = Color.Green
@@ -1470,11 +1474,11 @@ Continue1:
                     Color = Color.Red
                 End If
             Else
-                className = "No class req."
+                jobName = "No Job Req."
                 Color = Color.Green
             End If
 
-            .Controls(GetControlIndex("winDescription", "lblClass")).Text = className
+            .Controls(GetControlIndex("winDescription", "lblClass")).Text = jobName
             .Controls(GetControlIndex("winDescription", "lblClass")).Color = Color
             ' level
             If Item(itemNum).LevelReq > 0 Then
@@ -1486,7 +1490,7 @@ Continue1:
                     Color = Color.Red
                 End If
             Else
-                levelTxt = "No level req."
+                levelTxt = "No Level Req."
                 Color = Color.Green
             End If
             .Controls(GetControlIndex("winDescription", "lblLevel")).Text = levelTxt
@@ -1499,20 +1503,20 @@ Continue1:
         ' go through the rest of the text
         Select Case Item(itemNum).Type
             Case ItemType.None
-                AddDescInfo("No type", Color.White)
+                AddDescInfo("No Type", Color.White)
             Case ItemType.Equipment
                 Select Case Item(itemNum).SubType
-                    Case EquipmentType.Weapon
+                    Case ItemSubType.Weapon
                         AddDescInfo("Weapon", Color.White)
-                    Case EquipmentType.Armor
+                    Case ItemSubType.Armor
                         AddDescInfo("Armor", Color.White)
-                    Case EquipmentType.Helmet
+                    Case ItemSubType.Helmet
                         AddDescInfo("Helmet", Color.White)
-                    Case EquipmentType.Shield
+                    Case ItemSubType.Shield
                         AddDescInfo("Shield", Color.White)
-                    Case EquipmentType.Shoes
+                    Case ItemSubType.Shoes
                         AddDescInfo("Shoes", Color.White)
-                    Case EquipmentType.Gloves
+                    Case ItemSubType.Gloves
                         AddDescInfo("Gloves", Color.White)
                 End Select
             Case ItemType.Consumable
@@ -1537,10 +1541,9 @@ Continue1:
                     AddDescInfo("Bind on Equip", Color.White)
                 End If
 
-                ' price
                 AddDescInfo("Value: " & Item(itemNum).Price & " G", Color.Yellow)
             Case ItemType.Equipment
-                ' Damage/defence
+                ' Damage/defense
                 If Item(itemNum).SubType = EquipmentType.Weapon Then
                     AddDescInfo("Damage: " & Item(itemNum).Data2, Color.White)
                     AddDescInfo("Speed: " & (Item(itemNum).Speed / 1000) & "s", Color.White)
@@ -1557,40 +1560,178 @@ Continue1:
                     AddDescInfo("Bind on Equip", Color.White)
                 End If
 
-                ' price
                 AddDescInfo("Value: " & Item(itemNum).Price & " G", Color.Yellow)
 
                 ' stat bonuses
                 If Item(itemNum).Add_Stat(StatType.Strength) > 0 Then
                     AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Strength) & " Str", Color.White)
                 End If
+
                 If Item(itemNum).Add_Stat(StatType.Luck) > 0 Then
                     AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Luck) & " End", Color.White)
                 End If
+
                 If Item(itemNum).Add_Stat(StatType.Spirit) > 0 Then
                     AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Spirit) & " Spi", Color.White)
                 End If
+
                 If Item(itemNum).Add_Stat(StatType.Luck) > 0 Then
                     AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Luck) & " Luc", Color.White)
                 End If
+
                 If Item(itemNum).Add_Stat(StatType.Intelligence) > 0 Then
                     AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Intelligence) & " Int", Color.White)
                 End If
             Case ItemType.Consumable
-                'If Item(itemNum).Add_Stat > 0 Then
-                ' AddDescInfo "+" & Item(itemNum).Add_Stat & " HP"
-                'End If
-                'If Item(itemNum).AddMP > 0 Then
-                ' AddDescInfo "+" & Item(itemNum).AddMP & " SP"
-                'End If
-                'If Item(itemNum).AddEXP > 0 Then
-                ' AddDescInfo "+" & Item(itemNum).AddEXP & " EXP"
-                'End If
-                ' price
+                If Item(itemNum).Add_Stat(StatType.Strength) > 0 Then
+                    AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Strength) & " Str", Color.White)
+                End If
+
+                If Item(itemNum).Add_Stat(StatType.Luck) > 0 Then
+                    AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Luck) & " End", Color.White)
+                End If
+
+                If Item(itemNum).Add_Stat(StatType.Spirit) > 0 Then
+                    AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Spirit) & " Spi", Color.White)
+                End If
+
+                If Item(itemNum).Add_Stat(StatType.Luck) > 0 Then
+                    AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Luck) & " Luc", Color.White)
+                End If
+
+                If Item(itemNum).Add_Stat(StatType.Intelligence) > 0 Then
+                    AddDescInfo("+" & Item(itemNum).Add_Stat(StatType.Intelligence) & " Int", Color.White)
+                End If
+
+                If Item(itemNum).Data1 > 0 Then
+                    Select Case Item(itemNum).SubType
+                        Case ItemSubType.AddHP
+                            AddDescInfo("+" & Item(itemNum).Data1 & " HP", Color.White)
+                        Case ItemSubType.AddMP
+                            AddDescInfo("+" & Item(itemNum).Data1 & " MP", Color.White)
+                        Case ItemSubType.AddSP
+                            AddDescInfo("+" & Item(itemNum).Data1 & " SP", Color.White)
+                        Case ItemSubType.Exp
+                            AddDescInfo("+" & Item(itemNum).Data1 & " EXP", Color.White)
+                    End Select
+                    
+                End If
+
                 AddDescInfo("Value: " & Item(itemNum).Price & " G", Color.Yellow)
             Case ItemType.Skill
-                ' price
                 AddDescInfo("Value: " & Item(itemNum).Price & " G", Color.Yellow)
+        End Select
+    End Sub
+
+    Public Sub ShowSkillDesc(x As Long, y As Long, Skillnum As Long, SkillSlot As Long)
+        Dim Color As Long, theName As String, sUse As String, i As Long, barWidth As Long, tmpWidth As Long
+
+        ' set globals
+        descType = 2 ' Skill
+        descItem = Skillnum
+    
+        ' set position
+        Windows(GetWindowIndex("winDescription")).Window.Left = x
+        Windows(GetWindowIndex("winDescription")).Window.Top = y
+    
+        ' show the window
+        ShowWindow(GetWindowIndex("winDescription"), , False)
+    
+        ' exit out early if last is same
+        If (descLastType = descType) And (descLastItem = descItem) Then Exit Sub
+    
+        ' clear
+        ReDim descText(1)
+    
+        ' hide req. labels
+        Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblLevel")).visible = False
+        Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "picBar")).visible = True
+    
+        ' set variables
+        With Windows(GetWindowIndex("winDescription"))
+            ' set name
+            .Controls(GetControlIndex("winDescription", "lblName")).Text = Trim$(Skill(Skillnum).name)
+            .Controls(GetControlIndex("winDescription", "lblName")).Color =  SFML.Graphics.Color.White
+        
+            ' find ranks
+            If SkillSlot > 0 Then
+                ' draw the rank bar
+                barWidth = 66
+                'If Skill(Skillnum).rank > 0 Then
+                    'tmpWidth = ((PlayerSkills(SkillSlot).Uses / barWidth) / (Skill(Skillnum).NextUses / barWidth)) * barWidth
+                'Else
+                    tmpWidth = 66
+                'End If
+                .Controls(GetControlIndex("winDescription", "picBar")).value = tmpWidth
+                ' does it rank up?
+                'If Skill(Skillnum).NextRank > 0 Then
+                    Color = ColorType.White
+                    'sUse = "Uses: " & PlayerSkills(SkillSlot).Uses & "/" & Skill(Skillnum).NextUses
+                    'If PlayerSkills(SkillSlot).Uses = Skill(Skillnum).NextUses Then
+                        'If Not GetPlayerLevel(MyIndex) >= Skill(Skill(Skillnum).NextRank).LevelReq Then
+                            'Color = BrightRed
+                            'sUse = "Lvl " & Skill(Skill(Skillnum).NextRank).LevelReq & " req."
+                        'End If
+                    'End If
+                'Else
+                    Color = ColorType.Gray
+                    sUse = "Max Rank"
+                'End If
+                ' show controls
+                .Controls(GetControlIndex("winDescription", "lblClass")).visible = True
+                .Controls(GetControlIndex("winDescription", "picBar")).visible = True
+                 'set vals
+                .Controls(GetControlIndex("winDescription", "lblClass")).Text = sUse
+                .Controls(GetControlIndex("winDescription", "lblClass")).Color = SFML.Graphics.Color.White
+            Else
+                ' hide some controls
+                .Controls(GetControlIndex("winDescription", "lblClass")).visible = False
+                .Controls(GetControlIndex("winDescription", "picBar")).visible = False
+            End If
+        End With
+    
+        Select Case Skill(Skillnum).Type
+            Case SkillType.DamageHp
+                AddDescInfo("Damage HP", SFML.Graphics.Color.White)
+            Case SkillType.DamageMp
+                AddDescInfo("Damage SP", SFML.Graphics.Color.White)
+            Case SkillType.HealHp
+                AddDescInfo("Heal HP", SFML.Graphics.Color.White)
+            Case SkillType.HealMp
+                AddDescInfo("Heal SP", SFML.Graphics.Color.White)
+            Case SkillType.Warp
+                AddDescInfo("Warp", SFML.Graphics.Color.White)
+        End Select
+    
+        ' more info
+        Select Case Skill(Skillnum).Type
+            Case SkillType.DamageHp, SkillType.DamageMp, SkillType.HealHp, SkillType.HealMp
+                ' damage
+                AddDescInfo("Vital: " & Skill(Skillnum).Vital, SFML.Graphics.Color.White)
+            
+                ' mp cost
+                AddDescInfo("Cost: " & Skill(Skillnum).MPCost & " SP", SFML.Graphics.Color.White)
+            
+                ' cast time
+                AddDescInfo("Cast Time: " & Skill(Skillnum).CastTime & "s", SFML.Graphics.Color.White)
+            
+                ' cd time
+                AddDescInfo("Cooldown: " & Skill(Skillnum).CDTime & "s", SFML.Graphics.Color.White)
+            
+                ' aoe
+                If Skill(Skillnum).AoE > 0 Then
+                    AddDescInfo("AoE: " & Skill(Skillnum).AoE, SFML.Graphics.Color.White)
+                End If
+            
+                ' stun
+                If Skill(Skillnum).StunDuration > 0 Then
+                    AddDescInfo("Stun: " & Skill(Skillnum).StunDuration & "s", SFML.Graphics.Color.White)
+                End If
+            
+                ' dot
+                If Skill(Skillnum).Duration > 0 And Skill(Skillnum).Interval > 0 Then
+                    AddDescInfo("DoT: " & (Skill(Skillnum).Duration / Skill(Skillnum).Interval) & " tick", SFML.Graphics.Color.White)
+                End If
         End Select
     End Sub
 
@@ -1643,7 +1784,6 @@ Continue1:
         End Select
 
         frmAdmin.Dispose()
-        frmOptions.Dispose()
 
         isLogging = True
         InGame = False
@@ -1663,4 +1803,33 @@ Continue1:
         Next
     End Sub
 
+    Sub SetOptionsScreen()
+        ' clear the combolists
+        Erase Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "cmbRes")).list
+        ReDim Windows(GetWindowIndex("winOptions")).Controls(GetControlIndex("winOptions", "cmbRes")).list(0)
+
+        ' Resolutions
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1920x1080")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1680x1050")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1600x900")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1440x900")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1440x1050")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1366x768")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1360x1024")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1360x768")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1280x1024")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1280x800")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1280x768")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1280x720")
+        Combobox_AddItem(GetWindowIndex("winOptions"), GetControlIndex("winOptions", "cmbRes"), "1024x768")    
+
+        ' fill the options screen
+        With Windows(GetWindowIndex("winOptions"))
+            .Controls(GetControlIndex("winOptions", "chkMusic")).Value = Types.Settings.Music
+            .Controls(GetControlIndex("winOptions", "chkSound")).Value = Types.Settings.Sound
+            .Controls(GetControlIndex("winOptions", "chkAutotile")).Value = Types.Settings.Autotile
+            .Controls(GetControlIndex("winOptions", "chkFullscreen")).Value = Types.Settings.Fullscreen
+            .Controls(GetControlIndex("winOptions", "cmbRes")).Value = Types.Settings.Resolution
+        End With
+    End Sub
 End Module

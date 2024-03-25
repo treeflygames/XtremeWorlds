@@ -280,7 +280,7 @@ Friend Module C_Projectiles
             .TextureRect = New IntRect(rec.Left, rec.Top, 32, 32),
             .Position = New Vector2f(x, y)
         }
-        GameWindow.Draw(tmpSprite)
+        Window.Draw(tmpSprite)
 
     End Sub
 
@@ -304,9 +304,9 @@ Friend Module C_Projectiles
 #Region "Projectile Editor"
 
     Friend Sub ProjectileEditorInit()
-        Editorindex = frmEditor_Projectile.lstIndex.SelectedIndex + 1
+        EditorIndex = frmEditor_Projectile.lstIndex.SelectedIndex + 1
 
-        With Projectile(Editorindex)
+        With Projectile(EditorIndex)
             frmEditor_Projectile.txtName.Text = Trim$(.Name)
             frmEditor_Projectile.nudPic.Value = .Sprite
             frmEditor_Projectile.nudRange.Value = .Range
@@ -314,7 +314,7 @@ Friend Module C_Projectiles
             frmEditor_Projectile.nudDamage.Value = .Damage
         End With
 
-        ProjectileChanged(Editorindex) = True
+        ProjectileChanged(EditorIndex) = True
 
     End Sub
 

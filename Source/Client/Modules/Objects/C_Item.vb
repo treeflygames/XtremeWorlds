@@ -60,7 +60,7 @@ Module C_Items
     End Sub
 
     Sub StreamItem(itemNum As Integer)
-        If itemnum > 0 and Item(itemNum).Name = "" And Item_Loaded(itemNum) = False Then
+        If itemnum > 0 and Item(itemNum).Name = "" Or Item_Loaded(itemNum) = False Then
             Item_Loaded(itemNum) = True
             SendRequestItem(itemNum)
         End If
@@ -93,7 +93,7 @@ Module C_Items
         Item(n).Mastery = buffer.ReadInt32()
         Item(n).Name = Trim$(buffer.ReadString())
         Item(n).Paperdoll = buffer.ReadInt32()
-        Item(n).Pic = buffer.ReadInt32()
+        Item(n).Icon = buffer.ReadInt32()
         Item(n).Price = buffer.ReadInt32()
         Item(n).Rarity = buffer.ReadInt32()
         Item(n).Speed = buffer.ReadInt32()

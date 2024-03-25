@@ -381,7 +381,7 @@ Public Class frmEditor_Map
         If PreviewPlayer Is Nothing Then
             If lstMusic.SelectedIndex > 0 Then
                 If Types.Settings.MusicExt = ".mid" Then
-                    MidiPlayer.LoadMidiFile(Paths.Music & lstMusic.Items(lstMusic.SelectedIndex).ToString)
+                    MidiPlayer.Load(Paths.Music & lstMusic.Items(lstMusic.SelectedIndex).ToString)
                     MidiPlayer.Play()
                 Else
                     StopMusic()
@@ -1229,7 +1229,7 @@ Public Class frmEditor_Map
     Public Sub EditorMap_DrawItem()
         Dim itemnum As Integer
 
-        itemnum = Item(Me.scrlMapItem.Value).Pic
+        itemnum = Item(Me.scrlMapItem.Value).Icon
 
         If itemnum <= 0 OrElse itemnum > NumItems Then
             Me.picMapItem.BackgroundImage = Nothing
@@ -1328,7 +1328,7 @@ Public Class frmEditor_Map
         End If
 
         Dim image As Image
-        image = GameWindow.Capture()
+        image = Window.Capture()
         image.SaveToFile(Map.Name & GfxExt)
     End Sub
 

@@ -199,7 +199,7 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data), I As Long, winNum As Long, conNum As Long, isSlotEmpty(MAX_CHARS) As Boolean, x As Long
 
         Types.Settings.Username = Windows(GetWindowIndex("winLogin")).Controls(GetControlIndex("winLogin", "txtUsername")).Text
-        SettingsManager.Save()
+        Settings.Save()
 
         For I = 1 To MAX_CHARS
             CharName(I) = Trim$(buffer.ReadString)
@@ -829,7 +829,7 @@ Module C_NetworkReceive
             Item(n).Mastery = buffer.ReadInt32()
             Item(n).Name = Trim$(buffer.ReadString())
             Item(n).Paperdoll = buffer.ReadInt32()
-            Item(n).Pic = buffer.ReadInt32()
+            Item(n).Icon = buffer.ReadInt32()
             Item(n).Price = buffer.ReadInt32()
             Item(n).Rarity = buffer.ReadInt32()
             Item(n).Speed = buffer.ReadInt32()

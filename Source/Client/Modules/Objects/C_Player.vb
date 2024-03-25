@@ -51,8 +51,8 @@ Module C_Player
             Player(index).Inv(x).Value = 0
         Next
 
-        ReDim Player(index).Skill(MAX_SKILLS)
-        For x = 1 To MAX_SKILLS
+        ReDim Player(index).Skill(MAX_PLAYER_SKILLS)
+        For x = 1 To MAX_PLAYER_SKILLS
             Player(index).Skill(x).Num = 0
             Player(index).Skill(x).CD = 0
         Next
@@ -692,7 +692,7 @@ Module C_Player
         End If
 
         ' Draw name
-        RenderText(name, GameWindow, textX, textY, color, backcolor)
+        RenderText(name, Window, textX, textY, color, backcolor)
     End Sub
 
 #End Region

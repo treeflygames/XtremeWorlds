@@ -232,7 +232,7 @@ Module C_Database
     End Sub
 
     Sub StreamNpc(npcNum As Integer)
-        If npcNum > 0 and NPC(npcNum).Name = "" And NPC_Loaded(npcNum) = False Then
+        If npcNum > 0 and NPC(npcNum).Name = "" Or NPC_Loaded(npcNum) = False Then
             NPC_Loaded(npcNum) = True
             SendRequestNpc(npcNum)
         End If
@@ -277,7 +277,7 @@ Module C_Database
     End Sub
 
     Sub StreamSkill(skillNum As Integer)
-        If skillNum > 0 and Item(skillNum).Name = "" And SKill_Loaded(skillNum) = False Then
+        If skillNum > 0 And Skill(skillNum).Name = "" Or Skill_Loaded(skillNum) = False Then
             Skill_Loaded(skillNum) = True
             SendRequestSkill(skillNum)
         End If

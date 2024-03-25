@@ -30,36 +30,36 @@ Friend Class frmEditor_Projectile
         Dim tmpindex As Integer
 
         tmpindex = lstIndex.SelectedIndex
-        Projectile(Editorindex).Name = Trim$(txtName.Text)
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Projectile(Editorindex).Name)
+        Projectile(EditorIndex).Name = Trim$(txtName.Text)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Projectile(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
     Private Sub NudPic_ValueChanged(sender As Object, e As EventArgs) Handles nudPic.Click
-        Projectile(Editorindex).Sprite = nudPic.Value
+        Projectile(EditorIndex).Sprite = nudPic.Value
     End Sub
 
     Private Sub NudRange_ValueChanged(sender As Object, e As EventArgs) Handles nudRange.Click
-        Projectile(Editorindex).Range = nudRange.Value
+        Projectile(EditorIndex).Range = nudRange.Value
     End Sub
 
     Private Sub NudSpeed_ValueChanged(sender As Object, e As EventArgs) Handles nudSpeed.Click
-        Projectile(Editorindex).Speed = nudSpeed.Value
+        Projectile(EditorIndex).Speed = nudSpeed.Value
     End Sub
 
     Private Sub NudDamage_ValueChanged(sender As Object, e As EventArgs) Handles nudDamage.Click
-        Projectile(Editorindex).Damage = nudDamage.Value
+        Projectile(EditorIndex).Damage = nudDamage.Value
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim tmpindex As Integer
 
-        ClearProjectile(Editorindex)
+        ClearProjectile(EditorIndex)
 
         tmpindex = lstIndex.SelectedIndex
-        lstIndex.Items.RemoveAt(Editorindex - 1)
-        lstIndex.Items.Insert(Editorindex - 1, Editorindex & ": " & Projectile(Editorindex).Name)
+        lstIndex.Items.RemoveAt(EditorIndex - 1)
+        lstIndex.Items.Insert(EditorIndex - 1, EditorIndex & ": " & Projectile(EditorIndex).Name)
         lstIndex.SelectedIndex = tmpindex
 
         ProjectileEditorInit()

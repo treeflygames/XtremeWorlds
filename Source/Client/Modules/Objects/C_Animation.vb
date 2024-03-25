@@ -90,7 +90,7 @@ Module C_Animations
     End Sub
 
     Sub StreamAnimation(animationNum As Integer)
-        If animationNum > 0 and Animation(animationNum).Name = "" And Animation_Loaded(animationNum) = False Then
+        If animationNum > 0 and Animation(animationNum).Name = "" Or Animation_Loaded(animationNum) = False Then
             Animation_Loaded(animationNum) = True
             SendRequestAnimation(animationNum)
         End If
@@ -283,7 +283,7 @@ Module C_Animations
 
         If sRect.Width < 0 OrElse sRect.Height < 0 Then Exit Sub
 
-        RenderTexture(AnimationSprite(sprite), GameWindow, x, y, sRect.X, sRect.Y, sRect.Width, sRect.Height)
+        RenderTexture(AnimationSprite(sprite), Window, x, y, sRect.X, sRect.Y, sRect.Width, sRect.Height)
 
     End Sub
 

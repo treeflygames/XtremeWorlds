@@ -49,6 +49,7 @@ Module S_NetworkReceive
         Socket.PacketId(ClientPackets.CCast) = AddressOf Packet_Cast
         Socket.PacketId(ClientPackets.CQuit) = AddressOf Packet_QuitGame
         Socket.PacketId(ClientPackets.CSwapInvSlots) = AddressOf Packet_SwapInvSlots
+        Socket.PacketId(ClientPackets.CSwapSkillSlots) = AddressOf Packet_SwapSkillSlots
 
         Socket.PacketId(ClientPackets.CCheckPing) = AddressOf Packet_CheckPing
         Socket.PacketId(ClientPackets.CUnequip) = AddressOf Packet_Unequip
@@ -82,33 +83,28 @@ Module S_NetworkReceive
 
         Socket.PacketId(ClientPackets.CAdmin) = AddressOf Packet_Admin
 
-        'hotbar
         Socket.PacketId(ClientPackets.CSetHotbarSlot) = AddressOf Packet_SetHotBarSlot
         Socket.PacketId(ClientPackets.CDeleteHotbarSlot) = AddressOf Packet_DeleteHotBarSlot
         Socket.PacketId(ClientPackets.CUseHotbarSlot) = AddressOf Packet_UseHotBarSlot
 
-        'Events
+        Socket.PacketId(ClientPackets.CSkillLearn) = AddressOf Packet_SkillLearn
+
         Socket.PacketId(ClientPackets.CEventChatReply) = AddressOf Packet_EventChatReply
         Socket.PacketId(ClientPackets.CEvent) = AddressOf Packet_Event
         Socket.PacketId(ClientPackets.CRequestSwitchesAndVariables) = AddressOf Packet_RequestSwitchesAndVariables
         Socket.PacketId(ClientPackets.CSwitchesAndVariables) = AddressOf Packet_SwitchesAndVariables
 
-        'projectiles
-
         Socket.PacketId(ClientPackets.CRequestProjectiles) = AddressOf HandleRequestProjectile
         Socket.PacketId(ClientPackets.CClearProjectile) = AddressOf HandleClearProjectile
 
-        'emotes
         Socket.PacketId(ClientPackets.CEmote) = AddressOf Packet_Emote
 
-        'parties
         Socket.PacketId(ClientPackets.CRequestParty) = AddressOf Packet_PartyRquest
         Socket.PacketId(ClientPackets.CAcceptParty) = AddressOf Packet_AcceptParty
         Socket.PacketId(ClientPackets.CDeclineParty) = AddressOf Packet_DeclineParty
         Socket.PacketId(ClientPackets.CLeaveParty) = AddressOf Packet_LeaveParty
         Socket.PacketId(ClientPackets.CPartyChatMsg) = AddressOf Packet_PartyChatMsg
 
-        'pets
         Socket.PacketId(ClientPackets.CRequestPets) = AddressOf Packet_RequestPets
         Socket.PacketId(ClientPackets.CSummonPet) = AddressOf Packet_SummonPet
         Socket.PacketId(ClientPackets.CPetMove) = AddressOf Packet_PetMove
@@ -118,7 +114,6 @@ Module S_NetworkReceive
         Socket.PacketId(ClientPackets.CPetUseStatPoint) = AddressOf Packet_UsePetStatPoint
         Socket.PacketId(ClientPackets.CRequestEditPet) = AddressOf Packet_RequestPet
 
-        'editor
         Socket.PacketId(ClientPackets.CRequestEditItem) = AddressOf Packet_EditItem
         Socket.PacketId(ClientPackets.CSaveItem) = AddressOf Packet_SaveItem
         Socket.PacketId(ClientPackets.CRequestEditNpc) = AddressOf Packet_EditNpc
@@ -1381,7 +1376,7 @@ Module S_NetworkReceive
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
 
         Types.Settings.Welcome = Trim$(buffer.ReadString)
-        SettingsManager.Save()
+        Settings.Save()
 
         GlobalMsg("Welcome changed to: " & Types.Settings.Welcome)
         Addlog(GetPlayerName(index) & " changed welcome to: " & Types.Settings.Welcome, ADMIN_LOG)
@@ -1527,6 +1522,22 @@ Module S_NetworkReceive
         buffer.Dispose()
 
         PlayerSwitchInvSlots(index, oldSlot, newSlot)
+
+        buffer.Dispose()
+    End Sub
+
+     Sub Packet_SwapSkillSlots(index As Integer, ByRef data() As Byte)
+        Dim oldSlot As Integer, newSlot As Integer
+        Dim buffer As New ByteStream(data)
+
+        If TempPlayer(index).InTrade > 0 OrElse TempPlayer(index).InBank OrElse TempPlayer(index).InShop Then Exit Sub
+
+        ' Old Slot
+        oldSlot = buffer.ReadInt32
+        newSlot = buffer.ReadInt32
+        buffer.Dispose()
+
+        PlayerSwitchSkillSlots(index, oldSlot, newSlot)
 
         buffer.Dispose()
     End Sub
@@ -2102,9 +2113,9 @@ Module S_NetworkReceive
         Dim slot As Integer, skill As Integer, type As Byte
         Dim buffer As New ByteStream(data)
 
-        slot = buffer.ReadInt32
-        skill = buffer.ReadInt32
         type = buffer.ReadInt32
+        skill = buffer.ReadInt32
+        slot = buffer.ReadInt32
 
         Player(index).Hotbar(slot).Slot = skill
         Player(index).Hotbar(slot).SlotType = type
@@ -2145,6 +2156,15 @@ Module S_NetworkReceive
 
         SendHotbar(index)
 
+    End Sub
+
+    Sub Packet_SkillLearn(index As Integer, ByRef data() As Byte)
+        Dim SkillNum As Integer
+        Dim buffer As New ByteStream(data)
+
+        SkillNum = buffer.ReadInt32()
+
+        PlayerLearnSkill(index, 0, SkillNum)
     End Sub
 
     Sub Packet_RequestEditJob(index As Integer, ByRef data() As Byte)

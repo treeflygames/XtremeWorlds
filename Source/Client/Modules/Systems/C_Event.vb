@@ -2548,7 +2548,7 @@ newlist:
                     .Size = New Vector2f(rec.Width, rec.Height),
                     .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                 }
-                GameWindow.Draw(rec2)
+                Window.Draw(rec2)
                 GoTo nextevent
             End If
             x = ConvertMapX(x)
@@ -2559,7 +2559,7 @@ newlist:
                 Case 0
                     tX = ((x) - 4) + (PicX * 0.5)
                     tY = ((y) - 7) + (PicY * 0.5)
-                    RenderText("E", GameWindow, tX, tY, (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black))
+                    RenderText("E", Window, tX, tY, (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black))
                 Case 1
                     If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
                         If CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
@@ -2581,7 +2581,7 @@ newlist:
                             .TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height),
                             .Position = New Vector2f(ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY))
                         }
-                        GameWindow.Draw(tmpSprite)
+                        Window.Draw(tmpSprite)
                     Else
                         With rec
                             .Y = 0
@@ -2597,7 +2597,7 @@ newlist:
                             .Size = New Vector2f(rec.Width, rec.Height),
                             .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                         }
-                        GameWindow.Draw(rec2)
+                        Window.Draw(rec2)
                     End If
                 Case 2
                     If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumTileSets Then
@@ -2617,9 +2617,9 @@ newlist:
                         End With
 
                         If rec.Height > 32 Then
-                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY) - PicY, rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY) - PicY, rec.X, rec.Y, rec.Width, rec.Height)
                         Else
-                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), GameWindow, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY), rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY), rec.X, rec.Y, rec.Width, rec.Height)
                         End If
                     Else
                         With rec
@@ -2636,7 +2636,7 @@ newlist:
                             .Size = New Vector2f(rec.Width, rec.Height),
                             .Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
                         }
-                        GameWindow.Draw(rec2)
+                        Window.Draw(rec2)
                     End If
             End Select
 nextevent:
@@ -2737,9 +2737,9 @@ nextevent:
                 y = y - (sRect.Bottom - sRect.Top) + 32
 
                 If MapEvents(id).GraphicY2 > 1 Then
-                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), GameWindow, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY) - PicY, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY) - PicY, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 Else
-                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), GameWindow, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 End If
         End Select
 

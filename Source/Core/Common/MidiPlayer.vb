@@ -1,10 +1,10 @@
 ﻿Imports Sanford.Multimedia.Midi
 
 Public Module MidiPlayer
-    Private OutputDevice As OutputDevice
-    Private midiSequence As Sequence
-    Private midiSequencer As Sequencer
-    Private midiPath As String
+    Public OutputDevice As OutputDevice
+    Public midiSequence As Sequence
+    Public midiSequencer As Sequencer
+    Public midiPath As String
 
     ' Initialize the MIDI sequence and sequencer
     Public Sub Initialize()
@@ -27,7 +27,8 @@ Public Module MidiPlayer
     End Sub
 
     ' Load a MIDI file
-    Public Sub LoadMidiFile(filePath As String)
+    Public Sub Load(filePath As String)
+        Initialize()
         midiPath = filePath
         midiSequence.Load(filePath)
     End Sub
@@ -43,7 +44,7 @@ Public Module MidiPlayer
     Public Sub Dispose()
         midiSequence.Dispose
         midiSequencer.Dispose
-        Initialize()
+        OutputDevice.Dispose
     End Sub
 
     ' Handle channel messages
@@ -54,7 +55,7 @@ Public Module MidiPlayer
     ' Handle playback completion
     Private Sub OnPlayingCompleted(sender As Object, e As EventArgs)
         MidiPlayer.Dispose()
-        MidiPlayer.LoadMidiFile(midiPath)
+        MidiPlayer.Load(midiPath)
         MidiPlayer.Play()
     End Sub
 End Module
