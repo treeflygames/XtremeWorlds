@@ -53,7 +53,7 @@ Module S_General
         InitNetwork()
 
         Console.WriteLine("Creating Database...")
-        DatabaseContext = New SQLiteDbContext()
+        DatabaseContext = New MirageDbContext()
         DatabaseContext.Database.Migrate()
         CreateDatabase("mirage")
 
