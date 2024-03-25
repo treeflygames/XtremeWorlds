@@ -30,8 +30,8 @@ Namespace DbContexts.Extensions
                 Throw New ArgumentException($"'{NameOf(name)}' cannot be null or whitespace.", NameOf(name))
             End If
 
-            Return (From c In dbset
-                    Where Trim(c.Name.ToLower()) = Trim$(name.ToLower())
+            Return (From c In dbset.ToList()
+                    Where Trim$(c.Name.ToLower()) = Trim$(name.ToLower())
                     Select c).FirstOrDefault() IsNot Nothing
         End Function
 
@@ -42,8 +42,8 @@ Namespace DbContexts.Extensions
             End If
 
             If dbset.Exists(name) Then
-                Dim character As Character = (From c In dbset
-                                              Where Trim(c.Name.ToLower()) = Trim$(name.ToLower())
+                Dim character As Character = (From c In dbset.ToList()
+                                              Where Trim$(c.Name.ToLower()) = Trim$(name.ToLower())
                                               Select c).FirstOrDefault()
 
                 If character IsNot Nothing Then
