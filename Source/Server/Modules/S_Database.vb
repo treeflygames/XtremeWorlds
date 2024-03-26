@@ -1,17 +1,11 @@
-﻿Imports System
-Imports System.Data
-Imports System.Globalization
+﻿Imports System.Globalization
 Imports System.IO
-Imports System.Numerics
-Imports System.Runtime.InteropServices.JavaScript
-Imports System.Runtime.InteropServices.JavaScript.JSType
-Imports System.Runtime.InteropServices.Marshalling
-Imports System.Security.Cryptography
 Imports System.Text
-Imports System.Text.Json.Nodes
 Imports System.Text.RegularExpressions
 Imports Core
 Imports Core.Types
+Imports Microsoft.Extensions.Configuration
+Imports Mirage.Core.Database.DbContexts
 Imports Mirage.Sharp.Asfw
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
@@ -19,7 +13,34 @@ Imports Npgsql
 Imports NpgsqlTypes
 
 Module S_Database
-    Dim connectionString As String = "Host=localhost;Port=5432;Username=postgres;Password=mirage;Database=mirage"
+    Dim connectionString As String = ReadConnectionStringFromConfiguration()
+
+    Public Function ReadConnectionStringFromConfiguration() As String
+        Dim builder As IConfigurationBuilder = New ConfigurationBuilder() _
+                .SetBasePath(AppContext.BaseDirectory) _
+                .AddJsonFile("appsettings.database.json", optional:=False, reloadOnChange:=True) _
+                .AddJsonFile($"appsettings.database.{If(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production")}.json", optional:=True, reloadOnChange:=True) _
+                .AddUserSecrets(Of MirageDbContext)([optional]:=True, reloadOnChange:=True) _
+                .AddEnvironmentVariables()
+
+        Dim configuration = builder.Build()
+
+        Dim connectionString = configuration("Database:ConnectionString")
+
+        If String.IsNullOrWhiteSpace(connectionString) Then
+            connectionString = "Data Source=Database/Mirage.db"
+        End If
+
+        If connectionString.Contains("Filename=") OrElse connectionString.Contains("Data Source=") Then
+            Dim dbdir As String = Path.GetDirectoryName(connectionString.Replace("Filename=", "").Replace("Data Source=", ""))
+
+            If Not String.IsNullOrWhiteSpace(dbdir) AndAlso Not Directory.Exists(dbdir) Then
+                Dim unused = Directory.CreateDirectory(dbdir)
+            End If
+        End If
+
+        Return connectionString
+    End Function
 
     Public Sub ExecuteSql(connectionString As String, sql As String)
         Using connection As New NpgsqlConnection(connectionString)
@@ -323,7 +344,7 @@ Module S_Database
         End Using
     End Function
 
-    #Region "Var"
+#Region "Var"
 
     Public Function GetVar(filePath As String, section As String, key As String) As String
         Dim isInSection As Boolean = False
@@ -528,13 +549,13 @@ Module S_Database
 
         CacheResources(mapNum)
 
-        If File.Exists(mapsDir & "\cs\map" & MapNum & ".ini" )
+        If File.Exists(mapsDir & "\cs\map" & mapNum & ".ini") Then
             Dim csMap As CSMapStruct = LoadCSMap(mapNum)
             Map(mapNum) = MapFromCSMap(csMap)
             Exit Sub
         End If
 
-        If File.Exists(mapsDir & "\xw\map" & MapNum & ".dat" )
+        If File.Exists(mapsDir & "\xw\map" & mapNum & ".dat") Then
             Dim xwMap As XWMapStruct = LoadXWMap(mapsDir & "\xw\map" & mapNum.ToString() & ".dat")
             Map(mapNum) = MapFromXWMap(xwMap)
             Exit Sub
@@ -602,7 +623,7 @@ Module S_Database
 
         filename = AppDomain.CurrentDomain.BaseDirectory & "\maps\cs\map" & MapNum & ".dat"
 
-        Using fileStream As New FileStream(filename, FileMode.Open, FileAccess.Read), 
+        Using fileStream As New FileStream(filename, FileMode.Open, FileAccess.Read),
             binaryReader As New BinaryReader(fileStream)
 
             With csMap
@@ -630,9 +651,9 @@ Module S_Database
                             .DirBlock = binaryReader.ReadByte()
 
                             For i = 1 To LayerType.Count - 1
-                                .Layer(i).Tileset = binaryReader.ReadInt32()
-                                .Layer(i).X = binaryReader.ReadInt32()
-                                .Layer(i).Y = binaryReader.ReadInt32()
+                                .Layer(i).TileSet = binaryReader.ReadInt32()
+                                .Layer(i).x = binaryReader.ReadInt32()
+                                .Layer(i).y = binaryReader.ReadInt32()
                             Next
                         End With
                     Next
@@ -830,7 +851,7 @@ Module S_Database
         Return mwMap
     End Function
 
-    public Function MapFromCSMap(csMap As CSMapStruct) As MapStruct
+    Public Function MapFromCSMap(csMap As CSMapStruct) As MapStruct
         Dim mwMap As MapStruct
 
         ReDim mwMap.Npc(MAX_MAP_NPCS)
@@ -868,13 +889,13 @@ Module S_Database
                 mwMap.Tile(x, y).Data1 = csMap.Tile(x, y).Data1
                 mwMap.Tile(x, y).Data2 = csMap.Tile(x, y).Data2
                 mwMap.Tile(x, y).Data3 = csMap.Tile(x, y).Data3
-                mwMap.Tile(x,y).DirBlock = csMap.Tile(x,y).DirBlock
-                
+                mwMap.Tile(x, y).DirBlock = csMap.Tile(x, y).DirBlock
+
                 For i As Integer = LayerType.Ground To LayerType.Count - 1
-                    mwMap.Tile(x,y).Layer(i).X = csMap.Tile(x,y).Layer(i).x
-                    mwMap.Tile(x,y).Layer(i).y = csMap.Tile(x,y).Layer(i).y
-                    mwMap.Tile(x,y).Layer(i).Tileset = csMap.Tile(x,y).Layer(i).TileSet
-                    mwMap.Tile(x,y).Layer(i).AutoTile = csMap.Tile(x,y).Autotile(i)
+                    mwMap.Tile(x, y).Layer(i).X = csMap.Tile(x, y).Layer(i).x
+                    mwMap.Tile(x, y).Layer(i).Y = csMap.Tile(x, y).Layer(i).y
+                    mwMap.Tile(x, y).Layer(i).Tileset = csMap.Tile(x, y).Layer(i).TileSet
+                    mwMap.Tile(x, y).Layer(i).AutoTile = csMap.Tile(x, y).Autotile(i)
                 Next
             Next
         Next
