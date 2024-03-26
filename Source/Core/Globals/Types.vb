@@ -17,7 +17,7 @@ Public Module Types
     Public MapNPC(MAX_MAP_NPCS) As MapDataStruct
     Public Bank(MAX_PLAYERS) As BankStruct
     Public TempPlayer(MAX_PLAYERS) As TempPlayerStruct
-    Public Account(MAX_PLAYERS) As AccountStruct
+    Public Accounts(MAX_PLAYERS) As AccountStruct
     Public Player(MAX_PLAYERS) As PlayerStruct
     Public Projectile(MAX_PROJECTILES) As ProjectileStruct
     Public MapProjectile(MAX_MAPS, MAX_PROJECTILES) As MapProjectileStruct

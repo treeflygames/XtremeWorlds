@@ -8,7 +8,7 @@ Module C_Player
     Sub ClearPlayers()
         Dim i As Integer
 
-        ReDim Account(MAX_PLAYERS)
+        ReDim Accounts(MAX_PLAYERS)
         ReDim Player(MAX_PLAYERS)
 
         For i = 1 To MAX_PLAYERS
@@ -18,7 +18,7 @@ Module C_Player
     End Sub
 
     Sub ClearAccount(index As Integer)
-        Account(index).Login = ""
+        Accounts(index).Login = ""
     End Sub
 
     Sub ClearPlayer(index As Integer)

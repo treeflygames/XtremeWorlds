@@ -1,18 +1,18 @@
 ﻿Public Module Commands
     Public Function GetPlayerLogin(index As Integer) As String
-        GetPlayerLogin = Trim$(Account(index).Login)
+        GetPlayerLogin = Trim$(Accounts(index).Login)
     End Function
 
     Public Sub SetPlayerLogin(index As Integer, login As String)
-        Account(index).Login = login.Trim
+        Accounts(index).Login = login.Trim
     End Sub
 
     Public Function GetPlayerPassword(index As Integer) As String
-        GetPlayerPassword = Trim$(Account(index).Password)
+        GetPlayerPassword = Trim$(Accounts(index).Password)
     End Function
 
     Public Sub SetPlayerPassword(index As Integer, password As String)
-        Account(index).Password = password.Trim
+        Accounts(index).Password = password.Trim
     End Sub
 
     Public Function GetPlayerMaxVital(index As Integer, Vital As VitalType) As Integer

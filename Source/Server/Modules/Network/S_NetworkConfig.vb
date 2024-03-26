@@ -23,7 +23,7 @@ Friend Module S_NetworkConfig
     End Sub
 
     Function IsLoggedIn(index As Integer) As Boolean
-        Return Account(index).Login.Trim.Length > 0
+        Return Accounts(index).Login.Trim.Length > 0
     End Function
 
     Function IsPlaying(index As Integer) As Boolean
@@ -33,7 +33,7 @@ Friend Module S_NetworkConfig
     Function IsMultiAccounts(Index As Integer, Login As String) As Boolean
         For i As Integer = 1 To Socket.HighIndex()
             If i <> Index then
-                If Account(i).Login.Trim.ToLower() = Login.Trim.ToLower() Then
+                If Accounts(i).Login.Trim.ToLower() = Login.Trim.ToLower() Then
                     Return True
                 End If
             End If

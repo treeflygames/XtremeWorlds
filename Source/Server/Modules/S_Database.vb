@@ -1109,7 +1109,7 @@ Module S_Database
     End Sub
 
     Sub SaveAccount(index As Integer)
-        Dim json As String = JsonConvert.SerializeObject(Account(index)).ToString()
+        Dim json As String = JsonConvert.SerializeObject(Accounts(index)).ToString()
         Dim username As String = GetPlayerLogin(index)
         Dim id As Int64 = GenerateIdFromString(username)
 
@@ -1124,7 +1124,7 @@ Module S_Database
         SetPlayerLogin(index, username)
         SetPlayerPassword(index, password)
 
-        Dim json As String = JsonConvert.SerializeObject(Account(index)).ToString()
+        Dim json As String = JsonConvert.SerializeObject(Accounts(index)).ToString()
 
         Dim id As Int64 = GenerateIdFromString(username)
 
@@ -1141,7 +1141,7 @@ Module S_Database
         End If
 
         Dim accountData = JObject.FromObject(data).ToObject(Of AccountStruct)()
-        Account(index) = accountData
+        Accounts(index) = accountData
         Return True
     End Function
 
@@ -1411,7 +1411,7 @@ Module S_Database
 
         Next
 
-        Account(BanPlayerindex).Banned = True
+        Accounts(BanPlayerindex).Banned = True
 
         IP = Mid$(IP, 1, i)
         AddTextToFile(IP, "banlist.txt")
@@ -1442,7 +1442,7 @@ Module S_Database
 
         sr.Close()
 
-        If Account(index).Banned Then
+        If Accounts(index).Banned Then
             IsBanned = True
         End If
 
@@ -1466,7 +1466,7 @@ Module S_Database
 
         Next
 
-        Account(BanPlayerindex).Banned = True
+        Accounts(BanPlayerindex).Banned = True
 
         IP = Mid$(IP, 1, i)
         AddTextToFile(IP, "banlist.txt")
