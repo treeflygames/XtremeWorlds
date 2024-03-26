@@ -14,8 +14,8 @@ Module C_General
 
     Friend Sub LoadGame()
         Settings.Load()
-        LoadLanguage()
-        InputSettings.Load()
+        Languages.Load()
+        Inputs.Load()
         MidiPlayer.Initialize()
         LoadGraphics()
         InitNetwork()

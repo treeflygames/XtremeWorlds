@@ -259,7 +259,7 @@ End Class
 Public Module Languages
     Public Language As New LanguageDef
 
-    Public Sub LoadLanguage()
+    Public Sub Load()
         Dim cf As String = Paths.Config()
         Dim x As New XmlSerializer(GetType(LanguageDef), New XmlRootAttribute("Language"))
 

@@ -209,12 +209,12 @@ Module C_Graphics
         Console.WriteLine("Key Pressed: " & e.Code.ToString())
 
         If InGame Then
-            If InputSettings.MoveUp(e.Code) Then VbKeyUp = True
-            If InputSettings.MoveDown(e.Code) Then VbKeyDown = True
-            If InputSettings.MoveLeft(e.Code) Then VbKeyLeft = True
-            If InputSettings.MoveRight(e.Code) Then VbKeyRight = True
-            If InputSettings.Attack(e.Code) Then VbKeyControl = True
-            If InputSettings.Run(e.Code) Then VbKeyShift = True
+            If Inputs.MoveUp(e.Code) Then VbKeyUp = True
+            If Inputs.MoveDown(e.Code) Then VbKeyDown = True
+            If Inputs.MoveLeft(e.Code) Then VbKeyLeft = True
+            If Inputs.MoveRight(e.Code) Then VbKeyRight = True
+            If Inputs.Attack(e.Code) Then VbKeyControl = True
+            If Inputs.Run(e.Code) Then VbKeyShift = True
 
             Select Case e.Code
                 Case Keyboard.Key.Escape
@@ -346,12 +346,12 @@ Module C_Graphics
 
         Console.WriteLine("Key Released: " & e.Code.ToString())
 
-        If InputSettings.MoveUp(e.Code) Then VbKeyUp = False
-        If InputSettings.MoveDown(e.Code) Then VbKeyDown = False
-        If InputSettings.MoveLeft(e.Code) Then VbKeyLeft = False
-        If InputSettings.MoveRight(e.Code) Then VbKeyRight = False
-        If InputSettings.Attack(e.Code) Then VbKeyControl = False
-        If InputSettings.Run(e.Code) Then VbKeyShift = False
+        If Inputs.MoveUp(e.Code) Then VbKeyUp = False
+        If Inputs.MoveDown(e.Code) Then VbKeyDown = False
+        If Inputs.MoveLeft(e.Code) Then VbKeyLeft = False
+        If Inputs.MoveRight(e.Code) Then VbKeyRight = False
+        If Inputs.Attack(e.Code) Then VbKeyControl = False
+        If Inputs.Run(e.Code) Then VbKeyShift = False
 
         'admin
         If e.Code = Keyboard.Key.Insert Then

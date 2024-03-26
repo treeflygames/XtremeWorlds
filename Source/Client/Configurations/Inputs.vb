@@ -4,8 +4,8 @@ Imports System.Xml.Serialization
 Imports Core
 Imports SFML.Window
 
-Public Class InputSettings
-    Public Shared Inputs As InputSettings
+Public Class Inputs
+    Public Shared Inputs As Inputs
 
     Public Class Input
 
@@ -152,7 +152,7 @@ Public Class InputSettings
 
      Public Shared Sub Load()
         Dim cf As String = Paths.Config()
-        Dim x As New XmlSerializer(GetType(InputSettings), New XmlRootAttribute("Inputs"))
+        Dim x As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
 
         Directory.CreateDirectory(cf)
         cf += "Inputs.xml"
@@ -175,7 +175,7 @@ Public Class InputSettings
         Directory.CreateDirectory(cf)
         cf += "Inputs.xml"
 
-        Dim x As New XmlSerializer(GetType(InputSettings), New XmlRootAttribute("Inputs"))
+        Dim x As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
         Dim writer = New StreamWriter(cf)
 
         x.Serialize(writer, Inputs)
