@@ -11,6 +11,7 @@ Namespace DbContexts
         Private connectionString As String
         Private ReadOnly configuration As IConfigurationRoot
 
+        Public Property Accounts As DbSet(Of Account)
         Public Property Characters As DbSet(Of Character)
 
         Public Sub New()
@@ -63,6 +64,19 @@ Namespace DbContexts
             Console.WriteLine($"Database type '{Me.dbType}' has been configured.")
             MyBase.OnConfiguring(optionsBuilder)
         End Sub
+
+        Public Function TrySaveChanges() As Boolean
+            Try
+                Call Me.SaveChanges()
+                Return True
+            Catch ex As Exception
+                Console.WriteLine($"{ex.Message}")
+                If ex.InnerException IsNot Nothing Then
+                    Console.WriteLine($"{ex.InnerException.Message}")
+                End If
+                Return False
+            End Try
+        End Function
 
         Public Function UseConnectionString(ByVal connectionString As String) As MirageDbContext
             If String.IsNullOrWhiteSpace(connectionString) Then

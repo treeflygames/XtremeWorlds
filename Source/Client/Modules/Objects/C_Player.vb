@@ -2,6 +2,7 @@
 Imports Core
 Imports SFML.Graphics
 Imports SFML.System
+Imports Mirage.Core.Database.Types
 
 Module C_Player
 #Region "Database"
@@ -18,7 +19,10 @@ Module C_Player
     End Sub
 
     Sub ClearAccount(index As Integer)
-        Accounts(index).Login = ""
+        If Accounts(index) Is Nothing Then
+            Accounts(index) = Nothing
+        End If
+        Accounts(index) = New Account()
     End Sub
 
     Sub ClearPlayer(index As Integer)
@@ -113,7 +117,7 @@ Module C_Player
             If VbKeyShift Then
                 Player(Myindex).Moving = MovementType.Walking
             Else
-                Player(Myindex).Moving = MovementType.Running               
+                Player(Myindex).Moving = MovementType.Running
             End If
 
             Select Case GetPlayerDir(Myindex)
@@ -401,37 +405,37 @@ Module C_Player
 
         Select Case GetPlayerDir(index)
             Case DirectionType.Up
-                Player(Index).YOffset = Player(Index).YOffset - movementSpeed
-                If Player(Index).YOffset < 0 Then Player(Index).YOffset = 0
+                Player(index).YOffset = Player(index).YOffset - movementSpeed
+                If Player(index).YOffset < 0 Then Player(index).YOffset = 0
             Case DirectionType.Down
-                Player(Index).YOffset = Player(Index).YOffset + movementSpeed
-                If Player(Index).YOffset > 0 Then Player(Index).YOffset = 0
+                Player(index).YOffset = Player(index).YOffset + movementSpeed
+                If Player(index).YOffset > 0 Then Player(index).YOffset = 0
             Case DirectionType.Left
-                Player(Index).XOffset = Player(Index).XOffset - movementSpeed
-                If Player(Index).XOffset < 0 Then Player(Index).XOffset = 0
+                Player(index).XOffset = Player(index).XOffset - movementSpeed
+                If Player(index).XOffset < 0 Then Player(index).XOffset = 0
             Case DirectionType.Right
-                Player(Index).XOffset = Player(Index).XOffset + movementSpeed
-                If Player(Index).XOffset > 0 Then Player(Index).XOffset = 0
+                Player(index).XOffset = Player(index).XOffset + movementSpeed
+                If Player(index).XOffset > 0 Then Player(index).XOffset = 0
         End Select
 
         ' Check if completed walking over to the next tile
-        If Player(Index).Moving > 0 Then
-            If GetPlayerDir(Index) = DirectionType.Right OrElse GetPlayerDir(Index) = DirectionType.Down Then
-                If (Player(Index).XOffset >= 0) AndAlso (Player(Index).YOffset >= 0) Then
-                    Player(Index).Moving = 0
-                    If Player(Index).Steps = 1 Then
-                        Player(Index).Steps = 3
+        If Player(index).Moving > 0 Then
+            If GetPlayerDir(index) = DirectionType.Right OrElse GetPlayerDir(index) = DirectionType.Down Then
+                If (Player(index).XOffset >= 0) AndAlso (Player(index).YOffset >= 0) Then
+                    Player(index).Moving = 0
+                    If Player(index).Steps = 1 Then
+                        Player(index).Steps = 3
                     Else
-                        Player(Index).Steps = 1
+                        Player(index).Steps = 1
                     End If
                 End If
             Else
-                If (Player(Index).XOffset <= 0) AndAlso (Player(Index).YOffset <= 0) Then
-                    Player(Index).Moving = 0
-                    If Player(Index).Steps = 1 Then
-                        Player(Index).Steps = 3
+                If (Player(index).XOffset <= 0) AndAlso (Player(index).YOffset <= 0) Then
+                    Player(index).Moving = 0
+                    If Player(index).Steps = 1 Then
+                        Player(index).Steps = 3
                     Else
-                        Player(Index).Steps = 1
+                        Player(index).Steps = 1
                     End If
                 End If
             End If
@@ -523,7 +527,7 @@ Module C_Player
         If Player(Myindex).Skill(skillslot).Num > 0 Then
             If GetTickCount() > Player(Myindex).AttackTimer + 1000 Then
                 If Player(Myindex).Moving = 0 Then
-                    SendCast(skillSlot)
+                    SendCast(skillslot)
                 Else
                     AddText("Cannot cast while walking!", ColorType.BrightRed)
                 End If
@@ -546,7 +550,7 @@ Module C_Player
 
         For i = 1 To MAX_PLAYER_SKILLS
             ' Check to see if the player has the skill
-            If GetPlayerSkill(MyIndex, i) = skillNum Then
+            If GetPlayerSkill(Myindex, i) = skillNum Then
                 FindSkill = i
                 Exit Function
             End If
@@ -812,7 +816,7 @@ Module C_Player
                 .Controls(GetControlIndex("winCharacter", "lblLevel")).Text = "Level"
                 .Controls(GetControlIndex("winCharacter", "lblGuild")).Text = "Guild"
                 .Controls(GetControlIndex("winCharacter", "lblName2")).Text = Trim$(GetPlayerName(Myindex))
-                .Controls(GetControlIndex("winCharacter", "lblClass2")).Text =Trim$(Job(GetPlayerJob(Myindex)).Name)
+                .Controls(GetControlIndex("winCharacter", "lblClass2")).Text = Trim$(Job(GetPlayerJob(Myindex)).Name)
                 .Controls(GetControlIndex("winCharacter", "lblLevel2")).Text = GetPlayerLevel(Myindex)
                 .Controls(GetControlIndex("winCharacter", "lblGuild2")).Text = "None"
                 UpdateStats_UI()

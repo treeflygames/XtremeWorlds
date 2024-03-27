@@ -6,6 +6,7 @@ Imports Core
 Imports Core.Types
 Imports Microsoft.Extensions.Configuration
 Imports Mirage.Core.Database.DbContexts
+Imports Mirage.Core.Database.Types
 Imports Mirage.Sharp.Asfw
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
@@ -1108,46 +1109,61 @@ Module S_Database
         Next
     End Sub
 
-    Sub SaveAccount(index As Integer)
-        Dim json As String = JsonConvert.SerializeObject(Accounts(index)).ToString()
-        Dim username As String = GetPlayerLogin(index)
-        Dim id As Int64 = GenerateIdFromString(username)
+    Function SaveAccount(ByVal index As Integer) As Boolean
+        If FindAccount(Accounts(index).Login) IsNot Nothing Then
+            Dim unused1 = DatabaseContext.Accounts.Update(Accounts(index))
 
-        If RowExists(id, "account") Then
-            UpdateRowByColumn("id", id, "data", json, "account")
+            Return DatabaseContext.TrySaveChanges()
         Else
-            InsertRowByColumn(id, json, "account", "data", "id")
-        End If
-    End Sub
+            Dim unused1 = DatabaseContext.Accounts.Add(Accounts(index))
 
-    Sub RegisterAccount(index As Integer, username As String, password As String)
-        SetPlayerLogin(index, username)
-        SetPlayerPassword(index, password)
-
-        Dim json As String = JsonConvert.SerializeObject(Accounts(index)).ToString()
-
-        Dim id As Int64 = GenerateIdFromString(username)
-
-        InsertRowByColumn(id, json, "account", "data", "id")
-    End Sub
-
-    Function LoadAccount(index As Integer, username As String)
-        Dim data As JObject
-
-        data = SelectRowByColumn("id", GenerateIdFromString(username), "account", "data")
-
-        If data Is Nothing Then
-            Return False
+            Return DatabaseContext.TrySaveChanges()
         End If
 
-        Dim accountData = JObject.FromObject(data).ToObject(Of AccountStruct)()
-        Accounts(index) = accountData
-        Return True
+        Return False
+    End Function
+
+    Function RegisterAccount(ByVal index As Integer, ByVal username As String, ByVal password As String) As Boolean
+        If FindAccount(username) Is Nothing Then
+            Dim account As New Account With {
+                .Login = username,
+                .Password = password
+            }
+
+            Dim unused1 = DatabaseContext.Accounts.Add(account)
+
+            Accounts(index) = account
+
+            Return DatabaseContext.TrySaveChanges()
+        End If
+
+        Return False
+    End Function
+
+    Function FindAccount(ByVal username As String)
+        Return (From a In DatabaseContext.Accounts.ToList()
+                Where Trim$(a.Login.ToLower()) = Trim$(username.ToLower())
+                Select a).FirstOrDefault()
+    End Function
+
+    Function LoadAccount(ByVal index As Integer, ByVal username As String)
+        Dim account As Account = FindAccount(username)
+
+        If account IsNot Nothing Then
+            Accounts(index) = account
+
+            Return True
+        End If
+
+        Return False
     End Function
 
     Sub ClearAccount(index As Integer)
-        SetPlayerLogin(index, "")
-        SetPlayerPassword(index, "")
+        If Accounts(index) Is Nothing Then
+            Accounts(index) = Nothing
+        End If
+        Accounts(index) = New Account()
+
         ClearPlayer(index)
     End Sub
 

@@ -223,7 +223,6 @@ Module S_NetworkReceive
         Dim username As String, IP As String
         Dim password As String, i As Integer, n As Integer
         Dim buffer As New ByteStream(data)
-        Dim userData As JObject
 
         If Not IsPlaying(index) Then
             If Not IsLoggedIn(index) Then
@@ -252,7 +251,7 @@ Module S_NetworkReceive
                 End If
 
                 ' Get the data
-                username = EKeyPair.DecryptString(buffer.ReadString()).ToLower
+                username = EKeyPair.DecryptString(buffer.ReadString())
                 password = EKeyPair.DecryptString(buffer.ReadString())
 
                 For i = 1 To Len(username)
@@ -281,18 +280,11 @@ Module S_NetworkReceive
                     Exit Sub
                 End If
 
-                userData = SelectRowByColumn("id", GenerateIdFromString(username), "account", "data")
-
-                If Not userData Is Nothing Then
-                    AlertMsg(index, DialogueMsg.NameTaken, MenuType.Register)
-                    Exit Sub
+                If RegisterAccount(index, username, password) Then
+                    ' send them to the character portal
+                    Call SendPlayerChars(index)
+                    Call SendNewCharJob(index)
                 End If
-
-                RegisterAccount(index, username, password)
-
-                ' send them to the character portal
-                Call SendPlayerChars(index)
-                Call SendNewCharJob(index)
             End If
         End If
     End Sub

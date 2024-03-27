@@ -1,5 +1,4 @@
-﻿
-Imports Core.Database
+﻿Imports Mirage.Core.Database.Types
 Imports SFML.Graphics
 
 Public Module Types
@@ -17,7 +16,7 @@ Public Module Types
     Public MapNPC(MAX_MAP_NPCS) As MapDataStruct
     Public Bank(MAX_PLAYERS) As BankStruct
     Public TempPlayer(MAX_PLAYERS) As TempPlayerStruct
-    Public Accounts(MAX_PLAYERS) As AccountStruct
+    Public Accounts(MAX_PLAYERS) As Account
     Public Player(MAX_PLAYERS) As PlayerStruct
     Public Projectile(MAX_PROJECTILES) As ProjectileStruct
     Public MapProjectile(MAX_MAPS, MAX_PROJECTILES) As MapProjectileStruct
@@ -25,7 +24,7 @@ Public Module Types
     Public TradeTheirOffer(MAX_INV) As PlayerInvStruct
     Public Party As PartyStruct
     Public MapResource() As MapResourceStruct
-    Public Settings As Settings 
+    Public Settings As Settings
 
     Public Structure ResourceTypeStruct
         Dim SkillLevel As Integer
@@ -293,12 +292,6 @@ Public Module Types
         Dim AttackTimer As Integer
         Dim Steps As Byte
         Dim Damage As Integer
-    End Structure
-
-    Public Structure AccountStruct
-        Dim Login As String
-        Dim Password As String
-        Dim Banned As Boolean
     End Structure
 
     Public Structure PlayerStruct
@@ -889,7 +882,7 @@ Public Module Types
         Dim Activated As Boolean
         Dim LinkedToWin As Long
         Dim LinkedToCon As Long
-        Dim State As entState
+        Dim State As EntState
         Dim movedX As Long
         Dim movedY As Long
         Dim zOrder As Long
