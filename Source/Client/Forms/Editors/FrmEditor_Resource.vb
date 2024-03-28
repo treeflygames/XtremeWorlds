@@ -43,7 +43,7 @@ Friend Class frmEditor_Resource
         Resource(EditorIndex).Animation = cmbAnimation.SelectedIndex
     End Sub
 
-    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
+    Private Sub lstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         ResourceEditorInit()
     End Sub
 

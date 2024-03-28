@@ -134,6 +134,10 @@ Module S_NetworkReceive
         Socket.PacketId(ClientPackets.CRequestEditPet) = AddressOf Packet_RequestEditPet
         Socket.PacketId(ClientPackets.CSavePet) = AddressOf Packet_SavePet
 
+        Socket.PacketId(ClientPackets.CRequestMoral) = AddressOf Packet_RequestMoral
+        Socket.PacketId(ClientPackets.CRequestEditMoral) = AddressOf Packet_RequestEditMoral
+        Socket.PacketId(ClientPackets.CSaveMoral) = AddressOf Packet_SaveMoral
+
         Socket.PacketId(ClientPackets.CCloseEditor) = AddressOf Packet_CloseEditor
 
     End Sub
@@ -214,7 +218,10 @@ Module S_NetworkReceive
 
                 ' send them to the character portal
                 Call SendPlayerChars(index)
-                Call SendNewCharJob(index)
+
+                For i = 1 to MAX_JOBS
+                    SendUpdateJob(index, i)
+                Next
             End If
         End If
     End Sub
@@ -283,7 +290,10 @@ Module S_NetworkReceive
                 If RegisterAccount(index, username, password) Then
                     ' send them to the character portal
                     Call SendPlayerChars(index)
-                    Call SendNewCharJob(index)
+
+                    For i = 1 to MAX_JOBS
+                        Call SendUpdateJob(index, i)
+                    Next
                 End If
             End If
         End If
@@ -407,7 +417,10 @@ Module S_NetworkReceive
 
             ' send them to the character portal
             Call SendPlayerChars(index)
-            Call SendNewCharJob(index)
+
+            For i = 1 To MAX_JOBS
+                Call SendUpdateJob(index, i)
+            Next
 
             buffer.Dispose()
         End If
@@ -824,7 +837,7 @@ Module S_NetworkReceive
         Map(mapNum).Panorama = buffer.ReadByte
         Map(mapNum).Parallax = buffer.ReadByte
         Map(mapNum).Brightness = buffer.ReadByte
-        Map(mapNum).Respawn = buffer.ReadInt32
+        Map(mapNum).NoRespawn = buffer.ReadInt32
         Map(mapNum).Indoors = buffer.ReadInt32
         Map(mapNum).Shop = buffer.ReadInt32
 
@@ -1030,6 +1043,7 @@ Module S_NetworkReceive
         End If
 
         If Map(GetPlayerMap(index)).Shop > 0 Then
+            TempPlayer(index).InShop = Map(GetPlayerMap(index)).Shop
             SendOpenShop(index, Map(GetPlayerMap(index)).Shop)
         End If
 
@@ -1168,10 +1182,10 @@ Module S_NetworkReceive
         SendItems(index)
         SendAnimations(index)
         SendShops(index)
+        SendResources(index)
+        SendMapEventData(index)
 
         TempPlayer(index).Editor = EditorType.Map
-
-        SendMapEventData(index)
 
         Dim Buffer As New ByteStream(4)
         Buffer.WriteInt32(ServerPackets.SEditMap)
@@ -1213,7 +1227,7 @@ Module S_NetworkReceive
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
 
-        ShopNum = buffer.ReadInt32
+        ShopNum = buffer.ReadInt32()
 
         ' Prevent hacking
         If ShopNum <= 0 OrElse ShopNum > MAX_SHOPS Then Exit Sub
@@ -1228,8 +1242,6 @@ Module S_NetworkReceive
             Shop(ShopNum).TradeItem(i).Item = buffer.ReadInt32()
             Shop(ShopNum).TradeItem(i).ItemValue = buffer.ReadInt32()
         Next
-
-        If Shop(ShopNum).Name Is Nothing Then Shop(ShopNum).Name = ""
 
         buffer.Dispose()
 
@@ -1491,10 +1503,12 @@ Module S_NetworkReceive
         n = buffer.ReadInt32
         buffer.Dispose()
 
-        ' set the skill buffer before casting
-        BufferSkill(index, n)
-
-        buffer.Dispose()
+        If Map(GetPlayerMap(index)).Moral > 0 Then
+            If Moral(Map(GetPlayerMap(index)).Moral).CanCast Then
+                ' set the skill buffer before casting
+                BufferSkill(index, n)
+            End If
+        End If
     End Sub
 
     Sub Packet_QuitGame(index As Integer, ByRef data() As Byte)
@@ -1684,7 +1698,9 @@ Module S_NetworkReceive
             End If
 
             ' it's fine, let's go ahead
-            TakeInvItem(index, .CostItem, .CostValue)
+            For i = 1 To .CostValue
+                TakeInvItem(index, .CostItem, .CostValue)
+            Next
             GiveInvItem(index, .Item, .ItemValue)
         End With
 
@@ -2301,7 +2317,7 @@ Module S_NetworkReceive
         Map(mapNum).Panorama = buffer.ReadByte
         Map(mapNum).Parallax = buffer.ReadByte
         Map(mapNum).Brightness = buffer.ReadByte
-        Map(mapNum).Respawn = buffer.ReadInt32
+        Map(mapNum).NoRespawn = buffer.ReadInt32
         Map(mapNum).Indoors = buffer.ReadInt32
         Map(mapNum).Shop = buffer.ReadInt32
 
@@ -2511,6 +2527,7 @@ Module S_NetworkReceive
     Private Sub Packet_CloseEditor(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        
         If TempPlayer(index).Editor = -1 Then Exit Sub
 
         TempPlayer(index).Editor = -1

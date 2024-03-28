@@ -230,7 +230,7 @@ Friend Module S_Item
 
         ' Check for subscript out of range
         If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Sub
-        If Map(mapNum).Respawn = False Then Exit Sub
+        If Map(mapNum).NoRespawn Then Exit Sub
 
         ' Spawn what we have
         For x = 0 To Map(mapNum).MaxX
@@ -365,24 +365,24 @@ Friend Module S_Item
     End Sub
 
     Sub Packet_DropItem(index As Integer, ByRef data() As Byte)
-        Dim InvNum As Integer, Amount As Integer
+        Dim invNum As Integer, amount As Integer
         Dim buffer As New ByteStream(data)
         
-        InvNum = buffer.ReadInt32
-        Amount = buffer.ReadInt32
+        invNum = buffer.ReadInt32
+        amount = buffer.ReadInt32
         buffer.Dispose()
 
         If TempPlayer(index).InBank OrElse TempPlayer(index).InShop Then Exit Sub
 
         ' Prevent hacking
-        If invNum <= 0 OrElse InvNum > MAX_INV Then Exit Sub
-        If GetPlayerInvItemNum(index, InvNum) < 0 OrElse GetPlayerInvItemNum(index, InvNum) > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(index, InvNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, InvNum)).Stackable = 1 Then
-            If Amount < 0 OrElse Amount > GetPlayerInvItemValue(index, InvNum) Then Exit Sub
+        If invNum <= 0 OrElse invNum > MAX_INV Then Exit Sub
+        If GetPlayerInvItemNum(index, invNum) < 0 OrElse GetPlayerInvItemNum(index, invNum) > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
+            If amount < 0 OrElse amount > GetPlayerInvItemValue(index, invNum) Then Exit Sub
         End If
 
         ' everything worked out fine
-        PlayerMapDropItem(index, InvNum, Amount)
+        PlayerMapDropItem(index, invNum, amount)
     End Sub
 
 #End Region

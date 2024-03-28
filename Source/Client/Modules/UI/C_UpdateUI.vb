@@ -15,12 +15,6 @@ Module C_UpdateUI
     Friend VbKeyAlt As Boolean
     Friend VbKeyEnter As Boolean
 
-    Friend NeedToOpenShop As Boolean
-    Friend NeedToOpenShopNum As Integer
-    Friend NeedToOpenBank As Boolean
-    Friend NeedToOpenTrade As Boolean
-    Friend NeedtoCloseTrade As Boolean
-    Friend NeedtoUpdateTrade As Boolean
     Friend Tradername As String
 
     Friend SkillDescName As String
@@ -111,6 +105,17 @@ Module C_UpdateUI
                 JobEditorInit()
             End With
             InitJobEditor = False
+        End If
+        
+        If InitMoralEditor Then
+            With frmEditor_Moral
+                Editor = EditorType.Moral
+                EditorIndex = 1
+                .Show()
+                .lstIndex.SelectedIndex = 0
+                MoralEditorInit()
+            End With
+            InitMoralEditor = False
         End If
 
         If InitResourceEditor Then

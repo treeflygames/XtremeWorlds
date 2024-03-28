@@ -833,7 +833,7 @@ Partial Class frmEditor_NPC
         ' 
         ' btnCancel
         ' 
-        btnCancel.Location = New Point(13, 873)
+        btnCancel.Location = New Point(17, 874)
         btnCancel.Margin = New Padding(6, 5, 6, 5)
         btnCancel.Name = "btnCancel"
         btnCancel.Padding = New Padding(8, 9, 8, 9)
@@ -853,7 +853,7 @@ Partial Class frmEditor_NPC
         ' 
         ' btnSave
         ' 
-        btnSave.Location = New Point(21, 764)
+        btnSave.Location = New Point(17, 764)
         btnSave.Margin = New Padding(6, 5, 6, 5)
         btnSave.Name = "btnSave"
         btnSave.Padding = New Padding(8, 9, 8, 9)

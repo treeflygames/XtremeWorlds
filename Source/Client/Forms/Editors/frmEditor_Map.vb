@@ -530,7 +530,7 @@ Public Class frmEditor_Map
         Next
 
         chkTint.Checked = Map.MapTint
-        chkMapRespawn.Checked = Map.Respawn
+        chkNoMapRespawn.Checked = Map.NoRespawn
         chkIndoors.Checked = Map.Indoors
 
         ' rest of it
@@ -538,12 +538,6 @@ Public Class frmEditor_Map
         txtDown.Text = Map.Down
         txtLeft.Text = Map.Left
         txtRight.Text = Map.Right
-
-        If Map.Moral > 0 Then
-            cmbMoral.SelectedIndex = Map.Moral - 1
-        Else
-            cmbMoral.SelectedIndex = 0
-        End If
 
         txtBootMap.Text = Map.BootMap
         txtBootX.Text = Map.BootX
@@ -555,6 +549,14 @@ Public Class frmEditor_Map
 
         For X = 1 To MAX_MAP_NPCS
             lstMapNpc.Items.Add(X & ": " & Trim$(NPC(Map.Npc(X)).Name))
+        Next
+
+        cmbMoral.Items.Clear()
+        cmbMoral.Items.Add("None")
+        cmbMoral.SelectedIndex = 0
+
+        For X = 1 To MAX_MORALS
+            cmbMoral.Items.Add(X & ": " & Trim$(Moral(x).Name))
         Next
 
         cmbNpcList.Items.Clear()
@@ -1376,11 +1378,11 @@ Public Class frmEditor_Map
         lblRadius.Text = "Radius: " & scrlLight.Value
     End Sub
 
-    Private Sub chkRespawn_CheckedChanged(sender As Object, e As EventArgs) Handles chkMapRespawn.CheckedChanged
-        If chkMapRespawn.Checked = True Then
-            Map.Respawn = 1
+    Private Sub chkRespawn_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoMapRespawn.CheckedChanged
+        If chkNoMapRespawn.Checked = True Then
+            Map.NoRespawn = 1
         Else
-            Map.Respawn = 0
+            Map.NoRespawn = 0
         End If
     End Sub
 

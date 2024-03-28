@@ -4,19 +4,6 @@ Imports Core
 
 Module C_Items
 
-#Region "Globals & Types"
-
-    ' inv drag + drop
-    Friend DragInvSlotNum As Integer
-
-    Friend InvX As Integer
-    Friend InvY As Integer
-
-    Friend InvItemFrame(MAX_INV) As Byte ' Used for animated items
-    Friend LastItemDesc As Integer ' Stores the last item we showed in desc
-
-#End Region
-
 #Region "Database"
 
     Friend Sub CheckItems()

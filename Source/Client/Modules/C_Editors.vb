@@ -581,4 +581,51 @@ Module C_Editors
     End Sub
 
 #End Region
+
+#Region "Moral Editor"
+    Friend Sub MoralEditorOk()
+        For i = 1 To MAX_MORALS
+            If Moral_Changed(i) Then
+                SendSaveMoral(i)
+            End If
+        Next
+        Editor = -1
+        SendCloseEditor()
+    End Sub
+
+    Friend Sub MoralEditorCancel()
+        Editor = -1
+        ClearChanged_Moral()
+        ClearMorals()
+        SendCloseEditor()
+    End Sub
+
+    Friend Sub MoralEditorInit()
+        Dim i As Integer
+
+        With frmEditor_Moral
+            EditorIndex = .lstIndex.SelectedIndex + 1
+
+            .txtName.Text = Moral(EditorIndex).Name
+            .cmbColor.SelectedIndex = Moral(EditorIndex).Color
+            .chkCanCast.Checked = Moral(EditorIndex).CanCast
+            .chkCanPK.Checked = Moral(EditorIndex).CanPK
+            .chkCanPickupItem.Checked = Moral(EditorIndex).CanPickupItem
+            .chkCanDropItem.Checked = Moral(EditorIndex).CanDropItem
+            .chkCanUseItem.Checked = Moral(EditorIndex).CanUseItem
+            .chkDropItems.Checked = Moral(EditorIndex).DropItems
+            .chkLoseExp.Checked = Moral(EditorIndex).LoseExp
+            .chkPlayerBlock.Checked = Moral(EditorIndex).PlayerBlock
+            .chkNPCBlock.Checked = Moral(EditorIndex).NPCBlock
+        
+            Moral_Changed(EditorIndex) = True
+        End With
+    End Sub
+
+    Friend Sub ClearChanged_Moral()
+       For i = 1 To MAX_MORALS
+            Moral_Changed(i) = False
+        Next
+    End Sub
+#End Region
 End Module

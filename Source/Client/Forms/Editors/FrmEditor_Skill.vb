@@ -96,7 +96,7 @@ Friend Class frmEditor_Skill
         Skill(EditorIndex).StunDuration = nudStun.Value
     End Sub
 
-    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
+    Private Sub lstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         SkillEditorInit()
     End Sub
 

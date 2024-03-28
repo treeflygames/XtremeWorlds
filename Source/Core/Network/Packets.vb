@@ -63,28 +63,20 @@
         CWithdrawItem
         CCloseBank
         CAdminWarp
-
         CTradeInvite
         CTradeInviteAccept
         CAcceptTrade
         CDeclineTrade
         CTradeItem
         CUntradeItem
-
         CAdmin
-
-        'quests
         CRequestQuests
         CQuestLogUpdate
         CPlayerHandleQuest
         CQuestReset
-
-        'Hotbar
         CSetHotbarSlot
         CDeleteHotbarSlot
         CUseHotbarSlot
-
-        'Events
         CEventChatReply
         CEvent
         CSwitchesAndVariables
@@ -92,18 +84,12 @@
 
         CRequestProjectiles
         CClearProjectile  
-
-        'emotes
         CEmote
-
-        'party
         CRequestParty
         CAcceptParty
         CDeclineParty
         CLeaveParty
         CPartyChatMsg
-
-        'pets
         CRequestPets
         CSummonPet
         CPetMove
@@ -113,60 +99,39 @@
         CPetUseStatPoint
         CRequestPet
 
-        CSkillLearn
-
         '*************************
         '***   EDITOR PACKETS  ***
         '*************************
-
-        ' Mapper Packets
         CMapRespawn
         CMapReport
         CSaveMap
+        CSkillLearn
 
         ' ####################
         ' ### Dev+ Packets ###
         ' ####################
-
-        'animations
         CRequestEditAnimation
         CSaveAnimation
-
-        'job
         CRequestEditJob
         CSaveJob
-
-        'items
         CRequestEditItem
         CSaveItem
-
-        'npc's
         CRequestEditNpc
         CSaveNpc
-
-        'pets
         CRequestEditPet
         CSavePet
-
-        'projectiles
         CRequestEditProjectiles
         CSaveProjectile
-
-        'quests
-        CRequestEditQuest
-        CSaveQuest
-
-        'resources
         CRequestEditResource
         CSaveResource
-
-        'shops
         CRequestEditShop
         CSaveShop
-
-        'skills
         CRequestEditSkill
         CSaveSkill
+
+        CRequestMoral
+        CSaveMoral
+        CRequestEditMoral
 
         CCloseEditor
 
@@ -181,7 +146,6 @@
         SKeyPair
         SLoginOK
         SPlayerChars
-        SNewCharJob
         SJobData
         SInGame
         SPlayerInv
@@ -212,7 +176,6 @@
         SSpawnItem
         SItemEditor
         SUpdateItem
-        SREditor
         SSpawnNpc
         SNpcDead
         SNpcEditor
@@ -244,14 +207,12 @@
         SMapWornEq
         SBank
         SLeftGame
-
         SClearTradeTimer
         STradeInvite
         STrade
         SCloseTrade
         STradeUpdate
         STradeStatus
-
         SGameData
         SMapReport
         STarget
@@ -259,18 +220,7 @@
         SMapNames
         SCritical
         SrClick
-
-        'quests
-        SQuestEditor
-        SUpdateQuest
-        SPlayerQuest
-        SPlayerQuests
-        SQuestMessage
-
-        'hotbar
         SHotbar
-
-        'Events
         SSpawnEvent
         SEventMove
         SEventDir
@@ -287,24 +237,16 @@
         SSpecialEffect
         SPic
         SHoldPlayer
-
         SProjectileEditor
         SUpdateProjectile
         SMapProjectile
-
-        'Class Editor
         SJobEditor
         SUpdateJob
-
-        'emotes
+        SUpdateMoral
         SEmote
-
-        'Parties
         SPartyInvite
         SPartyUpdate
         SPartyVitals
-
-        'pets
         SPetEditor
         SUpdatePet
         SUpdatePlayerPet
@@ -315,6 +257,7 @@
         SPetAttack
         SPetXY
         SPetExp
+        SMoralEditor
 
         STime
         SClock

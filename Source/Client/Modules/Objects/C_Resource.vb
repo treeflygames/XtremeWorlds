@@ -121,11 +121,12 @@ Module C_Resources
 #Region "Drawing"
 
     Friend Sub DrawResource(resource As Integer, dx As Integer, dy As Integer, rec As Rectangle)
-        If resource < 1 OrElse resource > NumResources Then Exit Sub
         Dim x As Integer
         Dim y As Integer
         Dim width As Integer
         Dim height As Integer
+
+        If resource < 1 OrElse resource > NumResources Then Exit Sub
 
         x = ConvertMapX(dx)
         y = ConvertMapY(dy)
@@ -143,7 +144,7 @@ Module C_Resources
             .TextureTimer = GetTickCount() + 100000
         End With
 
-        RenderTexture(ResourceSprite(resource), Window, x, y, rec.X, rec.Y, rec.Width, rec.Height)
+        RenderTexture(ResourceSprite(resource), Window, x, y, rec.X, rec.Y, rec.Width, rec.Height, rec.Width, rec.Height)
     End Sub
 
     Friend Sub DrawMapResource(resourceNum As Integer)
@@ -157,8 +158,6 @@ Module C_Resources
         If GettingMap Then Exit Sub
         If MapData = False Then Exit Sub
 
-        StreamResource(resourceNum)
-
         If MapResource(resourceNum).X > Map.MaxX OrElse MapResource(resourceNum).Y > Map.MaxY Then Exit Sub
 
         ' Get the Resource type
@@ -167,6 +166,8 @@ Module C_Resources
         If resourceMaster = 0 Then Exit Sub
 
         If Resource(resourceMaster).ResourceImage = 0 Then Exit Sub
+
+        StreamResource(resourceMaster)
 
         ' Get the Resource state
         resourceState = MapResource(resourceNum).State

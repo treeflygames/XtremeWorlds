@@ -31,7 +31,7 @@ Module S_Npc
         Dim i = 0
         Dim spawned As Boolean
 
-        If Map(mapNum).Respawn = False Then Exit Sub
+        If Map(mapNum).NoRespawn Then Exit Sub
 
         npcNum = Map(mapNum).Npc(mapNpcNum)
 
@@ -394,7 +394,6 @@ Module S_Npc
         Dim mapNum As Integer, npcnum As Integer, Damage As Integer, i As Integer, armor As Integer
 
         ' Can the npc attack the player?
-
         If CanNpcAttackPlayer(mapnpcnum, index) Then
             mapNum = GetPlayerMap(index)
             npcnum = MapNPC(mapNum).Npc(mapnpcnum).Num
@@ -612,59 +611,6 @@ Module S_Npc
             ' Set NPC target to 0
             MapNPC(mapNum).Npc(MapNpcNum).Target = 0
             MapNPC(mapNum).Npc(MapNpcNum).TargetType = 0
-
-            If GetPlayerLevel(Victim) >= 10 Then
-
-                For z = 1 To MAX_INV
-                    If GetPlayerInvItemNum(Victim, z) > 0 Then
-                        InvCount = InvCount + 1
-                    End If
-                Next
-
-                For z = 1 To EquipmentType.Count - 1
-                    If GetPlayerEquipment(Victim, z) > 0 Then
-                        EqCount = EqCount + 1
-                    End If
-                Next
-                z = Random(1, InvCount + EqCount)
-
-                If z = 0 Then z = 1
-                If z > InvCount + EqCount Then z = InvCount + EqCount
-                If z > InvCount Then
-                    z = z - InvCount
-
-                    For x = 1 To EquipmentType.Count - 1
-
-                        If GetPlayerEquipment(Victim, x) > 0 Then
-                            j = j + 1
-
-                            If j = z Then
-                                'Here it is, drop this piece of equipment!
-                                PlayerMsg(Victim, "In death you lost grip on your " & Trim$(Item(GetPlayerEquipment(Victim, x)).Name), ColorType.BrightRed)
-                                SpawnItem(GetPlayerEquipment(Victim, x), 1, GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
-                                SetPlayerEquipment(Victim, 0, x)
-                                SendWornEquipment(Victim)
-                                SendMapEquipment(Victim)
-                            End If
-                        End If
-                    Next
-                Else
-                    For x = 1 To MAX_INV
-                        If GetPlayerInvItemNum(Victim, x) > 0 Then
-                            j = j + 1
-
-                            If j = z Then
-                                'Here it is, drop this item!
-                                PlayerMsg(Victim, "In death you lost grip on your " & Trim$(Item(GetPlayerInvItemNum(Victim, x)).Name), ColorType.BrightRed)
-                                SpawnItem(GetPlayerInvItemNum(Victim, x), GetPlayerInvItemValue(Victim, x), GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
-                                SetPlayerInvItemNum(Victim, x, 0)
-                                SetPlayerInvItemValue(Victim, x, 0)
-                                SendInventory(Victim)
-                            End If
-                        End If
-                    Next
-                End If
-            End If
 
             ' kill player
             KillPlayer(Victim)

@@ -12,7 +12,7 @@ Imports Core.Types
 Imports SFML.Graphics
 Module C_Interface
     ' GUI
-    Public Windows() As Types.WindowStruct
+    Public Windows() As WindowStruct
     Public WindowCount As Long
     Public activeWindow As Long
 
@@ -1320,6 +1320,8 @@ Module C_Interface
         CreateWindow_Skills()
         CreateWindow_Character()
         CreateWindow_Hotbar()
+        CreateWindow_Bank()
+        CreateWindow_Shop()
         CreateWindow_EscMenu()
         CreateWindow_Bars()
         CreateWindow_Dialogue()
@@ -2114,9 +2116,9 @@ Module C_Interface
                 For I = 1 To MAX_INV
                     If TradeYourOffer(I).Num = invNum Then
                         ' is currency?
-                        If Item(GetPlayerInvItemNum(Myindex, TradeYourOffer(I).Num)).Type = ItemType.Currency Then
+                        If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(I).Num)).Type = ItemType.Currency Then
                             ' only exit out if we're offering all of it
-                            If TradeYourOffer(I).Value = GetPlayerInvItemValue(Myindex, TradeYourOffer(I).Num) Then
+                            If TradeYourOffer(I).Value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(I).Num) Then
                                 Exit Sub
                             End If
                         Else
@@ -2126,7 +2128,7 @@ Module C_Interface
                 Next
 
                 ' currency handler
-                If Item(GetPlayerInvItemNum(Myindex, invNum)).Type = ItemType.Currency Then
+                If Item(GetPlayerInvItemNum(MyIndex, invNum)).Type = ItemType.Currency Then
                     Dialogue("Select Amount", "Please choose how many to offer", "", DialogueType.TradeAmount, DialogueStyle.Input, invNum)
                     Exit Sub
                 End If
@@ -2139,7 +2141,7 @@ Module C_Interface
             ' drag it
             With DragBox
                 .Type = PartType.Item
-                .Value = GetPlayerInvItemNum(Myindex, invNum)
+                .Value = GetPlayerInvItemNum(MyIndex, invNum)
                 .Origin = PartOriginType.Inventory
                 .Slot = invNum
             End With
@@ -2192,9 +2194,9 @@ Module C_Interface
                 For I = 1 To MAX_INV
                     If TradeYourOffer(I).Num = itemNum Then
                         ' is currency?
-                        If Item(GetPlayerInvItemNum(Myindex, TradeYourOffer(I).Num)).Type = ItemType.Currency Then
+                        If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(I).Num)).Type = ItemType.Currency Then
                             ' only exit out if we're offering all of it
-                            If TradeYourOffer(I).Value = GetPlayerInvItemValue(Myindex, TradeYourOffer(I).Num) Then
+                            If TradeYourOffer(I).Value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(I).Num) Then
                                 Exit Sub
                             End If
                         Else
@@ -2222,6 +2224,82 @@ Module C_Interface
         Else
             Windows(GetWindowIndex("winDescription")).Window.Visible = False
         End If
+    End Sub
+
+    ' ###############
+    ' ##    Bank   ##
+    ' ###############
+    Public Sub btnMenu_Bank()
+        If Windows(GetWindowIndex("winBank")).Window.visible Then
+            CloseBank
+        End If
+
+        Windows(GetWindowIndex("winBank")).Window.visible = Not Windows(GetWindowIndex("winBank")).Window.visible
+    End Sub
+
+    Public Sub Bank_MouseMove()
+        Dim ItemNum As Long, X As Long, Y As Long, i As Long
+
+        ' exit out early if dragging
+        If DragBox.Type <> PartType.None Then Exit Sub
+
+        ItemNum = IsBank(Windows(GetWindowIndex("winBank")).Window.Left, Windows(GetWindowIndex("winBank")).Window.Top)
+
+        If ItemNum > 0 Then
+
+            ' make sure we're not dragging the item
+            If DragBox.Type = PartType.Item And DragBox.Value = ItemNum Then Exit Sub
+            
+            ' calc position
+            X = Windows(GetWindowIndex("winBank")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
+            Y = Windows(GetWindowIndex("winBank")).Window.Top - 4
+
+            ' offscreen?
+            If X < 0 Then
+                ' switch to right
+                X = Windows(GetWindowIndex("winBank")).Window.Left + Windows(GetWindowIndex("winBank")).Window.Width
+            End If
+
+            ShowItemDesc(X, Y, Bank.Item(ItemNum).Num)
+        Else
+            Windows(GetWindowIndex("winDescription")).Window.Visible = False
+        End If
+    End Sub
+
+    Public Sub Bank_MouseDown()
+        Dim BankSlot As Long, winIndex As Long, i As Long
+
+        ' is there an item?
+        BankSlot = IsBank(Windows(GetWindowIndex("winBank")).Window.Left, Windows(GetWindowIndex("winBank")).Window.Top)
+
+        If BankSlot > 0 Then
+            ' exit out if we're offering that item
+
+            ' drag it
+            With DragBox
+                .Type = PartType.Item
+                .Value = Bank.Item(BankSlot).Num
+                .Origin = PartOriginType.Bank
+
+                .Slot = BankSlot
+            End With
+
+            winIndex = GetWindowIndex("winDragBox")
+            With Windows(winIndex).Window
+                .state = EntState.MouseDown
+                .Left = CurMouseX - 16
+                .Top = CurMouseY - 16
+                .movedX = CurMouseX - .Left
+                .movedY = CurMouseY - .Top
+            End With
+
+            ShowWindow(winIndex, , False)
+            ' stop dragging inventory
+            Windows(GetWindowIndex("winBank")).Window.state = EntState.Normal
+        End If
+
+        ' show desc. if needed
+        Bank_MouseMove
     End Sub
 
     ' ##############
@@ -2457,7 +2535,7 @@ Module C_Interface
         If slotNum Then
             With DragBox
                 .Type = PartType.Skill
-                .value = Player(Myindex).Skill(slotNum).Num
+                .value = Player(MyIndex).Skill(slotNum).Num
                 .Origin = PartOriginType.Skill
                 .Slot = slotNum
             End With
@@ -2517,7 +2595,7 @@ Module C_Interface
             End If
 
             ' go go go
-            ShowSkillDesc(x, y, GetPlayerSkill(Myindex, slotNum), slotNum)
+            ShowSkillDesc(x, y, GetPlayerSkill(MyIndex, slotNum), slotNum)
         Else
             Windows(GetWindowIndex("winDescription")).Window.Visible = False
         End If
@@ -2534,12 +2612,12 @@ Module C_Interface
 
         If slotNum > 0 Then
             With DragBox
-                If Player(Myindex).Hotbar(slotNum).SlotType = 1 Then ' inventory
+                If Player(MyIndex).Hotbar(slotNum).SlotType = 1 Then ' inventory
                     .Type = PartOriginsType.Inventory
-                ElseIf Player(Myindex).Hotbar(slotNum).SlotType = 2 Then ' Skill
+                ElseIf Player(MyIndex).Hotbar(slotNum).SlotType = 2 Then ' Skill
                     .Type = PartOriginsType.Skill
                 End If
-                .Value = Player(Myindex).Hotbar(slotNum).Slot
+                .Value = Player(MyIndex).Hotbar(slotNum).Slot
                 .Origin = PartOriginType.Hotbar
                 .Slot = slotNum
             End With
@@ -2598,11 +2676,11 @@ Module C_Interface
             End If
 
             ' go go go
-            Select Case Player(Myindex).Hotbar(slotNum).SlotType
+            Select Case Player(MyIndex).Hotbar(slotNum).SlotType
                 Case 1 ' inventory
-                    ShowItemDesc(x, y, Player(Myindex).Hotbar(slotNum).Slot)
+                    ShowItemDesc(x, y, Player(MyIndex).Hotbar(slotNum).Slot)
                 Case 2 ' skill
-                    ShowskillDesc(x, y, Player(Myindex).Hotbar(slotNum).Slot, 0)
+                    ShowskillDesc(x, y, Player(MyIndex).Hotbar(slotNum).Slot, 0)
             End Select
         Else
              Windows(GetWindowIndex("winDescription")).Window.Visible = False
@@ -2624,9 +2702,9 @@ Module C_Interface
     Sub UpdateStats_UI()
         ' set the bar labels
         With Windows(GetWindowIndex("winBars"))
-            .Controls(GetControlIndex("winBars", "lblHP")).Text = GetPlayerVital(Myindex, VitalType.HP) & "/" & GetPlayerMaxVital(Myindex, VitalType.HP)
-            .Controls(GetControlIndex("winBars", "lblMP")).Text = GetPlayerVital(Myindex, VitalType.MP) & "/" & GetPlayerMaxVital(Myindex, VitalType.MP)
-            .Controls(GetControlIndex("winBars", "lblEXP")).Text = GetPlayerExp(Myindex) & "/" & NextlevelExp
+            .Controls(GetControlIndex("winBars", "lblHP")).Text = GetPlayerVital(MyIndex, VitalType.HP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.HP)
+            .Controls(GetControlIndex("winBars", "lblMP")).Text = GetPlayerVital(MyIndex, VitalType.MP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.MP)
+            .Controls(GetControlIndex("winBars", "lblEXP")).Text = GetPlayerExp(MyIndex) & "/" & NextlevelExp
         End With
 
         ' update character screen
@@ -2634,9 +2712,9 @@ Module C_Interface
             .Controls(GetControlIndex("winCharacter", "lblHealth")).Text = "Health"
             .Controls(GetControlIndex("winCharacter", "lblSpirit")).Text = "Spirit"
             .Controls(GetControlIndex("winCharacter", "lblExperience")).Text = "Exp"
-            .Controls(GetControlIndex("winCharacter", "lblHealth2")).Text = GetPlayerVital(Myindex, VitalType.HP) & "/" & GetPlayerMaxVital(Myindex, VitalType.HP)
-            .Controls(GetControlIndex("winCharacter", "lblSpirit2")).Text = GetPlayerVital(Myindex, VitalType.MP) & "/" & GetPlayerMaxVital(Myindex, VitalType.MP)
-            .Controls(GetControlIndex("winCharacter", "lblExperience2")).Text = Player(Myindex).Exp & "/" & NextlevelExp
+            .Controls(GetControlIndex("winCharacter", "lblHealth2")).Text = GetPlayerVital(MyIndex, VitalType.HP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.HP)
+            .Controls(GetControlIndex("winCharacter", "lblSpirit2")).Text = GetPlayerVital(MyIndex, VitalType.MP) & "/" & GetPlayerMaxVital(MyIndex, VitalType.MP)
+            .Controls(GetControlIndex("winCharacter", "lblExperience2")).Text = Player(MyIndex).Exp & "/" & NextlevelExp
 
         End With
     End Sub
@@ -2659,7 +2737,7 @@ Module C_Interface
         CreateButton(WindowCount, "btnOptions", 16, 48, 178, 28, "Options", Verdana, , , , , , , DesignType.Orange, DesignType.Orange_Hover, DesignType.Orange_Click, , , New Action(AddressOf btnEscMenu_Options))
         CreateButton(WindowCount, "btnMainMenu", 16, 80, 178, 28, "Back to Main Menu", Verdana, , , , , , , DesignType.Blue, DesignType.Blue_Hover, DesignType.Blue_Click, , , New Action(AddressOf btnEscMenu_MainMenu))
         CreateButton(WindowCount, "btnExit", 16, 112, 178, 28, "Exit the Game", Verdana, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnEscMenu_Exit))
-End Sub
+    End Sub
 
     Public Sub CreateWindow_Bars()
         ' Create window
@@ -2765,9 +2843,9 @@ End Sub
         CreateButton(WindowCount, "btnChar", 8, 1, 29, 29, , , 108, , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnMenu_Char), , , -1, -2, "Character (C)")
         CreateButton(WindowCount, "btnInv", 44, 1, 29, 29, , , 1, , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnMenu_Inv), , , -1, -2, "Inventory (I)")
         CreateButton(WindowCount, "btnSkills", 82, 1, 29, 29, , , 109, , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnMenu_Skills), , , -1, -2, "Skills (K)")
-        'CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , Tex_Item(106), , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Map), , , -1, -2
-        'CreateButton WindowCount, "btnGuild", 155, 1, 29, 29, , , , Tex_Item(107), , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Guild), , , -1, -1
-        'CreateButton WindowCount, "btnQuest", 191, 1, 29, 29, , , , Tex_Item(23), , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Quest), , , -1, -2
+        'CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , 106, , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Map), , , -1, -2
+        'CreateButton WindowCount, "btnGuild", 155, 1, 29, 29, , , , 107, , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Guild), , , -1, -1
+        'CreateButton WindowCount, "btnQuest", 191, 1, 29, 29, , , , 23, , , , , , DesignType.desGreen, DesignType.desGreen_Hover, DesignType.desGreen_Click, , , New Action(AddressOf btnMenu_Quest), , , -1, -2
         CreateButton(WindowCount, "btnMap", 119, 1, 29, 29, , , 106, , , , , , DesignType.Grey, DesignType.Grey, DesignType.Grey, , , New Action(AddressOf btnMenu_Map), , , -1, -2)
         CreateButton(WindowCount, "btnGuild", 155, 1, 29, 29, , , 107, , , , , , DesignType.Grey, DesignType.Grey, DesignType.Grey, , , New Action(AddressOf btnMenu_Guild), , , , , -1, -1)
         CreateButton(WindowCount, "btnQuest", 191, 1, 29, 29, , , 23, , , , , , DesignType.Grey, DesignType.Grey, DesignType.Grey, , , New Action(AddressOf btnMenu_Quest), , , -1, -2)
@@ -2883,7 +2961,7 @@ End Sub
     ' ## Character ##
     ' ###############
     Public Sub DrawCharacter()
-        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, sprite As Long, itemNum As Long, ItemPic As Long
+        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, sprite As Long, itemNum As Long, ItemIcon As Long
 
         xO = Windows(GetWindowIndex("winCharacter")).Window.Left
         yO = Windows(GetWindowIndex("winCharacter")).Window.Top
@@ -2899,20 +2977,20 @@ End Sub
 
         ' loop through equipment
         For i = 1 To EquipmentType.Count - 1
-            itemNum = GetPlayerEquipment(Myindex, i)
+            itemNum = GetPlayerEquipment(MyIndex, i)
 
             ' get the item sprite
             If itemNum > 0 Then
-                ItemPic = Item(itemNum).Icon
+                ItemIcon = Item(itemNum).Icon
             Else
                 ' no item equiped - use blank image
-                ItemPic = 37 + i
+                ItemIcon = 37 + i
             End If
 
             yO = Windows(GetWindowIndex("winCharacter")).Window.Top + EqTop
             xO = Windows(GetWindowIndex("winCharacter")).Window.Left + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
 
-            RenderTexture(ItemSprite(ItemPic), Window, xO, yO, 0, 0, 32, 32, 32, 32)
+            RenderTexture(ItemSprite(ItemIcon), Window, xO, yO, 0, 0, 32, 32, 32, 32)
         Next
     End Sub
 
@@ -2941,13 +3019,15 @@ End Sub
             ' calc position
             x = Windows(GetWindowIndex("winCharacter")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
             y = Windows(GetWindowIndex("winCharacter")).Window.Top - 4
+            
             ' offscreen?
             If x < 0 Then
                 ' switch to right
                 x = Windows(GetWindowIndex("winCharacter")).Window.Left + Windows(GetWindowIndex("winCharacter")).Window.Width
             End If
+
             ' go go go
-            'ShowEqDesc x, y, itemNum
+            ShowEqDesc(x, y, itemNum)
         End If
     End Sub
 
@@ -2972,7 +3052,7 @@ End Sub
     End Sub
 
     Public Sub DrawInventory()
-        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, itemNum As Long, ItemPic As Long, x As Long, Top As Long, Left As Long, Amount As String
+        Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, itemNum As Long, ItemIcon As Long, x As Long, Top As Long, Left As Long, Amount As String
         Dim Color As Color, skipItem As Boolean, amountModifier As Long, tmpItem As Long
 
         xO = Windows(GetWindowIndex("winInventory")).Window.Left
@@ -3001,19 +3081,19 @@ End Sub
 
         ' actually draw the icons
         For i = 1 To MAX_INV
-            itemNum = GetPlayerInvItemNum(Myindex, i)
+            itemNum = GetPlayerInvItemNum(MyIndex, i)
             StreamItem(itemNum)
 
             If itemNum > 0 And itemNum <= MAX_ITEMS Then
                 ' not dragging?
                 If Not (DragBox.Origin = PartOriginType.Inventory And DragBox.Slot = i) Then
-                    ItemPic = Item(itemNum).Icon
+                    ItemIcon = Item(itemNum).Icon
 
                     ' exit out if we're offering item in a trade.
                     amountModifier = 0
                     If InTrade > 0 Then
                         For x = 1 To MAX_INV
-                            tmpItem = GetPlayerInvItemNum(Myindex, TradeYourOffer(x).Num)
+                            tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(x).Num)
                             If TradeYourOffer(x).Num = i Then
                                 ' check if currency
                                 If Not Item(tmpItem).Type = ItemType.Currency Then
@@ -3021,7 +3101,7 @@ End Sub
                                     skipItem = True
                                 Else
                                     ' if amount = all currency, remove from inventory
-                                    If TradeYourOffer(x).Value = GetPlayerInvItemValue(Myindex, i) Then
+                                    If TradeYourOffer(x).Value = GetPlayerInvItemValue(MyIndex, i) Then
                                         skipItem = True
                                     Else
                                         ' not all, change modifier to show change in currency count
@@ -3033,18 +3113,18 @@ End Sub
                     End If
 
                     If Not skipItem Then
-                        If ItemPic > 0 And ItemPic <= NumItems Then
+                        If ItemIcon > 0 And ItemIcon <= NumItems Then
                             Top = yO + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
                             Left = xO + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
 
                             ' draw icon
-                            RenderTexture(ItemSprite(ItemPic), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+                            RenderTexture(ItemSprite(ItemIcon), Window, Left, Top, 0, 0, 32, 32, 32, 32)
 
                             ' If item is a stack - draw the amount you have
-                            If GetPlayerInvItemValue(Myindex, i) > 1 Then
+                            If GetPlayerInvItemValue(MyIndex, i) > 1 Then
                                 y = Top + 21
                                 x = Left + 1
-                                Amount = GetPlayerInvItemValue(Myindex, i) - amountModifier
+                                Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
 
                                 ' Draw currency but with k, m, b etc. using a convertion function
                                 If CLng(Amount) < 1000000 Then
@@ -3197,6 +3277,260 @@ End Sub
         CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Skills))
     End Sub
 
+    Public Sub CreateWindow_Bank()
+        CreateWindow("winBank", "Bank", Georgia, zOrder_Win, 0, 0, 391, 373, 1, False, 2, 5, DesignType.Win_Empty, DesignType.Win_Empty, DesignType.Win_Empty, , , , , , New Action(AddressOf Bank_MouseMove), New Action(AddressOf Bank_MouseDown), , New Action(AddressOf DrawBank))
+
+        ' Centralize it
+        CentralizeWindow(windowCount)
+
+        ' Set the index for spawning controls
+        zOrder_Con = 1
+        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 5, 36, 36, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Bank))
+    End Sub
+
+    Public Sub CreateWindow_Shop()
+        ' Create window
+        CreateWindow("winShop", "Shop", Georgia, zOrder_Win, 0, 0, 278, 293, 17, False, 2, 5, DesignType.Win_Empty, DesignType.Win_Empty, DesignType.Win_Empty, , , , , , New Action(AddressOf Shop_MouseMove), New Action(AddressOf Shop_MouseDown), , New Action(AddressOf DrawShopBackground))
+
+        ' Centralize it
+        CentralizeWindow(windowCount)
+
+        ' Close button
+        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 6, 36, 36, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnShop_Close))
+        
+        ' Parchment
+        CreatePictureBox(windowCount, "picParchment", 6, 215, 266, 50, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment, , , , , , New Action(AddressOf DrawShop))
+        
+        ' Picture Box
+        CreatePictureBox(windowCount, "picItemBG", 13, 222, 36, 36, , , , , 30, 30, 30)
+        CreatePictureBox(windowCount, "picItem", 15, 224, 32, 32)
+        
+        ' Buttons
+        CreateButton(windowCount, "btnBuy", 190, 228, 70, 24, "Buy", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnShopBuy))
+        CreateButton(windowCount, "btnSell", 190, 228, 70, 24, "Sell", Verdana, , , , , False, , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnShopSell))
+        
+        ' Buying/Selling
+        CreateCheckbox(windowCount, "chkBuying", 173, 265, 49, 20, 1, , , , , , DesignType.ChkCustom_Buying, , , , , New Action(AddressOf chkShopBuying))
+        CreateCheckbox(windowCount, "chkSelling", 222, 265, 49, 20, 0, , , , ,  , DesignType.ChkCustom_Selling, , , , , New Action(AddressOf chkShopSelling))
+
+        ' Labels
+        CreateLabel(windowCount, "lblName", 56, 226, 300, FontSize, "Test Item", Verdana, Color.Black, AlignmentType.Left)
+        CreateLabel(windowCount, "lblCost", 56, 240, 300,  FontSize, "1000g", Verdana, Color.Black, AlignmentType.Left)
+        
+        ' Gold
+        'CreateLabel(windowCount, "lblGold", 44, 269, 300, FontSize, "G", Verdana, Color.White)
+    End Sub
+
+    Public Sub DrawShopBackground()
+        Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long
+    
+        Xo = Windows(GetWindowIndex("winShop")).Window.Left
+        Yo = Windows(GetWindowIndex("winShop")).Window.Top
+        Width = Windows(GetWindowIndex("winShop")).Window.Width
+        Height = Windows(GetWindowIndex("winShop")).Window.Height
+    
+        ' render green
+        RenderTexture(InterfaceSprite(34), Window, Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4)
+    
+        Width = 76
+        Height = 76
+    
+        Y = Yo + 23
+        ' render grid - row
+        For i = 1 To 3
+            If i = 3 Then Height = 42
+            RenderTexture(InterfaceSprite(35), Window, Xo + 4, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 80, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 156, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 232, Y, 0, 0, 42, Height, 42, Height)
+            Y = Y + 76
+        Next
+
+        ' render bottom wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + 4, Y - 34, 0, 0, 270, 72, 270, 72)
+    End Sub
+
+    Public Sub DrawShop()
+        Dim Xo As Long, Yo As Long, ItemIcon As Long, ItemNum As Long, Amount As Long, i As Long, Top As Long, Left As Long, Y As Long, X As Long, Color As Long
+
+        If InShop = 0 Then Exit Sub
+
+        StreamShop(InShop)
+    
+        Xo = Windows(GetWindowIndex("winShop")).Window.Left
+        Yo = Windows(GetWindowIndex("winShop")).Window.Top
+    
+        If Not shopIsSelling Then
+            ' render the shop items
+            For i = 1 To MAX_TRADES
+                ItemNum = Shop(InShop).TradeItem(i).Item
+            
+                ' draw early
+                Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+                Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+                
+                ' draw selected square
+                If shopSelectedSlot = i Then RenderTexture(ItemSprite(35), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+            
+                If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
+                    ItemIcon = Item(ItemNum).Icon
+                    If ItemIcon > 0 And ItemIcon <= NumItems Then
+                        ' draw item
+                        RenderTexture(ItemSprite(ItemIcon), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+                    End If
+                End If
+            Next
+        Else
+            ' render the shop items
+            For i = 1 To MAX_TRADES
+                ItemNum = GetPlayerInvItemNum(MyIndex, i)
+            
+                ' draw early
+                Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+                Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+                
+                ' draw selected square
+                If shopSelectedSlot = i Then RenderTexture(InterfaceSprite(30), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+            
+                If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
+                    ItemIcon = Item(ItemNum).Icon
+                    If ItemIcon > 0 And ItemIcon <= NumItems Then
+
+                        ' draw item
+                        RenderTexture(ItemSprite(ItemIcon), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+                    
+                        ' If item is a stack - draw the amount you have
+                        If GetPlayerInvItemValue(MyIndex, i) > 1 Then
+                            Y = Top + 21
+                            X = Left + 1
+                            Amount = CStr(GetPlayerInvItemValue(MyIndex, i))
+                        
+                            ' Draw currency but with k, m, b etc. using a convertion function
+                            If CLng(Amount) < 1000000 Then
+                                Color = ColorType.White
+                            ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                                Color = ColorType.Yellow
+                            ElseIf CLng(Amount) > 10000000 Then
+                                Color = ColorType.BrightGreen
+                            End If
+                        
+                            RenderText(ConvertCurrency(Amount), Window, X, Y, GetSfmlColor(Color), GetSfmlColor(Color))
+                        End If
+                    End If
+                End If
+            Next
+        End If
+    End Sub
+
+    ' Shop
+    Public Sub btnShop_Close()
+        CloseShop
+    End Sub
+
+    Public Sub chkShopBuying()
+        With Windows(GetWindowIndex("winShop"))
+            If .Controls(GetControlIndex("winShop", "chkBuying")).Value = 1 Then
+                .Controls(GetControlIndex("winShop", "chkSelling")).Value = 0
+            Else
+                .Controls(GetControlIndex("winShop", "chkSelling")).Value = 0
+                .Controls(GetControlIndex("winShop", "chkBuying")).Value = 1
+                Exit Sub
+            End If
+        End With
+
+        ' show buy button, hide sell
+        With Windows(GetWindowIndex("winShop"))
+            .Controls(GetControlIndex("winShop", "btnSell")).visible = False
+            .Controls(GetControlIndex("winShop", "btnBuy")).visible = True
+        End With
+
+        ' update the shop
+        shopIsSelling  = False
+        shopSelectedSlot = 1
+        UpdateShop
+    End Sub
+
+    Public Sub chkShopSelling()
+        With Windows(GetWindowIndex("winShop"))
+            If .Controls(GetControlIndex("winShop", "chkSelling")).Value = 1 Then
+                .Controls(GetControlIndex("winShop", "chkBuying")).Value = 0
+            Else
+                .Controls(GetControlIndex("winShop", "chkBuying")).Value = 0
+                .Controls(GetControlIndex("winShop", "chkSelling")).Value = 1
+                Exit Sub
+            End If
+        End With
+
+        ' show sell button, hide buy
+        With Windows(GetWindowIndex("winShop"))
+            .Controls(GetControlIndex("winShop", "btnBuy")).visible = False
+            .Controls(GetControlIndex("winShop", "btnSell")).visible = True
+        End With
+
+        ' update the shop
+        shopIsSelling  = True
+        shopSelectedSlot = 1
+        UpdateShop
+    End Sub
+
+    Public Sub btnShopBuy()
+        BuyItem(shopSelectedSlot)
+    End Sub
+
+    Public Sub btnShopSell()
+        SellItem(shopSelectedSlot)
+    End Sub
+
+    Public Sub Shop_MouseDown()
+        Dim shopNum As Long
+    
+        ' is there an item?
+        shopNum = IsShop(Windows(GetWindowIndex("winShop")).Window.Left, Windows(GetWindowIndex("winShop")).Window.Top)
+    
+        If shopNum Then
+            ' set the active slot
+            shopSelectedSlot = shopNum
+            UpdateShop
+        End If
+    
+        Shop_MouseMove
+    End Sub
+
+    Public Sub Shop_MouseMove()
+        Dim shopSlot As Long, ItemNum As Long, X As Long, Y As Long
+
+        If InShop = 0 Then Exit Sub
+
+        shopSlot = IsShop(Windows(GetWindowIndex("winShop")).Window.Left, Windows(GetWindowIndex("winShop")).Window.Top)
+    
+        If shopSlot > 0 Then
+            ' calc position
+            X = Windows(GetWindowIndex("winShop")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
+            Y = Windows(GetWindowIndex("winShop")).Window.Top - 4
+
+            ' offscreen?
+            If X < 0 Then
+                ' switch to right
+                X = Windows(GetWindowIndex("winShop")).Window.Left + Windows(GetWindowIndex("winShop")).Window.Width
+            End If
+
+            ' selling/buying
+            If Not shopIsSelling Then
+                ' get the itemnum
+                ItemNum = Shop(InShop).TradeItem(shopSlot).Item
+                If ItemNum = 0 Then Exit Sub
+                ShowShopDesc(X, Y, ItemNum)
+            Else
+                ' get the itemnum
+                ItemNum = GetPlayerInvItemNum(MyIndex, shopSlot)
+                If ItemNum = 0 Then Exit Sub
+                ShowShopDesc(X, Y, ItemNum)
+            End If
+        Else
+            Windows(GetWindowIndex("winDescription")).Window.Visible = False
+        End If
+    End Sub
+
     Sub ResizeGUI()
         Dim Top As Long
 
@@ -3258,7 +3592,7 @@ End Sub
         ' actually draw the icons
         For i = 1 To MAX_PLAYER_SKILLS
             StreamSkill(Skillnum)
-            Skillnum = Player(Myindex).Skill(i).Num
+            Skillnum = Player(MyIndex).Skill(i).Num
             If Skillnum > 0 And Skillnum <= MAX_SKILLS Then
                 ' not dragging?
                 If Not (DragBox.Origin = PartOriginType.Skill And DragBox.Slot = i) Then
@@ -3363,6 +3697,76 @@ End Sub
 
         ' close
         btnOptions_Close
+    End Sub
+
+    Public Sub DrawBank()
+        Dim X As Long, Y As Long, Xo As Long, Yo As Long, width As Long, height As Long
+        Dim i As Long, itemNum As Long, itemIcon As Long
+
+        Dim Left As Long, top As Long
+        Dim color As Long, skipItem As Boolean, amount As Long, tmpItem As Long
+
+        Xo = Windows(GetWindowIndex("winBank")).Window.Left
+        Yo = Windows(GetWindowIndex("winBank")).Window.Top
+        width = Windows(GetWindowIndex("winBank")).Window.Width
+        height = Windows(GetWindowIndex("winBank")).Window.Height
+        
+        ' render green
+        RenderTexture(InterfaceSprite(34), Window, Xo + 4, Yo + 23, 0, 0, width - 8, height - 27, 4, 4)
+
+        width = 76
+        height = 76
+
+        Y = Yo + 23
+        ' render grid - row
+        For i = 1 To 5
+            If i = 5 Then height = 42
+            RenderTexture(InterfaceSprite(35), Window, Xo + 4, Y, 0, 0, width, height, width, height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 80, Y, 0, 0, width, height, width, height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 156, Y, 0, 0, width, height, width, height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 232, Y, 0, 0, width, height, width, height)
+            RenderTexture(InterfaceSprite(35), Window, Xo + 308, Y, 0, 0, 79, height, 79, height)
+            Y = Y + 76
+        Next
+
+        ' actually draw the icons
+        For i = 1 To MAX_BANK
+            itemNum = Bank.Item(i).Num
+
+            If itemNum > 0 And itemNum <= MAX_ITEMS Then
+                ' not dragging?
+                If Not (DragBox.Origin = PartOriginType.Bank And DragBox.Slot = i) Then
+                    itemIcon = Item(itemNum).Icon
+
+                    If itemIcon > 0 And itemIcon <= NumItems Then
+                        top = Yo + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                        Left = Xo + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
+
+                        ' draw icon
+                        RenderTexture(ItemSprite(itemIcon), Window, Left, top, 0, 0, 32, 32, 32, 32)
+
+                        ' If item is a stack - draw the amount you have
+                        If Bank.Item(i).Value > 1 Then
+                            Y = top + 21
+                            X = Left + 1
+                            amount = Bank.Item(i).Value
+
+                            ' Draw currency but with k, m, b etc. using a convertion function
+                            If CLng(amount) < 1000000 Then
+                                color = ColorType.White
+                            ElseIf CLng(amount) > 1000000 And CLng(amount) < 10000000 Then
+                                color = ColorType.Yellow
+                            ElseIf CLng(amount) > 10000000 Then
+                                color = ColorType.BrightGreen
+                            End If
+
+                            RenderText(ConvertCurrency(amount), Window, X, Y, GetSfmlColor(color), GetSfmlColor(color))
+                        End If
+                    End If
+                End If
+            End If
+        Next
+
     End Sub
 End Module
 

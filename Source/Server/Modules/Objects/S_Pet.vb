@@ -595,7 +595,7 @@ Module S_Pet
                         ' make sure it's not stunned
                         If Not TempPlayer(playerindex).PetStunDuration > 0 Then
 
-                            For i = 0 To Socket.HighIndex
+                            For i = 1 To Socket.HighIndex
                                 If TempPlayer(playerindex).PetTargetType > 0 Then
                                     If TempPlayer(playerindex).PetTargetType = 1 AndAlso TempPlayer(playerindex).PetTarget = playerindex Then
                                     Else
@@ -2024,7 +2024,7 @@ Module S_Pet
             SendNpcDead(mapNum, mapnpcnum)
 
             'Loop through entire map and purge NPC from targets
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) Then
                     If GetPlayerMap(i) = mapNum Then
@@ -2286,9 +2286,11 @@ Module S_Pet
         End If
 
         ' Check if map is attackable
-        If Not Map(GetPlayerMap(attacker)).Moral = MapMoralType.Danger Then
-            If GetPlayerPK(victim) = 0 Then
-                Exit Function
+        If Map(GetPlayerMap(attacker)).Moral > 0 Then
+            If Not Moral(Map(GetPlayerMap(attacker)).Moral).CanPK Then
+                If GetPlayerPK(victim) = 0 Then
+                    Exit Function
+                End If
             End If
         End If
 
@@ -2373,7 +2375,7 @@ Module S_Pet
             End If
 
             ' purge target info of anyone who targetted dead guy
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) AndAlso Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(attacker) Then
@@ -2534,9 +2536,11 @@ Module S_Pet
         End If
 
         ' Check if map is attackable
-        If Not Map(GetPlayerMap(attacker)).Moral = MapMoralType.Danger Then
-            If GetPlayerPK(victim) = 0 Then
-                Exit Function
+        If Map(GetPlayerMap(attacker)).Moral > 0 Then
+            If Not Moral(Map(GetPlayerMap(attacker)).Moral).CanPK Then
+                If GetPlayerPK(victim) = 0 Then
+                    Exit Function
+                End If
             End If
         End If
 
@@ -2603,35 +2607,8 @@ Module S_Pet
             ' send the sound
             'If Skillnum > 0 Then SendMapSound Victim, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.x, Player(Victim).characters(TempPlayer(Victim).CurChar).Pet.y, SoundEntity.seSkill, Skillnum
 
-            ' Player is dead
-            GlobalMsg(GetPlayerName(victim) & " has been killed by " & GetPlayerName(attacker) & "'s " & Trim$(GetPetName(attacker)) & ".")
-
-            ' Calculate exp to give attacker
-            exp = (GetPlayerExp(victim) \ 10)
-
-            ' Make sure we dont get less then 0
-            If exp < 0 Then exp = 0
-
-            If exp = 0 Then
-                PlayerMsg(victim, "You lost no exp.", ColorType.BrightGreen)
-                PlayerMsg(attacker, "You received no exp.", ColorType.Yellow)
-            Else
-                SetPlayerExp(victim, GetPlayerExp(victim) - exp)
-                SendExp(victim)
-                PlayerMsg(victim, "You lost " & exp & " exp.", ColorType.BrightRed)
-
-                ' check if we're in a party
-                If TempPlayer(attacker).InParty > 0 Then
-                    ' pass through party exp share function
-                    Party_ShareExp(TempPlayer(attacker).InParty, exp, attacker, GetPlayerMap(attacker))
-                Else
-                    ' not in party, get exp for self
-                    GivePlayerExp(attacker, exp)
-                End If
-            End If
-
             ' purge target info of anyone who targetted dead guy
-            For i = 0 To Socket.HighIndex
+            For i = 1 To Socket.HighIndex
 
                 If IsPlaying(i) AndAlso Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(attacker) Then
@@ -3462,10 +3439,12 @@ Module S_Pet
         End If
 
         ' Check if map is attackable
-        If Not Map(GetPlayerMap(attacker)).Moral = MapMoralType.Danger Then
-            If GetPlayerPK(victim) = 0 Then
-                PlayerMsg(attacker, "This is a safe zone!", ColorType.Yellow)
-                Exit Function
+        If Map(GetPlayerMap(attacker)).Moral > 0 Then
+            If Not Moral(Map(GetPlayerMap(attacker)).Moral).CanPK Then
+                If GetPlayerPK(victim) = 0 Then
+                    PlayerMsg(attacker, "This is a safe zone!", ColorType.Yellow)
+                    Exit Function
+                End If
             End If
         End If
 

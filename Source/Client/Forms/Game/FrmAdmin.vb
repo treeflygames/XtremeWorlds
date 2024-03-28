@@ -12,7 +12,7 @@ Friend Class FrmAdmin
 
     Private Sub BtnAdminWarpTo_Click(sender As Object, e As EventArgs) Handles btnAdminWarpTo.Click
 
-        If GetPlayerAccess(Myindex) < [Enum].AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < [Enum].AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -21,7 +21,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminBan_Click(sender As Object, e As EventArgs) Handles btnAdminBan.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -30,7 +30,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminKick_Click(sender As Object, e As EventArgs) Handles btnAdminKick.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -39,7 +39,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminWarp2Me_Click(sender As Object, e As EventArgs) Handles btnAdminWarp2Me.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -50,7 +50,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminWarpMe2_Click(sender As Object, e As EventArgs) Handles btnAdminWarpMe2.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -63,7 +63,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminSetAccess_Click(sender As Object, e As EventArgs) Handles btnAdminSetAccess.Click
-        If GetPlayerAccess(Myindex) < AdminType.Creator Then
+        If GetPlayerAccess(MyIndex) < AdminType.Creator Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -76,7 +76,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnAdminSetSprite_Click(sender As Object, e As EventArgs) Handles btnAdminSetSprite.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -94,7 +94,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -108,7 +108,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -122,7 +122,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -136,7 +136,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -150,7 +150,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -164,7 +164,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -178,7 +178,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -192,7 +192,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -206,7 +206,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -220,7 +220,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -233,7 +233,7 @@ Friend Class FrmAdmin
 #Region "Map Report"
 
     Private Sub BtnMapReport_Click(sender As Object, e As EventArgs) Handles btnMapReport.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -241,7 +241,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub LstMaps_DoubleClick(sender As Object, e As EventArgs) Handles lstMaps.DoubleClick
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -254,7 +254,7 @@ Friend Class FrmAdmin
 
 #Region "Misc"
     Private Sub BtnLevelUp_Click(sender As Object, e As EventArgs) Handles btnLevelUp.Click
-        If GetPlayerAccess(Myindex) < AdminType.Developer Then
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -263,7 +263,7 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnALoc_Click(sender As Object, e As EventArgs) Handles btnALoc.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
@@ -272,12 +272,26 @@ Friend Class FrmAdmin
     End Sub
 
     Private Sub BtnRespawn_Click(sender As Object, e As EventArgs) Handles btnRespawn.Click
-        If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+        If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
             AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
             Exit Sub
         End If
 
         SendMapRespawn()
+    End Sub
+
+    Private Sub btnMoralEditor_Click(sender As Object, e As EventArgs) Handles btnMoralEditor.Click
+        If Editor <> -1 Then
+            MsgBox("You are already in an Editor. Please close the editor to use another one.")
+            Exit Sub
+        End If
+
+        If GetPlayerAccess(MyIndex) < AdminType.Developer Then
+            AddText("You need to be a high enough staff member to do this!", ColorType.BrightRed)
+            Exit Sub
+        End If
+
+        SendRequestEditMoral()
     End Sub
 
 #End Region

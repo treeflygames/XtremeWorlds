@@ -129,7 +129,7 @@ Partial Class frmEditor_Map
         txtUp = New TextBox()
         fraBootSettings = New GroupBox()
         chkIndoors = New CheckBox()
-        chkMapRespawn = New CheckBox()
+        chkNoMapRespawn = New CheckBox()
         txtBootMap = New TextBox()
         Label5 = New Label()
         txtBootY = New TextBox()
@@ -1130,7 +1130,7 @@ Partial Class frmEditor_Map
         tpNpcs.Padding = New Padding(6, 5, 6, 5)
         tpNpcs.Size = New Size(778, 1010)
         tpNpcs.TabIndex = 1
-        tpNpcs.Text = "NPC's"
+        tpNpcs.Text = "NPCs"
         tpNpcs.UseVisualStyleBackColor = True
         ' 
         ' fraNpcs
@@ -1265,7 +1265,6 @@ Partial Class frmEditor_Map
         ' 
         cmbMoral.DropDownStyle = ComboBoxStyle.DropDownList
         cmbMoral.FormattingEnabled = True
-        cmbMoral.Items.AddRange(New Object() {"None", "Safe Zone", "Danger Zone"})
         cmbMoral.Location = New Point(74, 23)
         cmbMoral.Margin = New Padding(6, 5, 6, 5)
         cmbMoral.Name = "cmbMoral"
@@ -1337,7 +1336,7 @@ Partial Class frmEditor_Map
         ' fraBootSettings
         ' 
         fraBootSettings.Controls.Add(chkIndoors)
-        fraBootSettings.Controls.Add(chkMapRespawn)
+        fraBootSettings.Controls.Add(chkNoMapRespawn)
         fraBootSettings.Controls.Add(txtBootMap)
         fraBootSettings.Controls.Add(Label5)
         fraBootSettings.Controls.Add(txtBootY)
@@ -1359,21 +1358,21 @@ Partial Class frmEditor_Map
         chkIndoors.Location = New Point(12, 167)
         chkIndoors.Margin = New Padding(6, 5, 6, 5)
         chkIndoors.Name = "chkIndoors"
-        chkIndoors.Size = New Size(108, 29)
+        chkIndoors.Size = New Size(100, 29)
         chkIndoors.TabIndex = 42
-        chkIndoors.Text = "Indoors?"
+        chkIndoors.Text = "Indoors"
         chkIndoors.UseVisualStyleBackColor = True
         ' 
-        ' chkMapRespawn
+        ' chkNoMapRespawn
         ' 
-        chkMapRespawn.AutoSize = True
-        chkMapRespawn.Location = New Point(229, 167)
-        chkMapRespawn.Margin = New Padding(6, 5, 6, 5)
-        chkMapRespawn.Name = "chkMapRespawn"
-        chkMapRespawn.Size = New Size(157, 29)
-        chkMapRespawn.TabIndex = 19
-        chkMapRespawn.Text = "Map Respawn?"
-        chkMapRespawn.UseVisualStyleBackColor = True
+        chkNoMapRespawn.AutoSize = True
+        chkNoMapRespawn.Location = New Point(197, 163)
+        chkNoMapRespawn.Margin = New Padding(6, 5, 6, 5)
+        chkNoMapRespawn.Name = "chkNoMapRespawn"
+        chkNoMapRespawn.Size = New Size(178, 29)
+        chkNoMapRespawn.TabIndex = 19
+        chkNoMapRespawn.Text = "No Map Respawn"
+        chkNoMapRespawn.UseVisualStyleBackColor = True
         ' 
         ' txtBootMap
         ' 
@@ -2220,6 +2219,6 @@ Partial Class frmEditor_Map
     Friend WithEvents lblRadius As Label
     Friend WithEvents Label22 As Label
     Friend WithEvents lstShop As ComboBox
-    Friend WithEvents chkMapRespawn As CheckBox
+    Friend WithEvents chkNoMapRespawn As CheckBox
     Friend WithEvents chkIndoors As CheckBox
 End Class

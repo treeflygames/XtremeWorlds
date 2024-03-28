@@ -893,9 +893,9 @@ Partial Class frmEditor_Item
         DarkLabel11.Location = New Point(10, 34)
         DarkLabel11.Margin = New Padding(5, 0, 5, 0)
         DarkLabel11.Name = "DarkLabel11"
-        DarkLabel11.Size = New Size(101, 25)
+        DarkLabel11.Size = New Size(54, 25)
         DarkLabel11.TabIndex = 0
-        DarkLabel11.Text = "Vitals Mod:"
+        DarkLabel11.Text = "Mod:"
         ' 
         ' txtName
         ' 
@@ -1102,9 +1102,9 @@ Partial Class frmEditor_Item
         DarkLabel10.Location = New Point(10, 228)
         DarkLabel10.Margin = New Padding(5, 0, 5, 0)
         DarkLabel10.Name = "DarkLabel10"
-        DarkLabel10.Size = New Size(102, 25)
+        DarkLabel10.Size = New Size(106, 25)
         DarkLabel10.TabIndex = 21
-        DarkLabel10.Text = "Description"
+        DarkLabel10.Text = "Description:"
         ' 
         ' txtDescription
         ' 
@@ -1151,9 +1151,9 @@ Partial Class frmEditor_Item
         DarkLabel13.Location = New Point(10, 34)
         DarkLabel13.Margin = New Padding(5, 0, 5, 0)
         DarkLabel13.Name = "DarkLabel13"
-        DarkLabel13.Size = New Size(40, 25)
+        DarkLabel13.Size = New Size(55, 25)
         DarkLabel13.TabIndex = 0
-        DarkLabel13.Text = "Pet:"
+        DarkLabel13.Text = "Num:"
         ' 
         ' fraEvents
         ' 

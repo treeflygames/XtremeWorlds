@@ -19,6 +19,11 @@ Module C_Globals
     Public diaDataString As String
     Public diaStyle As Byte
 
+    ' shop
+    Public shopSelectedSlot As Long
+    Public shopSelectedItem As Long
+    Public shopIsSelling As Boolean
+
     ' description
     Public descType As Byte
     Public descItem As Long
@@ -118,7 +123,7 @@ Module C_Globals
     Public ItemRarityColor5 = New SFML.Graphics.Color(255, 215, 0) ' gold
 
     ' Player variables
-    Public Myindex As Integer ' Index of actual player
+    Public MyIndex As Integer ' Index of actual player
 
     Public InventoryItemSelected As Integer
     Public SkillBuffer As Integer
@@ -236,6 +241,7 @@ Module C_Globals
     Public Skill_Loaded(MAX_SKILLS)
     Public Shop_Loaded(MAX_SHOPS)
     Public Pet_Loaded(MAX_PETS)
+    Public Moral_Loaded(MAX_MORALS)
 
     ' Editor edited items array
     Public Item_Changed(MAX_ITEMS) As Boolean
@@ -246,6 +252,7 @@ Module C_Globals
     Public Shop_Changed(MAX_SHOPS) As Boolean
     Public Pet_Changed(MAX_PETS) As Boolean
     Public Job_Changed(MAX_JOBS) As Boolean
+    Public Moral_Changed(MAX_MORALS) As Boolean
 
     Public AnimEditorFrame(1) As Integer
     Public AnimEditorTimer(1) As Integer
@@ -261,6 +268,6 @@ Module C_Globals
     Public InitShopEditor As Boolean
     Public InitAnimationEditor As Boolean
     Public InitJobEditor As Boolean
-    Public InitQuestEditor As Boolean
+    Public InitMoralEditor As Boolean
     Public InitAdminForm As Boolean
 End Module

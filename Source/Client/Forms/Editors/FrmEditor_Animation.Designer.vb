@@ -74,11 +74,11 @@ Partial Class frmEditor_Animation
         DarkGroupBox1.BorderColor = Color.FromArgb(CByte(90), CByte(90), CByte(90))
         DarkGroupBox1.Controls.Add(lstIndex)
         DarkGroupBox1.ForeColor = Color.Gainsboro
-        DarkGroupBox1.Location = New Point(4, 6)
-        DarkGroupBox1.Margin = New Padding(8, 6, 8, 6)
+        DarkGroupBox1.Location = New Point(3, 5)
+        DarkGroupBox1.Margin = New Padding(6, 5, 6, 5)
         DarkGroupBox1.Name = "DarkGroupBox1"
-        DarkGroupBox1.Padding = New Padding(8, 6, 8, 6)
-        DarkGroupBox1.Size = New Size(433, 916)
+        DarkGroupBox1.Padding = New Padding(6, 5, 6, 5)
+        DarkGroupBox1.Size = New Size(333, 716)
         DarkGroupBox1.TabIndex = 0
         DarkGroupBox1.TabStop = False
         DarkGroupBox1.Text = "Animation List"
@@ -89,10 +89,11 @@ Partial Class frmEditor_Animation
         lstIndex.BorderStyle = BorderStyle.None
         lstIndex.ForeColor = Color.Gainsboro
         lstIndex.FormattingEnabled = True
-        lstIndex.Location = New Point(13, 47)
-        lstIndex.Margin = New Padding(8, 6, 8, 6)
+        lstIndex.ItemHeight = 25
+        lstIndex.Location = New Point(10, 37)
+        lstIndex.Margin = New Padding(6, 5, 6, 5)
         lstIndex.Name = "lstIndex"
-        lstIndex.Size = New Size(407, 832)
+        lstIndex.Size = New Size(313, 650)
         lstIndex.TabIndex = 0
         ' 
         ' DarkGroupBox2
@@ -106,11 +107,11 @@ Partial Class frmEditor_Animation
         DarkGroupBox2.Controls.Add(txtName)
         DarkGroupBox2.Controls.Add(DarkLabel1)
         DarkGroupBox2.ForeColor = Color.Gainsboro
-        DarkGroupBox2.Location = New Point(451, 6)
-        DarkGroupBox2.Margin = New Padding(8, 6, 8, 6)
+        DarkGroupBox2.Location = New Point(347, 5)
+        DarkGroupBox2.Margin = New Padding(6, 5, 6, 5)
         DarkGroupBox2.Name = "DarkGroupBox2"
-        DarkGroupBox2.Padding = New Padding(8, 6, 8, 6)
-        DarkGroupBox2.Size = New Size(949, 1141)
+        DarkGroupBox2.Padding = New Padding(6, 5, 6, 5)
+        DarkGroupBox2.Size = New Size(730, 891)
         DarkGroupBox2.TabIndex = 1
         DarkGroupBox2.TabStop = False
         DarkGroupBox2.Text = "Properties"
@@ -119,20 +120,20 @@ Partial Class frmEditor_Animation
         ' 
         cmbSound.DrawMode = DrawMode.OwnerDrawVariable
         cmbSound.FormattingEnabled = True
-        cmbSound.Location = New Point(252, 132)
-        cmbSound.Margin = New Padding(8, 6, 8, 6)
+        cmbSound.Location = New Point(194, 103)
+        cmbSound.Margin = New Padding(6, 5, 6, 5)
         cmbSound.Name = "cmbSound"
-        cmbSound.Size = New Size(333, 40)
+        cmbSound.Size = New Size(257, 32)
         cmbSound.TabIndex = 25
         ' 
         ' DarkLabel2
         ' 
         DarkLabel2.AutoSize = True
         DarkLabel2.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        DarkLabel2.Location = New Point(35, 140)
-        DarkLabel2.Margin = New Padding(8, 0, 8, 0)
+        DarkLabel2.Location = New Point(17, 106)
+        DarkLabel2.Margin = New Padding(6, 0, 6, 0)
         DarkLabel2.Name = "DarkLabel2"
-        DarkLabel2.Size = New Size(88, 32)
+        DarkLabel2.Size = New Size(68, 25)
         DarkLabel2.TabIndex = 24
         DarkLabel2.Text = "Sound:"
         ' 
@@ -150,60 +151,60 @@ Partial Class frmEditor_Animation
         DarkGroupBox4.Controls.Add(lblSprite1)
         DarkGroupBox4.Controls.Add(picSprite1)
         DarkGroupBox4.ForeColor = Color.Gainsboro
-        DarkGroupBox4.Location = New Point(13, 684)
-        DarkGroupBox4.Margin = New Padding(8, 6, 8, 6)
+        DarkGroupBox4.Location = New Point(10, 534)
+        DarkGroupBox4.Margin = New Padding(6, 5, 6, 5)
         DarkGroupBox4.Name = "DarkGroupBox4"
-        DarkGroupBox4.Padding = New Padding(8, 6, 8, 6)
-        DarkGroupBox4.Size = New Size(923, 444)
+        DarkGroupBox4.Padding = New Padding(6, 5, 6, 5)
+        DarkGroupBox4.Size = New Size(710, 347)
         DarkGroupBox4.TabIndex = 23
         DarkGroupBox4.TabStop = False
         DarkGroupBox4.Text = "Layer 1 - Above Player"
         ' 
         ' nudLoopTime1
         ' 
-        nudLoopTime1.Location = New Point(190, 340)
-        nudLoopTime1.Margin = New Padding(8, 6, 8, 6)
+        nudLoopTime1.Location = New Point(146, 266)
+        nudLoopTime1.Margin = New Padding(6, 5, 6, 5)
         nudLoopTime1.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
         nudLoopTime1.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         nudLoopTime1.Name = "nudLoopTime1"
-        nudLoopTime1.Size = New Size(260, 39)
+        nudLoopTime1.Size = New Size(200, 31)
         nudLoopTime1.TabIndex = 33
         nudLoopTime1.Value = New Decimal(New Integer() {1, 0, 0, 0})
         ' 
         ' nudFrameCount1
         ' 
-        nudFrameCount1.Location = New Point(190, 244)
-        nudFrameCount1.Margin = New Padding(8, 6, 8, 6)
+        nudFrameCount1.Location = New Point(146, 191)
+        nudFrameCount1.Margin = New Padding(6, 5, 6, 5)
         nudFrameCount1.Name = "nudFrameCount1"
-        nudFrameCount1.Size = New Size(260, 39)
+        nudFrameCount1.Size = New Size(200, 31)
         nudFrameCount1.TabIndex = 32
         ' 
         ' nudLoopCount1
         ' 
-        nudLoopCount1.Location = New Point(190, 149)
-        nudLoopCount1.Margin = New Padding(8, 6, 8, 6)
+        nudLoopCount1.Location = New Point(146, 116)
+        nudLoopCount1.Margin = New Padding(6, 5, 6, 5)
         nudLoopCount1.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         nudLoopCount1.Name = "nudLoopCount1"
-        nudLoopCount1.Size = New Size(260, 39)
+        nudLoopCount1.Size = New Size(200, 31)
         nudLoopCount1.TabIndex = 31
         nudLoopCount1.Value = New Decimal(New Integer() {1, 0, 0, 0})
         ' 
         ' nudSprite1
         ' 
-        nudSprite1.Location = New Point(190, 60)
-        nudSprite1.Margin = New Padding(8, 6, 8, 6)
+        nudSprite1.Location = New Point(146, 47)
+        nudSprite1.Margin = New Padding(6, 5, 6, 5)
         nudSprite1.Name = "nudSprite1"
-        nudSprite1.Size = New Size(260, 39)
+        nudSprite1.Size = New Size(200, 31)
         nudSprite1.TabIndex = 30
         ' 
         ' lblLoopTime1
         ' 
         lblLoopTime1.AutoSize = True
         lblLoopTime1.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblLoopTime1.Location = New Point(22, 346)
-        lblLoopTime1.Margin = New Padding(8, 0, 8, 0)
+        lblLoopTime1.Location = New Point(17, 270)
+        lblLoopTime1.Margin = New Padding(6, 0, 6, 0)
         lblLoopTime1.Name = "lblLoopTime1"
-        lblLoopTime1.Size = New Size(132, 32)
+        lblLoopTime1.Size = New Size(100, 25)
         lblLoopTime1.TabIndex = 28
         lblLoopTime1.Text = "Loop Time:"
         ' 
@@ -211,10 +212,10 @@ Partial Class frmEditor_Animation
         ' 
         lblFrameCount1.AutoSize = True
         lblFrameCount1.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblFrameCount1.Location = New Point(24, 250)
-        lblFrameCount1.Margin = New Padding(8, 0, 8, 0)
+        lblFrameCount1.Location = New Point(18, 195)
+        lblFrameCount1.Margin = New Padding(6, 0, 6, 0)
         lblFrameCount1.Name = "lblFrameCount1"
-        lblFrameCount1.Size = New Size(157, 32)
+        lblFrameCount1.Size = New Size(118, 25)
         lblFrameCount1.TabIndex = 26
         lblFrameCount1.Text = "Frame Count:"
         ' 
@@ -222,10 +223,10 @@ Partial Class frmEditor_Animation
         ' 
         lblLoopCount1.AutoSize = True
         lblLoopCount1.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblLoopCount1.Location = New Point(24, 156)
-        lblLoopCount1.Margin = New Padding(8, 0, 8, 0)
+        lblLoopCount1.Location = New Point(18, 122)
+        lblLoopCount1.Margin = New Padding(6, 0, 6, 0)
         lblLoopCount1.Name = "lblLoopCount1"
-        lblLoopCount1.Size = New Size(144, 32)
+        lblLoopCount1.Size = New Size(110, 25)
         lblLoopCount1.TabIndex = 24
         lblLoopCount1.Text = "Loop Count:"
         ' 
@@ -233,20 +234,20 @@ Partial Class frmEditor_Animation
         ' 
         lblSprite1.AutoSize = True
         lblSprite1.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblSprite1.Location = New Point(22, 64)
-        lblSprite1.Margin = New Padding(8, 0, 8, 0)
+        lblSprite1.Location = New Point(17, 50)
+        lblSprite1.Margin = New Padding(6, 0, 6, 0)
         lblSprite1.Name = "lblSprite1"
-        lblSprite1.Size = New Size(81, 32)
+        lblSprite1.Size = New Size(62, 25)
         lblSprite1.TabIndex = 22
         lblSprite1.Text = "Sprite:"
         ' 
         ' picSprite1
         ' 
         picSprite1.BackColor = Color.Black
-        picSprite1.Location = New Point(476, 26)
-        picSprite1.Margin = New Padding(8, 6, 8, 6)
+        picSprite1.Location = New Point(366, 20)
+        picSprite1.Margin = New Padding(6, 5, 6, 5)
         picSprite1.Name = "picSprite1"
-        picSprite1.Size = New Size(444, 405)
+        picSprite1.Size = New Size(342, 316)
         picSprite1.TabIndex = 21
         picSprite1.TabStop = False
         ' 
@@ -264,60 +265,60 @@ Partial Class frmEditor_Animation
         DarkGroupBox3.Controls.Add(lblSprite0)
         DarkGroupBox3.Controls.Add(picSprite0)
         DarkGroupBox3.ForeColor = Color.Gainsboro
-        DarkGroupBox3.Location = New Point(13, 226)
-        DarkGroupBox3.Margin = New Padding(8, 6, 8, 6)
+        DarkGroupBox3.Location = New Point(10, 177)
+        DarkGroupBox3.Margin = New Padding(6, 5, 6, 5)
         DarkGroupBox3.Name = "DarkGroupBox3"
-        DarkGroupBox3.Padding = New Padding(8, 6, 8, 6)
-        DarkGroupBox3.Size = New Size(923, 444)
+        DarkGroupBox3.Padding = New Padding(6, 5, 6, 5)
+        DarkGroupBox3.Size = New Size(710, 347)
         DarkGroupBox3.TabIndex = 22
         DarkGroupBox3.TabStop = False
         DarkGroupBox3.Text = "Layer 0 - Beneath Player"
         ' 
         ' nudLoopTime0
         ' 
-        nudLoopTime0.Location = New Point(190, 340)
-        nudLoopTime0.Margin = New Padding(8, 6, 8, 6)
+        nudLoopTime0.Location = New Point(146, 266)
+        nudLoopTime0.Margin = New Padding(6, 5, 6, 5)
         nudLoopTime0.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
         nudLoopTime0.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         nudLoopTime0.Name = "nudLoopTime0"
-        nudLoopTime0.Size = New Size(260, 39)
+        nudLoopTime0.Size = New Size(200, 31)
         nudLoopTime0.TabIndex = 33
         nudLoopTime0.Value = New Decimal(New Integer() {100, 0, 0, 0})
         ' 
         ' nudFrameCount0
         ' 
-        nudFrameCount0.Location = New Point(190, 244)
-        nudFrameCount0.Margin = New Padding(8, 6, 8, 6)
+        nudFrameCount0.Location = New Point(146, 191)
+        nudFrameCount0.Margin = New Padding(6, 5, 6, 5)
         nudFrameCount0.Name = "nudFrameCount0"
-        nudFrameCount0.Size = New Size(260, 39)
+        nudFrameCount0.Size = New Size(200, 31)
         nudFrameCount0.TabIndex = 32
         ' 
         ' nudLoopCount0
         ' 
-        nudLoopCount0.Location = New Point(190, 149)
-        nudLoopCount0.Margin = New Padding(8, 6, 8, 6)
+        nudLoopCount0.Location = New Point(146, 116)
+        nudLoopCount0.Margin = New Padding(6, 5, 6, 5)
         nudLoopCount0.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         nudLoopCount0.Name = "nudLoopCount0"
-        nudLoopCount0.Size = New Size(260, 39)
+        nudLoopCount0.Size = New Size(200, 31)
         nudLoopCount0.TabIndex = 31
         nudLoopCount0.Value = New Decimal(New Integer() {1, 0, 0, 0})
         ' 
         ' nudSprite0
         ' 
-        nudSprite0.Location = New Point(190, 60)
-        nudSprite0.Margin = New Padding(8, 6, 8, 6)
+        nudSprite0.Location = New Point(146, 47)
+        nudSprite0.Margin = New Padding(6, 5, 6, 5)
         nudSprite0.Name = "nudSprite0"
-        nudSprite0.Size = New Size(260, 39)
+        nudSprite0.Size = New Size(200, 31)
         nudSprite0.TabIndex = 30
         ' 
         ' lblLoopTime0
         ' 
         lblLoopTime0.AutoSize = True
         lblLoopTime0.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblLoopTime0.Location = New Point(22, 346)
-        lblLoopTime0.Margin = New Padding(8, 0, 8, 0)
+        lblLoopTime0.Location = New Point(17, 270)
+        lblLoopTime0.Margin = New Padding(6, 0, 6, 0)
         lblLoopTime0.Name = "lblLoopTime0"
-        lblLoopTime0.Size = New Size(132, 32)
+        lblLoopTime0.Size = New Size(100, 25)
         lblLoopTime0.TabIndex = 28
         lblLoopTime0.Text = "Loop Time:"
         ' 
@@ -325,10 +326,10 @@ Partial Class frmEditor_Animation
         ' 
         lblFrameCount0.AutoSize = True
         lblFrameCount0.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblFrameCount0.Location = New Point(24, 250)
-        lblFrameCount0.Margin = New Padding(8, 0, 8, 0)
+        lblFrameCount0.Location = New Point(18, 195)
+        lblFrameCount0.Margin = New Padding(6, 0, 6, 0)
         lblFrameCount0.Name = "lblFrameCount0"
-        lblFrameCount0.Size = New Size(157, 32)
+        lblFrameCount0.Size = New Size(118, 25)
         lblFrameCount0.TabIndex = 26
         lblFrameCount0.Text = "Frame Count:"
         ' 
@@ -336,10 +337,10 @@ Partial Class frmEditor_Animation
         ' 
         lblLoopCount0.AutoSize = True
         lblLoopCount0.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblLoopCount0.Location = New Point(24, 156)
-        lblLoopCount0.Margin = New Padding(8, 0, 8, 0)
+        lblLoopCount0.Location = New Point(18, 122)
+        lblLoopCount0.Margin = New Padding(6, 0, 6, 0)
         lblLoopCount0.Name = "lblLoopCount0"
-        lblLoopCount0.Size = New Size(144, 32)
+        lblLoopCount0.Size = New Size(110, 25)
         lblLoopCount0.TabIndex = 24
         lblLoopCount0.Text = "Loop Count:"
         ' 
@@ -347,20 +348,20 @@ Partial Class frmEditor_Animation
         ' 
         lblSprite0.AutoSize = True
         lblSprite0.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        lblSprite0.Location = New Point(22, 64)
-        lblSprite0.Margin = New Padding(8, 0, 8, 0)
+        lblSprite0.Location = New Point(17, 50)
+        lblSprite0.Margin = New Padding(6, 0, 6, 0)
         lblSprite0.Name = "lblSprite0"
-        lblSprite0.Size = New Size(81, 32)
+        lblSprite0.Size = New Size(62, 25)
         lblSprite0.TabIndex = 22
         lblSprite0.Text = "Sprite:"
         ' 
         ' picSprite0
         ' 
         picSprite0.BackColor = Color.Black
-        picSprite0.Location = New Point(476, 26)
-        picSprite0.Margin = New Padding(8, 6, 8, 6)
+        picSprite0.Location = New Point(366, 20)
+        picSprite0.Margin = New Padding(6, 5, 6, 5)
         picSprite0.Name = "picSprite0"
-        picSprite0.Size = New Size(444, 405)
+        picSprite0.Size = New Size(342, 316)
         picSprite0.TabIndex = 21
         picSprite0.TabStop = False
         ' 
@@ -369,67 +370,67 @@ Partial Class frmEditor_Animation
         txtName.BackColor = Color.FromArgb(CByte(69), CByte(73), CByte(74))
         txtName.BorderStyle = BorderStyle.FixedSingle
         txtName.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        txtName.Location = New Point(252, 68)
-        txtName.Margin = New Padding(8, 6, 8, 6)
+        txtName.Location = New Point(194, 53)
+        txtName.Margin = New Padding(6, 5, 6, 5)
         txtName.Name = "txtName"
-        txtName.Size = New Size(680, 39)
+        txtName.Size = New Size(524, 31)
         txtName.TabIndex = 1
         ' 
         ' DarkLabel1
         ' 
         DarkLabel1.AutoSize = True
         DarkLabel1.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        DarkLabel1.Location = New Point(39, 68)
-        DarkLabel1.Margin = New Padding(8, 0, 8, 0)
+        DarkLabel1.Location = New Point(17, 55)
+        DarkLabel1.Margin = New Padding(6, 0, 6, 0)
         DarkLabel1.Name = "DarkLabel1"
-        DarkLabel1.Size = New Size(83, 32)
+        DarkLabel1.Size = New Size(63, 25)
         DarkLabel1.TabIndex = 0
         DarkLabel1.Text = "Name:"
         ' 
         ' btnSave
         ' 
-        btnSave.Location = New Point(17, 949)
-        btnSave.Margin = New Padding(8, 6, 8, 6)
+        btnSave.Location = New Point(13, 741)
+        btnSave.Margin = New Padding(6, 5, 6, 5)
         btnSave.Name = "btnSave"
-        btnSave.Padding = New Padding(11, 12, 11, 12)
-        btnSave.Size = New Size(407, 58)
+        btnSave.Padding = New Padding(8, 9, 8, 9)
+        btnSave.Size = New Size(313, 45)
         btnSave.TabIndex = 2
         btnSave.Text = "Save"
         ' 
         ' btnDelete
         ' 
-        btnDelete.Location = New Point(17, 1019)
-        btnDelete.Margin = New Padding(8, 6, 8, 6)
+        btnDelete.Location = New Point(13, 796)
+        btnDelete.Margin = New Padding(6, 5, 6, 5)
         btnDelete.Name = "btnDelete"
-        btnDelete.Padding = New Padding(11, 12, 11, 12)
-        btnDelete.Size = New Size(407, 58)
+        btnDelete.Padding = New Padding(8, 9, 8, 9)
+        btnDelete.Size = New Size(313, 45)
         btnDelete.TabIndex = 3
         btnDelete.Text = "Delete"
         ' 
         ' btnCancel
         ' 
-        btnCancel.Location = New Point(17, 1089)
-        btnCancel.Margin = New Padding(8, 6, 8, 6)
+        btnCancel.Location = New Point(13, 851)
+        btnCancel.Margin = New Padding(6, 5, 6, 5)
         btnCancel.Name = "btnCancel"
-        btnCancel.Padding = New Padding(11, 12, 11, 12)
-        btnCancel.Size = New Size(407, 58)
+        btnCancel.Padding = New Padding(8, 9, 8, 9)
+        btnCancel.Size = New Size(313, 45)
         btnCancel.TabIndex = 4
         btnCancel.Text = "Cancel"
         ' 
         ' frmEditor_Animation
         ' 
-        AutoScaleDimensions = New SizeF(13F, 32F)
+        AutoScaleDimensions = New SizeF(10F, 25F)
         AutoScaleMode = AutoScaleMode.Font
         AutoSize = True
         BackColor = Color.FromArgb(CByte(45), CByte(45), CByte(48))
-        ClientSize = New Size(1408, 1156)
+        ClientSize = New Size(1083, 903)
         Controls.Add(btnCancel)
         Controls.Add(btnDelete)
         Controls.Add(btnSave)
         Controls.Add(DarkGroupBox2)
         Controls.Add(DarkGroupBox1)
         FormBorderStyle = FormBorderStyle.FixedToolWindow
-        Margin = New Padding(8, 6, 8, 6)
+        Margin = New Padding(6, 5, 6, 5)
         Name = "frmEditor_Animation"
         Text = "Animation Editor"
         DarkGroupBox1.ResumeLayout(False)

@@ -181,7 +181,7 @@ Module S_Database
             playerTable += $", character{i} jsonb"
         Next
 
-        Dim tableNames As String() = {"job", "item", "map", "npc", "shop", "skill", "resource", "animation", "pet", "projectile"}
+        Dim tableNames As String() = {"job", "item", "map", "npc", "shop", "skill", "resource", "animation", "pet", "projectile", "moral"}
 
         For Each tableName In tableNames
             CreateTable(tableName, dataTable)
@@ -410,11 +410,6 @@ Module S_Database
         Dim i As Integer
 
         ReDim Job(MAX_JOBS)
-        For i = 1 To MAX_JOBS
-            ReDim Job(i).Stat(Core.StatType.Count - 1)
-            ReDim Job(i).StartItem(5)
-            ReDim Job(i).StartValue(5)
-        Next
 
         For i = 1 To MAX_JOBS
             ClearJob(i)
@@ -422,12 +417,13 @@ Module S_Database
     End Sub
 
     Sub ClearJob(jobNum As Integer)
-        Job(jobNum).Name = ""
-        Job(jobNum).Desc = ""
-        Job(jobNum).StartMap = 1
         ReDim Job(jobNum).Stat(StatType.Count - 1)
         ReDim Job(jobNum).StartItem(5)
         ReDim Job(jobNum).StartValue(5)
+
+        Job(jobNum).Name = ""
+        Job(jobNum).Desc = ""
+        Job(jobNum).StartMap = 1
         Job(jobNum).MaleSprite = 1
         Job(jobNum).FemaleSprite = 1
     End Sub
@@ -845,7 +841,7 @@ Module S_Database
         End If
 
         mwMap.Weather = xwMap.Weather
-        mwMap.Respawn = xwMap.Respawn <> 0
+        mwMap.NoRespawn = xwMap.Respawn <> 0
         mwMap.MaxX = 15
         mwMap.MaxY = 11
 
@@ -910,7 +906,7 @@ Module S_Database
 
 #End Region
 
-#Region "Npc's"
+#Region "Npcs"
 
     Sub SaveNpc(npcNum As Integer)
         Dim json As String = JsonConvert.SerializeObject(NPC(npcNum)).ToString()
@@ -1027,15 +1023,8 @@ Module S_Database
     End Sub
 
     Sub ClearShop(index As Integer)
-        Dim i As Integer
-
+        Shop(index) = Nothing
         Shop(index).Name = ""
-
-        ReDim Shop(index).TradeItem(MAX_TRADES)
-        For i = 1 To MAX_SHOPS
-            ReDim Shop(i).TradeItem(MAX_TRADES)
-        Next
-
     End Sub
 
     Sub ClearShops()

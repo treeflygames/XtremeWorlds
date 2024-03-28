@@ -40,7 +40,11 @@ Module C_Banks
             Bank.Item(i).Value = buffer.ReadInt32
         Next
 
-        NeedToOpenBank = True
+        InBank = True
+
+        If Not Windows(GetWindowIndex("winBank")).Window.visible Then
+            ShowWindow(GetWindowIndex("winBank"), , False)
+        End If
 
         buffer.Dispose()
     End Sub

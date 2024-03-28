@@ -110,10 +110,10 @@ Module C_GameLogic
                 ' check if we need to end the CD icon
                 If NumSkills > 0 Then
                     For i = 1 To MAX_PLAYER_SKILLS
-                        If Player(Myindex).Skill(i).Num > 0 Then
-                            If Player(Myindex).Skill(i).CD > 0 Then
-                                If Player(Myindex).Skill(i).CD + (Skill(Player(Myindex).Skill(i).Num).CdTime * 1000) < tick Then
-                                    Player(Myindex).Skill(i).CD = 0
+                        If Player(MyIndex).Skill(i).Num > 0 Then
+                            If Player(MyIndex).Skill(i).CD > 0 Then
+                                If Player(MyIndex).Skill(i).CD + (Skill(Player(MyIndex).Skill(i).Num).CdTime * 1000) < tick Then
+                                    Player(MyIndex).Skill(i).CD = 0
                                 End If
                             End If
                         End If
@@ -122,7 +122,7 @@ Module C_GameLogic
 
                 ' check if we need to unlock the player's skill casting restriction
                 If SkillBuffer > 0 Then
-                    If SkillBufferTimer + (Skill(Player(Myindex).Skill(SkillBuffer).Num).CastTime * 1000) < tick Then
+                    If SkillBufferTimer + (Skill(Player(MyIndex).Skill(SkillBuffer).Num).CastTime * 1000) < tick Then
                         SkillBuffer = 0
                         SkillBufferTimer = 0
                     End If
@@ -130,7 +130,7 @@ Module C_GameLogic
 
                 ' check if we need to unlock the pets's Skill casting restriction
                 If PetSkillBuffer > 0 Then
-                    If PetSkillBufferTimer + (Skill(Pet(Player(Myindex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000) < tick Then
+                    If PetSkillBufferTimer + (Skill(Pet(Player(MyIndex).Pet.Num).Skill(PetSkillBuffer)).CastTime * 1000) < tick Then
                         PetSkillBuffer = 0
                         PetSkillBufferTimer = 0
                     End If
@@ -607,7 +607,7 @@ Module C_GameLogic
                 ' // Moderator Admin Commands //
                 ' Admin Help
                 Case "/admin"
-                    If GetPlayerAccess(Myindex) < AdminType.Moderator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Moderator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -620,7 +620,7 @@ Module C_GameLogic
                 ' Kicking a player
                 Case "/kick"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Moderator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Moderator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -636,7 +636,7 @@ Module C_GameLogic
                 ' Location
                 Case "/loc"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -646,7 +646,7 @@ Module C_GameLogic
                 ' Warping to a player
                 Case "/warpmeto"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -661,7 +661,7 @@ Module C_GameLogic
                 ' Warping a player to you
                 Case "/warptome"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -676,7 +676,7 @@ Module C_GameLogic
                 ' Warping to a map
                 Case "/warpto"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -698,7 +698,7 @@ Module C_GameLogic
                 ' Setting sprite
                 Case "/sprite"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -713,7 +713,7 @@ Module C_GameLogic
                 ' Map report
                 Case "/mapreport"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -723,7 +723,7 @@ Module C_GameLogic
                 ' Respawn request
                 Case "/respawn"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -732,7 +732,7 @@ Module C_GameLogic
 
                 Case "/editmap"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Mapper Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Mapper Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -743,7 +743,7 @@ Module C_GameLogic
                 ' Welcome change
                 Case "/welcome"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Moderator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Moderator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -758,7 +758,7 @@ Module C_GameLogic
                 ' Check the ban list
                 Case "/banlist"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Moderator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Moderator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -768,7 +768,7 @@ Module C_GameLogic
                 ' Banning a player
                 Case "/ban"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Moderator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Moderator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -784,7 +784,7 @@ Module C_GameLogic
                 ' Giving another player access
                 Case "/bandestroy"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Creator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Creator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -793,7 +793,7 @@ Module C_GameLogic
 
                 Case "/access"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Creator Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Creator Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -810,7 +810,7 @@ Module C_GameLogic
                 ' // Developer Admin Commands //
                 Case "/editresource"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -819,7 +819,7 @@ Module C_GameLogic
 
                 Case "/editanimation"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -828,7 +828,7 @@ Module C_GameLogic
 
                 Case "/editpet"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -837,7 +837,7 @@ Module C_GameLogic
 
                 Case "/edititem"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -846,7 +846,7 @@ Module C_GameLogic
 
                 Case "/editprojectile"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -855,7 +855,7 @@ Module C_GameLogic
 
                 Case "/editnpc"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -864,7 +864,7 @@ Module C_GameLogic
 
                 Case "/editjob"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -873,7 +873,7 @@ Module C_GameLogic
 
                 Case "/editskill"
 
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -881,13 +881,21 @@ Module C_GameLogic
                     SendRequestEditSkill()
 
                 Case "/editshop"
-                    If GetPlayerAccess(Myindex) < AdminType.Developer Then
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
                         AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
                         GoTo Continue1
                     End If
 
                     SendRequestEditShop()
 
+                    
+                Case "/editmoral"
+                    If GetPlayerAccess(MyIndex) < AdminType.Developer Then
+                        AddText(Language.Chat.AccessAlert, ColorType.BrightRed)
+                        GoTo Continue1
+                    End If
+
+                    SendRequestEditMoral()
                 Case ""
 
                 Case Else
@@ -906,8 +914,8 @@ Continue1:
         Dim buffer As New ByteStream(4)
         buffer = New ByteStream(4)
 
-        If GetTickCount() > Player(Myindex).MapGetTimer + 250 Then
-            Player(Myindex).MapGetTimer = GetTickCount()
+        If GetTickCount() > Player(MyIndex).MapGetTimer + 250 Then
+            Player(MyIndex).MapGetTimer = GetTickCount()
             buffer.WriteInt32(ClientPackets.CMapGetItem)
             Socket.SendData(buffer.Data, buffer.Head)
         End If
@@ -1005,19 +1013,9 @@ Continue1:
     End Sub
 
     Friend Sub UpdateDrawMapName()
-        Dim g As Graphics = Graphics.FromImage(New Bitmap(1, 1))
-
-        Select Case Map.Moral
-            Case MapMoralType.None
-                DrawMapNameColor = Color.Red
-            Case MapMoralType.Danger
-                DrawMapNameColor = Color.Green
-            Case MapMoralType.Safe
-                DrawMapNameColor = Color.Blue
-            Case Else
-                DrawMapNameColor = SFML.Graphics.Color.White
-        End Select
-        g.Dispose()
+        If Map.Moral > 0 Then
+            DrawMapNameColor = GetSfmlColor(Moral(Map.Moral).Color)
+        End If
     End Sub
 
     Friend Sub AddChatBubble(target As Integer, targetType As Byte, msg As String, Color As Integer)
@@ -1389,7 +1387,7 @@ Continue1:
                 .Bottom = .Top + PicY
             End With
 
-            If Player(Myindex).Hotbar(i).Slot > 0 Then
+            If Player(MyIndex).Hotbar(i).Slot > 0 Then
                 If CurMouseX >= tempRec.Left And CurMouseX <= tempRec.Right Then
                     If CurMouseY >= tempRec.Top And CurMouseY <= tempRec.Bottom Then
                         IsHotbar = i
@@ -1406,9 +1404,9 @@ Continue1:
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
 
         ' show
-        If GetPlayerInvItemNum(Myindex, invNum) Then
-            If Item(GetPlayerInvItemNum(Myindex, invNum)).BindType > 0 And Player(Myindex).Inv(invNum).Bound > 0 Then soulBound = True
-            ShowItemDesc(x, y, GetPlayerInvItemNum(Myindex, invNum))
+        If GetPlayerInvItemNum(MyIndex, invNum) Then
+            If Item(GetPlayerInvItemNum(MyIndex, invNum)).BindType > 0 And Player(MyIndex).Inv(invNum).Bound > 0 Then soulBound = True
+            ShowItemDesc(x, y, GetPlayerInvItemNum(MyIndex, invNum))
         End If
     End Sub
 
@@ -1416,7 +1414,7 @@ Continue1:
         Dim Color As Color, theName As String, jobName As String, levelTxt As String, i As Long
 
         ' set globals
-        descType = 1 ' inventory
+        descType = PartType.Item ' inventory
         descItem = itemNum
 
         ' set position
@@ -1467,7 +1465,7 @@ Continue1:
             If Item(itemNum).JobReq > 0 Then
                 jobName = Trim$(Job(Item(itemNum).JobReq).Name)
                 ' do we match it?
-                If GetPlayerJob(Myindex) = Item(itemNum).JobReq Then
+                If GetPlayerJob(MyIndex) = Item(itemNum).JobReq Then
                     Color = Color.Green
                 Else
                     Color = Color.Red
@@ -1483,7 +1481,7 @@ Continue1:
             If Item(itemNum).LevelReq > 0 Then
                 levelTxt = "Level " & Item(itemNum).LevelReq
                 ' do we match it?
-                If GetPlayerLevel(Myindex) >= Item(itemNum).LevelReq Then
+                If GetPlayerLevel(MyIndex) >= Item(itemNum).LevelReq Then
                     Color = Color.Green
                 Else
                     Color = Color.Red
@@ -1734,6 +1732,12 @@ Continue1:
         End Select
     End Sub
 
+    Public Sub ShowShopDesc(X As Long, Y As Long, ItemNum As Long)
+        If ItemNum <= 0 Or ItemNum > MAX_ITEMS Then Exit Sub
+        ' show
+        ShowItemDesc(X, Y, ItemNum)
+    End Sub
+
     Public Sub ShowEqDesc(x As Long, y As Long, eqNum As Long)
         Dim soulBound As Boolean
 
@@ -1741,9 +1745,9 @@ Continue1:
         If eqNum <= 0 Or eqNum > EquipmentType.Count - 1 Then Exit Sub
 
         ' show
-        If Player(Myindex).Equipment(eqNum) Then
-            If Item(Player(Myindex).Equipment(eqNum)).BindType > 0 Then soulBound = True
-            ShowItemDesc(x, y, Player(Myindex).Equipment(eqNum))
+        If Player(MyIndex).Equipment(eqNum) Then
+            If Item(Player(MyIndex).Equipment(eqNum)).BindType > 0 Then soulBound = True
+            ShowItemDesc(x, y, Player(MyIndex).Equipment(eqNum))
         End If
     End Sub
 
@@ -1780,6 +1784,8 @@ Continue1:
                 frmEditor_Skill.Dispose()
             Case EditorType.Animation
                 frmEditor_Animation.Dispose()
+            Case EditorType.Moral
+                frmEditor_Moral.Dispose()
         End Select
 
         frmAdmin.Dispose()
@@ -1829,6 +1835,100 @@ Continue1:
             .Controls(GetControlIndex("winOptions", "chkAutotile")).Value = Types.Settings.Autotile
             .Controls(GetControlIndex("winOptions", "chkFullscreen")).Value = Types.Settings.Fullscreen
             .Controls(GetControlIndex("winOptions", "cmbRes")).Value = Types.Settings.Resolution
+        End With
+    End Sub
+
+    Public Sub OpenShop(shopNum As Long)
+        ' set globals
+        InShop = shopNum
+        shopSelectedSlot = 1
+        shopSelectedItem = Shop(InShop).TradeItem(1).Item
+        Windows(GetWindowIndex("winShop")).Controls(GetControlIndex("winShop", "chkSelling")).Value = 0
+        Windows(GetWindowIndex("winShop")).Controls(GetControlIndex("winShop", "chkBuying")).Value = 1
+        Windows(GetWindowIndex("winShop")).Controls(GetControlIndex("winShop", "btnSell")).visible = False
+        Windows(GetWindowIndex("winShop")).Controls(GetControlIndex("winShop", "btnBuy")).visible = True
+        shopIsSelling = False
+    
+        ' set the current item
+        UpdateShop
+    
+        ' show the window
+        ShowWindow(GetWindowIndex("winShop"))
+    End Sub
+
+    Public Sub CloseShop()
+        SendCloseShop
+        HideWindow(GetWindowIndex("winShop"))
+        shopSelectedSlot = 0
+        shopSelectedItem = 0
+        shopIsSelling = False
+        InShop = 0
+    End Sub
+
+    Sub UpdateShop()
+        Dim i As Long, CostValue As Long
+
+        If InShop = 0 Then Exit Sub
+    
+        ' make sure we have an item selected
+        If shopSelectedSlot = 0 Then shopSelectedSlot = 1
+    
+        With Windows(GetWindowIndex("winShop"))
+            ' buying items
+            If Not shopIsSelling Then
+                shopSelectedItem = Shop(InShop).TradeItem(shopSelectedSlot).Item
+                ' labels
+                If shopSelectedItem > 0 Then
+                    .Controls(GetControlIndex("winShop", "lblName")).text = Trim$(Item(shopSelectedItem).Name)
+                    ' check if it's gold
+                    If Shop(InShop).TradeItem(shopSelectedSlot).CostItem = 1 Then
+                        ' it's gold
+                        .Controls(GetControlIndex("winShop", "lblCost")).text = Shop(InShop).TradeItem(shopSelectedSlot).CostValue & "g"
+                    Else
+                        ' if it's one then just print the name
+                        If Shop(InShop).TradeItem(shopSelectedSlot).CostValue = 1 Then
+                            .Controls(GetControlIndex("winShop", "lblCost")).text = Trim$(Item(Shop(InShop).TradeItem(shopSelectedSlot).CostItem).Name)
+                        Else
+                            .Controls(GetControlIndex("winShop", "lblCost")).text = Shop(InShop).TradeItem(shopSelectedSlot).CostValue & " " & Trim$(Item(Shop(InShop).TradeItem(shopSelectedSlot).CostItem).Name)
+                        End If
+                    End If
+
+                    ' draw the item
+                    For i = 0 To 5
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = Item(shopSelectedItem).Icon
+                    Next
+                Else
+                    .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
+                    .Controls(GetControlIndex("winShop", "lblCost")).text = vbNullString
+                    
+                    ' draw the item
+                    For i = 0 To 5
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
+                    Next
+                End If
+            Else
+                shopSelectedItem = GetPlayerInvItemNum(MyIndex, shopSelectedSlot)
+                ' labels
+                If shopSelectedItem > 0 Then
+                    .Controls(GetControlIndex("winShop", "lblName")).text = Trim$(Item(shopSelectedItem).Name)
+                    ' calc cost
+                    CostValue = (Item(shopSelectedItem).Price / 100) * Shop(InShop).BuyRate
+                    .Controls(GetControlIndex("winShop", "lblCost")).text = CostValue & "g"
+                    
+                    ' draw the item
+                    For i = 0 To 5
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = Item(shopSelectedItem).Icon
+                    Next
+                Else
+                    .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
+                    .Controls(GetControlIndex("winShop", "lblCost")).text = vbNullString
+                    
+                    ' draw the item
+                    For i = 0 To 5
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
+                    Next
+                End If
+            End If
         End With
     End Sub
 End Module

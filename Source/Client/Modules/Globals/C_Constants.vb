@@ -46,7 +46,7 @@ Public Module C_Constants
     Public Const EqOffsetX As Long = 8
     Public Const EqColumns As Long = 4
 
-    ' Inventory constants
+    ' Skill constants
     Public Const SkillTop As Long = 28
     Public Const SkillLeft As Long = 9
     Public Const SkillOffsetY As Long = 6

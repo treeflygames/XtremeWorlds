@@ -151,6 +151,7 @@ Module S_General
         ClearParty()
 
         Console.WriteLine("Clearing Jobs...") : ClearJobs()
+        Console.WriteLine("Clearing Morals...") : ClearMorals()
         Console.WriteLine("Clearing Maps...") : ClearMaps()
         Console.WriteLine("Clearing Map Items...") : ClearMapItems()
         Console.WriteLine("Clearing Map NPC's...") : ClearAllMapNpcs()
@@ -167,9 +168,10 @@ Module S_General
 
     Private Sub LoadGameData()
         Console.WriteLine("Loading Jobs...") : LoadJobs()
+        Console.WriteLine("Loading Morals...") : LoadMorals()
         Console.WriteLine("Loading Maps...") : LoadMaps()
         Console.WriteLine("Loading Items...") : LoadItems()
-        Console.WriteLine("Loading NPC's...") : LoadNpcs()
+        Console.WriteLine("Loading NPCs...") : LoadNpcs()
         Console.WriteLine("Loading Resources...") : LoadResources()
         Console.WriteLine("Loading Shops...") : LoadShops()
         Console.WriteLine("Loading Skills...") : LoadSkills()

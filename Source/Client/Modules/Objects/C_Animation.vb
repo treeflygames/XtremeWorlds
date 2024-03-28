@@ -212,7 +212,7 @@ Module C_Animations
                 ' check if is ingame
                 If IsPlaying(lockindex) Then
                     ' check if on same map
-                    If GetPlayerMap(lockindex) = GetPlayerMap(Myindex) Then
+                    If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
                         ' is on map, is playing, set x & y
                         x = (GetPlayerX(lockindex) * PicX) + 16 - (width / 2) + Player(lockindex).XOffset
                         y = (GetPlayerY(lockindex) * PicY) + 16 - (height / 2) + Player(lockindex).YOffset
@@ -244,7 +244,7 @@ Module C_Animations
                 ' check if is ingame
                 If IsPlaying(lockindex) AndAlso PetAlive(lockindex) = True Then
                     ' check if on same map
-                    If GetPlayerMap(lockindex) = GetPlayerMap(Myindex) Then
+                    If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
                         ' is on map, is playing, set x & y
                         x = (Player(lockindex).Pet.X * PicX) + 16 - (width / 2) + Player(lockindex).Pet.XOffset
                         y = (Player(lockindex).Pet.Y * PicY) + 16 - (height / 2) + Player(lockindex).Pet.YOffset

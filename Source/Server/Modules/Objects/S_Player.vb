@@ -47,10 +47,12 @@ Module S_Player
         End If
 
         ' Check if map is attackable
-        If Not Map(GetPlayerMap(Attacker)).Moral = MapMoralType.Danger Then
-            If GetPlayerPK(Victim) = False Then
-                PlayerMsg(Attacker, "This is a safe zone!", ColorType.BrightRed)
-                Exit Function
+        If Map(GetPlayerMap(attacker)).Moral > 0 Then
+            If Not Moral(Map(GetPlayerMap(Attacker)).Moral).CanPK Then
+                If GetPlayerPK(Victim) = False Then
+                    PlayerMsg(Attacker, "This is a safe zone!", ColorType.BrightRed)
+                    Exit Function
+                End If
             End If
         End If
 
@@ -179,135 +181,138 @@ Module S_Player
 
     End Function
 
-    Sub AttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As Integer = 0)
+    Sub AttackPlayer(attacker As Integer, victim As Integer, damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As Integer = 0)
         Dim exp As Integer, mapNum As Integer
         Dim n As Integer
         Dim buffer As ByteStream
 
         If npcnum = 0 Then
             ' Check for subscript out of range
-            If IsPlaying(Attacker) = False OrElse IsPlaying(Victim) = False OrElse Damage < 0 Then
+            If IsPlaying(attacker) = False OrElse IsPlaying(victim) = False OrElse damage < 0 Then
                 Exit Sub
             End If
 
             ' Check for weapon
-
-            If GetPlayerEquipment(Attacker, EquipmentType.Weapon) > 0 Then
-                n = GetPlayerEquipment(Attacker, EquipmentType.Weapon)
+            If GetPlayerEquipment(attacker, EquipmentType.Weapon) > 0 Then
+                n = GetPlayerEquipment(attacker, EquipmentType.Weapon)
             End If
 
             ' Send this packet so they can see the person attacking
             buffer = New ByteStream(4)
             buffer.WriteInt32(ServerPackets.SAttack)
-            buffer.WriteInt32(Attacker)
-            SendDataToMapBut(Attacker, GetPlayerMap(Attacker), buffer.Data, buffer.Head)
+            buffer.WriteInt32(attacker)
+            SendDataToMapBut(attacker, GetPlayerMap(attacker), buffer.Data, buffer.Head)
             buffer.Dispose()
 
-            If Damage >= GetPlayerVital(Victim, VitalType.HP) Then
-
-                SendActionMsg(GetPlayerMap(Victim), "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
+            If damage >= GetPlayerVital(victim, VitalType.HP) Then
+                SendActionMsg(GetPlayerMap(victim), "-" & damage, ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
 
                 ' Player is dead
-                GlobalMsg(GetPlayerName(Victim) & " has been killed by " & GetPlayerName(Attacker))
-                ' Calculate exp to give attacker
-                exp = (GetPlayerExp(Victim) \ 10)
+                GlobalMsg(GetPlayerName(victim) & " has been killed by " & GetPlayerName(attacker))
+                
+                If Map(GetPlayerMap(victim)).Moral > 0 Then
+                    If Moral(Map(GetPlayerMap(victim)).Moral).LoseExp Then
+                        ' Calculate exp to give attacker
+                        exp = Math.Round(GetPlayerExp(victim) \ 3)
 
-                ' Make sure we dont get less then 0
-                If exp < 0 Then
-                    exp = 0
+                        ' Make sure we dont get less then 0
+                        If exp < 0 Then
+                            exp = 0
+                        End If
+
+                        If exp = 0 Then
+                            PlayerMsg(victim, "You lost no exp.", ColorType.BrightGreen)
+                            PlayerMsg(attacker, "You received no exp.", ColorType.BrightRed)
+                        Else
+                            SetPlayerExp(victim, GetPlayerExp(victim) - exp)
+                            SendExp(victim)
+                            PlayerMsg(victim, "You lost " & exp & " exp.", ColorType.BrightRed)
+                            SetPlayerExp(attacker, GetPlayerExp(attacker) + exp)
+                            SendExp(attacker)
+                            PlayerMsg(attacker, "You received " & exp & " exp.", ColorType.BrightGreen)
+                        End If
+
+                        ' Check for a level up
+                        CheckPlayerLevelUp(attacker)
+                    End If
                 End If
-
-                If exp = 0 Then
-                    PlayerMsg(Victim, "You lost no exp.", ColorType.BrightGreen)
-                    PlayerMsg(Attacker, "You received no exp.", ColorType.BrightRed)
-                Else
-                    SetPlayerExp(Victim, GetPlayerExp(Victim) - exp)
-                    SendExp(Victim)
-                    PlayerMsg(Victim, "You lost " & exp & " exp.", ColorType.BrightRed)
-                    SetPlayerExp(Attacker, GetPlayerExp(Attacker) + exp)
-                    SendExp(Attacker)
-                    PlayerMsg(Attacker, "You received " & exp & " exp.", ColorType.BrightGreen)
-                End If
-
-                ' Check for a level up
-                CheckPlayerLevelUp(Attacker)
 
                 ' Check if target is player who died and if so set target to 0
-                If TempPlayer(Attacker).TargetType = TargetType.Player Then
-                    If TempPlayer(Attacker).Target = Victim Then
-                        TempPlayer(Attacker).Target = 0
-                        TempPlayer(Attacker).TargetType = 0
+                If TempPlayer(attacker).TargetType = TargetType.Player Then
+                    If TempPlayer(attacker).Target = victim Then
+                        TempPlayer(attacker).Target = 0
+                        TempPlayer(attacker).TargetType = 0
                     End If
                 End If
 
-                If GetPlayerPK(Victim) = False Then
-                    If GetPlayerPK(Attacker) = False Then
-                        SetPlayerPK(Attacker, True)
-                        SendPlayerData(Attacker)
-                        GlobalMsg(GetPlayerName(Attacker) & " has been deemed a Player Killer!!!")
+                If GetPlayerPK(victim) = False Then
+                    If GetPlayerPK(attacker) = False Then
+                        SetPlayerPK(attacker, True)
+                        SendPlayerData(attacker)
+                        GlobalMsg(GetPlayerName(attacker) & " has been deemed a Player Killer!!!")
                     End If
                 Else
-                    GlobalMsg(GetPlayerName(Victim) & " has paid the price for being a Player Killer!!!")
+                    GlobalMsg(GetPlayerName(victim) & " has paid the price for being a Player Killer!!!")
                 End If
 
-                OnDeath(Victim)
+                OnDeath(victim)
             Else
                 ' Player not dead, just do the damage
-                SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
-                SendVital(Victim, VitalType.HP)
-                SendActionMsg(GetPlayerMap(Victim), "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
+                SetPlayerVital(victim, VitalType.HP, GetPlayerVital(victim, VitalType.HP) - damage)
+                SendVital(victim, VitalType.HP)
+                SendActionMsg(GetPlayerMap(victim), "-" & damage, ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
 
                 'if a stunning skill, stun the player
                 If skillnum > 0 Then
-                    If Skill(skillnum).StunDuration > 0 Then StunPlayer(Victim, skillnum)
+                    If Skill(skillnum).StunDuration > 0 Then StunPlayer(victim, skillnum)
                 End If
             End If
 
             ' Reset attack timer
-            TempPlayer(Attacker).AttackTimer = GetTimeMs()
+            TempPlayer(attacker).AttackTimer = GetTimeMs()
         Else ' npc to player
             ' Check for subscript out of range
-            If IsPlaying(Victim) = False OrElse Damage < 0 Then Exit Sub
+            If IsPlaying(victim) = False OrElse damage < 0 Then Exit Sub
 
-            mapNum = GetPlayerMap(Victim)
+            mapNum = GetPlayerMap(victim)
 
             ' Send this packet so they can see the person attacking
             buffer = New ByteStream(4)
             buffer.WriteInt32(ServerPackets.SNpcAttack)
-            buffer.WriteInt32(Attacker)
+            buffer.WriteInt32(attacker)
             SendDataToMap(mapNum, buffer.Data, buffer.Head)
             buffer.Dispose()
 
-            If Damage >= GetPlayerVital(Victim, VitalType.HP) Then
+            If damage >= GetPlayerVital(victim, VitalType.HP) Then
 
-                SendActionMsg(mapNum, "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
+                SendActionMsg(mapNum, "-" & damage, ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
 
                 ' Player is dead
-                GlobalMsg(GetPlayerName(Victim) & " has been killed by " & NPC(MapNPC(mapNum).Npc(Attacker).Num).Name)
+                GlobalMsg(GetPlayerName(victim) & " has been killed by " & NPC(MapNPC(mapNum).Npc(attacker).Num).Name)
 
                 ' Check if target is player who died and if so set target to 0
-                If TempPlayer(Attacker).TargetType = TargetType.Player Then
-                    If TempPlayer(Attacker).Target = Victim Then
-                        TempPlayer(Attacker).Target = 0
-                        TempPlayer(Attacker).TargetType = 0
+                If TempPlayer(attacker).TargetType = TargetType.Player Then
+                    If TempPlayer(attacker).Target = victim Then
+                        TempPlayer(attacker).Target = 0
+                        TempPlayer(attacker).TargetType = 0
                     End If
                 End If
 
-                OnDeath(Victim)
+                OnDeath(victim)
             Else
                 ' Player not dead, just do the damage
-                SetPlayerVital(Victim, VitalType.HP, GetPlayerVital(Victim, VitalType.HP) - Damage)
-                SendVital(Victim, VitalType.HP)
-                SendActionMsg(mapNum, "-" & Damage, ColorType.BrightRed, 1, (GetPlayerX(Victim) * 32), (GetPlayerY(Victim) * 32))
+                SetPlayerVital(victim, VitalType.HP, GetPlayerVital(victim, VitalType.HP) - damage)
+                SendVital(victim, VitalType.HP)
+                SendActionMsg(mapNum, "-" & damage, ColorType.BrightRed, 1, (GetPlayerX(victim) * 32), (GetPlayerY(victim) * 32))
 
                 'if a stunning skill, stun the player
                 If skillnum > 0 Then
-                    If Skill(skillnum).StunDuration > 0 Then StunPlayer(Victim, skillnum)
+                    If Skill(skillnum).StunDuration > 0 Then StunPlayer(victim, skillnum)
                 End If
             End If
 
             ' Reset attack timer
-            MapNPC(mapNum).Npc(Attacker).AttackTimer = GetTimeMs()
+            MapNPC(mapNum).Npc(attacker).AttackTimer = GetTimeMs()
         End If
 
     End Sub
@@ -709,69 +714,73 @@ Module S_Player
         Next
     End Sub
 
-    Friend Sub HandlePlayerKilledPK(Attacker As Integer, Victim As Integer)
+    Friend Sub HandlePlayerKilledPK(attacker As Integer, victim As Integer)
         ' TODO: Redo this method, it is horrendous.
         Dim z As Integer, eqcount As Integer, invcount, j As Integer
-        If GetPlayerPK(Victim) = 0 Then
-            If GetPlayerPK(Attacker) = 0 Then
-                SetPlayerPK(Attacker, 1)
-                SendPlayerData(Attacker)
-                GlobalMsg(GetPlayerName(Attacker) & " has been deemed a Player Killer!!!")
+        If GetPlayerPK(victim) = 0 Then
+            If GetPlayerPK(attacker) = 0 Then
+                SetPlayerPK(attacker, 1)
+                SendPlayerData(attacker)
+                GlobalMsg(GetPlayerName(attacker) & " has been deemed a Player Killer!!!")
             End If
         Else
-            GlobalMsg(GetPlayerName(Victim) & " has paid the price for being a Player Killer!!!")
+            GlobalMsg(GetPlayerName(victim) & " has paid the price for being a Player Killer!!!")
         End If
 
-        If GetPlayerLevel(Victim) >= 10 Then
+        If Map(GetPlayerMap(victim)).Moral > 0 Then
+            If Moral(Map(GetPlayerMap(victim)).Moral).DropItems Then
+                If GetPlayerLevel(victim) >= 10 Then
 
-            For z = 1 To MAX_INV
-                If GetPlayerInvItemNum(Victim, z) > 0 Then
-                    invcount += 1
-                End If
-            Next
-
-            For z = 0 To EquipmentType.Count - 1
-                If GetPlayerEquipment(Victim, z) > 0 Then
-                    eqcount += 1
-                End If
-            Next
-            z = Random(1, invcount + eqcount)
-
-            If z = 0 Then z = 1
-            If z > invcount + eqcount Then z = invcount + eqcount
-            If z > invcount Then
-                z -= invcount
-
-                For x = 0 To EquipmentType.Count - 1
-                    If GetPlayerEquipment(Victim, x) > 0 Then
-                        j += 1
-
-                        If j = z Then
-                            'Here it is, drop this piece of equipment!
-                            PlayerMsg(Victim, "In death you lost grip on your " & Trim$(Item(GetPlayerEquipment(Victim, x)).Name), ColorType.BrightRed)
-                            SpawnItem(GetPlayerEquipment(Victim, x), 1, GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
-                            SetPlayerEquipment(Victim, 0, x)
-                            SendWornEquipment(Victim)
-                            SendMapEquipment(Victim)
+                    For z = 1 To MAX_INV
+                        If GetPlayerInvItemNum(victim, z) > 0 Then
+                            invcount += 1
                         End If
-                    End If
-                Next
-            Else
+                    Next
 
-                For x = 1 To MAX_INV
-                    If GetPlayerInvItemNum(Victim, x) > 0 Then
-                        j += 1
-
-                        If j = z Then
-                            'Here it is, drop this item!
-                            PlayerMsg(Victim, "In death you lost grip on your " & Trim$(Item(GetPlayerInvItemNum(Victim, x)).Name), ColorType.BrightRed)
-                            SpawnItem(GetPlayerInvItemNum(Victim, x), GetPlayerInvItemValue(Victim, x), GetPlayerMap(Victim), GetPlayerX(Victim), GetPlayerY(Victim))
-                            SetPlayerInvItemNum(Victim, x, 0)
-                            SetPlayerInvItemValue(Victim, x, 0)
-                            SendInventory(Victim)
+                    For z = 0 To EquipmentType.Count - 1
+                        If GetPlayerEquipment(victim, z) > 0 Then
+                            eqcount += 1
                         End If
+                    Next
+                    z = Random(1, invcount + eqcount)
+
+                    If z = 0 Then z = 1
+                    If z > invcount + eqcount Then z = invcount + eqcount
+                    If z > invcount Then
+                        z -= invcount
+
+                        For x = 0 To EquipmentType.Count - 1
+                            If GetPlayerEquipment(victim, x) > 0 Then
+                                j += 1
+
+                                If j = z Then
+                                    'Here it is, drop this piece of equipment!
+                                    PlayerMsg(victim, "In death you lost grip on your " & Trim$(Item(GetPlayerEquipment(victim, x)).Name), ColorType.BrightRed)
+                                    SpawnItem(GetPlayerEquipment(victim, x), 1, GetPlayerMap(victim), GetPlayerX(victim), GetPlayerY(victim))
+                                    SetPlayerEquipment(victim, 0, x)
+                                    SendWornEquipment(victim)
+                                    SendMapEquipment(victim)
+                                End If
+                            End If
+                        Next
+                    Else
+
+                        For x = 1 To MAX_INV
+                            If GetPlayerInvItemNum(victim, x) > 0 Then
+                                j += 1
+
+                                If j = z Then
+                                    'Here it is, drop this item!
+                                    PlayerMsg(victim, "In death you lost grip on your " & Trim$(Item(GetPlayerInvItemNum(victim, x)).Name), ColorType.BrightRed)
+                                    SpawnItem(GetPlayerInvItemNum(victim, x), GetPlayerInvItemValue(victim, x), GetPlayerMap(victim), GetPlayerX(victim), GetPlayerY(victim))
+                                    SetPlayerInvItemNum(victim, x, 0)
+                                    SetPlayerInvItemValue(victim, x, 0)
+                                    SendInventory(victim)
+                                End If
+                            End If
+                        Next
                     End If
-                Next
+                End If
             End If
         End If
     End Sub
@@ -922,6 +931,8 @@ Module S_Player
         PlayersOnMap(MapNum) = True
         TempPlayer(index).GettingMap = True
 
+        SendUpdateMoralTo(index, Map(MapNum).Moral)
+
         buffer = New ByteStream(4)
         buffer.WriteInt32(ServerPackets.SCheckForMap)
         buffer.WriteInt32(MapNum)
@@ -941,6 +952,10 @@ Module S_Player
 
         ' Check for subscript out of range
         If Dir < DirectionType.Up OrElse Dir > DirectionType.Left OrElse Movement < MovementType.Standing OrElse Movement > MovementType.Running Then
+            Exit Sub
+        End If
+
+        If TempPlayer(index).InShop > 0 Or TempPlayer(index).InBank Then
             Exit Sub
         End If
 
@@ -1196,11 +1211,10 @@ Module S_Player
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(index, i) = ItemNum Then
                 If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
-                    HasItem = GetPlayerInvItemValue(index, i)
+                    HasItem += GetPlayerInvItemValue(index, i)
                 Else
-                    HasItem = 1
+                    HasItem += 1
                 End If
-                Exit Function
             End If
         Next
 
@@ -1233,6 +1247,7 @@ Module S_Player
         Dim Msg As String
 
         If Not IsPlaying(index) Then Exit Sub
+
         mapNum = GetPlayerMap(index)
 
         For i = 1 To MAX_MAP_ITEMS
@@ -1288,10 +1303,16 @@ Module S_Player
 
         mapNum = GetPlayerMap(index)
 
-        ' no lock or locked to player?
-        If MapItem(mapNum, mapItemNum).PlayerName = "" Or MapItem(mapNum, mapItemNum).PlayerName = GetPlayerName(index).Trim Then
-            CanPlayerPickupItem = True
-            Exit Function
+        If Map(mapNum).Moral > 0 Then
+            If Moral(Map(mapNum).Moral).CanPickupItem Then
+                ' no lock or locked to player?
+                If MapItem(mapNum, mapItemNum).PlayerName = "" Or MapItem(mapNum, mapItemNum).PlayerName = GetPlayerName(index).Trim Then
+                    CanPlayerPickupItem = True
+                    Exit Function
+                End If
+            Else 
+                Call PlayerMsg(index, "You can't pickup items here!", ColorType.BrightRed)
+            End If
         End If
 
         CanPlayerPickupItem = False
@@ -1390,23 +1411,28 @@ Module S_Player
 
     End Function
 
-    Sub PlayerMapDropItem(index As Integer, InvNum As Integer, Amount As Integer)
+    Sub PlayerMapDropItem(index As Integer, invNum As Integer, amount As Integer)
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse InvNum <= 0 OrElse InvNum > MAX_INV Then
+        If IsPlaying(index) = False OrElse invNum <= 0 OrElse invNum > MAX_INV Then
             Exit Sub
         End If
 
         ' check the player isn't doing something
         If TempPlayer(index).InBank OrElse TempPlayer(index).InShop OrElse TempPlayer(index).InTrade > 0 Then Exit Sub
 
-        If (GetPlayerInvItemNum(index, InvNum) > 0) Then
-            If (GetPlayerInvItemNum(index, InvNum) <= MAX_ITEMS) Then
+        If Moral(GetPlayerMap(index)).CanDropItem = False Then
+            Call PlayerMsg(index, "You can't drop items here!", ColorType.BrightRed)
+            Exit Sub
+        End If
+
+        If (GetPlayerInvItemNum(index, invNum) > 0) Then
+            If (GetPlayerInvItemNum(index, invNum) <= MAX_ITEMS) Then
                 i = FindOpenMapItemSlot(GetPlayerMap(index))
 
                 If i <> 0 Then
-                    MapItem(GetPlayerMap(index), i).Num = GetPlayerInvItemNum(index, InvNum)
+                    MapItem(GetPlayerMap(index), i).Num = GetPlayerInvItemNum(index, invNum)
                     MapItem(GetPlayerMap(index), i).X = GetPlayerX(index)
                     MapItem(GetPlayerMap(index), i).Y = GetPlayerY(index)
                     MapItem(GetPlayerMap(index), i).PlayerName = Trim$(GetPlayerName(index))
@@ -1415,33 +1441,32 @@ Module S_Player
                     MapItem(GetPlayerMap(index), i).CanDespawn = True
                     MapItem(GetPlayerMap(index), i).DespawnTimer = GetTimeMs() + ITEM_DESPAWN_TIME
 
-                    If Item(GetPlayerInvItemNum(index, InvNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, InvNum)).Stackable = 1 Then
-
+                    If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
                         ' Check if its more then they have and if so drop it all
-                        If Amount >= GetPlayerInvItemValue(index, InvNum) Then
-                            MapItem(GetPlayerMap(index), i).Value = GetPlayerInvItemValue(index, InvNum)
-                            SetPlayerInvItemNum(index, InvNum, 0)
-                            SetPlayerInvItemValue(index, InvNum, 0)
-                            Amount = GetPlayerInvItemValue(index, InvNum)
+                        If amount >= GetPlayerInvItemValue(index, invNum) Then
+                            MapItem(GetPlayerMap(index), i).Value = GetPlayerInvItemValue(index, invNum)
+                            SetPlayerInvItemNum(index, invNum, 0)
+                            SetPlayerInvItemValue(index, invNum, 0)
+                            amount = GetPlayerInvItemValue(index, invNum)
                         Else
-                            MapItem(GetPlayerMap(index), i).Value = Amount
-                            SetPlayerInvItemValue(index, InvNum, GetPlayerInvItemValue(index, InvNum) - Amount)
+                            MapItem(GetPlayerMap(index), i).Value = amount
+                            SetPlayerInvItemValue(index, invNum, GetPlayerInvItemValue(index, invNum) - amount)
                         End If
-                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, InvNum)).Name)), Amount), ColorType.Yellow)
+                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name)), amount), ColorType.Yellow)
                     Else
-                        ' Its not a currency object so this is easy
+                        ' It's not a currency object so this is easy
                         MapItem(GetPlayerMap(index), i).Value = 0
                         ' send message
 
-                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, InvNum)).Name))), ColorType.Yellow)
-                        SetPlayerInvItemNum(index, InvNum, 0)
-                        SetPlayerInvItemValue(index, InvNum, 0)
+                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name))), ColorType.Yellow)
+                        SetPlayerInvItemNum(index, invNum, 0)
+                        SetPlayerInvItemValue(index, invNum, 0)
                     End If
 
                     ' Send inventory update
-                    SendInventoryUpdate(index, InvNum)
+                    SendInventoryUpdate(index, invNum)
                     ' Spawn the item before we set the num or we'll get a different free map item slot
-                    SpawnItemSlot(i, MapItem(GetPlayerMap(index), i).Num, Amount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
+                    SpawnItemSlot(i, MapItem(GetPlayerMap(index), i).Num, amount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
                 Else
                     PlayerMsg(index, "Too many items already on the ground.", ColorType.Yellow)
                 End If
@@ -1482,6 +1507,13 @@ Module S_Player
 
     Function CanPlayerUseItem(Index As Integer, itemNum As Integer)
         Dim i As Integer
+
+        If Map(GetPlayerMap(index)).Moral > 0 Then
+            If Moral(Map(GetPlayerMap(index)).Moral).CanUseItem = False Then
+                PlayerMsg(Index, "You can't use items here!", ColorType.BrightRed)
+                Exit Function
+            End If
+        End If
 
         For i = 1 To StatType.Count - 1
             If GetPlayerStat(Index, i) < Item(itemNum).Stat_Req(i) Then
@@ -2344,6 +2376,8 @@ Module S_Player
         End If
     End Sub
 
+
+
 #End Region
 
 #Region "Bank"
@@ -2351,10 +2385,10 @@ Module S_Player
     Sub GiveBankItem(index As Integer, InvSlot As Integer, Amount As Integer)
         Dim BankSlot As Integer, itemnum As Integer
 
-        If InvSlot < 0 OrElse InvSlot > MAX_INV Then Exit Sub
+        If InvSlot <= 0 OrElse InvSlot > MAX_INV Then Exit Sub
 
         If GetPlayerInvItemValue(index, InvSlot) < 0 Then Exit Sub
-        If GetPlayerInvItemValue(index, InvSlot) < Amount Then Exit Sub
+        If GetPlayerInvItemValue(index, InvSlot) < Amount And GetPlayerInvItemNum(index, InvSlot) = 0 Then Exit Sub
 
         BankSlot = FindOpenBankSlot(index, GetPlayerInvItemNum(index, InvSlot))
         itemnum = GetPlayerInvItemNum(index, InvSlot)
@@ -2379,6 +2413,8 @@ Module S_Player
                     TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), 0)
                 End If
             End If
+
+            SendBank(index)
         End If
 
     End Sub

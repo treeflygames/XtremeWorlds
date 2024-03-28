@@ -44,7 +44,7 @@ Friend Class frmEditor_Shop
         Call UpdateShopTrade()
     End Sub
 
-    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
+    Private Sub lstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         ShopEditorInit()
     End Sub
 

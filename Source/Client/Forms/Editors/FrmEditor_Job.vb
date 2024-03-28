@@ -90,7 +90,7 @@ Friend Class frmEditor_Job
         Job(EditorIndex).Stat(StatType.Luck) = nudLuck.Value
     End Sub
 
-    Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs) Handles nudEndurance.Click
+    Private Sub NumEndurance_ValueChanged(sender As Object, e As EventArgs)
         Job(EditorIndex).Stat(StatType.Luck) = nudEndurance.Value
     End Sub
 

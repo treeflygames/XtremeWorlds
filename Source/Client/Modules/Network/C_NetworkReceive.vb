@@ -10,7 +10,7 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SKeyPair) = AddressOf Packet_KeyPair
         Socket.PacketId(ServerPackets.SLoginOK) = AddressOf HandleLoginOk
         Socket.PacketId(ServerPackets.SPlayerChars) = AddressOf Packet_PlayerChars
-        Socket.PacketId(ServerPackets.SNewCharJob) = AddressOf Packet_NewCharJob
+        Socket.PacketId(ServerPackets.SUpdateJob) = AddressOf Packet_UpdateJob
         Socket.PacketId(ServerPackets.SJobData) = AddressOf Packet_JobData
         Socket.PacketId(ServerPackets.SInGame) = AddressOf Packet_InGame
         Socket.PacketId(ServerPackets.SPlayerInv) = AddressOf Packet_PlayerInv
@@ -82,10 +82,8 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SCritical) = AddressOf Packet_Critical
         Socket.PacketId(ServerPackets.SrClick) = AddressOf Packet_RClick
 
-        'hotbar
         Socket.PacketId(ServerPackets.SHotbar) = AddressOf Packet_Hotbar
 
-        'Events
         Socket.PacketId(ServerPackets.SSpawnEvent) = AddressOf Packet_SpawnEvent
         Socket.PacketId(ServerPackets.SEventMove) = AddressOf Packet_EventMove
         Socket.PacketId(ServerPackets.SEventDir) = AddressOf Packet_EventDir
@@ -107,15 +105,12 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SUpdateProjectile) = AddressOf HandleUpdateProjectile
         Socket.PacketId(ServerPackets.SMapProjectile) = AddressOf HandleMapProjectile
 
-        'emotes
         Socket.PacketId(ServerPackets.SEmote) = AddressOf Packet_Emote
 
-        'party
         Socket.PacketId(ServerPackets.SPartyInvite) = AddressOf Packet_PartyInvite
         Socket.PacketId(ServerPackets.SPartyUpdate) = AddressOf Packet_PartyUpdate
         Socket.PacketId(ServerPackets.SPartyVitals) = AddressOf Packet_PartyVitals
 
-        'pets
         Socket.PacketId(ServerPackets.SUpdatePet) = AddressOf Packet_UpdatePet
         Socket.PacketId(ServerPackets.SUpdatePlayerPet) = AddressOf Packet_UpdatePlayerPet
         Socket.PacketId(ServerPackets.SPetMove) = AddressOf Packet_PetMove
@@ -130,7 +125,6 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.STime) = AddressOf Packet_Time
 
         Socket.PacketId(ServerPackets.SItemEditor) = AddressOf Packet_EditItem
-        Socket.PacketId(ServerPackets.SREditor) = AddressOf Packet_ResourceEditor
         Socket.PacketId(ServerPackets.SNpcEditor) = AddressOf Packet_NPCEditor
         Socket.PacketId(ServerPackets.SShopEditor) = AddressOf Packet_EditShop
         Socket.PacketId(ServerPackets.SSkillEditor) = AddressOf Packet_EditSkill
@@ -139,6 +133,9 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SProjectileEditor) = AddressOf HandleProjectileEditor
         Socket.PacketId(ServerPackets.SJobEditor) = AddressOf Packet_ClassEditor
         Socket.PacketId(ServerPackets.SPetEditor) = AddressOf Packet_PetEditor
+        Socket.PacketId(ServerPackets.SUpdateMoral) = AddressOf Packet_UpdateMoral
+        Socket.PacketId(ServerPackets.SMoralEditor) = AddressOf Packet_EditMoral
+
     End Sub
 
     Private Sub Packet_AlertMsg(ByRef data() As Byte)
@@ -190,7 +187,7 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Now we can receive game data
-        Myindex = buffer.ReadInt32
+        MyIndex = buffer.ReadInt32
 
         buffer.Dispose()
     End Sub
@@ -253,34 +250,34 @@ Module C_NetworkReceive
         Next
     End Sub
 
-    Sub Packet_NewCharJob(ByRef data() As Byte)
+    Sub Packet_UpdateJob(ByRef data() As Byte)
         Dim i As Integer
         Dim buffer As New ByteStream(data)
 
-        For i = 1 To MAX_JOBS
-            With Job(i)
-                .Name = buffer.ReadString
-                .Desc = buffer.ReadString
+        i = buffer.ReadInt32()
+        buffer.WriteInt32(i)
 
-                .MaleSprite = buffer.ReadInt32
-                .FemaleSprite = buffer.ReadInt32
+        With Job(i)
+            .Name = buffer.ReadString
+            .Desc = buffer.ReadString
 
-                For q = 1 To StatType.Count - 1
-                    .Stat(q) = buffer.ReadInt32
-                Next
+            .MaleSprite = buffer.ReadInt32
+            .FemaleSprite = buffer.ReadInt32
 
-                For q = 1 To 5
-                    .StartItem(q) = buffer.ReadInt32
-                    .StartValue(q) = buffer.ReadInt32
-                Next
+            For q = 1 To StatType.Count - 1
+                .Stat(q) = buffer.ReadInt32
+            Next
 
-                .StartMap = buffer.ReadInt32
-                .StartX = buffer.ReadByte
-                .StartY = buffer.ReadByte
-                .BaseExp = buffer.ReadInt32
-            End With
+            For q = 1 To 5
+                .StartItem(q) = buffer.ReadInt32
+                .StartValue(q) = buffer.ReadInt32
+            Next
 
-        Next
+            .StartMap = buffer.ReadInt32
+            .StartX = buffer.ReadByte
+            .StartY = buffer.ReadByte
+            .BaseExp = buffer.ReadInt32
+        End With
 
         buffer.Dispose()
     End Sub
@@ -340,8 +337,8 @@ Module C_NetworkReceive
         For i = 1 To MAX_INV
             invNum = buffer.ReadInt32
             amount = buffer.ReadInt32
-            SetPlayerInvItemNum(Myindex, i, invNum)
-            SetPlayerInvItemValue(Myindex, i, amount)
+            SetPlayerInvItemNum(MyIndex, i, invNum)
+            SetPlayerInvItemValue(MyIndex, i, amount)
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -355,9 +352,10 @@ Module C_NetworkReceive
         Dim n As Integer, i As Integer
         Dim buffer As New ByteStream(data)
 
-        n = buffer.ReadInt32
-        SetPlayerInvItemNum(Myindex, n, buffer.ReadInt32)
-        SetPlayerInvItemValue(Myindex, n, buffer.ReadInt32)
+        n = buffer.ReadInt32()
+
+        SetPlayerInvItemNum(MyIndex, n, buffer.ReadInt32)
+        SetPlayerInvItemValue(MyIndex, n, buffer.ReadInt32)
 
         ' changes, clear drop menu
         TmpCurrencyItem = 0
@@ -371,7 +369,7 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         For i = 1 To EquipmentType.Count - 1
-            SetPlayerEquipment(Myindex, buffer.ReadInt32, i)
+            SetPlayerEquipment(MyIndex, buffer.ReadInt32, i)
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -627,7 +625,7 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         For i = 1 To MAX_PLAYER_SKILLS
-            Player(Myindex).Skill(i).Num = buffer.ReadInt32
+            Player(MyIndex).Skill(i).Num = buffer.ReadInt32
         Next
 
         buffer.Dispose()
@@ -700,7 +698,7 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         slot = buffer.ReadInt32
-        Player(Myindex).Skill(slot).CD = GetTickCount()
+        Player(MyIndex).Skill(slot).CD = GetTickCount()
 
         buffer.Dispose()
     End Sub
@@ -1190,10 +1188,38 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         For i = 1 To MAX_HOTBAR
-            Player(Myindex).Hotbar(i).Slot = buffer.ReadInt32
-            Player(Myindex).Hotbar(i).SlotType = buffer.ReadInt32
+            Player(MyIndex).Hotbar(i).Slot = buffer.ReadInt32
+            Player(MyIndex).Hotbar(i).SlotType = buffer.ReadInt32
         Next
 
         buffer.Dispose()
     End Sub
+
+    Sub Packet_EditMoral(ByRef data() As Byte)
+        InitMoralEditor = True
+    End Sub
+
+     Sub Packet_UpdateMoral(ByRef data() As Byte)
+        Dim i As Integer
+        Dim buffer As New ByteStream(data)
+
+        i = buffer.ReadInt32()
+
+        With Moral(i)
+            .Name = buffer.ReadString()
+            .Color = buffer.ReadByte()
+            .NPCBlock = buffer.ReadBoolean()
+            .PlayerBlock = buffer.ReadBoolean()
+            .DropItems = buffer.ReadBoolean()
+            .CanCast = buffer.ReadBoolean()
+            .CanDropItem = buffer.ReadBoolean()
+            .CanPickupItem = buffer.ReadBoolean()
+            .CanPK = buffer.ReadBoolean()
+            .DropItems = buffer.ReadBoolean()
+            .LoseExp = buffer.ReadBoolean()
+        End With
+
+        buffer.Dispose()
+    End Sub
+
 End Module

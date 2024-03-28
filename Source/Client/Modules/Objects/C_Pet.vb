@@ -357,8 +357,8 @@ Module C_Pets
     Friend Sub Packet_PetExperience(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
 
-        Player(Myindex).Pet.Exp = buffer.ReadInt32
-        Player(Myindex).Pet.Tnl = buffer.ReadInt32
+        Player(MyIndex).Pet.Exp = buffer.ReadInt32
+        Player(MyIndex).Pet.Tnl = buffer.ReadInt32
 
         buffer.Dispose()
     End Sub

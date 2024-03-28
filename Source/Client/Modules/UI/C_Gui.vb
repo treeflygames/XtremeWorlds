@@ -58,7 +58,7 @@ Friend Module C_Gui
         Dim i As Long
 
         For i = 1 To MAX_PLAYER_SKILLS
-            If Player(Myindex).Skill(i).Num Then
+            If Player(MyIndex).Skill(i).Num Then
                 With tempRec
                     .Top = StartY + SkillTop + ((SkillOffsetY + PicY) * ((i - 1) \ SkillColumns))
                     .bottom = .Top + PicY

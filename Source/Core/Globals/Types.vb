@@ -4,6 +4,7 @@ Imports SFML.Graphics
 Public Module Types
     ' Common data structure arrays
     Public Job(MAX_JOBS) As JobStruct
+    Public Moral(MAX_MORALS) As MoralStruct
     Public Item(MAX_ITEMS) As ItemStruct
     Public NPC(MAX_NPCS) As NpcStruct
     Public Shop(MAX_SHOPS) As ShopStruct
@@ -474,7 +475,7 @@ Public Module Types
         Dim Brightness As Byte
 
         Dim Shop As Integer
-        Dim Respawn As Boolean
+        Dim NoRespawn As Boolean
         Dim Indoors As Boolean
     End Structure
 
@@ -1003,5 +1004,19 @@ Public Module Types
         Dim Data1_2 As Short
         Dim Data2_2 As Short
         Dim Data3_2 As Short
+    End Structure
+
+    Public Structure MoralStruct
+        Dim Name As String
+        Dim Color As Byte
+        Dim CanCast As Boolean
+        Dim CanPK As Boolean
+        Dim CanUseItem As Boolean
+        Dim DropItems As Boolean
+        Dim LoseExp As Boolean
+        Dim CanPickupItem As Boolean
+        Dim CanDropItem As Boolean
+        Dim PlayerBlock As Boolean
+        Dim NPCBlock As Boolean
     End Structure
 End Module

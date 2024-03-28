@@ -28,7 +28,7 @@ Friend Class frmEditor_Item
         ItemEditorInit()
     End Sub
 
-    Private Sub LstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
+    Private Sub lstIndex_Click(sender As Object, e As EventArgs) Handles lstIndex.Click
         ItemEditorInit()
     End Sub
 
@@ -354,6 +354,11 @@ Friend Class frmEditor_Item
     Private Sub btnSpawn_Click(sender As Object, e As EventArgs) Handles btnSpawn.Click
         SendSpawnItem(EditorIndex, nudSpanwAmount.Value)
     End Sub
+
+    Private Sub frmEditor_Item_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        ItemEditorCancel()
+    End Sub
+
 
 #End Region
 

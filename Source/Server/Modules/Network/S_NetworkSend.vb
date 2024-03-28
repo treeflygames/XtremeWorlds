@@ -64,34 +64,33 @@ Module S_NetworkSend
         buffer.Dispose()
     End Sub
 
-    Sub SendNewCharJob(index As Integer)
+    Sub SendUpdateJob(index As Integer, jobNum As Integer)
         Dim i As Integer, n As Integer
         Dim buffer As New ByteStream(4)
 
-        buffer.WriteInt32(ServerPackets.SNewCharJob)
+        buffer.WriteInt32(ServerPackets.SUpdateJob)
+        buffer.WriteInt32(jobNum)
 
-        For i = 1 To MAX_JOBS
-            buffer.WriteString((Job(i).Name))
-            buffer.WriteString((Job(i).Desc))
+        buffer.WriteString((Job(jobNum).Name))
+        buffer.WriteString((Job(jobNum).Desc))
 
-            buffer.WriteInt32(Job(i).MaleSprite)
-            buffer.WriteInt32(Job(i).FemaleSprite)
+        buffer.WriteInt32(Job(jobNum).MaleSprite)
+        buffer.WriteInt32(Job(jobNum).FemaleSprite)
 
-            For q = 1 To StatType.Count - 1
-                buffer.WriteInt32(Job(i).Stat(q))
-            Next
-
-            For q = 1 To 5
-                buffer.WriteInt32(Job(i).StartItem(q))
-                buffer.WriteInt32(Job(i).StartValue(q))
-            Next
-
-            buffer.WriteInt32(Job(i).StartMap)
-            buffer.WriteByte(Job(i).StartX)
-            buffer.WriteByte(Job(i).StartY)
-            buffer.WriteInt32(Job(i).BaseExp)
+        For q = 1 To StatType.Count - 1
+            buffer.WriteInt32(Job(jobNum).Stat(q))
         Next
 
+        For q = 1 To 5
+            buffer.WriteInt32(Job(jobNum).StartItem(q))
+            buffer.WriteInt32(Job(jobNum).StartValue(q))
+        Next
+
+        buffer.WriteInt32(Job(jobNum).StartMap)
+        buffer.WriteByte(Job(jobNum).StartX)
+        buffer.WriteByte(Job(jobNum).StartY)
+        buffer.WriteInt32(Job(jobNum).BaseExp)
+ 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
         buffer.Dispose()
     End Sub
@@ -127,12 +126,12 @@ Module S_NetworkSend
     End Sub
 
     Sub SendInGame(index As Integer)
-        Dim Buffer As New ByteStream(4)
+        Dim buffer As New ByteStream(4)
 
-        Buffer.WriteInt32(ServerPackets.SInGame)
-        Socket.SendDataTo(index, Buffer.Data, Buffer.Head)
+        buffer.WriteInt32(ServerPackets.SInGame)
+        Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
-        Buffer.Dispose()
+        buffer.Dispose()
     End Sub
 
     Sub SendJobs(index As Integer)
@@ -155,6 +154,28 @@ Module S_NetworkSend
 
         buffer.WriteInt32(ServerPackets.SJobData)
         buffer.WriteBlock(JobData(jobNum))
+        SendDataToAll(buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
+    Sub SendUpdateJobTo(index As Integer, jobNum As Integer)
+        Dim buffer As ByteStream
+        buffer = New ByteStream(4)
+        buffer.WriteInt32(ServerPackets.SUpdateJob)
+
+        buffer.WriteBlock(JobData(jobNum))
+
+        Socket.SendDataTo(index, buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
+    Sub SendUpdateJobToAll(jobNum As Integer)
+        Dim buffer As ByteStream
+        buffer = New ByteStream(4)
+        buffer.WriteInt32(ServerPackets.SUpdateJob)
+
+        buffer.WriteBlock(JobData(jobNum))
+
         SendDataToAll(buffer.Data, buffer.Head)
         buffer.Dispose()
     End Sub
@@ -245,6 +266,7 @@ Module S_NetworkSend
         buffer.WriteInt32(ServerPackets.SUpdateShop)
 
         buffer.WriteInt32(shopNum)
+
         buffer.WriteInt32(Shop(shopNum).BuyRate)
         buffer.WriteString((Shop(shopNum).Name.Trim))
         buffer.WriteInt32(Shop(shopNum).Face)
@@ -497,7 +519,7 @@ Module S_NetworkSend
             buffer.WriteByte(Map(mapNum).Panorama)
             buffer.WriteByte(Map(mapNum).Parallax)
             buffer.WriteByte(Map(mapNum).Brightness)
-            buffer.WriteInt32(Map(mapNum).Respawn)
+            buffer.WriteInt32(Map(mapNum).NoRespawn)
             buffer.WriteInt32(Map(mapNum).Indoors)
             buffer.WriteInt32(Map(mapNum).Shop)
 
@@ -821,7 +843,9 @@ Module S_NetworkSend
         Dim buffer As New ByteStream(4), n As Integer
 
         buffer.WriteInt32(ServerPackets.SPlayerInvUpdate)
+
         buffer.WriteInt32(InvSlot)
+
         buffer.WriteInt32(GetPlayerInvItemNum(index, InvSlot))
         buffer.WriteInt32(GetPlayerInvItemValue(index, InvSlot))
 

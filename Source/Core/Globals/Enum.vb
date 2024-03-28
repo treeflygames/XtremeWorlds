@@ -27,13 +27,6 @@
         Female
     End Enum
 
-    ''' <Summary> Map Moral Constant </Summary>
-    Enum MapMoralType As Byte
-        None = 0
-        Safe
-        Danger
-    End Enum
-
     ''' <Summary> Tile Constant </Summary>
     Enum TileType As Byte
         None = 0
@@ -416,6 +409,7 @@
         Quest
         Job
         Projectile
+        Moral
     End Enum
 
     Public Enum QuadrantType

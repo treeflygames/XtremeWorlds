@@ -192,7 +192,7 @@ Module C_Maps
 
         ' Erase all players except self
         For i = 1 To MAX_PLAYERS
-            If i <> Myindex Then
+            If i <> MyIndex Then
                 SetPlayerMap(i, 0)
             End If
         Next
@@ -258,7 +258,7 @@ Module C_Maps
             Map.Panorama = buffer.ReadByte
             Map.Parallax = buffer.ReadByte
             Map.Brightness = buffer.ReadByte
-            Map.Respawn = buffer.ReadInt32
+            Map.NoRespawn = buffer.ReadInt32
             Map.Indoors = buffer.ReadInt32
             Map.Shop = buffer.ReadInt32
 
@@ -560,7 +560,7 @@ Module C_Maps
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CRequestNewMap)
-        buffer.WriteInt32(GetPlayerDir(Myindex))
+        buffer.WriteInt32(GetPlayerDir(MyIndex))
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
@@ -609,7 +609,7 @@ Module C_Maps
         buffer.WriteByte(Map.Panorama)
         buffer.WriteByte(Map.Parallax)
         buffer.WriteByte(Map.Brightness)
-        buffer.WriteInt32(Map.Respawn)
+        buffer.WriteInt32(Map.NoRespawn)
         buffer.WriteInt32(Map.Indoors)
         buffer.WriteInt32(Map.Shop)
 

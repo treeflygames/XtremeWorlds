@@ -42,7 +42,7 @@ Module C_Trade
 
     Sub Packet_Trade(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
-        NeedToOpenTrade = True
+
         buffer.ReadInt32()
         Tradername = Trim(buffer.ReadString)
 
@@ -50,7 +50,7 @@ Module C_Trade
     End Sub
 
     Sub Packet_CloseTrade(ByRef data() As Byte)
-        NeedtoCloseTrade = True
+
     End Sub
 
     Sub Packet_TradeUpdate(ByRef data() As Byte)
@@ -71,8 +71,6 @@ Module C_Trade
             Next
             TheirWorth = String.Format(Language.Trade.Value, buffer.ReadInt32) & "g"
         End If
-
-        NeedtoUpdateTrade = True
 
         buffer.Dispose()
     End Sub

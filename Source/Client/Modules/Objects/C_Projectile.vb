@@ -43,6 +43,7 @@ Friend Module C_Projectiles
         buffer.Dispose()
 
     End Sub
+
     Sub SendRequestProjectile()
         Dim buffer As New ByteStream(4)
 
@@ -212,7 +213,7 @@ Friend Module C_Projectiles
 
         'Check for player collision
        For i = 1 To MAX_PLAYERS
-            If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(Myindex) Then
+            If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 If GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
                     canClearProjectile = True
                     collisionindex = i
@@ -233,7 +234,7 @@ Friend Module C_Projectiles
         'Clear the projectile if possible
         If canClearProjectile = True Then
             'Only send the clear to the server if you're the projectile caster or the one hit (only if owner is not a player)
-            If (MapProjectile(Player(MyIndex).Map, projectileNum).OwnerType = TargetType.Player AndAlso MapProjectile(Player(MyIndex).Map, projectileNum).Owner = Myindex) Then
+            If (MapProjectile(Player(MyIndex).Map, projectileNum).OwnerType = TargetType.Player AndAlso MapProjectile(Player(MyIndex).Map, projectileNum).Owner = MyIndex) Then
                 SendClearProjectile(projectileNum, collisionindex, collisionType, collisionZone)
             End If
 

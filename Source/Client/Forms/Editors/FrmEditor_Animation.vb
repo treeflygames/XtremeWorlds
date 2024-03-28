@@ -48,7 +48,7 @@ Friend Class frmEditor_Animation
         lstIndex.SelectedIndex = tmpindex
     End Sub
 
-    Private Sub LstIndex_Click(sender As Object, e As MouseEventArgs)
+    Private Sub lstIndex_Click(sender As Object, e As MouseEventArgs)
         AnimationEditorInit()
     End Sub
 

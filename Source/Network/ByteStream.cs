@@ -119,11 +119,12 @@ namespace Mirage.Sharp.Asfw
 
     public bool ReadBoolean()
     {
-      if (this.Head + 1 > this.Data.Length)
-        return false;
-      int num = BitConverter.ToBoolean(this.Data, this.Head) ? 1 : 0;
-      ++this.Head;
-      return num != 0;
+        if (this.Head + 1 > this.Data.Length)
+            return false; // Or throw an exception if unexpected end of data is an error condition.
+
+        bool result = BitConverter.ToBoolean(this.Data, this.Head);
+        this.Head += 1; // Increment the Head to move to the next piece of data.
+        return result;
     }
 
     public short ReadInt16()

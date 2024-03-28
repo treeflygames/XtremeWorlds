@@ -35,9 +35,9 @@ Module C_Shops
     End Sub
 
     Sub StreamShop(shopNum As Integer)
-        If shopNum > 0 and Shop(shopNum).Name = "" Or Shop_Loaded(shopNum) = False Then
+        If shopNum > 0 And Shop(shopNum).Name = "" Or Shop_Loaded(shopNum) = False Then
             Shop_Loaded(shopNum) = True
-            SendRequestItem(shopNum)
+            SendRequestShop(shopNum)
         End If
     End Sub
 
@@ -48,10 +48,10 @@ Module C_Shops
     Friend Sub Packet_OpenShop(ByRef data() As Byte)
         Dim shopnum As Integer
         Dim buffer As New ByteStream(data)
-        shopnum = buffer.ReadInt32
 
-        NeedToOpenShop = True
-        NeedToOpenShopNum = shopnum
+        shopNum = buffer.ReadInt32
+
+        OpenShop(shopNum)
 
         buffer.Dispose()
     End Sub
@@ -89,16 +89,17 @@ Module C_Shops
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CRequestShop)
+        buffer.WriteInt32(shopNum)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
     End Sub
 
-    Friend Sub BuyItem(shopslot As Integer)
+    Friend Sub BuyItem(shopSlot As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CBuyItem)
-        buffer.WriteInt32(shopslot)
+        buffer.WriteInt32(shopSlot)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
