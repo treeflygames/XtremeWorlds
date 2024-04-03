@@ -295,17 +295,17 @@ Friend Module C_AutoTiles
     Friend Sub CacheRenderState(x As Integer, y As Integer, layerNum As Integer)
         Dim quarterNum As Integer
 
-        If x < 0 OrElse x > Map.MaxX OrElse y < 0 OrElse y > Map.MaxY Then Exit Sub
+        If x < 0 Or x > Map.MaxX Or y < 0 Or y > Map.MaxY Then Exit Sub
 
         With Map.Tile(x, y)
             ' check if the tile can be rendered
-            If .Layer(layerNum).Tileset <= 0 OrElse .Layer(layerNum).Tileset > NumTileSets Then
+            If .Layer(layerNum).Tileset <= 0 Or .Layer(layerNum).Tileset > NumTileSets Then
                 Autotile(x, y).Layer(layerNum).RenderState = RenderStateNone
                 Exit Sub
             End If
 
             ' check if it needs to be rendered as an autotile
-            If .Layer(layerNum).AutoTile = AutotileNone OrElse .Layer(layerNum).AutoTile = AutotileFake Then
+            If .Layer(layerNum).AutoTile = AutotileNone Or .Layer(layerNum).AutoTile = AutotileFake Then
                 ' default to... default
                 Autotile(x, y).Layer(layerNum).RenderState = RenderStateNormal
             Else
@@ -383,19 +383,19 @@ Friend Module C_AutoTiles
         If CheckTileMatch(layerNum, x, y, x - 1, y) Then tmpTile(3) = True
 
         ' Calculate Situation - Inner
-        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(2) And Not tmpTile(3) Then situation = AutoInner
 
         ' Horizontal
-        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(2) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(2) And Not tmpTile(3) Then situation = AutoVertical
 
         ' Outer
-        If Not tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
+        If Not tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoOuter
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Actually place the subtile
         Select Case situation
@@ -427,17 +427,17 @@ Friend Module C_AutoTiles
         If CheckTileMatch(layerNum, x, y, x + 1, y) Then tmpTile(3) = True
 
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
 
         ' Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoVertical
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
+        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AutoOuter
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
         ' Actually place the subtile
         Select Case situation
             Case AutoInner
@@ -468,19 +468,19 @@ Friend Module C_AutoTiles
         If CheckTileMatch(layerNum, x, y, x, y + 1) Then tmpTile(3) = True
 
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
 
         ' Horizontal
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoHorizontal
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoVertical
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoVertical
 
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
+        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AutoOuter
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Actually place the subtile
         Select Case situation
@@ -512,19 +512,19 @@ Friend Module C_AutoTiles
         If CheckTileMatch(layerNum, x, y, x + 1, y) Then tmpTile(3) = True
 
         ' Calculate Situation - Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
 
         ' Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoVertical
 
         ' Outer
-        If tmpTile(1) AndAlso Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoOuter
+        If tmpTile(1) And Not tmpTile(2) And tmpTile(3) Then situation = AutoOuter
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Actually place the subtile
         Select Case situation
@@ -623,16 +623,16 @@ Friend Module C_AutoTiles
         situation = AutoFill
 
         ' Calculate Situation - Horizontal
-        If Not tmpTile(2) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(2) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(2) And Not tmpTile(3) Then situation = AutoVertical
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Inner
-        If Not tmpTile(2) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(2) And Not tmpTile(3) Then situation = AutoInner
 
         ' Actually place the subtile
         Select Case situation
@@ -663,16 +663,16 @@ Friend Module C_AutoTiles
         situation = AutoFill
 
         ' Calculate Situation - Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoVertical
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
 
         ' Actually place the subtile
         Select Case situation
@@ -703,16 +703,16 @@ Friend Module C_AutoTiles
         situation = AutoFill
 
         ' Calculate Situation - Horizontal
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoHorizontal
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoVertical
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoVertical
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
         ' Actually place the subtile
         Select Case situation
             Case AutoInner
@@ -742,16 +742,16 @@ Friend Module C_AutoTiles
 
         situation = AutoFill
         ' Calculate Situation -  Horizontal
-        If Not tmpTile(1) AndAlso tmpTile(3) Then situation = AutoHorizontal
+        If Not tmpTile(1) And tmpTile(3) Then situation = AutoHorizontal
 
         ' Vertical
-        If tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoVertical
+        If tmpTile(1) And Not tmpTile(3) Then situation = AutoVertical
 
         ' Fill
-        If tmpTile(1) AndAlso tmpTile(2) AndAlso tmpTile(3) Then situation = AutoFill
+        If tmpTile(1) And tmpTile(2) And tmpTile(3) Then situation = AutoFill
 
         ' Inner
-        If Not tmpTile(1) AndAlso Not tmpTile(3) Then situation = AutoInner
+        If Not tmpTile(1) And Not tmpTile(3) Then situation = AutoInner
 
         ' Actually place the subtile
         Select Case situation
@@ -771,7 +771,7 @@ Friend Module C_AutoTiles
         CheckTileMatch = True
 
         ' if it's off the map then set it as autotile and exit out early
-        If x2 < 0 OrElse x2 > Map.MaxX OrElse y2 < 0 OrElse y2 > Map.MaxY Then
+        If x2 < 0 Or x2 > Map.MaxX Or y2 < 0 Or y2 > Map.MaxY Then
             CheckTileMatch = True
             Exit Function
         End If

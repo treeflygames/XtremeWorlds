@@ -6,7 +6,7 @@ Partial Class frmEditor_Item
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(disposing As Boolean)
         Try
-            If disposing AndAlso components IsNot Nothing Then
+            If disposing And components IsNot Nothing Then
                 components.Dispose()
             End If
         Finally
@@ -89,7 +89,7 @@ Partial Class frmEditor_Item
         DarkLabel11 = New DarkUI.Controls.DarkLabel()
         txtName = New DarkUI.Controls.DarkTextBox()
         DarkLabel2 = New DarkUI.Controls.DarkLabel()
-        nudPic = New DarkUI.Controls.DarkNumericUpDown()
+        nudIcon = New DarkUI.Controls.DarkNumericUpDown()
         DarkLabel3 = New DarkUI.Controls.DarkLabel()
         nudRarity = New DarkUI.Controls.DarkNumericUpDown()
         picItem = New PictureBox()
@@ -143,7 +143,7 @@ Partial Class frmEditor_Item
         fraSkill.SuspendLayout()
         fraVitals.SuspendLayout()
         CType(nudVitalMod, ComponentModel.ISupportInitialize).BeginInit()
-        CType(nudPic, ComponentModel.ISupportInitialize).BeginInit()
+        CType(nudIcon, ComponentModel.ISupportInitialize).BeginInit()
         CType(nudRarity, ComponentModel.ISupportInitialize).BeginInit()
         CType(picItem, ComponentModel.ISupportInitialize).BeginInit()
         CType(nudPrice, ComponentModel.ISupportInitialize).BeginInit()
@@ -919,13 +919,13 @@ Partial Class frmEditor_Item
         DarkLabel2.TabIndex = 2
         DarkLabel2.Text = "Icon:"
         ' 
-        ' nudPic
+        ' nudIcon
         ' 
-        nudPic.Location = New Point(593, 27)
-        nudPic.Margin = New Padding(5)
-        nudPic.Name = "nudPic"
-        nudPic.Size = New Size(82, 31)
-        nudPic.TabIndex = 3
+        nudIcon.Location = New Point(593, 27)
+        nudIcon.Margin = New Padding(5)
+        nudIcon.Name = "nudIcon"
+        nudIcon.Size = New Size(82, 31)
+        nudIcon.TabIndex = 3
         ' 
         ' DarkLabel3
         ' 
@@ -1246,7 +1246,7 @@ Partial Class frmEditor_Item
         fraBasics.Controls.Add(picItem)
         fraBasics.Controls.Add(nudRarity)
         fraBasics.Controls.Add(DarkLabel3)
-        fraBasics.Controls.Add(nudPic)
+        fraBasics.Controls.Add(nudIcon)
         fraBasics.Controls.Add(DarkLabel2)
         fraBasics.Controls.Add(txtName)
         fraBasics.Controls.Add(fraVitals)
@@ -1316,7 +1316,7 @@ Partial Class frmEditor_Item
         fraVitals.ResumeLayout(False)
         fraVitals.PerformLayout()
         CType(nudVitalMod, ComponentModel.ISupportInitialize).EndInit()
-        CType(nudPic, ComponentModel.ISupportInitialize).EndInit()
+        CType(nudIcon, ComponentModel.ISupportInitialize).EndInit()
         CType(nudRarity, ComponentModel.ISupportInitialize).EndInit()
         CType(picItem, ComponentModel.ISupportInitialize).EndInit()
         CType(nudPrice, ComponentModel.ISupportInitialize).EndInit()
@@ -1400,7 +1400,7 @@ Partial Class frmEditor_Item
     Friend WithEvents DarkLabel11 As DarkUI.Controls.DarkLabel
     Friend WithEvents txtName As DarkUI.Controls.DarkTextBox
     Friend WithEvents DarkLabel2 As DarkUI.Controls.DarkLabel
-    Friend WithEvents nudPic As DarkUI.Controls.DarkNumericUpDown
+    Friend WithEvents nudIcon As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents DarkLabel3 As DarkUI.Controls.DarkLabel
     Friend WithEvents nudRarity As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents picItem As PictureBox

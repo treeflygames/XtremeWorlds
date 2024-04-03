@@ -46,8 +46,8 @@ namespace Mirage.Sharp.Asfw.Network
       if (this._socket == null)
         return;
       this.Disconnect();
-      this._socket.Close();
-      this._socket.Dispose();
+      this._socket?.Close();
+      this._socket?.Dispose();
       this._socket = (Socket) null;
       this.PacketId = (NetworkClient.DataArgs[]) null;
       this.ConnectionSuccess = (NetworkClient.ConnectionArgs) null;

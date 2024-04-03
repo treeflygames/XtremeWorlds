@@ -31,16 +31,16 @@ Module S_Player
             Select Case GetPlayerDir(Attacker)
                 Case DirectionType.Up
 
-                    If Not ((GetPlayerY(Victim) + 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) + 1 = GetPlayerY(Attacker)) And (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
                 Case DirectionType.Down
 
-                    If Not ((GetPlayerY(Victim) - 1 = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) - 1 = GetPlayerY(Attacker)) And (GetPlayerX(Victim) = GetPlayerX(Attacker))) Then Exit Function
                 Case DirectionType.Left
 
-                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) + 1 = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) And (GetPlayerX(Victim) + 1 = GetPlayerX(Attacker))) Then Exit Function
                 Case DirectionType.Right
 
-                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) AndAlso (GetPlayerX(Victim) - 1 = GetPlayerX(Attacker))) Then Exit Function
+                    If Not ((GetPlayerY(Victim) = GetPlayerY(Attacker)) And (GetPlayerX(Victim) - 1 = GetPlayerX(Attacker))) Then Exit Function
                 Case Else
                     Exit Function
             End Select
@@ -135,7 +135,7 @@ Module S_Player
         GetPlayerDamage = 0
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse index < 0 OrElse index > MAX_PLAYERS Then
+        If IsPlaying(index) = False Or index < 0 Or index > MAX_PLAYERS Then
             Exit Function
         End If
 
@@ -153,7 +153,7 @@ Module S_Player
         GetPlayerProtection = 0
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse index < 0 OrElse index > MAX_PLAYERS Then
+        If IsPlaying(index) = False Or index < 0 Or index > MAX_PLAYERS Then
             Exit Function
         End If
 
@@ -188,7 +188,7 @@ Module S_Player
 
         If npcnum = 0 Then
             ' Check for subscript out of range
-            If IsPlaying(attacker) = False OrElse IsPlaying(victim) = False OrElse damage < 0 Then
+            If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or damage < 0 Then
                 Exit Sub
             End If
 
@@ -272,7 +272,7 @@ Module S_Player
             TempPlayer(attacker).AttackTimer = GetTimeMs()
         Else ' npc to player
             ' Check for subscript out of range
-            If IsPlaying(victim) = False OrElse damage < 0 Then Exit Sub
+            If IsPlaying(victim) = False Or damage < 0 Then Exit Sub
 
             mapNum = GetPlayerMap(victim)
 
@@ -338,7 +338,7 @@ Module S_Player
         Dim attackspeed As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False OrElse MapNpcnum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS Then
+        If IsPlaying(Attacker) = False Or MapNpcnum <= 0 Or MapNpcNum > MAX_MAP_NPCS Then
             Exit Function
         End If
 
@@ -364,10 +364,10 @@ Module S_Player
             attackspeed = 1000
         End If
 
-        If NpcNum > 0 AndAlso GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
+        If NpcNum > 0 And GetTimeMs() > TempPlayer(Attacker).AttackTimer + attackspeed Then
             ' exit out early
             If IsSkill Then
-                If NPC(NpcNum).Behaviour <> NpcBehavior.Friendly AndAlso NPC(NpcNum).Behaviour <> NpcBehavior.ShopKeeper Then
+                If NPC(NpcNum).Behaviour <> NpcBehavior.Friendly And NPC(NpcNum).Behaviour <> NpcBehavior.ShopKeeper Then
                     CanPlayerAttackNpc = True
                     Exit Function
                 End If
@@ -391,7 +391,7 @@ Module S_Player
 
             If atkX = MapNPC(mapNum).Npc(MapNpcNum).X Then
                 If atkY = MapNPC(mapNum).Npc(MapNpcNum).Y Then
-                    If NPC(NpcNum).Behaviour <> NpcBehavior.Friendly AndAlso NPC(NpcNum).Behaviour <> NpcBehavior.ShopKeeper AndAlso NPC(NpcNum).Behaviour <> NpcBehavior.Quest Then
+                    If NPC(NpcNum).Behaviour <> NpcBehavior.Friendly And NPC(NpcNum).Behaviour <> NpcBehavior.ShopKeeper And NPC(NpcNum).Behaviour <> NpcBehavior.Quest Then
                         CanPlayerAttackNpc = True
                     Else
                         If Len(Trim$(NPC(NpcNum).AttackSay)) > 0 Then
@@ -415,7 +415,7 @@ Module S_Player
 
     Sub PlayerAttackNpc(Attacker As Integer, MapNpcNum As Integer, Damage As Integer)
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False OrElse MapNpcNum <= 0 OrElse MapNpcNum > MAX_MAP_NPCS OrElse Damage <= 0 Then Exit Sub
+        If IsPlaying(Attacker) = False Or MapNpcNum <= 0 Or MapNpcNum > MAX_MAP_NPCS Or Damage <= 0 Then Exit Sub
 
         Dim MapNum = GetPlayerMap(Attacker)
         Dim NpcNum = MapNPC(MapNum).Npc(MapNpcNum).Num
@@ -561,7 +561,7 @@ Module S_Player
 
     Sub PlayerAttackPlayer(Attacker As Integer, Victim As Integer, Damage As Integer)
         ' Check for subscript out of range
-        If IsPlaying(Attacker) = False OrElse IsPlaying(Victim) = False OrElse Damage < 0 Then
+        If IsPlaying(Attacker) = False Or IsPlaying(Victim) = False Or Damage < 0 Then
             Exit Sub
         End If
 
@@ -663,7 +663,7 @@ Module S_Player
 
     Friend Function IsPlayerDead(index As Integer)
         IsPlayerDead = False
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse Not TempPlayer(index).InGame Then Exit Function
+        If index <= 0 Or index > MAX_PLAYERS Or Not TempPlayer(index).InGame Then Exit Function
         If GetPlayerVital(index, VitalType.HP) < 0 Then IsPlayerDead = True
     End Function
 
@@ -678,7 +678,7 @@ Module S_Player
         HandlePlayerKilledPK(Attacker, Victim)
 
         ' Remove our player from everyone's target list.
-        For Each p In TempPlayer.Where(Function(x, i) x.InGame AndAlso GetPlayerMap(i + 1) = GetPlayerMap(Victim) AndAlso x.TargetType = TargetType.Player AndAlso x.Target = Victim).Select(Function(x, i) i + 1).ToArray()
+        For Each p In TempPlayer.Where(Function(x, i) x.InGame And GetPlayerMap(i + 1) = GetPlayerMap(Victim) And x.TargetType = TargetType.Player And x.Target = Victim).Select(Function(x, i) i + 1).ToArray()
             TempPlayer(p).Target = 0
             TempPlayer(p).TargetType = 0
             SendTarget(p, 0, 0)
@@ -707,7 +707,7 @@ Module S_Player
         SendNpcDead(mapNum, MapNpcNum)
 
         ' Check if our dead NPC is targetted by another player and remove their targets.
-        For Each p In TempPlayer.Where(Function(x, i) x.InGame AndAlso GetPlayerMap(i + 1) = mapNum AndAlso x.TargetType = TargetType.Npc AndAlso x.Target = MapNpcNum).Select(Function(x, i) i + 1).ToArray()
+        For Each p In TempPlayer.Where(Function(x, i) x.InGame And GetPlayerMap(i + 1) = mapNum And x.TargetType = TargetType.Npc And x.Target = MapNpcNum).Select(Function(x, i) i + 1).ToArray()
             TempPlayer(p).Target = 0
             TempPlayer(p).TargetType = 0
             SendTarget(p, 0, 0)
@@ -857,14 +857,13 @@ Module S_Player
 #End Region
 
 #Region "Movement"
-
     Sub PlayerWarp(index As Integer, MapNum As Integer, X As Integer, Y As Integer, Optional NoInstance As Boolean = False)
         Dim OldMap As Integer
         Dim i As Integer
         Dim buffer As ByteStream
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse MapNum <= 0 OrElse MapNum > MAX_MAPS Then Exit Sub
+        If IsPlaying(index) = False Or MapNum <= 0 Or MapNum > MAX_MAPS Then Exit Sub
 
         ' Check if you are out of bounds
         If X > Map(MapNum).MaxX Then X = Map(MapNum).MaxX
@@ -951,7 +950,7 @@ Module S_Player
         Dim VitalType As Integer, Color As Integer, amount As Integer
 
         ' Check for subscript out of range
-        If Dir < DirectionType.Up OrElse Dir > DirectionType.Left OrElse Movement < MovementType.Standing OrElse Movement > MovementType.Running Then
+        If Dir < DirectionType.Up Or Dir > DirectionType.Left Or Movement < MovementType.Standing Or Movement > MovementType.Running Then
             Exit Sub
         End If
 
@@ -965,14 +964,12 @@ Module S_Player
 
         Select Case Dir
             Case DirectionType.Up
-
-                ' Check to make sure not outside of boundries
+                ' Check to make sure not outside of boundaries
                 If GetPlayerY(index) > 0 Then
-
                     ' Check to make sure that the tile is walkable
                     If Not IsDirBlocked(Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).DirBlock, DirectionType.Up) Then
-                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type <> TileType.Blocked Then
-                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type <> TileType.Resource Then
+                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type <> TileType.Blocked And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type2 <> TileType.Blocked Then
+                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type <> TileType.Resource And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type2 <> TileType.Resource Then
                                 SetPlayerY(index, GetPlayerY(index) - 1)
                                 SendPlayerMove(index, Movement)
                                 Moved = True
@@ -985,25 +982,24 @@ Module S_Player
                         End If
                     End If
                 Else
-
-                    ' Check to see if we can move them to the another map
-                    If Map(GetPlayerMap(index)).Up > 0 Then
-                        NewMapY = Map(Map(GetPlayerMap(index)).Up).MaxY
-                        PlayerWarp(index, Map(GetPlayerMap(index)).Up, GetPlayerX(index), NewMapY)
-                        DidWarp = True
-                        Moved = True
+                    If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type <> TileType.NoXing And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type2 <> TileType.NoXing Then 
+                        ' Check to see if we can move them to the another map
+                        If Map(GetPlayerMap(index)).Up > 0 Then
+                            NewMapY = Map(Map(GetPlayerMap(index)).Up).MaxY
+                            PlayerWarp(index, Map(GetPlayerMap(index)).Up, GetPlayerX(index), NewMapY)
+                            DidWarp = True
+                            Moved = True
+                        End If
                     End If
                 End If
 
             Case DirectionType.Down
-
-                ' Check to make sure not outside of boundries
+                ' Check to make sure not outside of boundaries
                 If GetPlayerY(index) < Map(mapNum).MaxY Then
-
                     ' Check to make sure that the tile is walkable
                     If Not IsDirBlocked(Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).DirBlock, DirectionType.Down) Then
-                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type <> TileType.Blocked Then
-                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type <> TileType.Resource Then
+                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type <> TileType.Blocked And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type2 <> TileType.Blocked  Then
+                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type <> TileType.Resource And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type2 <> TileType.Resource Then
                                 SetPlayerY(index, GetPlayerY(index) + 1)
                                 SendPlayerMove(index, Movement)
                                 Moved = True
@@ -1016,24 +1012,23 @@ Module S_Player
                         End If
                     End If
                 Else
-
-                    ' Check to see if we can move them to the another map
-                    If Map(GetPlayerMap(index)).Down > 0 Then
-                        PlayerWarp(index, Map(GetPlayerMap(index)).Down, GetPlayerX(index), 0)
-                        DidWarp = True
-                        Moved = True
+                    If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type <> TileType.NoXing And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type2 <> TileType.NoXing Then 
+                        ' Check to see if we can move them to the another map
+                        If Map(GetPlayerMap(index)).Down > 0 Then
+                            PlayerWarp(index, Map(GetPlayerMap(index)).Down, GetPlayerX(index), 0)
+                            DidWarp = True
+                            Moved = True
+                        End If
                     End If
                 End If
 
             Case DirectionType.Left
-
-                ' Check to make sure not outside of boundries
+                ' Check to make sure not outside of boundaries
                 If GetPlayerX(index) > 0 Then
-
                     ' Check to make sure that the tile is walkable
                     If Not IsDirBlocked(Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).DirBlock, DirectionType.Left) Then
-                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type <> TileType.Blocked Then
-                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type <> TileType.Resource Then
+                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type <> TileType.Blocked And Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type2 <> TileType.Blocked Then
+                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type <> TileType.Resource And Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type2 <> TileType.Resource  Then
                                 SetPlayerX(index, GetPlayerX(index) - 1)
                                 SendPlayerMove(index, Movement)
                                 Moved = True
@@ -1046,25 +1041,24 @@ Module S_Player
                         End If
                     End If
                 Else
-
-                    ' Check to see if we can move them to the another map
-                    If Map(GetPlayerMap(index)).Left > 0 Then
-                        NewMapX = Map(Map(GetPlayerMap(index)).Left).MaxX
-                        PlayerWarp(index, Map(GetPlayerMap(index)).Left, NewMapX, GetPlayerY(index))
-                        DidWarp = True
-                        Moved = True
+                    If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type <> TileType.NoXing And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type2 <> TileType.NoXing Then 
+                        ' Check to see if we can move them to the another map
+                        If Map(GetPlayerMap(index)).Left > 0 Then
+                            NewMapX = Map(Map(GetPlayerMap(index)).Left).MaxX
+                            PlayerWarp(index, Map(GetPlayerMap(index)).Left, NewMapX, GetPlayerY(index))
+                            DidWarp = True
+                            Moved = True
+                        End If
                     End If
                 End If
 
             Case DirectionType.Right
-
-                ' Check to make sure not outside of boundries
+                ' Check to make sure not outside of boundaries
                 If GetPlayerX(index) < Map(mapNum).MaxX Then
-
                     ' Check to make sure that the tile is walkable
                     If Not IsDirBlocked(Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).DirBlock, DirectionType.Right) Then
-                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type <> TileType.Blocked Then
-                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type <> TileType.Resource Then
+                        If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type <> TileType.Blocked And Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type2 <> TileType.Blocked Then
+                            If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type <> TileType.Resource And Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type2 <> TileType.Resource Then
                                 SetPlayerX(index, GetPlayerX(index) + 1)
                                 SendPlayerMove(index, Movement)
                                 Moved = True
@@ -1077,41 +1071,64 @@ Module S_Player
                         End If
                     End If
                 Else
-                    ' Check to see if we can move them to the another map
-                    If Map(GetPlayerMap(index)).Right > 0 Then
-                        PlayerWarp(index, Map(GetPlayerMap(index)).Right, 0, GetPlayerY(index))
-                        DidWarp = True
-                        Moved = True
+                    If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type <> TileType.NoXing And Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index)).Type2 <> TileType.NoXing Then 
+                        ' Check to see if we can move them to the another map
+                        If Map(GetPlayerMap(index)).Right > 0 Then
+                            PlayerWarp(index, Map(GetPlayerMap(index)).Right, 0, GetPlayerY(index))
+                            DidWarp = True
+                            Moved = True
+                        End If
                     End If
                 End If
         End Select
 
         With Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index))
+            mapNum = 0
+            x = 0
+            y = 0
+
             ' Check to see if the tile is a warp tile, and if so warp them
             If .Type = TileType.Warp Then
                 mapNum = .Data1
                 x = .Data2
                 y = .Data3
+            End If
 
+            If .Type2 = TileType.Warp Then
+                mapNum = .Data1_2
+                x = .Data2_2
+                y = .Data3_2
+            End if
+
+            If mapNum > 0 Then
                 PlayerWarp(index, mapNum, x, y)
 
                 DidWarp = True
                 Moved = True
             End If
 
+            mapNum = 0
+            x = 0
+            y = 0
+
             ' Check for a shop, and if so open it
             If .Type = TileType.Shop Then
                 x = .Data1
-                If x > 0 Then ' shop exists?
-                    If Len(Trim$(Shop(x).Name)) > 0 Then ' name exists?
-                        SendOpenShop(index, x)
-                        TempPlayer(index).InShop = x ' stops movement and the like
-                    End If
+            End If
+
+            If .Type2 = TileType.Shop Then
+                x = .Data1_2
+            End If
+
+            If x > 0 Then ' shop exists?
+                If Len(Trim$(Shop(x).Name)) > 0 Then ' name exists?
+                    SendOpenShop(index, x)
+                    TempPlayer(index).InShop = x ' stops movement and the like
                 End If
             End If
 
             ' Check to see if the tile is a bank, and if so send bank
-            If .Type = TileType.Bank Then
+            If .Type = TileType.Bank Or .Type2 = TileType.Bank Then
                 SendBank(index)
                 TempPlayer(index).InBank = True
                 Moved = True
@@ -1121,16 +1138,26 @@ Module S_Player
             If .Type = TileType.Heal Then
                 VitalType = .Data1
                 amount = .Data2
+            End if
+
+            If .Type2 = TileType.Heal
+                VitalType = .Data1_2
+                amount = .Data2_2
+            End If
+
+            If VitalType > 0 Then
                 If Not GetPlayerVital(index, VitalType) = GetPlayerMaxVital(index, VitalType) Then
                     If VitalType = Core.VitalType.HP Then
                         Color = ColorType.BrightGreen
                     Else
                         Color = ColorType.BrightBlue
                     End If
+
                     SendActionMsg(GetPlayerMap(index), "+" & amount, Color, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32, 1)
                     SetPlayerVital(index, VitalType, GetPlayerVital(index, VitalType) + amount)
-                    PlayerMsg(index, "You feel rejuvinating forces coarsing through your body.", ColorType.BrightGreen)
+                    PlayerMsg(index, "You feel rejuvenating forces coursing through your body.", ColorType.BrightGreen)
                     SendVital(index, VitalType)
+
                     ' send vitals to party if in one
                     If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End If
@@ -1140,6 +1167,13 @@ Module S_Player
             ' Check if it's a trap tile
             If .Type = TileType.Trap Then
                 amount = .Data1
+            End if
+
+            If .Type2 = TileType.Trap Then
+                amount = .Data1_2
+            End If
+
+            If amount > 0 Then
                 SendActionMsg(GetPlayerMap(index), "-" & amount, ColorType.BrightRed, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32, 1)
                 If GetPlayerVital(index, Core.VitalType.HP) - amount < 0 Then
                     KillPlayer(index)
@@ -1157,7 +1191,7 @@ Module S_Player
         End With
 
         ' They tried to hack
-        If Moved = False OrElse (ExpectingWarp AndAlso Not DidWarp) Then
+        If Moved = False Or (ExpectingWarp And Not DidWarp) Then
             PlayerWarp(index, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
         End If
 
@@ -1169,9 +1203,9 @@ Module S_Player
                 For i = 1 To TempPlayer(index).EventMap.CurrentEvents
                     If TempPlayer(index).EventMap.EventPages(i).EventId > 0 Then
                         If Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Globals = 1 Then
-                            If Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).X = x AndAlso Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Y = y AndAlso Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Pages(TempPlayer(index).EventMap.EventPages(i).PageId).Trigger = 1 AndAlso TempPlayer(index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
+                            If Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).X = x And Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Y = y And Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Pages(TempPlayer(index).EventMap.EventPages(i).PageId).Trigger = 1 And TempPlayer(index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
                         Else
-                            If TempPlayer(index).EventMap.EventPages(i).X = x AndAlso TempPlayer(index).EventMap.EventPages(i).Y = y AndAlso Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Pages(TempPlayer(index).EventMap.EventPages(i).PageId).Trigger = 1 AndAlso TempPlayer(index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
+                            If TempPlayer(index).EventMap.EventPages(i).X = x And TempPlayer(index).EventMap.EventPages(i).Y = y And Map(GetPlayerMap(index)).Events(TempPlayer(index).EventMap.EventPages(i).EventId).Pages(TempPlayer(index).EventMap.EventPages(i).PageId).Trigger = 1 And TempPlayer(index).EventMap.EventPages(i).Visible = 1 Then begineventprocessing = True
                         End If
                         begineventprocessing = False
                         If begineventprocessing = True Then
@@ -1203,14 +1237,14 @@ Module S_Player
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then
+        If IsPlaying(index) = False Or Itemnum <= 0 Or ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
         For i = 1 To MAX_INV
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(index, i) = ItemNum Then
-                If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
+                If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
                     HasItem += GetPlayerInvItemValue(index, i)
                 Else
                     HasItem += 1
@@ -1226,7 +1260,7 @@ Module S_Player
         FindItemSlot = 0
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then
+        If IsPlaying(index) = False Or Itemnum <= 0 Or ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
@@ -1269,7 +1303,7 @@ Module S_Player
 
                                 SetPlayerInvItemNum(index, n, MapItem(mapNum, i).Num)
 
-                                If Item(GetPlayerInvItemNum(index, n)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, n)).Stackable = 1 Then
+                                If Item(GetPlayerInvItemNum(index, n)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, n)).Stackable = 1 Then
                                     SetPlayerInvItemValue(index, n, GetPlayerInvItemValue(index, n) + MapItem(mapNum, i).Value)
                                     Msg = MapItem(mapNum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
                                 Else
@@ -1322,11 +1356,11 @@ Module S_Player
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then
+        If IsPlaying(index) = False Or Itemnum <= 0 Or ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
-        If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
+        If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
             ' If currency then check to see if they already have an instance of the item and add it to that
             For i = 1 To MAX_INV
                 If GetPlayerInvItemNum(index, i) = ItemNum Then
@@ -1353,7 +1387,7 @@ Module S_Player
         TakeInvItem = False
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then
+        If IsPlaying(index) = False Or Itemnum <= 0 Or ItemNum > MAX_ITEMS Then
             Exit Function
         End If
 
@@ -1361,7 +1395,7 @@ Module S_Player
 
             ' Check to see if the player has the item
             If GetPlayerInvItemNum(index, i) = ItemNum Then
-                If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
+                If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
 
                     ' Is what we are trying to take away more then what they have?  If so just set it to zero
                     If ItemVal >= GetPlayerInvItemValue(index, i) Then
@@ -1391,7 +1425,7 @@ Module S_Player
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then
+        If IsPlaying(index) = False Or Itemnum <= 0 Or ItemNum > MAX_ITEMS Then
             GiveInvItem = False
             Exit Function
         End If
@@ -1415,12 +1449,12 @@ Module S_Player
         Dim i As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse invNum <= 0 OrElse invNum > MAX_INV Then
+        If IsPlaying(index) = False Or invNum <= 0 Or invNum > MAX_INV Then
             Exit Sub
         End If
 
         ' check the player isn't doing something
-        If TempPlayer(index).InBank OrElse TempPlayer(index).InShop OrElse TempPlayer(index).InTrade > 0 Then Exit Sub
+        If TempPlayer(index).InBank Or TempPlayer(index).InShop Or TempPlayer(index).InTrade > 0 Then Exit Sub
 
         If Moral(GetPlayerMap(index)).CanDropItem = False Then
             Call PlayerMsg(index, "You can't drop items here!", ColorType.BrightRed)
@@ -1441,7 +1475,7 @@ Module S_Player
                     MapItem(GetPlayerMap(index), i).CanDespawn = True
                     MapItem(GetPlayerMap(index), i).DespawnTimer = GetTimeMs() + ITEM_DESPAWN_TIME
 
-                    If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
+                    If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
                         ' Check if its more then they have and if so drop it all
                         If amount >= GetPlayerInvItemValue(index, invNum) Then
                             MapItem(GetPlayerMap(index), i).Value = GetPlayerInvItemValue(index, invNum)
@@ -1481,11 +1515,11 @@ Module S_Player
         TakeInvSlot = False
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse InvSlot < 0 OrElse InvSlot > MAX_ITEMS Then Exit Function
+        If IsPlaying(index) = False Or InvSlot < 0 Or InvSlot > MAX_ITEMS Then Exit Function
 
         itemNum = GetPlayerInvItemNum(index, InvSlot)
 
-        If Item(itemNum).Type = ItemType.Currency OrElse Item(itemNum).Stackable = 1 Then
+        If Item(itemNum).Type = ItemType.Currency Or Item(itemNum).Stackable = 1 Then
 
             ' Is what we are trying to take away more then what they have?  If so just set it to zero
             If ItemVal >= GetPlayerInvItemValue(index, InvSlot) Then
@@ -1528,7 +1562,7 @@ Module S_Player
         End If
 
         ' Make sure they are the right job
-        If Not Item(itemNum).JobReq = GetPlayerJob(Index) AndAlso Not Item(itemNum).JobReq = 0 Then
+        If Not Item(itemNum).JobReq = GetPlayerJob(Index) And Not Item(itemNum).JobReq = 0 Then
             PlayerMsg(Index, "You do not meet the class requirements to use this item.", ColorType.BrightRed)
             Exit Function
         End If
@@ -1547,7 +1581,7 @@ Module S_Player
         Dim m As Integer, tempdata(StatType.Count + 3) As Integer, tempstr(2) As String
 
         ' Prevent hacking
-        If InvNum <= 0 OrElse InvNum > MAX_INV Then Exit Sub
+        If InvNum <= 0 Or InvNum > MAX_INV Then Exit Sub
 
         InvItemNum = GetPlayerInvItemNum(index, InvNum)
 
@@ -1870,7 +1904,7 @@ Module S_Player
 
         If n > 0 Then
             ' Make sure they are the right class
-            If Skill(n).JobReq = GetPlayerJob(index) OrElse Skill(n).JobReq = 0 Then
+            If Skill(n).JobReq = GetPlayerJob(index) Or Skill(n).JobReq = 0 Then
                 ' Make sure they are the right level
                 i = Skill(n).LevelReq
 
@@ -1911,14 +1945,14 @@ Module S_Player
         Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
         Dim NewSuffix As String, NewSpeed As Integer, NewDamage As Integer
 
-        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
+        If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
 
         OldNum = GetPlayerInvItemNum(index, OldSlot)
         OldValue = GetPlayerInvItemValue(index, OldSlot)
         NewNum = GetPlayerInvItemNum(index, NewSlot)
         NewValue = GetPlayerInvItemValue(index, NewSlot)
 
-        If OldNum = NewNum AndAlso Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
+        If OldNum = NewNum And Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
             SetPlayerInvItemNum(index, NewSlot, NewNum)
             SetPlayerInvItemValue(index, NewSlot, OldValue + NewValue)
             SetPlayerInvItemNum(index, OldSlot, 0)
@@ -1939,14 +1973,14 @@ Module S_Player
         Dim NewNum As Integer, NewValue As Integer, NewRarity As Integer, NewPrefix As String
         Dim NewSuffix As String, NewSpeed As Integer, NewDamage As Integer
 
-        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
+        If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
 
         OldNum = GetPlayerSkill(index, OldSlot)
         OldValue = GetPlayerSkillCD(index, OldSlot)
         NewNum = GetPlayerSkill(index, NewSlot)
         NewValue = GetPlayerSkillCD(index, NewSlot)
 
-        If OldNum = NewNum AndAlso Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
+        If OldNum = NewNum And Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
             SetPlayerSkill(index, NewSlot, NewNum)
             SetPlayerSkillCD(index, NewSlot, NewValue)
             SetPlayerSkill(index, OldSlot, 0)
@@ -2006,7 +2040,7 @@ Module S_Player
     Sub PlayerUnequipItem(index As Integer, EqSlot As Integer)
         Dim i As Integer, m As Integer, itemnum As Integer
 
-        If EqSlot < 1 OrElse EqSlot > EquipmentType.Count - 1 Then Exit Sub ' exit out early if error'd
+        If EqSlot < 1 Or EqSlot > EquipmentType.Count - 1 Then Exit Sub ' exit out early if error'd
 
         If FindOpenInvSlot(index, GetPlayerEquipment(index, EqSlot)) > 0 Then
             itemnum = GetPlayerEquipment(index, EqSlot)
@@ -2178,7 +2212,7 @@ Module S_Player
         Dim i As Integer
 
         ' Prevent subscript out of range
-        If IsPlaying(index) = False OrElse index < 0 OrElse index > MAX_PLAYERS Then
+        If IsPlaying(index) = False Or index < 0 Or index > MAX_PLAYERS Then
             GetPlayerVitalRegen = 0
             Exit Function
         End If
@@ -2255,12 +2289,12 @@ Module S_Player
         Dim Target As Integer
 
         ' Prevent subscript out of range
-        If Skillslot < 0 OrElse Skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If Skillslot < 0 Or Skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         skillnum = GetPlayerSkill(index, Skillslot)
         mapNum = GetPlayerMap(index)
 
-        If skillnum <= 0 OrElse skillnum > MAX_SKILLS Then Exit Sub
+        If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
 
         ' Make sure player has the skill
         If Not HasSkill(index, skillnum) Then Exit Sub
@@ -2340,7 +2374,7 @@ Module S_Player
                         PlayerMsg(index, "Target not in range.", ColorType.BrightRed)
                     Else
                         ' go through skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
                             HasBuffered = True
                         Else
                             If CanPlayerAttackPlayer(index, Target, True) Then
@@ -2355,7 +2389,7 @@ Module S_Player
                         HasBuffered = False
                     Else
                         ' go through skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
                             HasBuffered = True
                         Else
                             If CanPlayerAttackNpc(index, Target, True) Then
@@ -2385,7 +2419,7 @@ Module S_Player
     Sub GiveBankItem(index As Integer, InvSlot As Integer, Amount As Integer)
         Dim BankSlot As Integer, itemnum As Integer
 
-        If InvSlot <= 0 OrElse InvSlot > MAX_INV Then Exit Sub
+        If InvSlot <= 0 Or InvSlot > MAX_INV Then Exit Sub
 
         If GetPlayerInvItemValue(index, InvSlot) < 0 Then Exit Sub
         If GetPlayerInvItemValue(index, InvSlot) < Amount And GetPlayerInvItemNum(index, InvSlot) = 0 Then Exit Sub
@@ -2394,7 +2428,7 @@ Module S_Player
         itemnum = GetPlayerInvItemNum(index, InvSlot)
 
         If BankSlot > 0 Then
-            If Item(GetPlayerInvItemNum(index, InvSlot)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, InvSlot)).Stackable = 1 Then
+            If Item(GetPlayerInvItemNum(index, InvSlot)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, InvSlot)).Stackable = 1 Then
                 If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, InvSlot) Then
                     SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) + Amount)
                     TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), Amount)
@@ -2404,7 +2438,7 @@ Module S_Player
                     TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), Amount)
                 End If
             Else
-                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, InvSlot) AndAlso Item(itemnum).Randomize = 0 Then
+                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, InvSlot) And Item(itemnum).Randomize = 0 Then
                     SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) + 1)
                     TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), 0)
                 Else
@@ -2439,9 +2473,9 @@ Module S_Player
         Dim i As Integer
 
         If Not IsPlaying(index) Then Exit Function
-        If Itemnum <= 0 OrElse ItemNum > MAX_ITEMS Then Exit Function
+        If Itemnum <= 0 Or ItemNum > MAX_ITEMS Then Exit Function
 
-        If Item(ItemNum).Type = ItemType.Currency OrElse Item(ItemNum).Stackable = 1 Then
+        If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
             For i = 1 To MAX_BANK
                 If GetPlayerBankItemNum(index, i) = ItemNum Then
                     FindOpenBankSlot = i
@@ -2462,7 +2496,7 @@ Module S_Player
     Sub TakeBankItem(index As Integer, BankSlot As Integer, Amount As Integer)
         Dim invSlot
 
-        If BankSlot <= 0 OrElse BankSlot > MAX_BANK Then Exit Sub
+        If BankSlot <= 0 Or BankSlot > MAX_BANK Then Exit Sub
 
         If GetPlayerBankItemValue(index, BankSlot) <= 0 Then Exit Sub
 
@@ -2471,7 +2505,7 @@ Module S_Player
         invSlot = FindOpenInvSlot(index, GetPlayerBankItemNum(index, BankSlot))
 
         If invSlot > 0 Then
-            If Item(GetPlayerBankItemNum(index, BankSlot)).Type = ItemType.Currency OrElse Item(GetPlayerBankItemNum(index, BankSlot)).Stackable = 1 Then
+            If Item(GetPlayerBankItemNum(index, BankSlot)).Type = ItemType.Currency Or Item(GetPlayerBankItemNum(index, BankSlot)).Stackable = 1 Then
                 GiveInvItem(index, GetPlayerBankItemNum(index, BankSlot), Amount)
                 SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) - Amount)
                 If GetPlayerBankItemValue(index, BankSlot) < 0 Then
@@ -2479,7 +2513,7 @@ Module S_Player
                     SetPlayerBankItemValue(index, BankSlot, 0)
                 End If
             Else
-                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, invSlot) AndAlso Item(GetPlayerBankItemNum(index, BankSlot)).Randomize = 0 Then
+                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, invSlot) And Item(GetPlayerBankItemNum(index, BankSlot)).Randomize = 0 Then
                     If GetPlayerBankItemValue(index, BankSlot) > 1 Then
                         GiveInvItem(index, GetPlayerBankItemNum(index, BankSlot), 0)
                         SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) - 1)
@@ -2500,7 +2534,7 @@ Module S_Player
         Dim OldNum As Integer, OldValue As Integer, NewNum As Integer, NewValue As Integer
         Dim i As Integer
 
-        If OldSlot = 0 OrElse NewSlot = 0 Then Exit Sub
+        If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
 
         OldNum = GetPlayerBankItemNum(index, OldSlot)
         OldValue = GetPlayerBankItemValue(index, OldSlot)

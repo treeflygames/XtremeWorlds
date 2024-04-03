@@ -25,7 +25,7 @@ Module C_Sound
             Exit Sub
         End If
 
-        If Types.Settings.Music = False OrElse Not File.Exists(Paths.Music & fileName) Then
+        If Types.Settings.Music = False Or Not File.Exists(Paths.Music & fileName) Then
             StopMusic()
             Exit Sub
         End If
@@ -78,7 +78,7 @@ Module C_Sound
     End Sub
 
     Sub PlayPreview(fileName As String)
-        If Types.Settings.Music = 0 OrElse Not File.Exists(Paths.Music & fileName) Then Exit Sub
+        If Types.Settings.Music = 0 Or Not File.Exists(Paths.Music & fileName) Then Exit Sub
 
         If PreviewPlayer Is Nothing Then
             Try
@@ -110,7 +110,7 @@ Module C_Sound
     End Sub
 
     Sub PlaySound(fileName As String, Optional looped As Boolean = False)
-        If Types.Settings.Sound = 0 OrElse Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
+        If Types.Settings.Sound = 0 Or Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
 
         Dim buffer As SoundBuffer
         If SoundPlayer Is Nothing Then
@@ -145,7 +145,7 @@ Module C_Sound
     End Sub
 
     Sub PlayExtraSound(fileName As String, Optional looped As Boolean = False)
-        If Types.Settings.Sound = 0 OrElse Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
+        If Types.Settings.Sound = 0 Or Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
 
         Dim buffer As SoundBuffer
         If ExtraSoundPlayer Is Nothing Then
@@ -192,7 +192,7 @@ Module C_Sound
         Dim tmpmusic As String
         If MusicPlayer Is Nothing Then Exit Sub
 
-        If MusicPlayer.Volume() = 0 OrElse MusicPlayer.Volume() < 3 Then
+        If MusicPlayer.Volume() = 0 Or MusicPlayer.Volume() < 3 Then
             FadeOutSwitch = False
             If CurrentMusic = "" Then
                 StopMusic()

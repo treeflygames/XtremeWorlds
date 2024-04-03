@@ -33,7 +33,7 @@ Friend Class frmEditor_Item
     End Sub
 
     Private Sub frmEditor_Item_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        nudPic.Maximum = NumItems
+        nudIcon.Maximum = NumItems
         nudPaperdoll.Maximum = NumPaperdolls
 
         'populate combo boxes
@@ -86,8 +86,8 @@ Friend Class frmEditor_Item
 
 #Region "Basics"
 
-    Private Sub NudPic_Click(sender As Object, e As EventArgs) Handles nudPic.Click
-        Item(EditorIndex).Icon = nudPic.Value
+    Private Sub NudPic_Click(sender As Object, e As EventArgs) Handles nudIcon.Click
+        Item(EditorIndex).Icon = nudIcon.Value
         EditorItem_DrawIcon()
     End Sub
 

@@ -62,7 +62,7 @@ Friend Module S_Resource
         For X = 0 To Map(mapNum).MaxX
             For Y = 0 To Map(mapNum).MaxY
 
-                If Map(mapNum).Tile(x, y).Type = TileType.Resource Then
+                If Map(mapNum).Tile(x, y).Type = TileType.Resource Or Map(mapNum).Tile(x, y).Type2 = TileType.Resource Then
                     Resource_Count += 1
                     ReDim Preserve MapResource(mapNum).ResourceData(Resource_Count)
                     MapResource(mapNum).ResourceData(Resource_Count).X = x
@@ -178,7 +178,7 @@ Friend Module S_Resource
         resourcenum = buffer.ReadInt32
 
         ' Prevent hacking
-        If resourcenum <= 0 OrElse resourcenum > MAX_RESOURCES Then Exit Sub
+        If resourcenum <= 0 Or resourcenum > MAX_RESOURCES Then Exit Sub
 
         Resource(resourcenum).Animation = buffer.ReadInt32()
         Resource(resourcenum).EmptyMessage = buffer.ReadString()
@@ -310,7 +310,7 @@ Friend Module S_Resource
 
         MapNum = GetPlayerMap(index)
 
-        If Map(MapNum).Tile(x, y).Type = TileType.Resource Then
+        If Map(MapNum).Tile(x, y).Type = TileType.Resource Or Map(MapNum).Tile(x, y).Type2 = TileType.Resource Then
             Resource_num = 0
             Resource_index = Map(MapNum).Tile(x, y).Data1
             ResourceType = Resource(Resource_index).ResourceType
@@ -325,7 +325,7 @@ Friend Module S_Resource
             Next
 
             If Resource_num > 0 Then
-                If GetPlayerEquipment(index, EquipmentType.Weapon) > 0 OrElse Resource(Resource_index).ToolRequired = 0 Then
+                If GetPlayerEquipment(index, EquipmentType.Weapon) > 0 Or Resource(Resource_index).ToolRequired = 0 Then
                     If Item(GetPlayerEquipment(index, EquipmentType.Weapon)).Data3 = Resource(Resource_index).ToolRequired Then
 
                         ' inv space?

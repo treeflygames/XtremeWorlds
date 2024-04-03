@@ -11,6 +11,7 @@
         CSayMsg
         CBroadcastMsg
         CPlayerMsg
+        CAdminMsg
         CPlayerMove
         CPlayerDir
         CUseItem

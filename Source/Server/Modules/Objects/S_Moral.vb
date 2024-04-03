@@ -166,7 +166,7 @@ Friend Module S_Moral
         moralNum = buffer.ReadInt32()
 
         ' Prevent hacking
-        If moralNum <= 0 OrElse moralNum > MAX_MORALS Then Exit Sub
+        If moralNum <= 0 Or moralNum > MAX_MORALS Then Exit Sub
 
         With Moral(moralNum)
             .Name = buffer.ReadString()

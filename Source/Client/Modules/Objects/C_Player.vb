@@ -82,7 +82,6 @@ Module C_Player
         ReDim Player(index).GatherSkills(ResourceType.Count - 1)
         ReDim Player(index).GatherSkills(ResourceType.Count - 1)
 
-        'pets
         Player(index).Pet.Num = 0
         Player(index).Pet.Health = 0
         Player(index).Pet.Mana = 0
@@ -112,7 +111,7 @@ Module C_Player
 
 #Region "Movement"
     Sub CheckMovement()
-        If IsTryingToMove() AndAlso CanMove() Then
+        If IsTryingToMove() And CanMove() Then
             ' Check if player has the shift key down for running
             If VbKeyShift Then
                 Player(MyIndex).Moving = MovementType.Walking
@@ -139,8 +138,8 @@ Module C_Player
                     SetPlayerX(MyIndex, GetPlayerX(MyIndex) + 1)
             End Select
 
-            If Player(MyIndex).XOffset = 0 AndAlso Player(MyIndex).YOffset = 0 Then
-                If Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type = TileType.Warp Then
+            If Player(MyIndex).XOffset = 0 And Player(MyIndex).YOffset = 0 Then
+                If Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type = TileType.Warp Or Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type2 = TileType.Warp Then
                     GettingMap = True
                 End If
             End If
@@ -150,7 +149,7 @@ Module C_Player
 
     Function IsTryingToMove() As Boolean
 
-        If DirUp OrElse DirDown OrElse DirLeft OrElse DirRight Then
+        If DirUp Or DirDown Or DirLeft Or DirRight Then
             IsTryingToMove = True
         End If
 
@@ -240,8 +239,6 @@ Module C_Player
                 ' Check if they can warp to a new map
                 If Map.Up > 0 Then
                     SendPlayerRequestNewMap()
-                    GettingMap = True
-                    CanMoveNow = False
                 End If
 
                 CanMove = False
@@ -269,8 +266,6 @@ Module C_Player
                 ' Check if they can warp to a new map
                 If Map.Down > 0 Then
                     SendPlayerRequestNewMap()
-                    GettingMap = True
-                    CanMoveNow = False
                 End If
 
                 CanMove = False
@@ -298,8 +293,6 @@ Module C_Player
                 ' Check if they can warp to a new map
                 If Map.Left > 0 Then
                     SendPlayerRequestNewMap()
-                    GettingMap = True
-                    CanMoveNow = False
                 End If
 
                 CanMove = False
@@ -323,12 +316,9 @@ Module C_Player
                     Exit Function
                 End If
             Else
-
                 ' Check if they can warp to a new map
                 If Map.Right > 0 Then
                     SendPlayerRequestNewMap()
-                    GettingMap = True
-                    CanMoveNow = False
                 End If
 
                 CanMove = False
@@ -366,13 +356,13 @@ Module C_Player
         End Select
 
         ' Check to see if the map tile is blocked or not
-        If Map.Tile(x, y).Type = TileType.Blocked Then
+        If Map.Tile(x, y).Type = TileType.Blocked Or Map.Tile(x, y).Type2 = TileType.Blocked Then
             CheckDirection = True
             Exit Function
         End If
 
         ' Check to see if the map tile is tree or not
-        If Map.Tile(x, y).Type = TileType.Resource Then
+        If Map.Tile(x, y).Type = TileType.Resource Or Map.Tile(x, y).Type2 = TileType.Resource Then
             CheckDirection = True
             Exit Function
         End If
@@ -382,7 +372,7 @@ Module C_Player
             If Moral(Map.Moral).PlayerBlock Then
                 For i = 1 To MAX_PLAYERS
                     If IsPlaying(i) Then
-                        If Player(i).X = x AndAlso Player(i).Y = y Then
+                        If Player(i).X = x And Player(i).Y = y Then
                             CheckDirection = True
                             Exit Function
                         End If
@@ -393,7 +383,7 @@ Module C_Player
             ' Check to see if a npc is already on that tile
             If Moral(Map.Moral).NPCBlock Then
                 For i = 1 To MAX_MAP_NPCS
-                    If MapNpc(i).Num > 0 AndAlso MapNpc(i).X = x AndAlso MapNpc(i).Y = y Then
+                    If MapNpc(i).Num > 0 And MapNpc(i).X = x And MapNpc(i).Y = y Then
                         CheckDirection = True
                         Exit Function
                     End If
@@ -403,7 +393,7 @@ Module C_Player
 
         For i = 0 To CurrentEvents
             If MapEvents(i).Visible = 1 Then
-                If MapEvents(i).X = x AndAlso MapEvents(i).Y = y Then
+                If MapEvents(i).X = x And MapEvents(i).Y = y Then
                     If MapEvents(i).WalkThrough = 0 Then
                         CheckDirection = True
                         Exit Function
@@ -440,21 +430,21 @@ Module C_Player
         End Select
 
         ' Check if completed walking over to the next tile
-        If Player(index).Moving > 0 Then
-            If GetPlayerDir(index) = DirectionType.Right OrElse GetPlayerDir(index) = DirectionType.Down Then
-                If (Player(index).XOffset >= 0) AndAlso (Player(index).YOffset >= 0) Then
-                    Player(index).Moving = 0
-                    If Player(index).Steps = 1 Then
-                        Player(index).Steps = 3
+        If Player(Index).Moving > 0 Then
+            If GetPlayerDir(Index) = DirectionType.Right Or GetPlayerDir(Index) = DirectionType.Down Then
+                If (Player(Index).XOffset >= 0) And (Player(Index).YOffset >= 0) Then
+                    Player(Index).Moving = 0
+                    If Player(Index).Steps = 1 Then
+                        Player(Index).Steps = 3
                     Else
                         Player(index).Steps = 1
                     End If
                 End If
             Else
-                If (Player(index).XOffset <= 0) AndAlso (Player(index).YOffset <= 0) Then
-                    Player(index).Moving = 0
-                    If Player(index).Steps = 1 Then
-                        Player(index).Steps = 3
+                If (Player(Index).XOffset <= 0) And (Player(Index).YOffset <= 0) Then
+                    Player(Index).Moving = 0
+                    If Player(Index).Steps = 1 Then
+                        Player(Index).Steps = 3
                     Else
                         Player(index).Steps = 1
                     End If
@@ -513,7 +503,7 @@ Module C_Player
             If GetTickCount() > Player(MyIndex).EventTimer Then
                 For i = 1 To CurrentEvents
                     If MapEvents(i).Visible = 1 Then
-                        If MapEvents(i).X = x AndAlso MapEvents(i).Y = y Then
+                        If MapEvents(i).X = x And MapEvents(i).Y = y Then
                             buffer = New ByteStream(4)
                             buffer.WriteInt32(ClientPackets.CEvent)
                             buffer.WriteInt32(i)
@@ -532,7 +522,7 @@ Module C_Player
         Dim buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If skillslot <= 0 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If skillslot <= 0 Or skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         If Player(MyIndex).Skill(skillslot).CD > 0 Then
             AddText("Skill has not cooled down yet!", ColorType.BrightRed)
@@ -571,7 +561,7 @@ Module C_Player
         FindSkill = 0
 
         ' Check for subscript out of range
-        If skillNum <= 0 OrElse skillNum > MAX_SKILLS Then
+        If skillNum <= 0 Or skillNum > MAX_SKILLS Then
             Exit Function
         End If
 
@@ -596,7 +586,7 @@ Module C_Player
 
         spritenum = GetPlayerSprite(index)
 
-        If spritenum <= 0 OrElse spritenum > NumCharacters Then Exit Sub
+        If spritenum <= 0 Or spritenum > NumCharacters Then Exit Sub
 
         ' speed from weapon
         If GetPlayerEquipment(index, EquipmentType.Weapon) > 0 Then
@@ -669,6 +659,7 @@ Module C_Player
                                (CharacterGfxInfo(spritenum).Width / 4), (CharacterGfxInfo(spritenum).Height / 4))
 
         ' render the actual sprite
+        DrawShadow(x, y + 16)
         DrawCharacterSprite(spritenum, x, y, rect)
 
         'check for paperdolling
@@ -729,7 +720,7 @@ Module C_Player
         textX = ConvertMapX(GetPlayerX(index) * PicX) + Player(index).XOffset + (PicX \ 2) - 2
         textX = textX - (TextWidth((name)) / 2)
 
-        If GetPlayerSprite(index) < 0 OrElse GetPlayerSprite(index) > NumCharacters Then
+        If GetPlayerSprite(index) < 0 Or GetPlayerSprite(index) > NumCharacters Then
             textY = ConvertMapY(GetPlayerY(index) * PicY) + Player(MyIndex).YOffset - 16
         Else
             ' Determine location for text

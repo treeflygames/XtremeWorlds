@@ -66,17 +66,6 @@ Module C_Database
 
     End Sub
 
-    Friend Sub CheckFaces()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Faces\" & i & GfxExt)
-            NumFaces = NumFaces + 1
-            i = i + 1
-        End While
-
-    End Sub
-
     Friend Sub CheckFog()
         Dim i As Integer
         i = 1
@@ -208,7 +197,7 @@ Module C_Database
 
 #End Region
 
-#Region "Npc's"
+#Region "Npc"
 
     Sub ClearNpcs()
         Dim i As Integer
@@ -282,7 +271,5 @@ Module C_Database
             SendRequestSkill(skillNum)
         End If
     End Sub
-
 #End Region
-
 End Module

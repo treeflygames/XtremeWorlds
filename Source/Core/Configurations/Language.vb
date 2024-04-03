@@ -107,7 +107,8 @@ Public Class LanguageDef
         Public Help2 As String = "'[message] = Global Message"
         Public Help3 As String = "-[message] = Party Message"
         Public Help4 As String = "![player] [message] = Player Message"
-        Public Help5 As String = "Available Commands: /help, /info, 
+        Public Help5 As String = "@[message] = Admin Message"
+        Public Help6 As String = "Available Commands: /help, /info, 
                                   /fps, /lps, /stats, /trade, 
                                   /party, /join, /leave"
                               

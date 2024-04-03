@@ -279,6 +279,16 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
+    Friend Sub AdminMsg(text As String)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ClientPackets.CAdminMsg)
+        buffer.WriteString(text.Trim)
+
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
     Friend Sub SendWhosOnline()
         Dim buffer As New ByteStream(4)
 
@@ -351,13 +361,13 @@ Module C_NetworkSend
     Friend Sub SendDropItem(invNum As Integer, amount As Integer)
         Dim buffer As New ByteStream(4)
 
-        If InBank OrElse InShop Then Exit Sub
+        If InBank Or InShop Then Exit Sub
 
         ' do basic checks
-        If invNum <= 0 OrElse invNum > MAX_INV Then Exit Sub
-        If Player(MyIndex).Inv(invNum).Num <= 0 OrElse Player(MyIndex).Inv(invNum).Num > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(MyIndex, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(MyIndex, invNum)).Stackable = 1 Then
-            If amount <= 0 OrElse amount > Player(MyIndex).Inv(invNum).Value Then Exit Sub
+        If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
+        If Player(MyIndex).Inv(invNum).Num <= 0 Or Player(MyIndex).Inv(invNum).Num > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInvItemNum(MyIndex, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(MyIndex, invNum)).Stackable = 1 Then
+            If amount <= 0 Or amount > Player(MyIndex).Inv(invNum).Value Then Exit Sub
         End If
 
         buffer.WriteInt32(ClientPackets.CMapDropItem)
@@ -416,7 +426,7 @@ Module C_NetworkSend
         Dim buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If skillslot < 0 OrElse skillslot > MAX_PLAYER_SKILLS Then Exit Sub
+        If skillslot < 0 Or skillslot > MAX_PLAYER_SKILLS Then Exit Sub
 
         ' dont let them forget a skill which is in CD
         If Player(MyIndex).Skill(skillslot).CD > 0 Then

@@ -1,5 +1,6 @@
 ﻿Imports Core
 Imports Mirage.Sharp.Asfw
+Imports SFML.Graphics
 Imports Color = SFML.Graphics.Color
 
 Module C_GameLogic
@@ -10,7 +11,7 @@ Module C_GameLogic
         Dim tmr1000 As Integer, tick As Integer, fogtmr As Integer, chattmr As Integer
         Dim tmpfps As Integer, tmplps As Integer, walkTimer As Integer, frameTime As Integer
         Dim tmrweather As Integer
-        Dim tmr25 As Integer, tmr500 As Integer, tmrconnect As Integer, TickFPS As Integer
+        Dim tmr25 As Integer, tmr500 As Integer, tmr250 As Integer, tmrconnect As Integer, TickFPS As Integer
         Dim fadetmr As Integer, rendertmr As Integer
         Dim animationtmr As Integer
 
@@ -53,7 +54,7 @@ Module C_GameLogic
                     For x = 0 To Map.MaxX
                         For y = 0 To Map.MaxY
                             If IsValidMapPoint(x, y) Then
-                                If Map.Tile(x, y).Data1 > 0 And Map.Tile(x, y).Type = CByte([Enum].TileType.Animation) Then
+                                If Map.Tile(x, y).Data1 > 0 And (Map.Tile(x, y).Type = TileType.Animation Or Map.Tile(x, y).Type2 = TileType.Animation)  Then
                                     CreateAnimation(Map.Tile(x, y).Data1, x, y)
                                     If Animation(Map.Tile(x, y).Data1).LoopTime(0) > 0 Then
                                         animationtmr = tick + Animation(Map.Tile(x, y).Data1).LoopTime(0) * Animation(Map.Tile(x, y).Data1).Frames(0) * Animation(Map.Tile(x, y).Data1).LoopCount(0)
@@ -224,6 +225,16 @@ Module C_GameLogic
                     tmr500 = tick + 500
                 End If
 
+                ' Change map animation
+                If tmr250 < tick Then
+                    If MapAnim = 0 Then
+                        MapAnim = 1
+                    Else
+                        MapAnim = 0
+                    End If
+                    tmr250 = tick + 250
+                End If
+
                 If FadeInSwitch = True Then
                     FadeIn()
                 End If
@@ -329,8 +340,8 @@ Module C_GameLogic
 
             ' Check if completed walking over to the next tile
             If MapNpc(mapNpcNum).Moving > 0 Then
-                If MapNpc(mapNpcNum).Dir = DirectionType.Right OrElse MapNpc(mapNpcNum).Dir = DirectionType.Down Then
-                    If (MapNpc(mapNpcNum).XOffset >= 0) AndAlso (MapNpc(mapNpcNum).YOffset >= 0) Then
+                If MapNpc(mapNpcNum).Dir = DirectionType.Right Or MapNpc(mapNpcNum).Dir = DirectionType.Down Then
+                    If (MapNpc(mapNpcNum).XOffset >= 0) And (MapNpc(mapNpcNum).YOffset >= 0) Then
                         MapNpc(mapNpcNum).Moving = 0
                         If MapNpc(mapNpcNum).Steps = 1 Then
                             MapNpc(mapNpcNum).Steps = 3
@@ -339,7 +350,7 @@ Module C_GameLogic
                         End If
                     End If
                 Else
-                    If (MapNpc(mapNpcNum).XOffset <= 0) AndAlso (MapNpc(mapNpcNum).YOffset <= 0) Then
+                    If (MapNpc(mapNpcNum).XOffset <= 0) And (MapNpc(mapNpcNum).YOffset <= 0) Then
                         MapNpc(mapNpcNum).Moving = 0
                         If MapNpc(mapNpcNum).Steps = 1 Then
                             MapNpc(mapNpcNum).Steps = 3
@@ -368,8 +379,8 @@ Module C_GameLogic
     Friend Function IsInBounds()
         IsInBounds = False
 
-        If (CurX >= 0) AndAlso (CurX <= Map.MaxX) Then
-            If (CurY >= 0) AndAlso (CurY <= Map.MaxY) Then
+        If (CurX >= 0) And (CurX <= Map.MaxX) Then
+            If (CurY >= 0) And (CurY <= Map.MaxY) Then
                 IsInBounds = True
             End If
         End If
@@ -479,12 +490,24 @@ Module C_GameLogic
             End If
         End If
 
+        ' Admin message
+        If Left$(chatText, 1) = "@" Then
+            chatText = Mid$(chatText, 2, Len(chatText) - 1)
+
+            If Len(chatText) > 0 Then
+                AdminMsg(chatText)
+            End If
+
+            Windows(GetWindowIndex("winChat")).Controls(GetControlIndex("winChat", "txtChat")).text = vbNullString
+            Exit Sub
+        End If
+
         ' Broadcast message
         If Left$(chatText, 1) = "'" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
-                BroadcastMsg(chatText) '("Привет, русский чат")
+                BroadcastMsg(chatText)
             End If
 
             Windows(GetWindowIndex("winChat")).Controls(GetControlIndex("winChat", "txtChat")).text = vbNullString
@@ -538,7 +561,7 @@ Module C_GameLogic
             Select Case command(0)
                 Case "/emote"
                     ' Checks to make sure we have more than one string in the array
-                    If UBound(command) < 1 OrElse Not IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or Not IsNumeric(command(1)) Then
                         AddText(Language.Chat.Emote, ColorType.Yellow)
                         GoTo Continue1
                     End If
@@ -551,10 +574,11 @@ Module C_GameLogic
                     AddText(Language.Chat.Help3, ColorType.Yellow)
                     AddText(Language.Chat.Help4, ColorType.Yellow)
                     AddText(Language.Chat.Help5, ColorType.Yellow)
+                    AddText(Language.Chat.Help6, ColorType.Yellow)
 
                 Case "/info"
                     ' Checks to make sure we have more than one string in the array
-                    If UBound(command) < 1 OrElse IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or IsNumeric(command(1)) Then
                         AddText(Language.Chat.Info, ColorType.Yellow)
                         GoTo Continue1
                     End If
@@ -589,7 +613,7 @@ Module C_GameLogic
 
                 Case "/party"
                     ' Make sure they are actually sending something
-                    If UBound(command) < 1 OrElse IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or IsNumeric(command(1)) Then
                         AddText(Language.Chat.Party, ColorType.Yellow)
                         GoTo Continue1
                     End If
@@ -625,7 +649,7 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 1 OrElse IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or IsNumeric(command(1)) Then
                         AddText(Language.Chat.Kick, ColorType.Yellow)
                         GoTo Continue1
                     End If
@@ -651,7 +675,7 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 1 OrElse IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or IsNumeric(command(1)) Then
                         AddText(Language.Chat.WarpMeTo, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -666,7 +690,7 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 1 OrElse IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or IsNumeric(command(1)) Then
                         AddText(Language.Chat.WarpToMe, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -681,7 +705,7 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 1 OrElse Not IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or Not IsNumeric(command(1)) Then
                         AddText(Language.Chat.WarpTo, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -689,7 +713,7 @@ Module C_GameLogic
                     n = command(1)
 
                     ' Check to make sure its a valid map #
-                    If n > 0 AndAlso n <= MAX_MAPS Then
+                    If n > 0 And n <= MAX_MAPS Then
                         WarpTo(n)
                     Else
                         AddText(Language.Chat.InvalidMap, ColorType.BrightRed)
@@ -703,7 +727,7 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 1 OrElse Not IsNumeric(command(1)) Then
+                    If UBound(command) < 1 Or Not IsNumeric(command(1)) Then
                         AddText(Language.Chat.Sprite, ColorType.BrightRed)
                         GoTo Continue1
                     End If
@@ -798,8 +822,8 @@ Module C_GameLogic
                         GoTo Continue1
                     End If
 
-                    If UBound(command) < 2 OrElse
-                        IsNumeric(command(1)) OrElse
+                    If UBound(command) < 2 Or
+                        IsNumeric(command(1)) Or
                         Not IsNumeric(command(2)) Then
                         AddText(Language.Chat.Access, ColorType.Yellow)
                         GoTo Continue1
@@ -1023,7 +1047,7 @@ Continue1:
 
         ' Set the global index
         ChatBubbleindex = ChatBubbleindex + 1
-        If ChatBubbleindex < 1 OrElse ChatBubbleindex > Byte.MaxValue Then ChatBubbleindex = 1
+        If ChatBubbleindex < 1 Or ChatBubbleindex > Byte.MaxValue Then ChatBubbleindex = 1
 
         ' Default to new bubble
         index = ChatBubbleindex
@@ -1895,7 +1919,7 @@ Continue1:
 
                     ' draw the item
                     For i = 0 To 5
-                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = Item(shopSelectedItem).Icon
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = ItemSprite(Item(shopSelectedItem).Icon)
                     Next
                 Else
                     .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
@@ -1903,7 +1927,7 @@ Continue1:
                     
                     ' draw the item
                     For i = 0 To 5
-                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = New Sprite
                     Next
                 End If
             Else
@@ -1917,7 +1941,7 @@ Continue1:
                     
                     ' draw the item
                     For i = 0 To 5
-                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = Item(shopSelectedItem).Icon
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = ItemSprite(Item(shopSelectedItem).Icon)
                     Next
                 Else
                     .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
@@ -1925,10 +1949,35 @@ Continue1:
                     
                     ' draw the item
                     For i = 0 To 5
-                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
+                        .Controls(GetControlIndex("winShop", "picItem")).image(i) = New Sprite
                     Next
                 End If
             End If
         End With
+    End Sub
+
+    Sub ShowTrade()
+        ' show the window
+        ShowWindow(GetWindowIndex("winTrade"))
+
+        ' set the controls up
+        With Windows(GetWindowIndex("winTrade"))
+            .Window.text = "Trading with " & Trim$(GetPlayerName(InTrade))
+            .Controls(GetControlIndex("winTrade", "lblYourTrade")).text = Trim$(GetPlayerName(MyIndex)) & "'s Offer"
+            .Controls(GetControlIndex("winTrade", "lblTheirTrade")).text = Trim$(GetPlayerName(InTrade)) & "'s Offer"
+            .Controls(GetControlIndex("winTrade", "lblYourValue")).text = "0g"
+            .Controls(GetControlIndex("winTrade", "lblTheirValue")).text = "0g"
+            .Controls(GetControlIndex("winTrade", "lblStatus")).text = "Choose items to offer."
+        End With
+    End Sub
+
+    Sub ShowPlayerMenu(Index As Long, X As Long, Y As Long)
+        PlayerMenuIndex = Index
+        If PlayerMenuIndex = 0 Then Exit Sub
+        Windows(GetWindowIndex("winPlayerMenu")).Window.Left = X - 5
+        Windows(GetWindowIndex("winPlayerMenu")).Window.Top = Y - 5
+        Windows(GetWindowIndex("winPlayerMenu")).Controls(GetControlIndex("winPlayerMenu", "btnName")).text = Trim$(GetPlayerName(PlayerMenuIndex))
+        ShowWindow(GetWindowIndex("winRightClickBG"))
+        ShowWindow(GetWindowIndex("winPlayerMenu"))
     End Sub
 End Module

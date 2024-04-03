@@ -50,7 +50,7 @@ Friend Class frmEditor_Pet
 
         petnum = nudSprite.Value
 
-        If petnum <= 0 OrElse petnum > NumCharacters Then
+        If petnum <= 0 Or petnum > NumCharacters Then
             picSprite.BackgroundImage = Nothing
             Exit Sub
         End If

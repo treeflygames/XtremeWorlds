@@ -42,6 +42,7 @@
         Trap
         Light
         Animation
+        NoXing
 
         Count
     End Enum
@@ -218,9 +219,13 @@
         None = 0
         Ground
         Mask
+        MaskAnim
         Cover
+        CoverAnim
         Fringe
+        FringeAnim
         Roof
+        RoofAnim
         Count
     End Enum
 
@@ -603,7 +608,7 @@
         Broadcast
         Party
         Guild
-        Whisper
+        Player
         Count
     End Enum
 

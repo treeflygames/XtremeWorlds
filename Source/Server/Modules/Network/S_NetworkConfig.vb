@@ -57,7 +57,7 @@ Friend Module S_NetworkConfig
 
     Sub SendDataToMapBut(index As Integer, mapNum As Integer, ByRef data() As Byte, head As Integer)
         For i As Integer = 1 To Socket.HighIndex()
-            If GetPlayerMap(i) = mapNum AndAlso i <> index Then
+            If GetPlayerMap(i) = mapNum And i <> index Then
                 Socket.SendDataTo(i, data, head)
             End If
         Next
@@ -76,7 +76,11 @@ Friend Module S_NetworkConfig
 
     End Sub
 
-#Region " Events "
+    Sub SendDataTo(index As Integer, ByRef data() As Byte, head As Integer)
+        Socket.SendDataTo(index, data, head)
+    End Sub
+
+#Region "Events"
 
     Friend Sub Socket_ConnectionReceived(index As Integer) Handles Socket.ConnectionReceived
         Console.WriteLine("Connection received on index[" & index & "] - IP[" & Socket.ClientIp(index) & "]")

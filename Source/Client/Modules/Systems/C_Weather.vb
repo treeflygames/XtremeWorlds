@@ -79,7 +79,7 @@ Friend Module C_Weather
         Dim fogNum As Integer
 
         fogNum = CurrentFog
-        If fogNum <= 0 OrElse fogNum > NumFogs Then Exit Sub
+        If fogNum <= 0 Or fogNum > NumFogs Then Exit Sub
 
         If FogGfxInfo(fogNum).IsLoaded = False Then
             LoadTexture(fogNum, 8)
@@ -110,7 +110,7 @@ Friend Module C_Weather
         Dim i As Integer, x As Integer
 
         If CurrentWeather > 0 And CurrentWeather < Weather.Fog Then
-            If CurrentWeather = Weather.Rain OrElse CurrentWeather = Weather.Storm Then
+            If CurrentWeather = Weather.Rain Or CurrentWeather = Weather.Storm Then
                 PlayWeatherSound("Rain.ogg", True)
             End If
             x = Rand(1, 101 - CurrentWeatherIntensity)
@@ -148,7 +148,7 @@ Friend Module C_Weather
         End If
         For i = 0 To MaxWeatherParticles
             If WeatherParticle(i).InUse = 1 Then
-                If WeatherParticle(i).X > TileView.Right * 32 OrElse WeatherParticle(i).Y > TileView.Bottom * 32 Then
+                If WeatherParticle(i).X > TileView.Right * 32 Or WeatherParticle(i).Y > TileView.Bottom * 32 Then
                     WeatherParticle(i).InUse = 0
                 Else
                     WeatherParticle(i).X = WeatherParticle(i).X + WeatherParticle(i).Velocity
@@ -164,7 +164,7 @@ Friend Module C_Weather
 #Region "Sound"
 
     Sub PlayWeatherSound(fileName As String, Optional looped As Boolean = False)
-        If Not Types.Settings.Sound = 1 OrElse Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
+        If Not Types.Settings.Sound = 1 Or Not File.Exists(Paths.Sounds & fileName) Then Exit Sub
         If CurWeatherMusic = fileName Then Exit Sub
 
         Dim buffer As SoundBuffer

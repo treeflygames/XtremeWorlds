@@ -126,14 +126,14 @@ Module C_Resources
         Dim width As Integer
         Dim height As Integer
 
-        If resource < 1 OrElse resource > NumResources Then Exit Sub
+        If resource < 1 Or resource > NumResources Then Exit Sub
 
         x = ConvertMapX(dx)
         y = ConvertMapY(dy)
         width = (rec.Right - rec.Left)
         height = (rec.Bottom - rec.Top)
 
-        If rec.Width < 0 OrElse rec.Height < 0 Then Exit Sub
+        If rec.Width < 0 Or rec.Height < 0 Then Exit Sub
 
         If ResourceGfxInfo(resource).IsLoaded = False Then
             LoadTexture(resource, 5)
@@ -158,7 +158,7 @@ Module C_Resources
         If GettingMap Then Exit Sub
         If MapData = False Then Exit Sub
 
-        If MapResource(resourceNum).X > Map.MaxX OrElse MapResource(resourceNum).Y > Map.MaxY Then Exit Sub
+        If MapResource(resourceNum).X > Map.MaxX Or MapResource(resourceNum).Y > Map.MaxY Then Exit Sub
 
         ' Get the Resource type
         resourceMaster = Map.Tile(MapResource(resourceNum).X, MapResource(resourceNum).Y).Data1

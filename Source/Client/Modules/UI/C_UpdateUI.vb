@@ -15,8 +15,6 @@ Module C_UpdateUI
     Friend VbKeyAlt As Boolean
     Friend VbKeyEnter As Boolean
 
-    Friend Tradername As String
-
     Friend SkillDescName As String
     Friend SkillDescVital As String
     Friend SkillDescType As String

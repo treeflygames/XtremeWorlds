@@ -93,7 +93,7 @@ Public Structure ChatData
                 Exit Select
 
             Case Else
-                If e.Code = Keys.V AndAlso e.Control = Keys.Control Then
+                If e.Code = Keys.V And e.Control = Keys.Control Then
                     CurrentMessage = CurrentMessage + Clipboard.GetText
                 End If
 

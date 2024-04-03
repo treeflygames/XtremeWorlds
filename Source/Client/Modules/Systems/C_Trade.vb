@@ -8,7 +8,7 @@ Module C_Trade
 
     Friend TradeTimer As Integer
     Friend TradeRequest As Boolean
-    Friend InTrade As Boolean
+    Friend InTrade As Integer
     Friend TradeX As Integer
     Friend TradeY As Integer
     Friend TheirWorth As String
@@ -43,14 +43,16 @@ Module C_Trade
     Sub Packet_Trade(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
 
-        buffer.ReadInt32()
-        Tradername = Trim(buffer.ReadString)
+        InTrade = buffer.ReadInt32
+
+        ShowTrade()
 
         buffer.Dispose()
     End Sub
 
     Sub Packet_CloseTrade(ByRef data() As Byte)
-
+        InTrade = 0
+        HideWindow(GetWindowIndex("winTrade"))
     End Sub
 
     Sub Packet_TradeUpdate(ByRef data() As Byte)

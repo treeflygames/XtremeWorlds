@@ -145,7 +145,7 @@ Friend Module S_Projectile
         ProjectileNum = buffer.ReadInt32
 
         ' Prevent hacking
-        If Projectilenum <= 0 OrElse ProjectileNum > MAX_PROJECTILES Then
+        If Projectilenum <= 0 Or ProjectileNum > MAX_PROJECTILES Then
             Exit Sub
         End If
 

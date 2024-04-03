@@ -6,6 +6,8 @@ Module C_Globals
     Public ResolutionHeight As Integer
     Public ResolutionWidth As Integer
 
+    Public MapAnim As Byte
+
     ' Global dialogue index
     Public diaHeader As String
     Public diaBody As String
@@ -23,6 +25,9 @@ Module C_Globals
     Public shopSelectedSlot As Long
     Public shopSelectedItem As Long
     Public shopIsSelling As Boolean
+
+    ' right click menu
+    Public PlayerMenuIndex As Long
 
     ' description
     Public descType As Byte
@@ -108,6 +113,7 @@ Module C_Globals
     Public EditorLight As Integer
     Public EditorShadow As Byte
     Public EditorFlicker As Byte
+    Public EditorAttribute As Byte
     Public EditorTileSelStart As Point
     Public EditorTileSelEnd As Point
     Public CopyMap As Boolean

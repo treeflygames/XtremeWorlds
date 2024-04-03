@@ -68,7 +68,7 @@ Friend Class FrmAdmin
             Exit Sub
         End If
 
-        If IsNumeric(Trim$(txtAdminName.Text)) OrElse cmbAccess.SelectedIndex < 0 Then
+        If IsNumeric(Trim$(txtAdminName.Text)) Or cmbAccess.SelectedIndex < 0 Then
             Exit Sub
         End If
 

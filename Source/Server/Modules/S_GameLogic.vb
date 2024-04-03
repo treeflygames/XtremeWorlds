@@ -18,7 +18,7 @@ Module S_GameLogic
         GetNpcMaxVital = 0
 
         ' Prevent subscript out of range
-        If NpcNum <= 0 OrElse NpcNum > MAX_NPCS Then Exit Function
+        If NpcNum <= 0 Or NpcNum > MAX_NPCS Then Exit Function
 
         Select Case Vital
             Case VitalType.HP

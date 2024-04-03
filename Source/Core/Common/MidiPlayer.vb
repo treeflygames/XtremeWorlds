@@ -35,7 +35,7 @@ Public Module MidiPlayer
 
     ' Play the loaded MIDI file
     Public Sub Play()
-        If midiSequencer IsNot Nothing AndAlso midiSequence IsNot Nothing Then
+        If midiSequencer IsNot Nothing And midiSequence IsNot Nothing Then
             midiSequencer.Start()
         End If
     End Sub

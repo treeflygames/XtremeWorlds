@@ -1,6 +1,7 @@
 ﻿Imports System.DirectoryServices.Protocols
 Imports System.Drawing
 Imports System.IO
+Imports System.Speech.Synthesis.TtsEngine
 Imports Core
 Imports Mirage.Sharp.Asfw
 Imports Mirage.Sharp.Asfw.IO
@@ -102,7 +103,11 @@ Module C_Maps
                     Map.Tile(x, y).Data1 = 0
                     Map.Tile(x, y).Data2 = 0
                     Map.Tile(x, y).Data3 = 0
+                    Map.Tile(x, y).Data1_2 = 0
+                    Map.Tile(x, y).Data2_2 = 0
+                    Map.Tile(x, y).Data3_2 = 0
                     Map.Tile(x, y).Type = 0
+                    Map.Tile(x, y).Type2 = 0
                     Map.Tile(x, y).DirBlock = 0
 
                     For i = 1 To MaxTileHistory
@@ -276,14 +281,21 @@ Module C_Maps
                     Map.Tile(x, y).Data1 = buffer.ReadInt32
                     Map.Tile(x, y).Data2 = buffer.ReadInt32
                     Map.Tile(x, y).Data3 = buffer.ReadInt32
+                    Map.Tile(x, y).Data1_2 = buffer.ReadInt32
+                    Map.Tile(x, y).Data2_2 = buffer.ReadInt32
+                    Map.Tile(x, y).Data3_2 = buffer.ReadInt32
                     Map.Tile(x, y).DirBlock = buffer.ReadInt32
 
                     For j = 1 To MaxTileHistory
                         TileHistory(j).Tile(x, y).Data1 = Map.Tile(x, y).Data1
                         TileHistory(j).Tile(x, y).Data2 = Map.Tile(x, y).Data2
                         TileHistory(j).Tile(x, y).Data3 = Map.Tile(x, y).Data3
+                        TileHistory(j).Tile(x, y).Data1_2 = Map.Tile(x, y).Data1_2
+                        TileHistory(j).Tile(x, y).Data2_2 = Map.Tile(x, y).Data2_2
+                        TileHistory(j).Tile(x, y).Data3_2 = Map.Tile(x, y).Data3_2
                         TileHistory(j).Tile(x, y).DirBlock = Map.Tile(x, y).DirBlock
                         TileHistory(j).Tile(x, y).Type = Map.Tile(x, y).Type
+                        TileHistory(j).Tile(x, y).Type2 = Map.Tile(x, y).Type2
                     Next
 
                     ReDim Map.Tile(x, y).Layer(LayerType.Count - 1)
@@ -304,7 +316,9 @@ Module C_Maps
                             TileHistory(j).Tile(x, y).Layer(i).AutoTile = Map.Tile(x, y).Layer(i).AutoTile
                         Next
                     Next
+
                     Map.Tile(x, y).Type = buffer.ReadInt32
+                    Map.Tile(x, y).Type2 = buffer.ReadInt32
                 Next
             Next
 
@@ -556,7 +570,11 @@ Module C_Maps
 
     Friend Sub SendPlayerRequestNewMap()
         If GettingMap Then Exit Sub
-
+        If Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type = TileType.NoXing Or Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type2 = TileType.NoXing Then
+            AddText("The pathway is blocked.", ColorType.BrightRed)
+            Exit Sub
+        End If
+ 
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CRequestNewMap)
@@ -564,6 +582,9 @@ Module C_Maps
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
+
+        GettingMap = True
+        CanMoveNow = False
 
     End Sub
 
@@ -622,6 +643,9 @@ Module C_Maps
                 buffer.WriteInt32(Map.Tile(x, y).Data1)
                 buffer.WriteInt32(Map.Tile(x, y).Data2)
                 buffer.WriteInt32(Map.Tile(x, y).Data3)
+                buffer.WriteInt32(Map.Tile(x, y).Data1_2)
+                buffer.WriteInt32(Map.Tile(x, y).Data2_2)
+                buffer.WriteInt32(Map.Tile(x, y).Data3_2)
                 buffer.WriteInt32(Map.Tile(x, y).DirBlock)
                 For i = 1 To LayerType.Count - 1
                     buffer.WriteInt32(Map.Tile(x, y).Layer(i).Tileset)
@@ -630,6 +654,7 @@ Module C_Maps
                     buffer.WriteInt32(Map.Tile(x, y).Layer(i).AutoTile)
                 Next
                 buffer.WriteInt32(Map.Tile(x, y).Type)
+                buffer.WriteInt32(Map.Tile(x, y).Type2)
             Next
         Next
 
@@ -777,7 +802,7 @@ Module C_Maps
 
 #Region "Drawing"
 
-    Friend Sub DrawMapTile(x As Integer, y As Integer)
+    Friend Sub DrawMapLowerTile(x As Integer, y As Integer)
         Dim i As Integer, alpha As Byte
         Dim rect As New Rectangle(0, 0, 0, 0)
 
@@ -785,11 +810,21 @@ Module C_Maps
         If Map.Tile Is Nothing Then Exit Sub
         If MapData = False Then Exit Sub
 
-        For i = LayerType.Ground To LayerType.Cover
+        For i = LayerType.Ground To LayerType.CoverAnim
             If Map.Tile(x, y).Layer Is Nothing Then Exit Sub
 
+            If MapAnim = 1 Then
+                Select Case i
+                    Case LayerType.Mask
+                        i = LayerType.MaskAnim
+
+                    Case LayerType.Cover
+                        i = LayerType.CoverAnim
+                End Select
+            End If
+
             ' skip tile if tileset isn't set
-            If Map.Tile(x, y).Layer(i).Tileset > 0 AndAlso Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
+            If Map.Tile(x, y).Layer(i).Tileset > 0 And Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
                 If TilesetGfxInfo(Map.Tile(x, y).Layer(i).Tileset).IsLoaded = False Then
                     LoadTexture(Map.Tile(x, y).Layer(i).Tileset, 1)
                 End If
@@ -831,7 +866,7 @@ Module C_Maps
 
     End Sub
 
-    Friend Sub DrawMapFringeTile(x As Integer, y As Integer)
+    Friend Sub DrawMapUpperTile(x As Integer, y As Integer)
         Dim i As Integer, alpha As Integer
         Dim rect As Rectangle
 
@@ -839,11 +874,21 @@ Module C_Maps
         If Map.Tile Is Nothing Then Exit Sub
         If MapData = False Then Exit Sub
 
-        For i = LayerType.Fringe To LayerType.Roof
+        For i = LayerType.Fringe To LayerType.RoofAnim
             If Map.Tile(x, y).Layer Is Nothing Then Exit Sub
 
+            If MapAnim = 1 Then
+                Select Case i
+                    Case LayerType.Fringe
+                        i = LayerType.Fringe
+
+                    Case LayerType.Roof
+                        i = LayerType.Roof
+                End Select
+            End If
+
             ' skip tile if tileset isn't set
-            If Map.Tile(x, y).Layer(i).Tileset > 0 AndAlso Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
+            If Map.Tile(x, y).Layer(i).Tileset > 0 And Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
                 If TileSetGfxInfo(Map.Tile(x, y).Layer(i).Tileset).IsLoaded = False Then
                     LoadTexture(Map.Tile(x, y).Layer(i).Tileset, 1)
                 End If

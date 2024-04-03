@@ -192,17 +192,19 @@ Friend Module C_Projectiles
         'Check if its been going for over 1 minute, if so clear.
         If MapProjectile(Player(MyIndex).Map, projectileNum).Timer < GetTickCount() Then canClearProjectile = True
 
-        If x > Map.MaxX OrElse x < 0 Then canClearProjectile = True
-        If y > Map.MaxY OrElse y < 0 Then canClearProjectile = True
+        If x > Map.MaxX Or x < 0 Then canClearProjectile = True
+        If y > Map.MaxY Or y < 0 Then canClearProjectile = True
 
         'Check for blocked wall collision
         If canClearProjectile = False Then 'Add a check to prevent crashing
-            If Map.Tile(x, y).Type = TileType.Blocked Then canClearProjectile = True
+            If Map.Tile(x, y).Type = TileType.Blocked Or Map.Tile(x, y).Type2 = TileType.Blocked Then
+                canClearProjectile = True
+            End If
         End If
 
         'Check for npc collision
        For i = 1 To MAX_MAP_NPCS
-            If MapNpc(i).X = x AndAlso MapNpc(i).Y = y Then
+            If MapNpc(i).X = x And MapNpc(i).Y = y Then
                 canClearProjectile = True
                 collisionindex = i
                 collisionType = TargetType.Npc
@@ -213,8 +215,8 @@ Friend Module C_Projectiles
 
         'Check for player collision
        For i = 1 To MAX_PLAYERS
-            If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-                If GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
+            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+                If GetPlayerX(i) = x And GetPlayerY(i) = y Then
                     canClearProjectile = True
                     collisionindex = i
                     collisionType = TargetType.Player
@@ -234,7 +236,7 @@ Friend Module C_Projectiles
         'Clear the projectile if possible
         If canClearProjectile = True Then
             'Only send the clear to the server if you're the projectile caster or the one hit (only if owner is not a player)
-            If (MapProjectile(Player(MyIndex).Map, projectileNum).OwnerType = TargetType.Player AndAlso MapProjectile(Player(MyIndex).Map, projectileNum).Owner = MyIndex) Then
+            If (MapProjectile(Player(MyIndex).Map, projectileNum).OwnerType = TargetType.Player And MapProjectile(Player(MyIndex).Map, projectileNum).Owner = MyIndex) Then
                 SendClearProjectile(projectileNum, collisionindex, collisionType, collisionZone)
             End If
 
@@ -243,7 +245,7 @@ Friend Module C_Projectiles
         End If
 
         sprite = Projectile(MapProjectile(Player(MyIndex).Map, projectileNum).ProjectileNum).Sprite
-        If sprite < 1 OrElse sprite > NumProjectiles Then Exit Sub
+        If sprite < 1 Or sprite > NumProjectiles Then Exit Sub
 
         If ProjectileGfxInfo(sprite).IsLoaded = False Then
             LoadTexture(sprite, 10)
@@ -290,7 +292,7 @@ Friend Module C_Projectiles
 
         iconnum = frmEditor_Projectile.nudPic.Value
 
-        If iconnum < 1 OrElse iconnum > NumProjectiles Then
+        If iconnum < 1 Or iconnum > NumProjectiles Then
             frmEditor_Projectile.picProjectile.BackgroundImage = Nothing
             Exit Sub
         End If

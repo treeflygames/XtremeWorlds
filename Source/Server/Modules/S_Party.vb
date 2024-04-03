@@ -102,7 +102,7 @@ Module S_Party
         If TempPlayer(index).TargetType <> TargetType.Player Then Exit Sub
 
         ' make sure they're connected and on the same map
-        If Not Socket.IsConnected(TempPlayer(index).Target) OrElse Not IsPlaying(TempPlayer(index).Target) Then Exit Sub
+        If Not Socket.IsConnected(TempPlayer(index).Target) Or Not IsPlaying(TempPlayer(index).Target) Then Exit Sub
         If GetPlayerMap(TempPlayer(index).Target) <> GetPlayerMap(index) Then Exit Sub
 
         ' init the request
@@ -154,7 +154,7 @@ Module S_Party
             ' exist?
             If Party(partyNum).Member(i) > 0 Then
                 ' make sure they're logged on
-                If Socket.IsConnected(Party(partyNum).Member(i)) AndAlso IsPlaying(Party(partyNum).Member(i)) Then
+                If Socket.IsConnected(Party(partyNum).Member(i)) And IsPlaying(Party(partyNum).Member(i)) Then
                     PlayerMsg(Party(partyNum).Member(i), msg, ColorType.BrightBlue)
                 End If
             End If
@@ -190,7 +190,7 @@ Module S_Party
                 If Party(partyNum).Leader = index Then
                     ' set next person down as leader
                     For i = 1 To MAX_PARTY_MEMBERS
-                        If Party(partyNum).Member(i) > 0 AndAlso Party(partyNum).Member(i) <> index Then
+                        If Party(partyNum).Member(i) > 0 And Party(partyNum).Member(i) <> index Then
                             Party(partyNum).Leader = Party(partyNum).Member(i)
                             PartyMsg(partyNum, String.Format("{0} is now the party leader.", GetPlayerName(i)))
                             Exit For
@@ -228,10 +228,10 @@ Module S_Party
         Dim partyNum As Integer, i As Integer
 
         ' check if the person is a valid target
-        If Not Socket.IsConnected(target) OrElse Not IsPlaying(target) Then Exit Sub
+        If Not Socket.IsConnected(target) Or Not IsPlaying(target) Then Exit Sub
 
         ' make sure they're not busy
-        If TempPlayer(target).PartyInvite > 0 OrElse TempPlayer(target).TradeRequest > 0 Then
+        If TempPlayer(target).PartyInvite > 0 Or TempPlayer(target).TradeRequest > 0 Then
             ' they've already got a request for trade/party
             PlayerMsg(index, "This player is busy.", ColorType.BrightRed)
             ' exit out early
@@ -401,7 +401,7 @@ Module S_Party
         For i = 1 To MAX_PARTY_MEMBERS
             tmpindex = Party(partyNum).Member(i)
             If tmpindex > 0 Then
-                If Socket.IsConnected(tmpindex) AndAlso IsPlaying(tmpindex) Then
+                If Socket.IsConnected(tmpindex) And IsPlaying(tmpindex) Then
                     If GetPlayerMap(tmpindex) <> mapNum Then
                         loseMemberCount = loseMemberCount + 1
                     End If
@@ -419,7 +419,7 @@ Module S_Party
             ' existing member?
             If tmpindex > 0 Then
                 ' playing?
-                If Socket.IsConnected(tmpindex) AndAlso IsPlaying(tmpindex) Then
+                If Socket.IsConnected(tmpindex) And IsPlaying(tmpindex) Then
                     If GetPlayerMap(tmpindex) = mapNum Then
                         ' give them their share
                         GivePlayerExp(tmpindex, expShare)
@@ -451,12 +451,12 @@ Module S_Party
     End Sub
 
     Friend Function IsPlayerInParty(index As Integer) As Boolean
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse Not TempPlayer(index).InGame Then Exit Function
+        If index <= 0 Or index > MAX_PLAYERS Or Not TempPlayer(index).InGame Then Exit Function
         If TempPlayer(index).InParty > 0 Then IsPlayerInParty = True
     End Function
 
     Friend Function GetPlayerParty(index As Integer) As Integer
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse Not TempPlayer(index).InGame Then Exit Function
+        If index <= 0 Or index > MAX_PLAYERS Or Not TempPlayer(index).InGame Then Exit Function
         GetPlayerParty = TempPlayer(index).InParty
     End Function
 

@@ -43,110 +43,110 @@ Public Class Inputs
     Public Shared Secondary As New Input
 
     Public Shared Function MoveUp(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.MoveUp OrElse
-               keyCode = Secondary.MoveUp OrElse
-               keyCode = Primary.MoveUp2 OrElse
+        Return keyCode = Primary.MoveUp Or
+               keyCode = Secondary.MoveUp Or
+               keyCode = Primary.MoveUp2 Or
                keyCode = Secondary.MoveUp2
     End Function
 
     Public Shared Function MoveDown(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.MoveDown OrElse
-               keyCode = Secondary.MoveDown OrElse
-               keyCode = Primary.MoveDown2 OrElse
+        Return keyCode = Primary.MoveDown Or
+               keyCode = Secondary.MoveDown Or
+               keyCode = Primary.MoveDown2 Or
                keyCode = Secondary.MoveDown2
     End Function
 
     Public Shared Function MoveLeft(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.MoveLeft OrElse
-               keyCode = Secondary.MoveLeft OrElse
-               keyCode = Primary.MoveLeft2 OrElse
+        Return keyCode = Primary.MoveLeft Or
+               keyCode = Secondary.MoveLeft Or
+               keyCode = Primary.MoveLeft2 Or
                keyCode = Secondary.MoveLeft2
     End Function
 
     Public Shared Function MoveRight(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.MoveRight OrElse
-               keyCode = Secondary.MoveRight OrElse
-               keyCode = Primary.MoveRight2 OrElse
+        Return keyCode = Primary.MoveRight Or
+               keyCode = Secondary.MoveRight Or
+               keyCode = Primary.MoveRight2 Or
                keyCode = Secondary.MoveRight2
     End Function
 
     Public Shared Function Attack(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Attack OrElse
+        Return keyCode = Primary.Attack Or
                keyCode = Secondary.Attack
     End Function
 
     Public Shared Function Run(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Run OrElse
+        Return keyCode = Primary.Run Or
                keyCode = Secondary.Run
     End Function
 
     Public Shared Function Loot(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Loot OrElse
+        Return keyCode = Primary.Loot Or
                keyCode = Secondary.Loot
     End Function
 
     Public Shared Function HotBar1(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar1 OrElse
+        Return keyCode = Primary.HotBar1 Or
                keyCode = Secondary.HotBar1
     End Function
 
     Public Shared Function HotBar2(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar2 OrElse
+        Return keyCode = Primary.HotBar2 Or
                keyCode = Secondary.HotBar2
     End Function
 
     Public Shared Function HotBar3(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar3 OrElse
+        Return keyCode = Primary.HotBar3 Or
                keyCode = Secondary.HotBar3
     End Function
 
     Public Shared Function HotBar4(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar4 OrElse
+        Return keyCode = Primary.HotBar4 Or
                keyCode = Secondary.HotBar4
     End Function
 
     Public Shared Function HotBar5(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar5 OrElse
+        Return keyCode = Primary.HotBar5 Or
                keyCode = Secondary.HotBar5
     End Function
 
     Public Shared Function HotBar6(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar6 OrElse
+        Return keyCode = Primary.HotBar6 Or
                keyCode = Secondary.HotBar6
     End Function
 
     Public Shared Function HotBar7(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HotBar7 OrElse
+        Return keyCode = Primary.HotBar7 Or
                keyCode = Secondary.HotBar7
     End Function
 
     Public Shared Function Inventory(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Inventory OrElse
+        Return keyCode = Primary.Inventory Or
                keyCode = Secondary.Inventory
     End Function
 
     Public Shared Function Character(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Character OrElse
+        Return keyCode = Primary.Character Or
                keyCode = Secondary.Character
     End Function
 
     Public Shared Function Skill(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Skill OrElse
+        Return keyCode = Primary.Skill Or
                keyCode = Secondary.Skill
     End Function
 
     Public Shared Function Settings(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Settings OrElse
+        Return keyCode = Primary.Settings Or
                keyCode = Secondary.Settings
     End Function
 
     Public Shared Function HudToggle(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.HudToggle OrElse
+        Return keyCode = Primary.HudToggle Or
                keyCode = Secondary.HudToggle
     End Function
 
     Public Shared Function Admin(keyCode As Keyboard.Key) As Boolean
-        Return keyCode = Primary.Admin OrElse
+        Return keyCode = Primary.Admin Or
                keyCode = Secondary.Admin
     End Function
 

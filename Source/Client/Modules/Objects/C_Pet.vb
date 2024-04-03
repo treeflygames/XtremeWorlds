@@ -19,8 +19,6 @@ Module C_Pets
     Friend PetSkillBufferTimer As Integer
     Friend PetSkillCd() As Integer
 
-    Friend ShowPetStats As Boolean
-
     'Pet Constants
     Friend Const PetBehaviourFollow As Byte = 0 'The pet will attack all npcs around
 
@@ -394,8 +392,8 @@ Module C_Pets
 
             ' Check if completed walking over to the next tile
             If Player(index).Pet.Moving > 0 Then
-                If Player(index).Pet.Dir = DirectionType.Right OrElse Player(index).Pet.Dir = DirectionType.Down Then
-                    If (Player(index).Pet.XOffset >= 0) AndAlso (Player(index).Pet.YOffset >= 0) Then
+                If Player(index).Pet.Dir = DirectionType.Right Or Player(index).Pet.Dir = DirectionType.Down Then
+                    If (Player(index).Pet.XOffset >= 0) And (Player(index).Pet.YOffset >= 0) Then
                         Player(index).Pet.Moving = 0
                         If Player(index).Pet.Steps = 1 Then
                             Player(index).Pet.Steps = 2
@@ -404,7 +402,7 @@ Module C_Pets
                         End If
                     End If
                 Else
-                    If (Player(index).Pet.XOffset <= 0) AndAlso (Player(index).Pet.YOffset <= 0) Then
+                    If (Player(index).Pet.XOffset <= 0) And (Player(index).Pet.YOffset <= 0) Then
                         Player(index).Pet.Moving = 0
                         If Player(index).Pet.Steps = 1 Then
                             Player(index).Pet.Steps = 2
@@ -445,7 +443,7 @@ Module C_Pets
 
         spriteNum = Pet(Player(index).Pet.Num).Sprite
 
-        If spriteNum < 1 OrElse spriteNum > NumCharacters Then Exit Sub
+        If spriteNum < 1 Or spriteNum > NumCharacters Then Exit Sub
 
         If CharacterGfxInfo(spriteNum).IsLoaded = False Then
             LoadTexture(spriteNum, 2)
@@ -554,7 +552,7 @@ Module C_Pets
 
         ' calc pos
         textX = ConvertMapX(Player(index).Pet.X * PicX) + Player(index).Pet.XOffset + (PicX \ 2) - TextWidth(name) / 2
-        If Pet(Player(index).Pet.Num).Sprite < 1 OrElse Pet(Player(index).Pet.Num).Sprite > NumCharacters Then
+        If Pet(Player(index).Pet.Num).Sprite < 1 Or Pet(Player(index).Pet.Num).Sprite > NumCharacters Then
             textY = ConvertMapY(Player(index).Pet.Y * PicY) + Player(index).Pet.YOffset - 16
         Else
             ' Determine location for text
@@ -601,7 +599,7 @@ Module C_Pets
                 .cmbSkill4.Items.Add(i & ": " & Skill(i).Name)
             Next
             .txtName.Text = Trim$(Pet(EditorIndex).Name)
-            If Pet(EditorIndex).Sprite < 0 OrElse Pet(EditorIndex).Sprite > .nudSprite.Maximum Then Pet(EditorIndex).Sprite = 0
+            If Pet(EditorIndex).Sprite < 0 Or Pet(EditorIndex).Sprite > .nudSprite.Maximum Then Pet(EditorIndex).Sprite = 0
 
             .nudSprite.Value = Pet(EditorIndex).Sprite
             .EditorPet_DrawPet()

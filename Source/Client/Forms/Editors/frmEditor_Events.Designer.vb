@@ -8,7 +8,7 @@ Partial Class frmEditor_Events
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
-            If disposing AndAlso components IsNot Nothing Then
+            If disposing And components IsNot Nothing Then
                 components.Dispose()
             End If
         Finally
@@ -479,9 +479,7 @@ Partial Class frmEditor_Events
         txtShowText = New DarkUI.Controls.DarkTextBox()
         btnShowTextCancel = New DarkUI.Controls.DarkButton()
         btnShowTextOk = New DarkUI.Controls.DarkButton()
-        picShowTextFace = New PictureBox()
         DarkLabel26 = New DarkUI.Controls.DarkLabel()
-        nudShowTextFace = New DarkUI.Controls.DarkNumericUpDown()
         pnlVariableSwitches = New Panel()
         FraRenaming = New GroupBox()
         btnRename_Cancel = New Button()
@@ -585,8 +583,6 @@ Partial Class frmEditor_Events
         CType(nudShowPicture, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(picShowPic, System.ComponentModel.ISupportInitialize).BeginInit()
         fraShowText.SuspendLayout()
-        CType(picShowTextFace, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(nudShowTextFace, System.ComponentModel.ISupportInitialize).BeginInit()
         pnlVariableSwitches.SuspendLayout()
         FraRenaming.SuspendLayout()
         fraRandom10.SuspendLayout()
@@ -1275,7 +1271,7 @@ Partial Class frmEditor_Events
         ' 
         cmbPlayervarCompare.DrawMode = DrawMode.OwnerDrawFixed
         cmbPlayervarCompare.FormattingEnabled = True
-        cmbPlayervarCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        cmbPlayervarCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         cmbPlayervarCompare.Location = New Point(372, 34)
         cmbPlayervarCompare.Margin = New Padding(5)
         cmbPlayervarCompare.Name = "cmbPlayervarCompare"
@@ -1955,7 +1951,7 @@ Partial Class frmEditor_Events
         ' 
         cmbCondition_LevelCompare.DrawMode = DrawMode.OwnerDrawFixed
         cmbCondition_LevelCompare.FormattingEnabled = True
-        cmbCondition_LevelCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        cmbCondition_LevelCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         cmbCondition_LevelCompare.Location = New Point(178, 300)
         cmbCondition_LevelCompare.Margin = New Padding(5)
         cmbCondition_LevelCompare.Name = "cmbCondition_LevelCompare"
@@ -2099,7 +2095,7 @@ Partial Class frmEditor_Events
         ' 
         cmbCondition_PlayerVarCompare.DrawMode = DrawMode.OwnerDrawFixed
         cmbCondition_PlayerVarCompare.FormattingEnabled = True
-        cmbCondition_PlayerVarCompare.Items.AddRange(New Object() {"Equal To", "Great Than OrElse Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
+        cmbCondition_PlayerVarCompare.Items.AddRange(New Object() {"Equal To", "Great Than Or Equal To", "Less Than or Equal To", "Greater Than", "Less Than", "Does Not Equal"})
         cmbCondition_PlayerVarCompare.Location = New Point(393, 40)
         cmbCondition_PlayerVarCompare.Margin = New Padding(5)
         cmbCondition_PlayerVarCompare.Name = "cmbCondition_PlayerVarCompare"
@@ -4776,9 +4772,7 @@ Partial Class frmEditor_Events
         fraShowText.Controls.Add(txtShowText)
         fraShowText.Controls.Add(btnShowTextCancel)
         fraShowText.Controls.Add(btnShowTextOk)
-        fraShowText.Controls.Add(picShowTextFace)
         fraShowText.Controls.Add(DarkLabel26)
-        fraShowText.Controls.Add(nudShowTextFace)
         fraShowText.ForeColor = Color.Gainsboro
         fraShowText.Location = New Point(10, 585)
         fraShowText.Margin = New Padding(5)
@@ -4833,17 +4827,6 @@ Partial Class frmEditor_Events
         btnShowTextOk.TabIndex = 25
         btnShowTextOk.Text = "Ok"
         ' 
-        ' picShowTextFace
-        ' 
-        picShowTextFace.BackColor = Color.Black
-        picShowTextFace.BackgroundImageLayout = ImageLayout.Zoom
-        picShowTextFace.Location = New Point(12, 287)
-        picShowTextFace.Margin = New Padding(5)
-        picShowTextFace.Name = "picShowTextFace"
-        picShowTextFace.Size = New Size(167, 178)
-        picShowTextFace.TabIndex = 2
-        picShowTextFace.TabStop = False
-        ' 
         ' DarkLabel26
         ' 
         DarkLabel26.AutoSize = True
@@ -4854,14 +4837,6 @@ Partial Class frmEditor_Events
         DarkLabel26.Size = New Size(50, 25)
         DarkLabel26.TabIndex = 22
         DarkLabel26.Text = "Face:"
-        ' 
-        ' nudShowTextFace
-        ' 
-        nudShowTextFace.Location = New Point(245, 427)
-        nudShowTextFace.Margin = New Padding(5)
-        nudShowTextFace.Name = "nudShowTextFace"
-        nudShowTextFace.Size = New Size(153, 31)
-        nudShowTextFace.TabIndex = 23
         ' 
         ' pnlVariableSwitches
         ' 
@@ -5196,8 +5171,6 @@ Partial Class frmEditor_Events
         CType(picShowPic, System.ComponentModel.ISupportInitialize).EndInit()
         fraShowText.ResumeLayout(False)
         fraShowText.PerformLayout()
-        CType(picShowTextFace, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(nudShowTextFace, System.ComponentModel.ISupportInitialize).EndInit()
         pnlVariableSwitches.ResumeLayout(False)
         FraRenaming.ResumeLayout(False)
         fraRandom10.ResumeLayout(False)
@@ -5329,10 +5302,8 @@ Partial Class frmEditor_Events
     Friend WithEvents optAddText_Global As DarkUI.Controls.DarkRadioButton
     Friend WithEvents btnShowTextOk As DarkUI.Controls.DarkButton
     Friend WithEvents btnShowTextCancel As DarkUI.Controls.DarkButton
-    Friend WithEvents nudShowTextFace As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents DarkLabel26 As DarkUI.Controls.DarkLabel
     Friend WithEvents txtShowText As DarkUI.Controls.DarkTextBox
-    Friend WithEvents picShowTextFace As PictureBox
     Friend WithEvents DarkLabel27 As DarkUI.Controls.DarkLabel
     Friend WithEvents fraShowText As DarkUI.Controls.DarkGroupBox
     Friend WithEvents fraSetFog As DarkUI.Controls.DarkGroupBox

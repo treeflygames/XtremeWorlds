@@ -327,7 +327,7 @@ Module S_Pet
         petNum = buffer.ReadInt32
 
         ' Prevent hacking
-        If petNum <= 0 OrElse petNum > MAX_PETS Then Exit Sub
+        If petNum <= 0 Or petNum > MAX_PETS Then Exit Sub
 
         With Pet(petNum)
             .Num = buffer.ReadInt32
@@ -380,16 +380,16 @@ Module S_Pet
         y = buffer.ReadInt32
 
         ' Prevent subscript out of range
-        If x < 0 OrElse x > Map(GetPlayerMap(index)).MaxX OrElse y < 0 OrElse y > Map(GetPlayerMap(index)).MaxY Then Exit Sub
+        If x < 0 Or x > Map(GetPlayerMap(index)).MaxX Or y < 0 Or y > Map(GetPlayerMap(index)).MaxY Then Exit Sub
 
         ' Check for a player
         For i = 1 To Socket.HighIndex()
 
             If IsPlaying(i) Then
-                If GetPlayerMap(index) = GetPlayerMap(i) AndAlso GetPlayerX(i) = x AndAlso GetPlayerY(i) = y Then
+                If GetPlayerMap(index) = GetPlayerMap(i) And GetPlayerX(i) = x And GetPlayerY(i) = y Then
                     If i = index Then
                         ' Change target
-                        If TempPlayer(index).PetTargetType = TargetType.Player AndAlso TempPlayer(index).PetTarget = i Then
+                        If TempPlayer(index).PetTargetType = TargetType.Player And TempPlayer(index).PetTarget = i Then
                             TempPlayer(index).PetTarget = 0
                             TempPlayer(index).PetTargetType = 0
                             TempPlayer(index).PetBehavior = PetBehaviourGoto
@@ -406,7 +406,7 @@ Module S_Pet
                         End If
                     Else
                         ' Change target
-                        If TempPlayer(index).PetTargetType = TargetType.Player AndAlso TempPlayer(index).PetTarget = i Then
+                        If TempPlayer(index).PetTargetType = TargetType.Player And TempPlayer(index).PetTarget = i Then
                             TempPlayer(index).PetTarget = 0
                             TempPlayer(index).PetTargetType = 0
                             ' send target to player
@@ -422,10 +422,10 @@ Module S_Pet
                 End If
             End If
 
-            If PetAlive(i) AndAlso i <> index Then
-                If GetPetX(i) = x AndAlso GetPetY(i) = y Then
+            If PetAlive(i) And i <> index Then
+                If GetPetX(i) = x And GetPetY(i) = y Then
                     ' Change target
-                    If TempPlayer(index).PetTargetType = TargetType.Pet AndAlso TempPlayer(index).PetTarget = i Then
+                    If TempPlayer(index).PetTargetType = TargetType.Pet And TempPlayer(index).PetTarget = i Then
                         TempPlayer(index).PetTarget = 0
                         TempPlayer(index).PetTargetType = 0
                         ' send target to player
@@ -444,8 +444,8 @@ Module S_Pet
         'Search For Target First
         ' Check for an npc
         For i = 1 To MAX_MAP_NPCS
-            If MapNPC(GetPlayerMap(index)).Npc(i).Num > 0 AndAlso MapNPC(GetPlayerMap(index)).Npc(i).X = x AndAlso MapNPC(GetPlayerMap(index)).Npc(i).Y = y Then
-                If TempPlayer(index).PetTarget = i AndAlso TempPlayer(index).PetTargetType = TargetType.Npc Then
+            If MapNPC(GetPlayerMap(index)).Npc(i).Num > 0 And MapNPC(GetPlayerMap(index)).Npc(i).X = x And MapNPC(GetPlayerMap(index)).Npc(i).Y = y Then
+                If TempPlayer(index).PetTarget = i And TempPlayer(index).PetTargetType = TargetType.Npc Then
                     ' Change target
                     TempPlayer(index).PetTarget = 0
                     TempPlayer(index).PetTargetType = 0
@@ -518,7 +518,7 @@ Module S_Pet
         buffer.Dispose()
 
         ' Prevent hacking
-        If (pointType < 0) OrElse (pointType > StatType.Count) Then Exit Sub
+        If (pointType < 0) Or (pointType > StatType.Count) Then Exit Sub
 
         If Not PetAlive(index) Then Exit Sub
 
@@ -586,7 +586,7 @@ Module S_Pet
             For playerindex = 1 To Socket.HighIndex()
                 tickCount = GetTimeMs()
 
-                If GetPlayerMap(playerindex) = mapNum AndAlso PetAlive(playerindex) Then
+                If GetPlayerMap(playerindex) = mapNum And PetAlive(playerindex) Then
                     ' // This is used for ATTACKING ON SIGHT //
 
                     ' If the npc is a attack on sight, search for a player on the map
@@ -597,14 +597,14 @@ Module S_Pet
 
                             For i = 1 To Socket.HighIndex
                                 If TempPlayer(playerindex).PetTargetType > 0 Then
-                                    If TempPlayer(playerindex).PetTargetType = 1 AndAlso TempPlayer(playerindex).PetTarget = playerindex Then
+                                    If TempPlayer(playerindex).PetTargetType = 1 And TempPlayer(playerindex).PetTarget = playerindex Then
                                     Else
                                         Exit For
                                     End If
                                 End If
 
-                                If IsPlaying(i) AndAlso i <> playerindex Then
-                                    If GetPlayerMap(i) = mapNum AndAlso GetPlayerAccess(i) <= AdminType.Moderator Then
+                                If IsPlaying(i) And i <> playerindex Then
+                                    If GetPlayerMap(i) = mapNum And GetPlayerAccess(i) <= AdminType.Moderator Then
                                         If PetAlive(i) Then
                                             n = GetPetRange(playerindex)
                                             distanceX = GetPetX(playerindex) - GetPetX(i)
@@ -615,7 +615,7 @@ Module S_Pet
                                             If distanceY < 0 Then distanceY *= -1
 
                                             ' Are they in range?  if so GET'M!
-                                            If distanceX <= n AndAlso distanceY <= n Then
+                                            If distanceX <= n And distanceY <= n Then
                                                 If GetPetBehaviour(playerindex) = PetAttackBehaviourAttackonsight Then
                                                     TempPlayer(playerindex).PetTargetType = TargetType.Pet ' pet
                                                     TempPlayer(playerindex).PetTarget = i
@@ -631,7 +631,7 @@ Module S_Pet
                                             If distanceY < 0 Then distanceY *= -1
 
                                             ' Are they in range?  if so GET'M!
-                                            If distanceX <= n AndAlso distanceY <= n Then
+                                            If distanceX <= n And distanceY <= n Then
                                                 If GetPetBehaviour(playerindex) = PetAttackBehaviourAttackonsight Then
                                                     TempPlayer(playerindex).PetTargetType = TargetType.Player ' player
                                                     TempPlayer(playerindex).PetTarget = i
@@ -656,7 +656,7 @@ Module S_Pet
                                         If distanceY < 0 Then distanceY *= -1
 
                                         ' Are they in range?  if so GET'M!
-                                        If distanceX <= n AndAlso distanceY <= n Then
+                                        If distanceX <= n And distanceY <= n Then
                                             If GetPetBehaviour(playerindex) = PetAttackBehaviourAttackonsight Then
                                                 TempPlayer(playerindex).PetTargetType = TargetType.Npc ' npc
                                                 TempPlayer(playerindex).PetTarget = i
@@ -690,7 +690,7 @@ Module S_Pet
                                     If target > 0 Then
 
                                         ' Check if the player is even playing, if so follow'm
-                                        If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum Then
+                                        If IsPlaying(target) And GetPlayerMap(target) = mapNum Then
                                             If target <> playerindex Then
                                                 didWalk = False
                                                 targetVerify = True
@@ -716,7 +716,7 @@ Module S_Pet
                                     End If
                                 ElseIf targetTypes = TargetType.Pet Then 'other pet
                                     If target > 0 Then
-                                        If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum AndAlso PetAlive(target) Then
+                                        If IsPlaying(target) And GetPlayerMap(target) = mapNum And PetAlive(target) Then
                                             didWalk = False
                                             targetVerify = True
                                             targetY = GetPetY(target)
@@ -750,9 +750,9 @@ Module S_Pet
                                     didWalk = PetTryWalk(playerindex, targetX, targetY)
                                 End If
 
-                            ElseIf TempPlayer(playerindex).PetBehavior = PetBehaviourGoto AndAlso targetVerify = False Then
+                            ElseIf TempPlayer(playerindex).PetBehavior = PetBehaviourGoto And targetVerify = False Then
 
-                                If GetPetX(playerindex) = TempPlayer(playerindex).GoToX AndAlso GetPetY(playerindex) = TempPlayer(playerindex).GoToY Then
+                                If GetPetX(playerindex) = TempPlayer(playerindex).GoToX And GetPetY(playerindex) = TempPlayer(playerindex).GoToY Then
                                     'Unblock these for the random turning
                                     'i = Int(Rnd() * 4)
                                     'PetDir(playerindex, i)
@@ -809,7 +809,7 @@ Module S_Pet
                         If target > 0 Then
                             If targetTypes = TargetType.Player Then ' player
                                 ' Is the target playing and on the same map?
-                                If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum Then
+                                If IsPlaying(target) And GetPlayerMap(target) = mapNum Then
                                     If playerindex <> target Then TryPetAttackPlayer(playerindex, target)
                                 Else
                                     ' Player left map or game, set target to 0
@@ -826,8 +826,8 @@ Module S_Pet
                                     TempPlayer(playerindex).PetTargetType = 0 ' clear
                                 End If
                             ElseIf targetTypes = TargetType.Pet Then 'pet
-                                ' Is the target playing and on the same map? AndAlso is pet alive??
-                                If IsPlaying(target) AndAlso GetPlayerMap(target) = mapNum AndAlso PetAlive(target) Then
+                                ' Is the target playing and on the same map? And is pet alive??
+                                If IsPlaying(target) And GetPlayerMap(target) = mapNum And PetAlive(target) Then
                                     TryPetAttackPet(playerindex, target)
                                 Else
                                     ' Player left map or game, set target to 0
@@ -842,7 +842,7 @@ Module S_Pet
                         ' ////////////////////////////////////////////
                         ' Check to see if we want to regen some of the npc's hp
                         If Not TempPlayer(playerindex).PetstopRegen Then
-                            If PetAlive(playerindex) AndAlso tickCount > givePetHpTimer + 10000 Then
+                            If PetAlive(playerindex) And tickCount > givePetHpTimer + 10000 Then
                                 If GetPetVital(playerindex, VitalType.HP) > 0 Then
                                     SetPetVital(playerindex, VitalType.HP, GetPetVital(playerindex, VitalType.HP) + GetPetVitalRegen(playerindex, VitalType.HP))
                                     SetPetVital(playerindex, VitalType.MP, GetPetVital(playerindex, VitalType.MP) + GetPetVitalRegen(playerindex, VitalType.MP))
@@ -983,7 +983,7 @@ Module S_Pet
     Sub PetMove(index As Integer, mapNum As Integer, dir As Integer, movement As Integer)
         Dim buffer As New ByteStream(4)
 
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse index < 0 OrElse index > MAX_PLAYERS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right OrElse movement < 0 OrElse movement > 2 Then
+        If mapNum <= 0 Or mapNum > MAX_MAPS Or index < 0 Or index > MAX_PLAYERS Or dir < DirectionType.Up Or dir > DirectionType.Right Or movement < 0 Or movement > 2 Then
             Exit Sub
         End If
 
@@ -1015,20 +1015,20 @@ Module S_Pet
     End Sub
 
     Function CanPetMove(index As Integer, mapNum As Integer, dir As Byte) As Boolean
-        Dim i As Integer, n As Integer
+        Dim i As Integer, n As Integer, n2 As Integer
         Dim x As Integer, y As Integer
 
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse index < 0 OrElse index > MAX_PLAYERS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right Then
+        If mapNum <= 0 Or mapNum > MAX_MAPS Or index < 0 Or index > MAX_PLAYERS Or dir < DirectionType.Up Or dir > DirectionType.Right Then
             Exit Function
         End If
 
-        If index <= 0 OrElse index > MAX_PLAYERS Then Exit Function
+        If index <= 0 Or index > MAX_PLAYERS Then Exit Function
 
         x = GetPetX(index)
         y = GetPetY(index)
 
-        If x < 0 OrElse x > Map(mapNum).MaxX Then Exit Function
-        If y < 0 OrElse y > Map(mapNum).MaxY Then Exit Function
+        If x < 0 Or x > Map(mapNum).MaxX Then Exit Function
+        If y < 0 Or y > Map(mapNum).MaxY Then Exit Function
 
         CanPetMove = True
 
@@ -1043,9 +1043,10 @@ Module S_Pet
                 ' Check to make sure not outside of boundries
                 If y > 0 Then
                     n = Map(mapNum).Tile(x, y - 1).Type
+                    n2 = Map(mapNum).Tile(x, y - 1).Type2
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.NpcSpawn Then
+                    If n <> TileType.NpcSpawn And n2 <> TileType.NpcSpawn Then
                         CanPetMove = False
                         Exit Function
                     End If
@@ -1053,10 +1054,10 @@ Module S_Pet
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To Socket.HighIndex()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = GetPetX(index) + 1) AndAlso (GetPlayerY(i) = GetPetY(index) - 1) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = GetPetX(index) + 1) And (GetPlayerY(i) = GetPetY(index) - 1) Then
                                 CanPetMove = False
                                 Exit Function
-                            ElseIf PetAlive(i) AndAlso (GetPlayerMap(i) = mapNum) AndAlso (GetPetX(i) = GetPetX(index)) AndAlso (GetPetY(i) = GetPetY(index) - 1) Then
+                            ElseIf PetAlive(i) And (GetPlayerMap(i) = mapNum) And (GetPetX(i) = GetPetX(index)) And (GetPetY(i) = GetPetY(index) - 1) Then
                                 CanPetMove = False
                                 Exit Function
                             End If
@@ -1065,7 +1066,7 @@ Module S_Pet
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).Num > 0) AndAlso (MapNPC(mapNum).Npc(i).X = GetPetX(index)) AndAlso (MapNPC(mapNum).Npc(i).Y = GetPetY(index) - 1) Then
+                        If (MapNPC(mapNum).Npc(i).Num > 0) And (MapNPC(mapNum).Npc(i).X = GetPetX(index)) And (MapNPC(mapNum).Npc(i).Y = GetPetY(index) - 1) Then
                             CanPetMove = False
                             Exit Function
                         End If
@@ -1081,23 +1082,23 @@ Module S_Pet
                 End If
 
             Case DirectionType.Down
-
                 ' Check to make sure not outside of boundries
                 If y < Map(mapNum).MaxY Then
                     n = Map(mapNum).Tile(x, y + 1).Type
+                    n2 = Map(mapNum).Tile(x, y + 1).Type2
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.NpcSpawn Then
+                    If n <> TileType.NpcSpawn And n2 <> TileType.NpcSpawn Then
                         CanPetMove = False
                         Exit Function
                     End If
 
                     For i = 1 To Socket.HighIndex()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = GetPetX(index)) AndAlso (GetPlayerY(i) = GetPetY(index) + 1) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = GetPetX(index)) And (GetPlayerY(i) = GetPetY(index) + 1) Then
                                 CanPetMove = False
                                 Exit Function
-                            ElseIf PetAlive(i) AndAlso (GetPlayerMap(i) = mapNum) AndAlso (GetPetX(i) = GetPetX(index)) AndAlso (GetPetY(i) = GetPetY(index) + 1) Then
+                            ElseIf PetAlive(i) And (GetPlayerMap(i) = mapNum) And (GetPetX(i) = GetPetX(index)) And (GetPetY(i) = GetPetY(index) + 1) Then
                                 CanPetMove = False
                                 Exit Function
                             End If
@@ -1106,7 +1107,7 @@ Module S_Pet
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).Num > 0) AndAlso (MapNPC(mapNum).Npc(i).X = GetPetX(index)) AndAlso (MapNPC(mapNum).Npc(i).Y = GetPetY(index) + 1) Then
+                        If (MapNPC(mapNum).Npc(i).Num > 0) And (MapNPC(mapNum).Npc(i).X = GetPetX(index)) And (MapNPC(mapNum).Npc(i).Y = GetPetY(index) + 1) Then
                             CanPetMove = False
                             Exit Function
                         End If
@@ -1126,19 +1127,20 @@ Module S_Pet
                 ' Check to make sure not outside of boundries
                 If x > 0 Then
                     n = Map(mapNum).Tile(x - 1, y).Type
+                    n2 = Map(mapNum).Tile(x - 1, y).Type2
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.NpcSpawn Then
+                    If n <> TileType.NpcSpawn And n2 <> TileType.NpcSpawn Then
                         CanPetMove = False
                         Exit Function
                     End If
 
                     For i = 1 To Socket.HighIndex()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = GetPetX(index) - 1) AndAlso (GetPlayerY(i) = GetPetY(index)) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = GetPetX(index) - 1) And (GetPlayerY(i) = GetPetY(index)) Then
                                 CanPetMove = False
                                 Exit Function
-                            ElseIf PetAlive(i) AndAlso (GetPlayerMap(i) = mapNum) AndAlso (GetPetX(i) = GetPetX(index) - 1) AndAlso (GetPetY(i) = GetPetY(index)) Then
+                            ElseIf PetAlive(i) And (GetPlayerMap(i) = mapNum) And (GetPetX(i) = GetPetX(index) - 1) And (GetPetY(i) = GetPetY(index)) Then
                                 CanPetMove = False
                                 Exit Function
                             End If
@@ -1147,7 +1149,7 @@ Module S_Pet
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).Num > 0) AndAlso (MapNPC(mapNum).Npc(i).X = GetPetX(index) - 1) AndAlso (MapNPC(mapNum).Npc(i).Y = GetPetY(index)) Then
+                        If (MapNPC(mapNum).Npc(i).Num > 0) And (MapNPC(mapNum).Npc(i).X = GetPetX(index) - 1) And (MapNPC(mapNum).Npc(i).Y = GetPetY(index)) Then
                             CanPetMove = False
                             Exit Function
                         End If
@@ -1163,23 +1165,23 @@ Module S_Pet
                 End If
 
             Case DirectionType.Right
-
                 ' Check to make sure not outside of boundries
                 If x < Map(mapNum).MaxX Then
                     n = Map(mapNum).Tile(x + 1, y).Type
+                    n2 = Map(mapNum).Tile(x + 1, y).Type2
 
                     ' Check to make sure that the tile is walkable
-                    If n <> TileType.NpcSpawn Then
+                    If n <> TileType.NpcSpawn And n2 <> TileType.NpcSpawn Then
                         CanPetMove = False
                         Exit Function
                     End If
 
                     For i = 1 To Socket.HighIndex()
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = GetPetX(index) + 1) AndAlso (GetPlayerY(i) = GetPetY(index)) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = GetPetX(index) + 1) And (GetPlayerY(i) = GetPetY(index)) Then
                                 CanPetMove = False
                                 Exit Function
-                            ElseIf PetAlive(i) AndAlso (GetPlayerMap(i) = mapNum) AndAlso (GetPetX(i) = GetPetX(index) + 1) AndAlso (GetPetY(i) = GetPetY(index)) Then
+                            ElseIf PetAlive(i) And (GetPlayerMap(i) = mapNum) And (GetPetX(i) = GetPetX(index) + 1) And (GetPetY(i) = GetPetY(index)) Then
                                 CanPetMove = False
                                 Exit Function
                             End If
@@ -1188,7 +1190,7 @@ Module S_Pet
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).Num > 0) AndAlso (MapNPC(mapNum).Npc(i).X = GetPetX(index) + 1) AndAlso (MapNPC(mapNum).Npc(i).Y = GetPetY(index)) Then
+                        If (MapNPC(mapNum).Npc(i).Num > 0) And (MapNPC(mapNum).Npc(i).X = GetPetX(index) + 1) And (MapNPC(mapNum).Npc(i).Y = GetPetY(index)) Then
                             CanPetMove = False
                             Exit Function
                         End If
@@ -1210,7 +1212,7 @@ Module S_Pet
     Sub PetDir(index As Integer, dir As Integer)
         Dim buffer As New ByteStream(4)
 
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right Then Exit Sub
+        If index <= 0 Or index > MAX_PLAYERS Or dir < DirectionType.Up Or dir > DirectionType.Right Then Exit Sub
 
         If TempPlayer(index).PetskillBuffer.Skill > 0 Then Exit Sub
 
@@ -1241,7 +1243,7 @@ Module S_Pet
                 Select Case i
                     Case 0
                         ' Up
-                        If Player(x).Pet.Y > targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y > targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Up) Then
                                 PetMove(x, mapNum, DirectionType.Up, MovementType.Walking)
                                 didwalk = True
@@ -1249,7 +1251,7 @@ Module S_Pet
                         End If
 
                         ' Down
-                        If Player(x).Pet.Y < targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y < targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Down) Then
                                 PetMove(x, mapNum, DirectionType.Down, MovementType.Walking)
                                 didwalk = True
@@ -1257,7 +1259,7 @@ Module S_Pet
                         End If
 
                         ' Left
-                        If Player(x).Pet.X > targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X > targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Left) Then
                                 PetMove(x, mapNum, DirectionType.Left, MovementType.Walking)
                                 didwalk = True
@@ -1265,7 +1267,7 @@ Module S_Pet
                         End If
 
                         ' Right
-                        If Player(x).Pet.X < targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X < targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Right) Then
                                 PetMove(x, mapNum, DirectionType.Right, MovementType.Walking)
                                 didwalk = True
@@ -1274,7 +1276,7 @@ Module S_Pet
                     Case 1
 
                         ' Right
-                        If Player(x).Pet.X < targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X < targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Right) Then
                                 PetMove(x, mapNum, DirectionType.Right, MovementType.Walking)
                                 didwalk = True
@@ -1282,7 +1284,7 @@ Module S_Pet
                         End If
 
                         ' Left
-                        If Player(x).Pet.X > targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X > targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Left) Then
                                 PetMove(x, mapNum, DirectionType.Left, MovementType.Walking)
                                 didwalk = True
@@ -1290,7 +1292,7 @@ Module S_Pet
                         End If
 
                         ' Down
-                        If Player(x).Pet.Y < targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y < targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Down) Then
                                 PetMove(x, mapNum, DirectionType.Down, MovementType.Walking)
                                 didwalk = True
@@ -1298,7 +1300,7 @@ Module S_Pet
                         End If
 
                         ' Up
-                        If Player(x).Pet.Y > targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y > targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Up) Then
                                 PetMove(x, mapNum, DirectionType.Up, MovementType.Walking)
                                 didwalk = True
@@ -1308,7 +1310,7 @@ Module S_Pet
                     Case 2
 
                         ' Down
-                        If Player(x).Pet.Y < targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y < targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Down) Then
                                 PetMove(x, mapNum, DirectionType.Down, MovementType.Walking)
                                 didwalk = True
@@ -1316,7 +1318,7 @@ Module S_Pet
                         End If
 
                         ' Up
-                        If Player(x).Pet.Y > targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y > targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Up) Then
                                 PetMove(x, mapNum, DirectionType.Up, MovementType.Walking)
                                 didwalk = True
@@ -1324,7 +1326,7 @@ Module S_Pet
                         End If
 
                         ' Right
-                        If Player(x).Pet.X < targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X < targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Right) Then
                                 PetMove(x, mapNum, DirectionType.Right, MovementType.Walking)
                                 didwalk = True
@@ -1332,7 +1334,7 @@ Module S_Pet
                         End If
 
                         ' Left
-                        If Player(x).Pet.X > targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X > targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Left) Then
                                 PetMove(x, mapNum, DirectionType.Left, MovementType.Walking)
                                 didwalk = True
@@ -1342,7 +1344,7 @@ Module S_Pet
                     Case 3
 
                         ' Left
-                        If Player(x).Pet.X > targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X > targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Left) Then
                                 Call PetMove(x, mapNum, DirectionType.Left, MovementType.Walking)
                                 didwalk = True
@@ -1350,7 +1352,7 @@ Module S_Pet
                         End If
 
                         ' Right
-                        If Player(x).Pet.X < targetX AndAlso Not didwalk Then
+                        If Player(x).Pet.X < targetX And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Right) Then
                                 PetMove(x, mapNum, DirectionType.Right, MovementType.Walking)
                                 didwalk = True
@@ -1358,7 +1360,7 @@ Module S_Pet
                         End If
 
                         ' Up
-                        If Player(x).Pet.Y > targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y > targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Up) Then
                                 PetMove(x, mapNum, DirectionType.Up, MovementType.Walking)
                                 didwalk = True
@@ -1366,7 +1368,7 @@ Module S_Pet
                         End If
 
                         ' Down
-                        If Player(x).Pet.Y < targetY AndAlso Not didwalk Then
+                        If Player(x).Pet.Y < targetY And Not didwalk Then
                             If CanPetMove(x, mapNum, DirectionType.Down) Then
                                 PetMove(x, mapNum, DirectionType.Down, MovementType.Walking)
                                 didwalk = True
@@ -1377,7 +1379,7 @@ Module S_Pet
 
                 ' Check if we can't move and if Target is behind something and if we can just switch dirs
                 If Not didwalk Then
-                    If GetPetX(x) - 1 = targetX AndAlso GetPetY(x) = targetY Then
+                    If GetPetX(x) - 1 = targetX And GetPetY(x) = targetY Then
 
                         If GetPetDir(x) <> DirectionType.Left Then
                             PetDir(x, DirectionType.Left)
@@ -1386,7 +1388,7 @@ Module S_Pet
                         didwalk = True
                     End If
 
-                    If GetPetX(x) + 1 = targetX AndAlso GetPetY(x) = targetY Then
+                    If GetPetX(x) + 1 = targetX And GetPetY(x) = targetY Then
 
                         If GetPetDir(x) <> DirectionType.Right Then
                             PetDir(x, DirectionType.Right)
@@ -1395,7 +1397,7 @@ Module S_Pet
                         didwalk = True
                     End If
 
-                    If GetPetX(x) = targetX AndAlso GetPetY(x) - 1 = targetY Then
+                    If GetPetX(x) = targetX And GetPetY(x) - 1 = targetY Then
 
                         If GetPetDir(x) <> DirectionType.Up Then
                             PetDir(x, DirectionType.Up)
@@ -1404,7 +1406,7 @@ Module S_Pet
                         didwalk = True
                     End If
 
-                    If GetPetX(x) = targetX AndAlso GetPetY(x) + 1 = targetY Then
+                    If GetPetX(x) = targetX And GetPetY(x) + 1 = targetY Then
 
                         If GetPetDir(x) <> DirectionType.Down Then
                             PetDir(x, DirectionType.Down)
@@ -1521,7 +1523,7 @@ Module S_Pet
             For j = 0 To Map(mapNum).MaxY
                 For i = 0 To Map(mapNum).MaxX
 
-                    'If j = 10 AndAlso i = 0 Then MsgBox "hi!"
+                    'If j = 10 And i = 0 Then MsgBox "hi!"
                     'If they are to be extended, the pointer TIM is on them
                     If pos(i, j) = 100 + tim Then
 
@@ -1608,7 +1610,7 @@ Module S_Pet
         'We are working backwards to find ONE of the shortest ways back to Start.
         'So we repeat the loop until the LastX and LastY arent in start. Look in the code to see
         'how LastX and LasY change
-        Do While lastX <> sX OrElse lastY <> sY
+        Do While lastX <> sX Or lastY <> sY
             'We decrease tim by one, and then we are finding any adjacent square to the final one, that
             'has that value. So lets say the tim would be 5, because it takes 5 steps to get to the target.
             'Now everytime we decrease that, so we make it 4, and we look for any adjacent square that has
@@ -1680,7 +1682,7 @@ Module S_Pet
         GetPetDamage = 0
 
         ' Check for subscript out of range
-        If IsPlaying(index) = False OrElse index < 0 OrElse index > MAX_PLAYERS OrElse Not PetAlive(index) Then
+        If IsPlaying(index) = False Or index < 0 Or index > MAX_PLAYERS Or Not PetAlive(index) Then
             Exit Function
         End If
 
@@ -1706,7 +1708,7 @@ Module S_Pet
     Function IsPetByPlayer(index As Integer) As Boolean
         Dim x As Integer, y As Integer, x1 As Integer, y1 As Integer
 
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse Not PetAlive(index) Then Exit Function
+        If index <= 0 Or index > MAX_PLAYERS Or Not PetAlive(index) Then Exit Function
 
         IsPetByPlayer = False
 
@@ -1716,11 +1718,11 @@ Module S_Pet
         y1 = GetPetY(index)
 
         If x = x1 Then
-            If y = y1 + 1 OrElse y = y1 - 1 Then
+            If y = y1 + 1 Or y = y1 - 1 Then
                 IsPetByPlayer = True
             End If
         ElseIf y = y1 Then
-            If x = x1 - 1 OrElse x = x1 + 1 Then
+            If x = x1 - 1 Or x = x1 + 1 Then
                 IsPetByPlayer = True
             End If
         End If
@@ -1730,7 +1732,7 @@ Module S_Pet
     Function GetPetVitalRegen(index As Integer, vital As VitalType) As Integer
         Dim i As Integer
 
-        If index <= 0 OrElse index > MAX_PLAYERS OrElse Not PetAlive(index) Then
+        If index <= 0 Or index > MAX_PLAYERS Or Not PetAlive(index) Then
             GetPetVitalRegen = 0
             Exit Function
         End If
@@ -1756,7 +1758,7 @@ Module S_Pet
             expRollover = GetPetExp(index) - GetPetNextLevel(index)
 
             ' can level up?
-            If GetPetLevel(index) < 99 AndAlso GetPetLevel(index) < Pet(Player(index).Pet.Num).MaxLevel Then
+            If GetPetLevel(index) < 99 And GetPetLevel(index) < Pet(Player(index).Pet.Num).MaxLevel Then
                 SetPetLevel(index, GetPetLevel(index) + 1)
             End If
 
@@ -1799,7 +1801,7 @@ Module S_Pet
         'Check for no projectile, if so just overwrite the first slot
         If projectileSlot = 0 Then projectileSlot = 1
 
-        If Skillnum <= 0 OrElse Skillnum > MAX_SKILLS Then Exit Sub
+        If Skillnum <= 0 Or Skillnum > MAX_SKILLS Then Exit Sub
 
         projectileNum = Skill(Skillnum).Projectile
 
@@ -1880,7 +1882,7 @@ Module S_Pet
         Dim npcY As Integer
         Dim attackspeed As Integer
 
-        If IsPlaying(attacker) = False OrElse mapnpcnum <= 0 OrElse mapnpcnum > MAX_MAP_NPCS OrElse Not PetAlive(attacker) Then
+        If IsPlaying(attacker) = False Or mapnpcnum <= 0 Or mapnpcnum > MAX_MAP_NPCS Or Not PetAlive(attacker) Then
             Exit Function
         End If
 
@@ -1896,11 +1898,11 @@ Module S_Pet
         ' Make sure they are on the same map
         If IsPlaying(attacker) Then
 
-            If TempPlayer(attacker).PetskillBuffer.Skill > 0 AndAlso isSkill = False Then Exit Function
+            If TempPlayer(attacker).PetskillBuffer.Skill > 0 And isSkill = False Then Exit Function
 
             ' exit out early
-            If isSkill AndAlso npcnum > 0 Then
-                If NPC(npcnum).Behaviour <> NpcBehavior.Friendly AndAlso NPC(npcnum).Behaviour <> NpcBehavior.ShopKeeper Then
+            If isSkill And npcnum > 0 Then
+                If NPC(npcnum).Behaviour <> NpcBehavior.Friendly And NPC(npcnum).Behaviour <> NpcBehavior.ShopKeeper Then
                     CanPetAttackNpc = True
                     Exit Function
                 End If
@@ -1908,7 +1910,7 @@ Module S_Pet
 
             attackspeed = 1000 'Pet cannot wield a weapon
 
-            If npcnum > 0 AndAlso GetTimeMs() > TempPlayer(attacker).PetAttackTimer + attackspeed Then
+            If npcnum > 0 And GetTimeMs() > TempPlayer(attacker).PetAttackTimer + attackspeed Then
 
                 ' Check if at same coordinates
                 Select Case GetPetDir(attacker)
@@ -1931,8 +1933,8 @@ Module S_Pet
 
                 End Select
 
-                If npcX = GetPetX(attacker) AndAlso npcY = GetPetY(attacker) Then
-                    If NPC(npcnum).Behaviour <> NpcBehavior.Friendly AndAlso NPC(npcnum).Behaviour <> NpcBehavior.ShopKeeper Then
+                If npcX = GetPetX(attacker) And npcY = GetPetY(attacker) Then
+                    If NPC(npcnum).Behaviour <> NpcBehavior.Friendly And NPC(npcnum).Behaviour <> NpcBehavior.ShopKeeper Then
                         CanPetAttackNpc = True
                     Else
                         CanPetAttackNpc = False
@@ -1948,7 +1950,7 @@ Module S_Pet
         Dim i As Integer, mapNum As Integer, npcnum As Integer
 
         ' Check for subscript out of range
-        If IsPlaying(attacker) = False OrElse mapnpcnum <= 0 OrElse mapnpcnum > MAX_MAP_NPCS OrElse damage < 0 OrElse Not PetAlive(attacker) Then
+        If IsPlaying(attacker) = False Or mapnpcnum <= 0 Or mapnpcnum > MAX_MAP_NPCS Or damage < 0 Or Not PetAlive(attacker) Then
             Exit Sub
         End If
 
@@ -2140,7 +2142,7 @@ Module S_Pet
 
         CanNpcAttackPet = False
 
-        If mapNpcNum <= 0 OrElse mapNpcNum > MAX_MAP_NPCS OrElse Not IsPlaying(index) OrElse Not PetAlive(index) Then
+        If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Not IsPlaying(index) Or Not PetAlive(index) Then
             Exit Function
         End If
 
@@ -2162,23 +2164,23 @@ Module S_Pet
         MapNPC(mapNum).Npc(mapNpcNum).AttackTimer = GetTimeMs()
 
         ' Make sure they are on the same map
-        If IsPlaying(index) AndAlso PetAlive(index) Then
+        If IsPlaying(index) And PetAlive(index) Then
             If npcnum > 0 Then
 
                 ' Check if at same coordinates
-                If (GetPetY(index) + 1 = MapNPC(mapNum).Npc(mapNpcNum).Y) AndAlso (GetPetX(index) = MapNPC(mapNum).Npc(mapNpcNum).X) Then
+                If (GetPetY(index) + 1 = MapNPC(mapNum).Npc(mapNpcNum).Y) And (GetPetX(index) = MapNPC(mapNum).Npc(mapNpcNum).X) Then
                     CanNpcAttackPet = True
                 Else
 
-                    If (GetPetY(index) - 1 = MapNPC(mapNum).Npc(mapNpcNum).Y) AndAlso (GetPetX(index) = MapNPC(mapNum).Npc(mapNpcNum).X) Then
+                    If (GetPetY(index) - 1 = MapNPC(mapNum).Npc(mapNpcNum).Y) And (GetPetX(index) = MapNPC(mapNum).Npc(mapNpcNum).X) Then
                         CanNpcAttackPet = True
                     Else
 
-                        If (GetPetY(index) = MapNPC(mapNum).Npc(mapNpcNum).Y) AndAlso (GetPetX(index) + 1 = MapNPC(mapNum).Npc(mapNpcNum).X) Then
+                        If (GetPetY(index) = MapNPC(mapNum).Npc(mapNpcNum).Y) And (GetPetX(index) + 1 = MapNPC(mapNum).Npc(mapNpcNum).X) Then
                             CanNpcAttackPet = True
                         Else
 
-                            If (GetPetY(index) = MapNPC(mapNum).Npc(mapNpcNum).Y) AndAlso (GetPetX(index) - 1 = MapNPC(mapNum).Npc(mapNpcNum).X) Then
+                            If (GetPetY(index) = MapNPC(mapNum).Npc(mapNpcNum).Y) And (GetPetX(index) - 1 = MapNPC(mapNum).Npc(mapNpcNum).X) Then
                                 CanNpcAttackPet = True
                             End If
                         End If
@@ -2193,7 +2195,7 @@ Module S_Pet
         Dim name As String, mapNum As Integer
 
         ' Check for subscript out of range
-        If mapnpcnum <= 0 OrElse mapnpcnum > MAX_MAP_NPCS OrElse IsPlaying(victim) = False OrElse Not PetAlive(victim) Then
+        If mapnpcnum <= 0 Or mapnpcnum > MAX_MAP_NPCS Or IsPlaying(victim) = False Or Not PetAlive(victim) Then
             Exit Sub
         End If
 
@@ -2263,22 +2265,22 @@ Module S_Pet
         ' Make sure we dont attack the player if they are switching maps
         If TempPlayer(victim).GettingMap = 1 Then Exit Function
 
-        If TempPlayer(attacker).PetskillBuffer.Skill > 0 AndAlso isSkill = False Then Exit Function
+        If TempPlayer(attacker).PetskillBuffer.Skill > 0 And isSkill = False Then Exit Function
 
         If Not isSkill Then
             ' Check if at same coordinates
             Select Case GetPetDir(attacker)
                 Case DirectionType.Up
-                    If Not (GetPlayerY(victim) + 1 = GetPetY(attacker)) AndAlso (GetPlayerX(victim) = GetPetX(attacker)) Then Exit Function
+                    If Not (GetPlayerY(victim) + 1 = GetPetY(attacker)) And (GetPlayerX(victim) = GetPetX(attacker)) Then Exit Function
 
                 Case DirectionType.Down
-                    If Not (GetPlayerY(victim) - 1 = GetPetY(attacker)) AndAlso (GetPlayerX(victim) = GetPetX(attacker)) Then Exit Function
+                    If Not (GetPlayerY(victim) - 1 = GetPetY(attacker)) And (GetPlayerX(victim) = GetPetX(attacker)) Then Exit Function
 
                 Case DirectionType.Left
-                    If Not (GetPlayerY(victim) = GetPetY(attacker)) AndAlso (GetPlayerX(victim) + 1 = GetPetX(attacker)) Then Exit Function
+                    If Not (GetPlayerY(victim) = GetPetY(attacker)) And (GetPlayerX(victim) + 1 = GetPetX(attacker)) Then Exit Function
 
                 Case DirectionType.Right
-                    If Not (GetPlayerY(victim) = GetPetY(attacker)) AndAlso (GetPlayerX(victim) - 1 = GetPetX(attacker)) Then Exit Function
+                    If Not (GetPlayerY(victim) = GetPetY(attacker)) And (GetPlayerX(victim) - 1 = GetPetX(attacker)) Then Exit Function
 
                 Case Else
                     Exit Function
@@ -2310,7 +2312,7 @@ Module S_Pet
         End If
 
         ' Don't attack a party member
-        If TempPlayer(attacker).InParty > 0 AndAlso TempPlayer(victim).InParty > 0 Then
+        If TempPlayer(attacker).InParty > 0 And TempPlayer(victim).InParty > 0 Then
             If TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
                 PlayerMsg(attacker, "You can't attack another party member!", ColorType.Yellow)
                 Exit Function
@@ -2326,7 +2328,7 @@ Module S_Pet
 
         ' Check for subscript out of range
 
-        If IsPlaying(attacker) = False OrElse IsPlaying(victim) = False OrElse damage < 0 OrElse PetAlive(attacker) = False Then
+        If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or damage < 0 Or PetAlive(attacker) = False Then
             Exit Sub
         End If
 
@@ -2377,7 +2379,7 @@ Module S_Pet
             ' purge target info of anyone who targetted dead guy
             For i = 1 To Socket.HighIndex
 
-                If IsPlaying(i) AndAlso Socket.IsConnected(i) Then
+                If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(attacker) Then
                         If TempPlayer(i).TargetType = TargetType.Player Then
                             If TempPlayer(i).Target = victim Then
@@ -2504,7 +2506,7 @@ Module S_Pet
         End If
 
         ' Check for subscript out of range
-        If Not IsPlaying(victim) OrElse Not IsPlaying(attacker) Then Exit Function
+        If Not IsPlaying(victim) Or Not IsPlaying(attacker) Then Exit Function
 
         ' Make sure they are on the same map
         If Not GetPlayerMap(attacker) = GetPlayerMap(victim) Then Exit Function
@@ -2512,23 +2514,23 @@ Module S_Pet
         ' Make sure we dont attack the player if they are switching maps
         If TempPlayer(victim).GettingMap = 1 Then Exit Function
 
-        If TempPlayer(attacker).PetskillBuffer.Skill > 0 AndAlso isSkill = False Then Exit Function
+        If TempPlayer(attacker).PetskillBuffer.Skill > 0 And isSkill = False Then Exit Function
 
         If Not isSkill Then
 
             ' Check if at same coordinates
             Select Case GetPetDir(attacker)
                 Case DirectionType.Up
-                    If Not ((GetPetY(victim) - 1 = GetPetY(attacker)) AndAlso (GetPetX(victim) = GetPetX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) - 1 = GetPetY(attacker)) And (GetPetX(victim) = GetPetX(attacker))) Then Exit Function
 
                 Case DirectionType.Down
-                    If Not ((GetPetY(victim) + 1 = GetPetY(attacker)) AndAlso (GetPetX(victim) = GetPetX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) + 1 = GetPetY(attacker)) And (GetPetX(victim) = GetPetX(attacker))) Then Exit Function
 
                 Case DirectionType.Left
-                    If Not ((GetPetY(victim) = GetPetY(attacker)) AndAlso (GetPetX(victim) + 1 = GetPetX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) = GetPetY(attacker)) And (GetPetX(victim) + 1 = GetPetX(attacker))) Then Exit Function
 
                 Case DirectionType.Right
-                    If Not ((GetPetY(victim) = GetPetY(attacker)) AndAlso (GetPetX(victim) - 1 = GetPetX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) = GetPetY(attacker)) And (GetPetX(victim) - 1 = GetPetX(attacker))) Then Exit Function
 
                 Case Else
                     Exit Function
@@ -2560,16 +2562,16 @@ Module S_Pet
         End If
 
         ' Don't attack a party member
-        If TempPlayer(attacker).InParty > 0 AndAlso TempPlayer(victim).InParty > 0 Then
+        If TempPlayer(attacker).InParty > 0 And TempPlayer(victim).InParty > 0 Then
             If TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
                 PlayerMsg(attacker, "You can't attack another party member!", ColorType.BrightRed)
                 Exit Function
             End If
         End If
 
-        If TempPlayer(attacker).InParty > 0 AndAlso TempPlayer(victim).InParty > 0 AndAlso TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
+        If TempPlayer(attacker).InParty > 0 And TempPlayer(victim).InParty > 0 And TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
             If isSkill > 0 Then
-                If Skill(isSkill).Type = SkillType.HealMp OrElse Skill(isSkill).Type = SkillType.HealHp Then
+                If Skill(isSkill).Type = SkillType.HealMp Or Skill(isSkill).Type = SkillType.HealHp Then
                     'Carry On :D
                 Else
                     Exit Function
@@ -2588,7 +2590,7 @@ Module S_Pet
 
         ' Check for subscript out of range
 
-        If IsPlaying(attacker) = False OrElse IsPlaying(victim) = False OrElse damage < 0 OrElse PetAlive(attacker) = False OrElse PetAlive(victim) = False Then
+        If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or damage < 0 Or PetAlive(attacker) = False Or PetAlive(victim) = False Then
             Exit Sub
         End If
 
@@ -2610,7 +2612,7 @@ Module S_Pet
             ' purge target info of anyone who targetted dead guy
             For i = 1 To Socket.HighIndex
 
-                If IsPlaying(i) AndAlso Socket.IsConnected(i) Then
+                If IsPlaying(i) And Socket.IsConnected(i) Then
                     If GetPlayerMap(i) = GetPlayerMap(attacker) Then
                         If TempPlayer(i).TargetType = TargetType.Player Then
                             If TempPlayer(i).Target = victim Then
@@ -2651,7 +2653,7 @@ Module S_Pet
             SendPetVital(victim, VitalType.HP)
 
             'Set pet to begin attacking the other pet if it isn't dead or dosent have another target
-            If TempPlayer(victim).PetTarget < 0 AndAlso TempPlayer(victim).PetBehavior <> PetBehaviourGoto Then
+            If TempPlayer(victim).PetTarget < 0 And TempPlayer(victim).PetBehavior <> PetBehaviourGoto Then
                 TempPlayer(victim).PetTarget = attacker
                 TempPlayer(victim).PetTargetType = TargetType.Pet
             End If
@@ -2686,7 +2688,7 @@ Module S_Pet
 
         If GetPlayerMap(index) <> GetPlayerMap(victim) Then Exit Sub
 
-        If Not PetAlive(index) OrElse Not PetAlive(victim) Then Exit Sub
+        If Not PetAlive(index) Or Not PetAlive(victim) Then Exit Sub
 
         ' Can the npc attack the player?
         If CanPetAttackPet(index, victim) Then
@@ -2741,12 +2743,12 @@ Module S_Pet
 
         ' Prevent subscript out of range
 
-        If skillSlot < 0 OrElse skillSlot > 4 Then Exit Sub
+        If skillSlot < 0 Or skillSlot > 4 Then Exit Sub
 
         skillnum = Player(index).Pet.Skill(skillSlot)
         mapNum = GetPlayerMap(index)
 
-        If skillnum <= 0 OrElse skillnum > MAX_SKILLS Then Exit Sub
+        If skillnum <= 0 Or skillnum > MAX_SKILLS Then Exit Sub
 
         ' see if cooldown has finished
         If TempPlayer(index).PetSkillCd(skillSlot) > GetTimeMs() Then
@@ -2810,7 +2812,7 @@ Module S_Pet
 
                 ' check if have target
                 If Not target > 0 Then
-                    If skillCastType = SkillType.HealHp OrElse skillCastType = SkillType.HealMp Then
+                    If skillCastType = SkillType.HealHp Or skillCastType = SkillType.HealMp Then
                         target = index
                         targetTypes = TargetType.Pet
                     Else
@@ -2825,7 +2827,7 @@ Module S_Pet
                         PlayerMsg(index, "Target not in range of " & Trim$(GetPetName(index)) & ".", ColorType.Yellow)
                     Else
                         ' go through Skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
                             If CanPetAttackPlayer(index, target, True) Then
@@ -2842,7 +2844,7 @@ Module S_Pet
                         hasBuffered = False
                     Else
                         ' go through Skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
                             If CanPetAttackNpc(index, target, True) Then
@@ -2860,7 +2862,7 @@ Module S_Pet
                         hasBuffered = False
                     Else
                         ' go through Skill types
-                        If Skill(skillnum).Type <> SkillType.DamageHp AndAlso Skill(skillnum).Type <> SkillType.DamageMp Then
+                        If Skill(skillnum).Type <> SkillType.DamageHp And Skill(skillnum).Type <> SkillType.DamageMp Then
                             hasBuffered = True
                         Else
                             If CanPetAttackPet(index, target, skillnum) Then
@@ -2896,7 +2898,7 @@ Module S_Pet
         didCast = False
 
         ' Prevent subscript out of range
-        If skillslot < 0 OrElse skillslot > 4 Then Exit Sub
+        If skillslot < 0 Or skillslot > 4 Then Exit Sub
 
         skillnum = Player(index).Pet.Skill(skillslot)
         mapNum = GetPlayerMap(index)
@@ -2992,10 +2994,10 @@ Module S_Pet
                         didCast = True
 
                         For i = 1 To Socket.HighIndex()
-                            If IsPlaying(i) AndAlso i <> index Then
+                            If IsPlaying(i) And i <> index Then
                                 If GetPlayerMap(i) = GetPlayerMap(index) Then
                                     If IsInRange(aoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
-                                        If CanPetAttackPlayer(index, i, True) AndAlso index <> target Then
+                                        If CanPetAttackPlayer(index, i, True) And index <> target Then
                                             SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, TargetType.Player, i)
                                             PetAttackPlayer(index, i, vital, skillnum)
                                         End If
@@ -3015,7 +3017,7 @@ Module S_Pet
                         Next
 
                         For i = 1 To MAX_MAP_NPCS
-                            If MapNPC(mapNum).Npc(i).Num > 0 AndAlso MapNPC(mapNum).Npc(i).Vital(Core.VitalType.HP) > 0 Then
+                            If MapNPC(mapNum).Npc(i).Num > 0 And MapNPC(mapNum).Npc(i).Vital(Core.VitalType.HP) > 0 Then
                                 If IsInRange(aoE, x, y, MapNPC(mapNum).Npc(i).X, MapNPC(mapNum).Npc(i).Y) Then
                                     If CanPetAttackNpc(index, i, True) Then
                                         SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, TargetType.Npc, i)
@@ -3041,7 +3043,7 @@ Module S_Pet
                         didCast = True
 
                         For i = 1 To Socket.HighIndex()
-                            If IsPlaying(i) AndAlso GetPlayerMap(i) = GetPlayerMap(index) Then
+                            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(index) Then
                                 If IsInRange(aoE, x, y, GetPlayerX(i), GetPlayerY(i)) Then
                                     SkillPlayer_Effect(vitalType, increment, i, vital, skillnum)
                                 End If
@@ -3082,7 +3084,7 @@ Module S_Pet
                     Case SkillType.DamageHp
 
                         If targetTypes = TargetType.Player Then
-                            If CanPetAttackPlayer(index, target, True) AndAlso index <> target Then
+                            If CanPetAttackPlayer(index, target, True) And index <> target Then
                                 If vital > 0 Then
                                     SendAnimation(mapNum, Skill(skillnum).SkillAnim, 0, 0, TargetType.Player, target)
                                     PetAttackPlayer(index, target, vital, skillnum)
@@ -3136,7 +3138,7 @@ Module S_Pet
                                     SkillNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
                                 End If
                             Else
-                                If Skill(skillnum).Type = SkillType.HealHp OrElse Skill(skillnum).Type = SkillType.HealMp Then
+                                If Skill(skillnum).Type = SkillType.HealHp Or Skill(skillnum).Type = SkillType.HealMp Then
                                     SkillPet_Effect(vitalType, increment, index, vital, skillnum)
                                 Else
                                     SkillNpc_Effect(vitalType, increment, target, vital, skillnum, mapNum)
@@ -3287,7 +3289,7 @@ Module S_Pet
 
         With TempPlayer(index).PetDoT(dotNum)
 
-            If .Used AndAlso .Skill > 0 Then
+            If .Used And .Skill > 0 Then
                 ' time to tick?
                 If GetTimeMs() > .Timer + (Skill(.Skill).Interval * 1000) Then
                     If .AttackerType = TargetType.Pet Then
@@ -3307,7 +3309,7 @@ Module S_Pet
                     .Timer = GetTimeMs()
 
                     ' check if DoT is still active - if player died it'll have been purged
-                    If .Used AndAlso .Skill > 0 Then
+                    If .Used And .Skill > 0 Then
                         ' destroy DoT if finished
                         If GetTimeMs() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
                             .Used = False
@@ -3327,7 +3329,7 @@ Module S_Pet
 
         With TempPlayer(index).PetHoT(hotNum)
 
-            If .Used AndAlso .Skill > 0 Then
+            If .Used And .Skill > 0 Then
                 ' time to tick?
                 If GetTimeMs() > .Timer + (Skill(.Skill).Interval * 1000) Then
                     SendActionMsg(GetPlayerMap(index), "+" & Skill(.Skill).Vital, ColorType.BrightGreen, ActionMsgType.Scroll, Player(index).Pet.X * 32, Player(index).Pet.Y * 32,)
@@ -3342,7 +3344,7 @@ Module S_Pet
                     .Timer = GetTimeMs()
 
                     ' check if DoT is still active - if player died it'll have been purged
-                    If .Used AndAlso .Skill > 0 Then
+                    If .Used And .Skill > 0 Then
                         ' destroy hoT if finished
                         If GetTimeMs() - .StartTime >= (Skill(.Skill).Duration * 1000) Then
                             .Used = False
@@ -3422,16 +3424,16 @@ Module S_Pet
             Select Case GetPlayerDir(attacker)
 
                 Case DirectionType.Up
-                    If Not ((GetPetY(victim) + 1 = GetPlayerY(attacker)) AndAlso (GetPetX(victim) = GetPlayerX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) + 1 = GetPlayerY(attacker)) And (GetPetX(victim) = GetPlayerX(attacker))) Then Exit Function
 
                 Case DirectionType.Down
-                    If Not ((GetPetY(victim) - 1 = GetPlayerY(attacker)) AndAlso (GetPetX(victim) = GetPlayerX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) - 1 = GetPlayerY(attacker)) And (GetPetX(victim) = GetPlayerX(attacker))) Then Exit Function
 
                 Case DirectionType.Left
-                    If Not ((GetPetY(victim) = GetPlayerY(attacker)) AndAlso (GetPetX(victim) + 1 = GetPlayerX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) = GetPlayerY(attacker)) And (GetPetX(victim) + 1 = GetPlayerX(attacker))) Then Exit Function
 
                 Case DirectionType.Right
-                    If Not ((GetPetY(victim) = GetPlayerY(attacker)) AndAlso (GetPetX(victim) - 1 = GetPlayerX(attacker))) Then Exit Function
+                    If Not ((GetPetY(victim) = GetPlayerY(attacker)) And (GetPetX(victim) - 1 = GetPlayerX(attacker))) Then Exit Function
 
                 Case Else
                     Exit Function
@@ -3464,16 +3466,16 @@ Module S_Pet
         End If
 
         ' Don't attack a party member
-        If TempPlayer(attacker).InParty > 0 AndAlso TempPlayer(victim).InParty > 0 Then
+        If TempPlayer(attacker).InParty > 0 And TempPlayer(victim).InParty > 0 Then
             If TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
                 PlayerMsg(attacker, "You can't attack another party member!", ColorType.BrightRed)
                 Exit Function
             End If
         End If
 
-        If TempPlayer(attacker).InParty > 0 AndAlso TempPlayer(victim).InParty > 0 AndAlso TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
+        If TempPlayer(attacker).InParty > 0 And TempPlayer(victim).InParty > 0 And TempPlayer(attacker).InParty = TempPlayer(victim).InParty Then
             If isSkill > 0 Then
-                If Skill(isSkill).Type = SkillType.HealMp OrElse Skill(isSkill).Type = SkillType.HealHp Then
+                If Skill(isSkill).Type = SkillType.HealMp Or Skill(isSkill).Type = SkillType.HealHp Then
                     'Carry On :D
                 Else
                     Exit Function
@@ -3492,7 +3494,7 @@ Module S_Pet
 
         ' Check for subscript out of range
 
-        If IsPlaying(attacker) = False OrElse IsPlaying(victim) = False OrElse damage < 0 OrElse Not PetAlive(victim) Then Exit Sub
+        If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or damage < 0 Or Not PetAlive(victim) Then Exit Sub
 
         If GetPlayerEquipment(attacker, EquipmentType.Weapon) > 0 Then
             n = GetPlayerEquipment(attacker, EquipmentType.Weapon)
@@ -3534,8 +3536,8 @@ Module S_Pet
 
             ' purge target info of anyone who targetted dead guy
             For i = 1 To Socket.HighIndex()
-                If IsPlaying(i) AndAlso Socket.IsConnected(i) AndAlso GetPlayerMap(i) = GetPlayerMap(attacker) Then
-                    If TempPlayer(i).Target = TargetType.Pet AndAlso TempPlayer(i).Target = victim Then
+                If IsPlaying(i) And Socket.IsConnected(i) And GetPlayerMap(i) = GetPlayerMap(attacker) Then
+                    If TempPlayer(i).Target = TargetType.Pet And TempPlayer(i).Target = victim Then
                         TempPlayer(i).Target = 0
                         TempPlayer(i).TargetType = 0
                         SendTarget(i, 0, 0)
@@ -3551,7 +3553,7 @@ Module S_Pet
             SendPetVital(victim, VitalType.HP)
 
             'Set pet to begin attacking the other pet if it isn't dead or dosent have another target
-            If TempPlayer(victim).PetTarget < 0 AndAlso TempPlayer(victim).PetBehavior <> PetBehaviourGoto Then
+            If TempPlayer(victim).PetTarget < 0 And TempPlayer(victim).PetBehavior <> PetBehaviourGoto Then
                 TempPlayer(victim).PetTarget = attacker
                 TempPlayer(victim).PetTargetType = TargetType.Player
             End If

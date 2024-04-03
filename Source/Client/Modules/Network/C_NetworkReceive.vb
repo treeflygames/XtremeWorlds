@@ -34,7 +34,8 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SMapNpcUpdate) = AddressOf Packet_MapNPCUpdate
         Socket.PacketId(ServerPackets.SMapDone) = AddressOf Packet_MapDone
         Socket.PacketId(ServerPackets.SGlobalMsg) = AddressOf Packet_GlobalMessage
-        Socket.PacketId(ServerPackets.SPlayerMsg) = AddressOf Packet_PlayerMessage
+        Socket.PacketId(ServerPackets.SAdminMsg) = AddressOf Packet_AdminMsg
+        Socket.PacketId(ServerPackets.SPlayerMsg) = AddressOf Packet_PlayerMsg
         Socket.PacketId(ServerPackets.SMapMsg) = AddressOf Packet_MapMessage
         Socket.PacketId(ServerPackets.SSpawnItem) = AddressOf Packet_SpawnItem
         Socket.PacketId(ServerPackets.SUpdateItem) = AddressOf Packet_UpdateItem
@@ -479,6 +480,28 @@ Module C_NetworkReceive
 
     End Sub
 
+    Private Sub Packet_AdminMsg(ByRef data() As Byte)
+        Dim msg As String
+        Dim buffer As New ByteStream(data)
+
+        msg = Trim(buffer.ReadString)
+
+        buffer.Dispose()
+
+        AddText(msg, ColorType.BrightCyan, , ChatChannel.Broadcast)
+    End Sub
+
+    Private Sub Packet_PlayerMsg(ByRef data() As Byte)
+        Dim msg As String
+        Dim buffer As New ByteStream(data)
+
+        msg = Trim(buffer.ReadString)
+
+        buffer.Dispose()
+
+        AddText(msg, ColorType.Pink, , ChatChannel.Player)
+    End Sub
+
     Private Sub Packet_SpawnItem(ByRef data() As Byte)
         Dim i As Integer
         Dim buffer As New ByteStream(data)
@@ -493,19 +516,6 @@ Module C_NetworkReceive
         End With
 
         buffer.Dispose()
-    End Sub
-
-    Private Sub Packet_PlayerMessage(ByRef data() As Byte)
-        Dim msg As String, Color As Integer
-        Dim buffer As New ByteStream(data)
-
-        msg = Trim(buffer.ReadString)
-
-        Color = buffer.ReadInt32
-
-        buffer.Dispose()
-
-        AddText(msg, Color, , ChatChannel.Whisper)
     End Sub
 
     Private Sub Packet_SpawnNPC(ByRef data() As Byte)
@@ -953,7 +963,6 @@ Module C_NetworkReceive
                 Shop(n).TradeItem(z).ItemValue = buffer.ReadInt32()
             Next
 
-            If Shop(n).Name Is Nothing Then Shop(n).Name = ""
         Next
 
         i = 0
@@ -995,7 +1004,6 @@ Module C_NetworkReceive
             Skill(n).KnockBack = buffer.ReadInt32()
             Skill(n).KnockBackTiles = buffer.ReadInt32()
 
-            If Skill(n).Name Is Nothing Then Skill(n).Name = ""
         Next
 
         i = 0
@@ -1022,10 +1030,6 @@ Module C_NetworkReceive
             Resource(n).LvlRequired = buffer.ReadInt32()
             Resource(n).ToolRequired = buffer.ReadInt32()
             Resource(n).Walkthrough = buffer.ReadInt32()
-
-            If Resource(n).Name Is Nothing Then Resource(n).Name = ""
-            If Resource(n).EmptyMessage Is Nothing Then Resource(n).EmptyMessage = ""
-            If Resource(n).SuccessMessage Is Nothing Then Resource(n).SuccessMessage = ""
         Next
 
         i = 0
@@ -1038,6 +1042,7 @@ Module C_NetworkReceive
 
     Private Sub Packet_Target(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
+
         MyTarget = buffer.ReadInt32
         MyTargetType = buffer.ReadInt32
 

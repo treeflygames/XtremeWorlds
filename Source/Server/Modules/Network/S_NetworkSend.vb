@@ -532,6 +532,9 @@ Module S_NetworkSend
                     buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data1)
                     buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data2)
                     buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data3)
+                    buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data1_2)
+                    buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data2_2)
+                    buffer.WriteInt32(Map(mapNum).Tile(X, Y).Data3_2)
                     buffer.WriteInt32(Map(mapNum).Tile(X, Y).DirBlock)
                     For i = 1 To LayerType.Count - 1
                         buffer.WriteInt32(Map(mapNum).Tile(X, Y).Layer(i).Tileset)
@@ -540,7 +543,7 @@ Module S_NetworkSend
                         buffer.WriteInt32(Map(mapNum).Tile(X, Y).Layer(i).AutoTile)
                     Next
                     buffer.WriteInt32(Map(mapNum).Tile(X, Y).Type)
-
+                    buffer.WriteInt32(Map(mapNum).Tile(X, Y).Type2)
                 Next
             Next
 
@@ -783,6 +786,21 @@ Module S_NetworkSend
         buffer.Dispose()
     End Sub
 
+    Sub AdminMsg(mapNum As Integer, Msg As String, Color As Byte)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ServerPackets.SAdminMsg)
+        buffer.WriteString((Msg.Trim))
+
+        For i = 1 To Socket.HighIndex
+            If GetPlayerAccess(i) >= AdminType.Moderator Then
+                SendDataTo(i, buffer.Data, buffer.Head)
+            End If
+        Next
+
+        buffer.Dispose()
+    End Sub
+
     Sub SendActionMsg(mapNum As Integer, Message As String, Color As Integer, MsgType As Integer, X As Integer, Y As Integer, Optional PlayerOnlyNum As Integer = 0)
         Dim buffer As New ByteStream(4)
 
@@ -923,7 +941,7 @@ Module S_NetworkSend
 
         buffer.WriteInt32(ServerPackets.STrade)
         buffer.WriteInt32(TradeTarget)
-        buffer.WriteString(GetPlayerName(TradeTarget).Trim)
+
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
         buffer.Dispose()
@@ -949,7 +967,7 @@ Module S_NetworkSend
                 ' add total worth
                 If TempPlayer(index).TradeOffer(i).Num > 0 Then
                     ' currency?
-                    If Item(TempPlayer(index).TradeOffer(i).Num).Type = ItemType.Currency OrElse Item(TempPlayer(index).TradeOffer(i).Num).Stackable = 1 Then
+                    If Item(TempPlayer(index).TradeOffer(i).Num).Type = ItemType.Currency Or Item(TempPlayer(index).TradeOffer(i).Num).Stackable = 1 Then
                         If TempPlayer(index).TradeOffer(i).Value = 0 Then TempPlayer(index).TradeOffer(i).Value = 1
                         totalWorth = totalWorth + (Item(GetPlayerInvItemNum(index, TempPlayer(index).TradeOffer(i).Num)).Price * TempPlayer(index).TradeOffer(i).Value)
                     Else
@@ -966,7 +984,7 @@ Module S_NetworkSend
                 ' add total worth
                 If GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num) > 0 Then
                     ' currency?
-                    If Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
+                    If Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
                         If TempPlayer(tradeTarget).TradeOffer(i).Value = 0 Then TempPlayer(tradeTarget).TradeOffer(i).Value = 1
                         totalWorth = totalWorth + (Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price * TempPlayer(tradeTarget).TradeOffer(i).Value)
                     Else

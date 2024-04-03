@@ -23,7 +23,7 @@ Module C_Interface
     Private zOrder_Win As Long
     Private zOrder_Con As Long
 
-    Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, color As Color, tType As EntityType, ByRef design() As Long, ByRef image() As Long, ByRef callback() As Action,
+    Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, color As Color, tType As EntityType, ByRef design() As Long, ByRef image() As Sprite, ByRef callback() As Action,
        Optional left As Long = 0, Optional top As Long = 0, Optional width As Long = 0, Optional height As Long = 0, Optional visible As Boolean = True, Optional canDrag As Boolean = False, Optional Max As Long = 0, Optional Min As Long = 0, Optional value As Long = 0, Optional text As String = "",
        Optional align As Byte = 0, Optional font As String = "Georgia.ttf", Optional alpha As Long = 255, Optional clickThrough As Boolean = False, Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional zChange As Byte = 0, Optional censor As Boolean = False, Optional icon As Long = 0,
        Optional onDraw As Action = Nothing, Optional isActive As Boolean = True, Optional tooltip As String = "", Optional group As Long = 0, Optional locked As Boolean = False)
@@ -203,8 +203,8 @@ Module C_Interface
                     End If
 
                     ' render image
-                    If .Image(.State) > 0 Then
-                        RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
+                    If Not .Image(.State) Is Nothing Then
+                        RenderTexture(.Image(.State), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
                     End If
 
                 ' textbox
@@ -215,8 +215,8 @@ Module C_Interface
                     End If
 
                     ' render image
-                    If .Image(.State) > 0 Then
-                        RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
+                    If Not .Image(.State) Is Nothing Then
+                        RenderTexture(.Image(.State), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height, .Alpha)
                     End If
 
                     If activeWindow = winNum And Windows(winNum).ActiveControl = entNum Then
@@ -240,10 +240,8 @@ Module C_Interface
                     End If
 
                     ' render image
-                    If .Image(.State) > 0 Then
-                        If .Image(.State) > 0 Then
-                            RenderTexture(InterfaceSprite(.Image(.State)), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height)
-                        End If
+                    If Not .Image(.State) Is Nothing Then
+                        RenderTexture(.Image(.State), Window, .Left + xO, .Top + yO, 0, 0, .Width, .Height, .Width, .Height)
                     End If
 
                     ' render icon
@@ -743,13 +741,13 @@ Module C_Interface
 
     Public Sub CreateWindow(name As String, caption As String, font As String, zOrder As Long, left As Long, top As Long, width As Long, height As Long, icon As Long,
        Optional visible As Boolean = True, Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0,
-       Optional image_norm As Long = 0, Optional image_hover As Long = 0, Optional image_mousedown As Long = 0,
+       Optional image_norm As Sprite = Nothing, Optional image_hover As Sprite = Nothing, Optional image_mousedown As Sprite = Nothing,
        Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing, Optional onDraw As Action = Nothing,
        Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional isActive As Boolean = True, Optional clickThrough As Boolean = False)
 
         Dim i As Long
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         ' fill temp arrays
@@ -817,12 +815,12 @@ Module C_Interface
     End Sub
 
     Public Sub CreateTextbox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long,
-        Optional text As String = "", Optional font As String = "Georgia.ttf", Optional align As Byte = AlignmentType.Left, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional isActive As Boolean = True, Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional image_norm As Long = 0,
-        Optional image_hover As Long = 0, Optional image_mousedown As Long = 0, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0, Optional censor As Boolean = False, Optional icon As Long = 0,
+        Optional text As String = "", Optional font As String = "Georgia.ttf", Optional align As Byte = AlignmentType.Left, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional isActive As Boolean = True, Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional image_norm As Sprite = Nothing,
+        Optional image_hover As Sprite = Nothing, Optional image_mousedown As Sprite = Nothing, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0, Optional censor As Boolean = False, Optional icon As Long = 0,
         Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing, Optional ByRef callback_enter As Action = Nothing)
 
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         ' fill temp arrays
@@ -844,12 +842,12 @@ Module C_Interface
     End Sub
 
     Public Sub CreatePictureBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long,
-       Optional visible As Boolean = True, Optional canDrag As Boolean = False, Optional alpha As Long = 255, Optional clickThrough As Boolean = True, Optional image_norm As Long = 0, Optional image_hover As Long = 0, Optional image_mousedown As Long = 0, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0,
+       Optional visible As Boolean = True, Optional canDrag As Boolean = False, Optional alpha As Long = 255, Optional clickThrough As Boolean = True, Optional image_norm As Sprite = Nothing, Optional image_hover As Sprite = Nothing, Optional image_mousedown As Sprite = Nothing, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0,
        Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing,
        Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing, Optional ByRef onDraw As Action = Nothing)
 
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         ' fill temp arrays
@@ -870,13 +868,13 @@ Module C_Interface
     End Sub
 
     Public Sub CreateButton(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long,
-       Optional text As String = "", Optional font As String = "Georgia.ttf", Optional icon As Long = 0, Optional image_norm As Long = 0, Optional image_hover As Long = 0, Optional image_mousedown As Long = 0,
+       Optional text As String = "", Optional font As String = "Georgia.ttf", Optional icon As Long = 0, Optional image_norm As Sprite = Nothing, Optional image_hover As Sprite = Nothing, Optional image_mousedown As Sprite = Nothing,
        Optional visible As Boolean = True, Optional alpha As Long = 255, Optional design_norm As Long = 0, Optional design_hover As Long = 0, Optional design_mousedown As Long = 0,
        Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing,
        Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional tooltip As String = "", Optional censor As Boolean = False, Optional locked As Boolean = True)
 
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         ' fill temp arrays
@@ -901,7 +899,7 @@ Module C_Interface
        Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing, Optional locked As Boolean = True)
 
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         ' fill temp arrays
@@ -921,7 +919,7 @@ Module C_Interface
         Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing)
 
         Dim design(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         design(0) = theDesign
@@ -939,7 +937,7 @@ Module C_Interface
 
     Public Sub CreateComboBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, design As Long)
         Dim theDesign(EntState.Count - 1) As Long
-        Dim image(EntState.Count - 1) As Long
+        Dim image(EntState.Count - 1) As Sprite
         Dim callback(EntState.Count - 1) As Action
 
         theDesign(0) = design
@@ -1048,7 +1046,7 @@ Module C_Interface
 
     Public Sub CreateWindow_Login()
         ' Create the window
-        CreateWindow("winLogin", "Login", Georgia, zOrder_Win, 0, 0, 276, 212, 45, , 3, 5, DesignType.Win_Norm, DesignType.Win_Norm, DesignType.Win_Norm)
+        CreateWindow("winLogin", "Login", Georgia, zOrder_Win, 0, 0, 276, 212, 45, True, 3, 5, DesignType.Win_Norm, DesignType.Win_Norm, DesignType.Win_Norm)
 
         ' Centralize it
         CentralizeWindow(WindowCount)
@@ -1064,7 +1062,7 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picShadow_2", 67, 79, 142, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf DestroyGame))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf DestroyGame))
 
         ' Buttons
         CreateButton(WindowCount, "btnAccept", 67, 134, 67, 22, "Accept", Arial, , , ,  , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnLogin_Click))
@@ -1103,7 +1101,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnReturnMain_Click))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnReturnMain_Click))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 264, 170, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
@@ -1150,7 +1148,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnNewChar_Cancel))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnNewChar_Cancel))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 278, 140, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
@@ -1179,11 +1177,11 @@ Module C_Interface
         CreateLabel(WindowCount, "lblSprite", 175, 39, 76, FontSize, "Sprite", Arial, Color.White, AlignmentType.Center)
 
         ' Scene
-        CreatePictureBox(WindowCount, "picScene", 165, 55, 96, 96, , , , , 11, 11, 11, , , , , , , , , New Action(AddressOf NewChar_OnDraw))
+        CreatePictureBox(WindowCount, "picScene", 165, 55, 96, 96, , , , , InterfaceSprite(11), InterfaceSprite(11), InterfaceSprite(11), , , , , , , , , New Action(AddressOf NewChar_OnDraw))
 
         ' Buttons
-        CreateButton(WindowCount, "btnLeft", 163, 40, 11, 13, ,  , , 12, 14, 16, , , , , , , , New Action(AddressOf btnNewChar_Left))
-        CreateButton(WindowCount, "btnRight", 252, 40, 11, 13, , , , 13, 15, 17, , , , , , , , New Action(AddressOf btnNewChar_Right))
+        CreateButton(WindowCount, "btnLeft", 163, 40, 11, 13, ,  , , InterfaceSprite(12), InterfaceSprite(14), InterfaceSprite(16), , , , , , , , New Action(AddressOf btnNewChar_Left))
+        CreateButton(WindowCount, "btnRight", 252, 40, 11, 13, , , , InterfaceSprite(13), InterfaceSprite(15), InterfaceSprite(17), , , , , , , , New Action(AddressOf btnNewChar_Right))
 
         ' Set the active control
         SetActiveControl(GetWindowIndex("winNewChar"), GetControlIndex("winNewChar", "txtName"))
@@ -1200,7 +1198,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnCharacters_Close))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnCharacters_Close))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
@@ -1214,9 +1212,9 @@ Module C_Interface
         CreateLabel(WindowCount, "lblCharName_3", 242, 37, 98, FontSize, "Blank Slot", Arial, Color.White, AlignmentType.Center)
 
         ' Scenery Boxes
-        CreatePictureBox(WindowCount, "picScene_1", 23, 55, 96, 96, , , , , 11, 11, 11)
-        CreatePictureBox(WindowCount, "picScene_2", 133, 55, 96, 96, , , , , 11, 11, 11)
-        CreatePictureBox(WindowCount, "picScene_3", 243, 55, 96, 96, , , , , 11, 11, 11, , , , , , , , , New Action(AddressOf Chars_OnDraw))
+        CreatePictureBox(WindowCount, "picScene_1", 23, 55, 96, 96, , , , , InterfaceSprite(11), InterfaceSprite(11), InterfaceSprite(11))
+        CreatePictureBox(WindowCount, "picScene_2", 133, 55, 96, 96, , , , , InterfaceSprite(11), InterfaceSprite(11), InterfaceSprite(11))
+        CreatePictureBox(WindowCount, "picScene_3", 243, 55, 96, 96, , , , , InterfaceSprite(11), InterfaceSprite(11), InterfaceSprite(11), , , , , , , , , New Action(AddressOf Chars_OnDraw))
 
         ' Create Buttons
         CreateButton(WindowCount, "btnSelectChar_1", 22, 155, 98, 24, "Select", Arial, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnAcceptChar_1))
@@ -1241,7 +1239,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnJobs_Close))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnJobs_Close))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment, , , , , , New Action(AddressOf Jobs_DrawFace))
@@ -1251,8 +1249,8 @@ Module C_Interface
         CreateLabel(WindowCount, "lblClassName", 183, 39, 98, FontSize, "Warrior", Arial, Color.White, AlignmentType.Center)
 
         ' Select Buttons
-        CreateButton(WindowCount, "btnLeft", 171, 40, 11, 13, , , , 12, 14, 16, , , , , , , , New Action(AddressOf btnJobs_Left))
-        CreateButton(WindowCount, "btnRight", 282, 40, 11, 13, , , , 13, 15, 17, , , , , , , , New Action(AddressOf btnJobs_Right))
+        CreateButton(WindowCount, "btnLeft", 171, 40, 11, 13, , , , InterfaceSprite(12), InterfaceSprite(14), InterfaceSprite(16), , , , , , , , New Action(AddressOf btnJobs_Left))
+        CreateButton(WindowCount, "btnRight", 282, 40, 11, 13, , , , InterfaceSprite(13), InterfaceSprite(15), InterfaceSprite(17), , , , , , , , New Action(AddressOf btnJobs_Right))
 
         ' Accept Button
         CreateButton(WindowCount, "btnAccept", 183, 185, 98, 22, "Accept", Arial, , , , ,  , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnJobs_Accept))
@@ -1275,7 +1273,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnDialogue_Close))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnDialogue_Close))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 335, 113, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
@@ -1298,6 +1296,83 @@ Module C_Interface
 
         ' Set active control
         SetActiveControl(WindowCount, GetControlIndex("winDialogue", "txtInput"))
+    End Sub
+
+    Public Sub CreateWindow_Party()
+        ' Create window
+        CreateWindow("winParty", "", Georgia, zOrder_Win, 4, 78, 252, 158, 0, False, , , DesignType.Win_Desc, DesignType.Win_Desc, DesignType.Win_Desc, , , , , , , , , , False)
+
+        ' Name labels
+        CreateLabel(windowCount, "lblName1", 60, 20, 173, FontSize, "Richard - Level 10", Verdana, Color.White)
+        CreateLabel(windowCount, "lblName2", 60, 60, 173, FontSize, "Anna - Level 18", Verdana, Color.White)
+        CreateLabel(windowCount, "lblName3", 60, 100, 173, FontSize, "Doleo - Level 25", Verdana, Color.White)
+    
+        ' Empty Bars - HP
+        CreatePictureBox(windowCount, "picEmptyBar_HP1", 58, 34, 173, 9, , , , , InterfaceSprite(22), InterfaceSprite(22), InterfaceSprite(22))
+        CreatePictureBox(windowCount, "picEmptyBar_HP2", 58, 74, 173, 9, , , , , InterfaceSprite(22), InterfaceSprite(22), InterfaceSprite(22))
+        CreatePictureBox(windowCount, "picEmptyBar_HP3", 58, 114, 173, 9, , , , , InterfaceSprite(22), InterfaceSprite(22), InterfaceSprite(22))
+    
+        ' Empty Bars - SP
+        CreatePictureBox(windowCount, "picEmptyBar_SP1", 58, 44, 173, 9, , , , , InterfaceSprite(23), InterfaceSprite(23), InterfaceSprite(23))
+        CreatePictureBox(windowCount, "picEmptyBar_SP2", 58, 84, 173, 9, , , , , InterfaceSprite(23), InterfaceSprite(23), InterfaceSprite(23))
+        CreatePictureBox(windowCount, "picEmptyBar_SP3", 58, 124, 173, 9, , , , , InterfaceSprite(23), InterfaceSprite(23), InterfaceSprite(23))
+    
+        ' Filled bars - HP
+        CreatePictureBox(windowCount, "picBar_HP1", 58, 34, 173, 9, , , , , InterfaceSprite(24), InterfaceSprite(24), InterfaceSprite(24))
+        CreatePictureBox(windowCount, "picBar_HP2", 58, 74, 173, 9, , , , , InterfaceSprite(24), InterfaceSprite(24), InterfaceSprite(24))
+        CreatePictureBox(windowCount, "picBar_HP3", 58, 114, 173, 9, , , , , InterfaceSprite(24), InterfaceSprite(24), InterfaceSprite(24))
+        
+        ' Filled bars - SP
+        CreatePictureBox(windowCount, "picBar_SP1", 58, 44, 173, 9, , , , , InterfaceSprite(25), InterfaceSprite(25), InterfaceSprite(25))
+        CreatePictureBox(windowCount, "picBar_SP2", 58, 84, 173, 9, , , , , InterfaceSprite(25), InterfaceSprite(25), InterfaceSprite(25))
+        CreatePictureBox(windowCount, "picBar_SP3", 58, 124, 173, 9, , , , , InterfaceSprite(25), InterfaceSprite(25), InterfaceSprite(25))
+        
+        ' Shadows
+        CreatePictureBox(windowCount, "picShadow1", 20, 24, 32, 32, , , , , ShadowSprite, ShadowSprite, ShadowSprite)
+        CreatePictureBox(windowCount, "picShadow2", 20, 64, 32, 32, , , , , ShadowSprite, ShadowSprite, ShadowSprite)
+        CreatePictureBox(windowCount, "picShadow3", 20, 104, 32, 32, , , , , ShadowSprite, ShadowSprite, ShadowSprite)
+        
+        ' Characters
+        CreatePictureBox(windowCount, "picChar1", 20, 20, 32, 32, , , , , CharacterSprite(1), CharacterSprite(1), CharacterSprite(1))
+        CreatePictureBox(windowCount, "picChar2", 20, 60, 32, 32, , , , , CharacterSprite(1), CharacterSprite(1), CharacterSprite(1)) 
+        CreatePictureBox(windowCount, "picChar3", 20, 100, 32, 32, , , , , CharacterSprite(1), CharacterSprite(1), CharacterSprite(1))
+    End Sub
+
+    Public Sub CreateWindow_Trade()
+        ' Create window
+        CreateWindow("winTrade", "Trading with [Name]", Georgia, zOrder_Win, 0, 0, 412, 386, 112 , False, 2, 5,  DesignType.Win_Empty, DesignType.Win_Empty, DesignType.Win_Empty, , , , , , , New Action(AddressOf DrawTrade))
+
+        ' Centralize it
+        CentralizeWindow(windowCount)
+
+        ' Close Button
+        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 5, 36, 36, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnTrade_Close))
+        
+        ' Parchment
+        CreatePictureBox(windowCount, "picParchment", 10, 312, 392, 66, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+        
+        ' Labels
+        CreatePictureBox(windowCount, "picShadow", 36, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+        CreateLabel(windowCount, "lblYourTrade", 36, 27, 142, 9, "Robin's Offer", Verdana, Color.White, AlignmentType.Center)
+        CreatePictureBox(windowCount, "picShadow", 36 + 200, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
+        CreateLabel(windowCount, "lblTheirTrade", 36 + 200, 27, 142, 9, "Richard's Offer", Verdana, Color.White, AlignmentType.Center)
+        
+        ' Buttons
+        CreateButton(windowCount, "btnAccept", 134, 340, 68, 24, "Accept", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , New Action(AddressOf btnTrade_Accept))
+        CreateButton(windowCount, "btnDecline", 210, 340, 68, 24, "Decline", Verdana, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnTrade_Close))
+        
+        ' Labels
+        CreateLabel(windowCount, "lblStatus", 114, 322, 184, FontSize, "", Verdana, Color.White, AlignmentType.Center)
+        
+        ' Amounts
+        CreateLabel(windowCount, "lblBlank", 25, 330, 100, FontSize, "Total Value", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 285, 330, 100, FontSize, "Total Value", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblYourValue", 25, 344, 100, FontSize, "52,812g", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblTheirValue", 285, 344, 100, FontSize, "12,531g", Verdana, Color.White, AlignmentType.Center)
+        
+        ' Item Containers
+        CreatePictureBox(windowCount, "picYour", 14, 46, 184, 260, , , , , , , , , , , , , New Action(AddressOf TradeMouseDown_Your), New Action(AddressOf TradeMouseMove_Your), , New Action(AddressOf DrawYourTrade))
+        CreatePictureBox(windowCount, "picTheir", 214, 46, 184, 260, , , , , , , , , , , , , , New Action(AddressOf TradeMouseMove_Their), , New Action(AddressOf DrawTheirTrade))
     End Sub
 
     ' Rendering & Initialisation
@@ -1327,6 +1402,10 @@ Module C_Interface
         CreateWindow_Dialogue()
         CreateWindow_DragBox()
         CreateWindow_Options()
+        CreateWindow_Trade()
+        CreateWindow_Party()
+        CreateWindow_PlayerMenu()
+        CreateWindow_RightClick()
         CreateWindow_Combobox()
     End Sub
 
@@ -1520,6 +1599,86 @@ Module C_Interface
             End With
 
         Next
+    End Sub
+
+    ' Trade
+    Sub btnTrade_Close()
+        HideWindow(GetWindowIndex("winTrade"))
+        SendDeclineTrade()
+    End Sub
+
+    Sub btnTrade_Accept()
+        SendAcceptTrade()
+    End Sub
+
+    Sub TradeMouseDown_Your()
+        Dim Xo As Long, Yo As Long, ItemNum As Long
+        
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
+        ItemNum = IsTrade(Xo, Yo)
+    
+        ' make sure it exists
+        If ItemNum > 0 Then
+            If TradeYourOffer(ItemNum).Num = 0 Then Exit Sub
+            If GetPlayerInvItemNum(MyIndex, TradeYourOffer(ItemNum).Num) = 0 Then Exit Sub
+        
+            ' unoffer the item
+            UntradeItem(ItemNum)
+        End If
+    End Sub
+
+    Sub TradeMouseMove_Your()
+        Dim Xo As Long, Yo As Long, ItemNum As Long, X As Long, Y As Long
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
+
+        ItemNum = IsTrade(Xo, Yo)
+    
+        ' make sure it exists
+        If ItemNum > 0 Then
+            If TradeYourOffer(ItemNum).Num = 0 Then Exit Sub
+            If GetPlayerInvItemNum(MyIndex, TradeYourOffer(ItemNum).Num) = 0 Then Exit Sub
+        
+            X = Windows(GetWindowIndex("winTrade")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
+            Y = Windows(GetWindowIndex("winTrade")).Window.Top - 4
+
+            ' offscreen?
+            If X < 0 Then
+                ' switch to right
+                X = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Window.Width
+            End If
+
+            ' go go go
+            ShowItemDesc(X, Y, GetPlayerInvItemNum(MyIndex, TradeYourOffer(ItemNum).Num))
+        End If
+    End Sub
+
+    Sub TradeMouseMove_Their()
+        Dim Xo As Long, Yo As Long, ItemNum As Long, X As Long, Y As Long
+        
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Top
+
+        ItemNum = IsTrade(Xo, Yo)
+    
+        ' make sure it exists
+        If ItemNum > 0 Then
+            If TradeTheirOffer(ItemNum).Num = 0 Then Exit Sub
+        
+            ' calc position
+            X = Windows(GetWindowIndex("winTrade")).Window.Left - Windows(GetWindowIndex("winDescription")).Window.Width
+            Y = Windows(GetWindowIndex("winTrade")).Window.Top - 4
+
+            ' offscreen?
+            If X < 0 Then
+                ' switch to right
+                X = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Window.Width
+            End If
+
+            ' go go go
+            ShowItemDesc(X, Y, TradeTheirOffer(ItemNum).Num)
+        End If
     End Sub
 
     Sub CloseComboMenu()
@@ -1766,7 +1925,7 @@ Module C_Interface
                     Dim rect = New Rectangle((CharacterGfxInfo(CharSprite(I)).Width / 4), (CharacterGfxInfo(CharSprite(I)).Height / 4),
                                (CharacterGfxInfo(CharSprite(I)).Width / 4), (CharacterGfxInfo(CharSprite(I)).Height / 4))
 
-                    If Not CharSprite(I) > NumCharacters And Not CharSprite(I) > NumFaces Then
+                    If Not CharSprite(I) > NumCharacters Then
                         ' render char
                         RenderTexture(CharacterSprite(CharSprite(I)), Window, x + 24, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
                     End If
@@ -1825,7 +1984,7 @@ Module C_Interface
     ' ## Jobs Window ##
     ' ####################
     Public Sub Jobs_DrawFace()
-        Dim imageFace As Long, xO As Long, yO As Long
+        Dim imageChar As Long, xO As Long, yO As Long
 
         xO = Windows(GetWindowIndex("winJob")).Window.Left
         yO = Windows(GetWindowIndex("winJob")).Window.Top
@@ -1834,19 +1993,18 @@ Module C_Interface
 
         Select Case newCharJob
             Case 1 ' Warrior
-                imageFace = 1
+                imageChar = 1
             Case 2 ' Wizard
-                imageFace = 2
+                imageChar = 2
             Case 3 ' Whisperer
-                imageFace = 3
+                imageChar = 3
         End Select
 
-        If FaceGfxInfo(imageFace).IsLoaded = False Then
-            LoadTexture(imageFace, 7)
+        If CharacterGfxInfo(imageChar).IsLoaded = False Then
+            LoadTexture(imageChar, 2)
         End If
 
-        ' render face
-        RenderTexture(FaceSprite(imageFace), Window, xO + 30, yO + 75, 0, 0, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height, FaceGfxInfo(imageFace).Width, FaceGfxInfo(imageFace).Height)
+        RenderTexture(CharacterSprite(imageChar), Window, xO + 50, yO + 90, 0, 0, CharacterGfxInfo(imageChar).Width / 4, CharacterGfxInfo(imageChar).Height / 4, CharacterGfxInfo(imageChar).Width / 4, CharacterGfxInfo(imageChar).Height / 4)
     End Sub
 
     Public Sub Jobs_DrawText()
@@ -1975,8 +2133,8 @@ Module C_Interface
         UpdateChat()
     End Sub
 
-    Public Sub chkChat_Private()
-        Types.Settings.ChannelState(ChatChannel.Whisper) = Windows(GetWindowIndex("winChat")).Controls(GetControlIndex("winChat", "chkPrivate")).Value
+    Public Sub chkChat_Player()
+        Types.Settings.ChannelState(ChatChannel.Player) = Windows(GetWindowIndex("winChat")).Controls(GetControlIndex("winChat", "chkPlayer")).Value
         UpdateChat()
     End Sub
 
@@ -2527,7 +2685,7 @@ Module C_Interface
     ' ## Skills ##
     ' ############
     Public Sub Skills_MouseDown()
-    Dim slotNum As Long, winIndex As Long
+        Dim slotNum As Long, winIndex As Long
     
         ' is there an item?
         slotNum = IsSkill(Windows(GetWindowIndex("winSkills")).Window.Left, Windows(GetWindowIndex("winSkills")).Window.Top)
@@ -2750,17 +2908,17 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picParchment", 6, 6, 227, 65, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
 
         ' Blank Bars
-        CreatePictureBox(WindowCount, "picHP_Blank", 15, 15, 209, 13, , , , , 24, 24, 24)
-        CreatePictureBox(WindowCount, "picSP_Blank", 15, 32, 209, 13, , , , , 25, 25, 25)
-        CreatePictureBox(WindowCount, "picEXP_Blank", 15, 49, 209, 13, , , , , 26, 26, 26)
+        CreatePictureBox(WindowCount, "picHP_Blank", 15, 15, 209, 13, , , , , InterfaceSprite(24), InterfaceSprite(24), InterfaceSprite(24))
+        CreatePictureBox(WindowCount, "picSP_Blank", 15, 32, 209, 13, , , , , InterfaceSprite(25), InterfaceSprite(25), InterfaceSprite(25))
+        CreatePictureBox(WindowCount, "picEXP_Blank", 15, 49, 209, 13, , , , , InterfaceSprite(26), InterfaceSprite(26), InterfaceSprite(26))
 
         ' Draw the bars
         CreatePictureBox(WindowCount, "picBlank", 0, 0, 0, 0, , , , , , , , , , , , , , , , New Action(AddressOf Bars_OnDraw))
 
         ' Bar Labels
-        CreatePictureBox(WindowCount, "picHealth", 16, 11, 44, 14, , , , , 21, 21, 21)
-        CreatePictureBox(WindowCount, "picSpirit", 16, 28, 44, 14, , , , , 22, 22, 22)
-        CreatePictureBox(WindowCount, "picExperience", 16, 45, 74, 14, , , , , 23, 23, 23)
+        CreatePictureBox(WindowCount, "picHealth", 16, 11, 44, 14, , , , , InterfaceSprite(21), InterfaceSprite(21), InterfaceSprite(21))
+        CreatePictureBox(WindowCount, "picSpirit", 16, 28, 44, 14, , , , , InterfaceSprite(22), InterfaceSprite(22), InterfaceSprite(22))
+        CreatePictureBox(WindowCount, "picExperience", 16, 45, 74, 14, , , , , InterfaceSprite(23), InterfaceSprite(23), InterfaceSprite(23))
 
         ' Labels
         CreateLabel(WindowCount, "lblHP", 15, 14, 209, FontSize, "999/999", Arial, Color.White, AlignmentType.Center)
@@ -2781,7 +2939,7 @@ Module C_Interface
         CreateCheckbox(WindowCount, "chkGlobal", 110, 2, 49, 23, 1, "Global", Arial, , , , DesignType.ChkChat, , , , , New Action(AddressOf chkChat_Global))
         CreateCheckbox(WindowCount, "chkParty", 160, 2, 49, 23, 1, "Party", Arial, , , , DesignType.ChkChat, , , , , New Action(AddressOf chkChat_Party))
         CreateCheckbox(WindowCount, "chkGuild", 210, 2, 49, 23, 1, "Guild", Arial, , , , DesignType.ChkChat, , , , , New Action(AddressOf chkChat_Guild))
-        CreateCheckbox(WindowCount, "chkPrivate", 260, 2, 49, 23, 1, "Private", Arial, , , , DesignType.ChkChat, , ,  , , New Action(AddressOf chkChat_Private))
+        CreateCheckbox(WindowCount, "chkPlayer", 260, 2, 49, 23, 1, "Player", Arial, , , , DesignType.ChkChat, , ,  , , New Action(AddressOf chkChat_Player))
 
         ' Blank picturebox - ondraw wrapper
         CreatePictureBox(WindowCount, "picNull", 0, 0, 0, 0, , , , , , , , , , , , , , , , New Action(AddressOf Chat_OnDraw))
@@ -2793,8 +2951,8 @@ Module C_Interface
         CreateTextbox(WindowCount, "txtChat", 12, 127 + 16, 286, 25, , Verdana)
 
         ' buttons
-        CreateButton(WindowCount, "btnUp", 328, 28, 11, 13, , , , 4, 52, 4, , , , , , , , New Action(AddressOf btnChat_Up))
-        CreateButton(WindowCount, "btnDown", 327, 122, 11, 13, , , , 5, 53, 5, , , , , , , , New Action(AddressOf btnChat_Down))
+        CreateButton(WindowCount, "btnUp", 328, 28, 11, 13, , , , InterfaceSprite(4), InterfaceSprite(52), InterfaceSprite(4), , , , , , , , New Action(AddressOf btnChat_Up))
+        CreateButton(WindowCount, "btnDown", 327, 122, 11, 13, , , , InterfaceSprite(5), InterfaceSprite(53), InterfaceSprite(5), , , , , , , , New Action(AddressOf btnChat_Down))
 
         ' Custom Handlers for mouse up
         Windows(WindowCount).Controls(GetControlIndex("winChat", "btnUp")).CallBack(EntState.MouseUp) = New Action(AddressOf btnChat_Up_MouseUp)
@@ -2810,7 +2968,7 @@ Module C_Interface
             .Controls(GetControlIndex("winChat", "chkGlobal")).Value = Types.Settings.ChannelState(ChatChannel.Broadcast)
             .Controls(GetControlIndex("winChat", "chkParty")).Value = Types.Settings.ChannelState(ChatChannel.Party)
             .Controls(GetControlIndex("winChat", "chkGuild")).Value = Types.Settings.ChannelState(ChatChannel.Guild)
-            .Controls(GetControlIndex("winChat", "chkPrivate")).Value = Types.Settings.ChannelState(ChatChannel.Whisper)
+            .Controls(GetControlIndex("winChat", "chkPlayer")).Value = Types.Settings.ChannelState(ChatChannel.Player)
         End With
     End Sub
 
@@ -2862,10 +3020,10 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Inv))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnMenu_Inv))
 
         ' Gold amount
-        CreatePictureBox(WindowCount, "picBlank", 8, 293, 186, 18, , , , , 67, 67, 67)
+        CreatePictureBox(WindowCount, "picBlank", 8, 293, 186, 18, , , , , InterfaceSprite(67), InterfaceSprite(67), InterfaceSprite(67))
         'CreateLabel(WindowCount, "lblGold", 42, 296, 100, FontSize, "Gold", Verdana, Color.Yellow)
 
         ' Drop
@@ -2883,7 +3041,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Char))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnMenu_Char))
 
         ' Parchment
         CreatePictureBox(WindowCount, "picParchment", 6, 26, 162, 287, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
@@ -2934,18 +3092,18 @@ Module C_Interface
         CreateLabel(WindowCount, "lblLabel", 18, 288, 138, FontSize, "Stat Points", Arial, Color.Green)
 
         ' Buttons
-        CreateButton(WindowCount, "btnStat_1", 144, 188, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint1))
-        CreateButton(WindowCount, "btnStat_2", 144, 208, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint2))
-        CreateButton(WindowCount, "btnStat_3", 144, 228, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint3))
-        CreateButton(WindowCount, "btnStat_4", 144, 248, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint4))
-        CreateButton(WindowCount, "btnStat_5", 144, 268, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint5))
+        CreateButton(WindowCount, "btnStat_1", 144, 188, 15, 15, , , , InterfaceSprite(48), InterfaceSprite(49), InterfaceSprite(50), , , , , , , , New Action(AddressOf Character_SpendPoint1))
+        CreateButton(WindowCount, "btnStat_2", 144, 208, 15, 15, , , , InterfaceSprite(48), InterfaceSprite(49), InterfaceSprite(50), , , , , , , , New Action(AddressOf Character_SpendPoint2))
+        CreateButton(WindowCount, "btnStat_3", 144, 228, 15, 15, , , , InterfaceSprite(48), InterfaceSprite(49), InterfaceSprite(50), , , , , , , , New Action(AddressOf Character_SpendPoint3))
+        CreateButton(WindowCount, "btnStat_4", 144, 248, 15, 15, , , , InterfaceSprite(48), InterfaceSprite(49), InterfaceSprite(50), , , , , , , , New Action(AddressOf Character_SpendPoint4))
+        CreateButton(WindowCount, "btnStat_5", 144, 268, 15, 15, , , , InterfaceSprite(48), InterfaceSprite(49), InterfaceSprite(50), , , , , , , , New Action(AddressOf Character_SpendPoint5))
 
         ' fake buttons
-        CreatePictureBox(WindowCount, "btnGreyStat_1", 144, 188, 15, 15, , , , , 47, 47, 47)
-        CreatePictureBox(WindowCount, "btnGreyStat_2", 144, 208, 15, 15, , , , , 47, 47, 47)
-        CreatePictureBox(WindowCount, "btnGreyStat_3", 144, 228, 15, 15, , , , , 47, 47, 47)
-        CreatePictureBox(WindowCount, "btnGreyStat_4", 144, 248, 15, 15, , , , , 47, 47, 47)
-        CreatePictureBox(WindowCount, "btnGreyStat_5", 144, 268, 15, 15, , , , , 47, 47, 47)
+        CreatePictureBox(WindowCount, "btnGreyStat_1", 144, 188, 15, 15, , , , , InterfaceSprite(47), InterfaceSprite(47), InterfaceSprite(47))
+        CreatePictureBox(WindowCount, "btnGreyStat_2", 144, 208, 15, 15, , , , , InterfaceSprite(47), InterfaceSprite(47), InterfaceSprite(47))
+        CreatePictureBox(WindowCount, "btnGreyStat_3", 144, 228, 15, 15, , , , , InterfaceSprite(47), InterfaceSprite(47), InterfaceSprite(47))
+        CreatePictureBox(WindowCount, "btnGreyStat_4", 144, 248, 15, 15, , , , , InterfaceSprite(47), InterfaceSprite(47), InterfaceSprite(47))
+        CreatePictureBox(WindowCount, "btnGreyStat_5", 144, 268, 15, 15, , , , , InterfaceSprite(47), InterfaceSprite(47), InterfaceSprite(47))
 
         ' Labels
         CreateLabel(WindowCount, "lblStat_1", 50, 188, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
@@ -3148,7 +3306,7 @@ Module C_Interface
 
     Public Sub CreateWindow_Description()
         ' Create window
-        CreateWindow("winDescription", "", Georgia, zOrder_Win, 0, 0, 193, 142, 0, False, , , , , DesignType.Win_Desc, DesignType.Win_Desc, DesignType.Win_Desc, , , , , , , , False)
+        CreateWindow("winDescription", "", Georgia, zOrder_Win, 0, 0, 193, 142, 0, False, , , DesignType.Win_Desc, DesignType.Win_Desc, DesignType.Win_Desc, , , , , , , , , , False)
 
         ' Set the index for spawning controls
         zOrder_Con = 1
@@ -3160,14 +3318,14 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picSprite", 18, 32, 68, 68, , , , , , , , DesignType.DescPic, DesignType.DescPic, DesignType.DescPic, , , , , , New Action(AddressOf Description_OnDraw))
 
         ' Sep
-        CreatePictureBox(WindowCount, "picSep", 96, 28, 1, 92, , , , , 44, 44, 44)
+        CreatePictureBox(WindowCount, "picSep", 96, 28, 1, 92, , , , , InterfaceSprite(44), InterfaceSprite(44), InterfaceSprite(44))
 
         ' Requirements
         CreateLabel(WindowCount, "lblClass", 5, 102, 92, FontSize, "Warrior", Verdana, Color.Green, AlignmentType.Center)
         CreateLabel(WindowCount, "lblLevel", 5, 114, 92, FontSize, "Level 20", Verdana, Color.Red, AlignmentType.Center)
 
         ' Bar
-        CreatePictureBox(WindowCount, "picBar", 19, 114, 66, 12, False, , , , 45, 45, 45)
+        CreatePictureBox(WindowCount, "picBar", 19, 114, 66, 12, False, , , , InterfaceSprite(45), InterfaceSprite(45), InterfaceSprite(45))
     End Sub
 
     ' #################
@@ -3274,7 +3432,7 @@ Module C_Interface
         zOrder_Con = 1
     
         ' Close button
-        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Skills))
+        CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnMenu_Skills))
     End Sub
 
     Public Sub CreateWindow_Bank()
@@ -3285,7 +3443,7 @@ Module C_Interface
 
         ' Set the index for spawning controls
         zOrder_Con = 1
-        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 5, 36, 36, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnMenu_Bank))
+        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 5, 36, 36, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnMenu_Bank))
     End Sub
 
     Public Sub CreateWindow_Shop()
@@ -3296,13 +3454,13 @@ Module C_Interface
         CentralizeWindow(windowCount)
 
         ' Close button
-        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 6, 36, 36, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnShop_Close))
+        CreateButton(windowCount, "btnClose", Windows(windowCount).Window.Width - 19, 6, 36, 36, , , , InterfaceSprite(8), InterfaceSprite(9), InterfaceSprite(10), , , , , , , , New Action(AddressOf btnShop_Close))
         
         ' Parchment
         CreatePictureBox(windowCount, "picParchment", 6, 215, 266, 50, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment, , , , , , New Action(AddressOf DrawShop))
         
         ' Picture Box
-        CreatePictureBox(windowCount, "picItemBG", 13, 222, 36, 36, , , , , 30, 30, 30)
+        CreatePictureBox(windowCount, "picItemBG", 13, 222, 36, 36, , , , , InterfaceSprite(30), InterfaceSprite(30), InterfaceSprite(30))
         CreatePictureBox(windowCount, "picItem", 15, 224, 32, 32)
         
         ' Buttons
@@ -3699,6 +3857,142 @@ Module C_Interface
         btnOptions_Close
     End Sub
 
+    Sub DrawTrade()
+        Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, X As Long
+    
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top
+        Width = Windows(GetWindowIndex("winTrade")).Window.Width
+        Height = Windows(GetWindowIndex("winTrade")).Window.Height
+    
+        ' render green
+        RenderTexture(InterfaceSprite(34), Window, Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4)
+    
+        ' top wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + 4, Yo + 23, 100, 100, Width - 8, 18, Width - 8, 18)
+        
+        ' left wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + 4, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45)
+        
+        ' right wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + Width - 9, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45)
+        
+        ' centre wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + 203, Yo + 41, 350, 0, 6, Height - 45, 6, Height - 45)
+        
+        ' bottom wood
+        RenderTexture(InterfaceSprite(1), Window, Xo + 4, Yo + 307, 100, 100, Width - 8, 75, Width - 8, 75)
+    
+        ' left
+        Width = 76
+        Height = 76
+        Y = Yo + 41
+        For i = 1 To 4
+            If i = 4 Then Height = 38
+            RenderTexture(InterfaceSprite(38), Window, Xo + 4 + 5, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(38), Window, Xo + 80 + 5, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(38), Window, Xo + 156 + 5, Y, 0, 0, 42, Height, 42, Height)
+            Y = Y + 76
+        Next
+    
+        ' right
+        Width = 76
+        Height = 76
+        Y = Yo + 41
+        For i = 1 To 4
+            If i = 4 Then Height = 38
+            RenderTexture(InterfaceSprite(38), Window, Xo + 4 + 205, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(38), Window, Xo + 80 + 205, Y, 0, 0, Width, Height, Width, Height)
+            RenderTexture(InterfaceSprite(38), Window, Xo + 156 + 205, Y, 0, 0, 42, Height, 42, Height)
+
+            Y = Y + 76
+        Next
+    End Sub
+
+    Sub DrawYourTrade()
+        Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Color As Long, Amount As String, X As Long, Y As Long
+        Dim Xo As Long, Yo As Long
+
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
+    
+        ' your items
+        For i = 1 To MAX_INV
+            If TradeYourOffer(i).Num > 0 Then
+                ItemNum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
+                If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
+                    ItemPic = Item(ItemNum).Icon
+                    If ItemPic > 0 And ItemPic <= NumItems Then
+                        Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+                        Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
+
+                        ' draw icon
+                        RenderTexture(ItemSprite(ItemPic), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+                
+                        ' If item is a stack - draw the amount you have
+                        If TradeYourOffer(i).Value > 1 Then
+                            Y = Top + 21
+                            X = Left + 1
+                            Amount = CStr(TradeYourOffer(i).Value)
+                    
+                            ' Draw currency but with k, m, b etc. using a convertion function
+                            If CLng(Amount) < 1000000 Then
+                                Color = ColorType.White
+                            ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                                Color = ColorType.Yellow
+                            ElseIf CLng(Amount) > 10000000 Then
+                                Color = ColorType.BrightGreen
+                            End If
+                    
+                            RenderText(ConvertCurrency(Amount), Window, X, Y, GetSfmlColor(Color), GetSfmlColor(Color))
+                        End If
+                    End If
+                End If
+            End If
+        Next
+    End Sub
+
+    Sub DrawTheirTrade()
+        Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Color As Long, Amount As String, X As Long, Y As Long
+        Dim Xo As Long, Yo As Long
+
+        Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Left
+        Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Top
+
+        ' their items
+        For i = 1 To MAX_INV
+            ItemNum = TradeTheirOffer(i).Num
+            If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
+                ItemPic = Item(ItemNum).Icon
+                If ItemPic > 0 And ItemPic <= NumItems Then
+                    Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+                    Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
+
+                    ' draw icon
+                    RenderTexture(ItemSprite(ItemPic), Window, Left, Top, 0, 0, 32, 32, 32, 32)
+                
+                    ' If item is a stack - draw the amount you have
+                    If TradeTheirOffer(i).Value > 1 Then
+                        Y = Top + 21
+                        X = Left + 1
+                        Amount = CStr(TradeTheirOffer(i).Value)
+                    
+                        ' Draw currency but with k, m, b etc. using a convertion function
+                        If CLng(Amount) < 1000000 Then
+                            Color = ColorType.White
+                        ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                            Color = ColorType.Yellow
+                        ElseIf CLng(Amount) > 10000000 Then
+                            Color = ColorType.BrightGreen
+                        End If
+                    
+                        RenderText(ConvertCurrency(Amount), Window, X, Y, GetSfmlColor(Color), GetSfmlColor(Color))
+                    End If
+                End If
+            End If
+        Next
+    End Sub
+
     Public Sub DrawBank()
         Dim X As Long, Y As Long, Xo As Long, Yo As Long, width As Long, height As Long
         Dim i As Long, itemNum As Long, itemIcon As Long
@@ -3768,5 +4062,63 @@ Module C_Interface
         Next
 
     End Sub
-End Module
 
+    Public Sub CreateWindow_RightClick()
+        ' Create window
+        CreateWindow("winRightClickBG", "", Georgia, zOrder_Win, 0, 0, 800, 600, 0, False, , , , , , , , , , , , New Action(AddressOf RightClick_Close), , , False)
+        
+        ' Centralize it
+        CentralizeWindow(windowCount)
+    End Sub
+
+    Public Sub CreateWindow_PlayerMenu()
+        ' Create window
+        CreateWindow("winPlayerMenu", "", Georgia, zOrder_Win, 0, 0, 110, 106, 0, False, , , DesignType.Win_Desc, DesignType.Win_Desc, DesignType.Win_Desc, , , , , , , New Action(AddressOf RightClick_Close), , , False)
+        
+        ' Centralise it
+        CentralizeWindow(windowCount)
+
+        ' Name
+        CreateButton(windowCount, "btnName", 8, 8, 94, 18, "[Name]", Verdana, , , , , , , DesignType.MenuHeader, DesignType.MenuHeader, DesignType.MenuHeader, , , New Action(AddressOf RightClick_Close))
+        
+        ' Options
+        CreateButton(windowCount, "btnParty", 8, 26, 94, 18, "Invite to Party", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Party))
+        CreateButton(windowCount, "btnTrade", 8, 44, 94, 18, "Request Trade", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Trade))
+        CreateButton(windowCount, "btnGuild", 8, 62, 94, 18, "Invite to Guild", Verdana, , , , , , , DesignType.MenuOption, , , , , New Action(AddressOf PlayerMenu_Guild))
+        CreateButton(windowCount, "btnPM", 8, 80, 94, 18, "Private Message", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Player))
+
+    End Sub
+
+    ' Right Click Menu
+    Sub RightClick_Close()
+        ' close all menus
+        HideWindow(GetWindowIndex("winRightClickBG"))
+        HideWindow(GetWindowIndex("winPlayerMenu"))
+    End Sub
+
+     ' Player Menu
+    Sub PlayerMenu_Party()
+        RightClick_Close
+        If PlayerMenuIndex = 0 Then Exit Sub
+        SendPartyRequest(GetPlayerName(PlayerMenuIndex))
+    End Sub
+
+    Sub PlayerMenu_Trade()
+        RightClick_Close
+        If PlayerMenuIndex = 0 Then Exit Sub
+        SendTradeRequest(GetPlayerName(PlayerMenuIndex))
+    End Sub
+
+    Sub PlayerMenu_Guild()
+        RightClick_Close
+        If PlayerMenuIndex = 0 Then Exit Sub
+        AddText("System not yet in place.", ColorType.BrightRed)
+    End Sub
+
+    Sub PlayerMenu_Player()
+        RightClick_Close
+        If PlayerMenuIndex = 0 Then Exit Sub
+        AddText("System not yet in place.", ColorType.BrightRed)
+    End Sub
+
+End Module

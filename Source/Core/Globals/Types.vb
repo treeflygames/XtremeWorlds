@@ -1,4 +1,6 @@
 ﻿Imports Mirage.Core.Database.Types
+Imports System.Xml.Serialization
+Imports Core.Database
 Imports SFML.Graphics
 
 Public Module Types
@@ -129,11 +131,11 @@ Public Module Types
 
     Public Structure TileStruct
         Dim Layer() As TileDataStruct
-        Dim Type As TileType
-        Dim Type2 As TileType
+        Dim Type As TileType 
         Dim Data1 As Integer
         Dim Data2 As Integer
         Dim Data3 As Integer
+        Dim Type2 As TileType
         Dim Data1_2 As Integer
         Dim Data2_2 As Integer
         Dim Data3_2 As Integer
@@ -863,7 +865,7 @@ Public Module Types
         Dim Min As Long
         Dim Value As Long
         Dim Text As String
-        Dim Image() As Long
+        Dim Image() As Sprite
         Dim Design() As Long
         Dim Color As Color
         Dim Alpha As Long
@@ -988,7 +990,7 @@ Public Module Types
     Public Structure XWTileStruct
         Dim Ground As Short
         Dim Mask As Short
-        Dim Animation As Short
+        Dim MaskAnim As Short
         Dim Mask2 As Short
         Dim Mask2Anim As Short
         Dim Fringe As Short
@@ -1018,5 +1020,56 @@ Public Module Types
         Dim CanDropItem As Boolean
         Dim PlayerBlock As Boolean
         Dim NPCBlock As Boolean
+    End Structure
+
+    Public Structure SDLayerStruct
+        Dim MapLayer As List(Of SDMapLayerStruct)
+    End Structure
+
+    Public Structure SDMapLayerStruct
+        Dim Name As String
+        Dim Tiles As SDTileStruct
+    End Structure
+
+    Public Structure SDTileStruct
+        Dim ArrayOfMapTile As List(Of SDMapTileStruct)
+    End Structure
+
+    Public Structure SDMapTileStruct
+        Dim TileIndex As Integer
+    End Structure
+
+    Structure SDWarpPosStruct
+        Dim X As Integer
+        Dim Y As Integer
+    End Structure
+
+    Public Structure SDWarpDesStruct
+        Dim X As Integer
+        Dim Y As Integer
+    End Structure
+
+    Public Structure SDWarpDataStruct
+        Dim Pos As SDWarpPosStruct
+        Dim WarpDes As SDWarpDesStruct
+        Dim MapID As Integer
+    End Structure
+
+    Public Structure SDMapStruct
+        Dim Name As String
+        Dim Music As String
+        Dim Revision As Integer
+
+        Dim Up As Integer
+        Dim Down As Integer
+        Dim Left As Integer
+        Dim Right As Integer
+
+        Dim Tileset As Integer
+        Dim MaxX As Integer
+        Dim MaxY As Integer
+
+        Dim Warp As SDWarpDataStruct
+        Dim MapLayer As SDLayerStruct
     End Structure
 End Module

@@ -77,7 +77,7 @@ Module C_Text
         End Select
 
         textX = ConvertMapX(MapNpc(mapNpcNum).X * PicX) + MapNpc(mapNpcNum).XOffset + (PicX \ 2) - (TextWidth((Trim$(NPC(npcNum).Name))) / 2) - 2
-        If NPC(npcNum).Sprite < 1 OrElse NPC(npcNum).Sprite > NumCharacters Then
+        If NPC(npcNum).Sprite < 1 Or NPC(npcNum).Sprite > NumCharacters Then
             textY = ConvertMapY(MapNpc(mapNpcNum).Y * PicY) + MapNpc(mapNpcNum).YOffset - 16
         Else
             textY = ConvertMapY(MapNpc(mapNpcNum).Y * PicY) + MapNpc(mapNpcNum).YOffset - (CharacterGfxInfo(NPC(npcNum).Sprite).Height / 4) + 16
@@ -103,7 +103,7 @@ Module C_Text
         If MapEvents(index).GraphicType = 0 Then
             textY = ConvertMapY(MapEvents(index).Y * PicY) + MapEvents(index).YOffset - 16
         ElseIf MapEvents(index).GraphicType = 1 Then
-            If MapEvents(index).Graphic < 1 OrElse MapEvents(index).Graphic > NumCharacters Then
+            If MapEvents(index).Graphic < 1 Or MapEvents(index).Graphic > NumCharacters Then
                 textY = ConvertMapY(MapEvents(index).Y * PicY) + MapEvents(index).YOffset - 16
             Else
                 ' Determine location for text
@@ -127,6 +127,7 @@ Module C_Text
         Dim y As Integer
         Dim tX As Integer
         Dim tY As Integer
+        Dim tA As Integer
 
         If frmEditor_Map.tabpages.SelectedTab Is frmEditor_Map.tpAttributes Then
             For X = TileView.Left To TileView.Right
@@ -135,8 +136,15 @@ Module C_Text
                         With Map.Tile(X, y)
                             tX = ((ConvertMapX(X * PicX)) - 4) + (PicX * 0.5)
                             tY = ((ConvertMapY(y * PicY)) - 7) + (PicY * 0.5)
-                            Select Case .Type
-                                Case [Enum].TileType.Blocked
+
+                            If EditorAttribute = 1 Then
+                                tA = .Type
+                            Else 
+                                tA = .Type2
+                            End If
+
+                            Select Case tA
+                                Case TileType.Blocked
                                     RenderText("B", Window, tX, tY, (Color.Red), (Color.Black))
                                 Case TileType.Warp
                                     RenderText("W", Window, tX, tY, (Color.Blue), (Color.Black))
@@ -160,6 +168,8 @@ Module C_Text
                                     RenderText("L", Window, tX, tY, (Color.Yellow), (Color.Black))
                                 Case TileType.Animation
                                     RenderText("A", Window, tX, tY, (Color.Red), (Color.Black))
+                                Case TileType.NoXing
+                                    RenderText("X", Window, tX, tY, (Color.Red), (Color.Black))
                             End Select
                         End With
                     End If

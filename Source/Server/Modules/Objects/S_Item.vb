@@ -160,7 +160,7 @@ Friend Module S_Item
         Dim i As Integer
 
         ' Check for subscript out of range
-        If itemnum <= 0 OrElse itemNum > MAX_ITEMS OrElse mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Sub
+        If itemnum <= 0 Or itemNum > MAX_ITEMS Or mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Sub
 
         ' Find open map item slot
         i = FindOpenMapItemSlot(mapNum)
@@ -175,7 +175,7 @@ Friend Module S_Item
         Dim buffer As New ByteStream(4)
 
         ' Check for subscript out of range
-        If MapItemSlot < 0 OrElse MapItemSlot > MAX_MAP_ITEMS OrElse itemnum < 0 OrElse itemNum > MAX_ITEMS OrElse mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Sub
+        If MapItemSlot < 0 Or MapItemSlot > MAX_MAP_ITEMS Or itemnum < 0 Or itemNum > MAX_ITEMS Or mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Sub
 
         i = MapItemSlot
 
@@ -202,7 +202,7 @@ Friend Module S_Item
         Dim i As Integer
 
         ' Check for subscript out of range
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Function
 
         FindOpenMapItemSlot = 0
 
@@ -229,7 +229,7 @@ Friend Module S_Item
         Dim y As Integer
 
         ' Check for subscript out of range
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Sub
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Sub
         If Map(mapNum).NoRespawn Then Exit Sub
 
         ' Spawn what we have
@@ -239,7 +239,7 @@ Friend Module S_Item
                 If (Map(mapNum).Tile(x, y).Type = TileType.Item) Then
 
                     ' Check to see if its a currency and if they set the value to 0 set it to 1 automatically
-                    If Item(Map(mapNum).Tile(x, y).Data1).Type = ItemType.Currency OrElse Item(Map(mapNum).Tile(x, y).Data1).Stackable = 1 Then
+                    If Item(Map(mapNum).Tile(x, y).Data1).Type = ItemType.Currency Or Item(Map(mapNum).Tile(x, y).Data1).Stackable = 1 Then
                         If Map(mapNum).Tile(x, y).Data2 <= 0 Then
                             SpawnItem(Map(mapNum).Tile(x, y).Data1, 1, mapNum, x, y)
                         Else
@@ -306,7 +306,7 @@ Friend Module S_Item
 
         n = buffer.ReadInt32
 
-        If n <= 0 OrElse n > MAX_ITEMS Then Exit Sub
+        If n <= 0 Or n > MAX_ITEMS Then Exit Sub
 
         ' Update the item
         Item(n).AccessReq = buffer.ReadInt32()
@@ -372,13 +372,13 @@ Friend Module S_Item
         amount = buffer.ReadInt32
         buffer.Dispose()
 
-        If TempPlayer(index).InBank OrElse TempPlayer(index).InShop Then Exit Sub
+        If TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
 
         ' Prevent hacking
-        If invNum <= 0 OrElse invNum > MAX_INV Then Exit Sub
-        If GetPlayerInvItemNum(index, invNum) < 0 OrElse GetPlayerInvItemNum(index, invNum) > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency OrElse Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
-            If amount < 0 OrElse amount > GetPlayerInvItemValue(index, invNum) Then Exit Sub
+        If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
+        If GetPlayerInvItemNum(index, invNum) < 0 Or GetPlayerInvItemNum(index, invNum) > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
+            If amount < 0 Or amount > GetPlayerInvItemValue(index, invNum) Then Exit Sub
         End If
 
         ' everything worked out fine

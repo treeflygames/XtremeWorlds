@@ -201,8 +201,6 @@ Public Class frmEditor_Events
         End If
         btnPastePage.Enabled = False
 
-        nudShowTextFace.Maximum = NumFaces
-        nudShowChoicesFace.Maximum = NumFaces
         nudShowPicture.Maximum = NumPictures
 
         cmbPicLoc.SelectedIndex = 0
@@ -270,8 +268,6 @@ Public Class frmEditor_Events
                 txtShowText.Text = ""
                 fraDialogue.Visible = True
                 fraShowText.Visible = True
-                nudShowTextFace.Value = 0
-                nudShowTextFace.Maximum = NumFaces
                 fraCommands.Visible = False
             'show choices
             Case "Show Choices"
@@ -849,10 +845,10 @@ Public Class frmEditor_Events
         End Select
 
         If TmpEvent.Pages(CurPageNum).GraphicType = 1 Then
-            If Me.nudGraphic.Value <= 0 OrElse Me.nudGraphic.Value > NumCharacters Then Exit Sub
+            If Me.nudGraphic.Value <= 0 Or Me.nudGraphic.Value > NumCharacters Then Exit Sub
 
         ElseIf TmpEvent.Pages(CurPageNum).GraphicType = 2 Then
-            If Me.nudGraphic.Value <= 0 OrElse Me.nudGraphic.Value > NumTileSets Then Exit Sub
+            If Me.nudGraphic.Value <= 0 Or Me.nudGraphic.Value > NumTileSets Then Exit Sub
 
         End If
         EditorEvent_DrawGraphic()
@@ -874,8 +870,8 @@ Public Class frmEditor_Events
 
         If cmbGraphic.SelectedIndex = 2 Then
             If Control.ModifierKeys = Keys.Shift Then
-                If GraphicSelX > -1 AndAlso GraphicSelY > -1 Then
-                    If selW >= 0 AndAlso selH >= 0 Then
+                If GraphicSelX > -1 And GraphicSelY > -1 Then
+                    If selW >= 0 And selH >= 0 Then
                         GraphicSelX2 = selW + 1
                         GraphicSelY2 = selH + 1
                     End If
@@ -891,14 +887,14 @@ Public Class frmEditor_Events
             GraphicSelY = Y
             GraphicSelX2 = 0
             GraphicSelY2 = 0
-            If nudGraphic.Value <= 0 OrElse nudGraphic.Value > NumCharacters Then Exit Sub
+            If nudGraphic.Value <= 0 Or nudGraphic.Value > NumCharacters Then Exit Sub
             For i = 0 To 3
-                If GraphicSelX >= CharacterGfxInfo(nudGraphic.Value).Width / 4 * i AndAlso GraphicSelX < CharacterGfxInfo(nudGraphic.Value).Width / 4 * (i + 1) Then
+                If GraphicSelX >= CharacterGfxInfo(nudGraphic.Value).Width / 4 * i And GraphicSelX < CharacterGfxInfo(nudGraphic.Value).Width / 4 * (i + 1) Then
                     GraphicSelX = i
                 End If
             Next
             For i = 0 To 3
-                If GraphicSelY >= CharacterGfxInfo(nudGraphic.Value).Height / 4 * i AndAlso GraphicSelY < CharacterGfxInfo(nudGraphic.Value).Height / 4 * (i + 1) Then
+                If GraphicSelY >= CharacterGfxInfo(nudGraphic.Value).Height / 4 * i And GraphicSelY < CharacterGfxInfo(nudGraphic.Value).Height / 4 * (i + 1) Then
                     GraphicSelY = i
                 End If
             Next
@@ -1181,7 +1177,7 @@ Public Class frmEditor_Events
         Select Case RenameType
             Case 1
                 'Variable
-                If Renameindex > 0 AndAlso Renameindex <= NAX_VARIABLES + 1 Then
+                If Renameindex > 0 And Renameindex <= NAX_VARIABLES + 1 Then
                     Variables(Renameindex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
@@ -1190,7 +1186,7 @@ Public Class frmEditor_Events
                 End If
             Case 2
                 'Switch
-                If Renameindex > 0 AndAlso Renameindex <= MAX_SWITCHES + 1 Then
+                If Renameindex > 0 And Renameindex <= MAX_SWITCHES + 1 Then
                     Switches(Renameindex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
@@ -1241,7 +1237,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub LstVariables_DoubleClick(sender As Object, e As EventArgs) Handles lstVariables.DoubleClick
-        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < NAX_VARIABLES Then
+        If lstVariables.SelectedIndex > -1 And lstVariables.SelectedIndex < NAX_VARIABLES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex)
@@ -1256,7 +1252,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub LstSwitches_DoubleClick(sender As Object, e As EventArgs) Handles lstSwitches.DoubleClick
-        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MAX_SWITCHES Then
+        If lstSwitches.SelectedIndex > -1 And lstSwitches.SelectedIndex < MAX_SWITCHES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex)
@@ -1267,7 +1263,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub BtnRenameVariable_Click(sender As Object, e As EventArgs) Handles btnRenameVariable.Click
-        If lstVariables.SelectedIndex > -1 AndAlso lstVariables.SelectedIndex < NAX_VARIABLES Then
+        If lstVariables.SelectedIndex > -1 And lstVariables.SelectedIndex < NAX_VARIABLES Then
             FraRenaming.Visible = True
             fraLabeling.Visible = False
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex)
@@ -1278,7 +1274,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub BtnRenameSwitch_Click(sender As Object, e As EventArgs) Handles btnRenameSwitch.Click
-        If lstSwitches.SelectedIndex > -1 AndAlso lstSwitches.SelectedIndex < MAX_SWITCHES Then
+        If lstSwitches.SelectedIndex > -1 And lstSwitches.SelectedIndex < MAX_SWITCHES Then
             FraRenaming.Visible = True
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex)
             txtRename.Text = Switches(lstSwitches.SelectedIndex)
@@ -1368,7 +1364,7 @@ Public Class frmEditor_Events
         Dim i As Integer
 
         Index = Index + 1
-        If Index > 0 AndAlso Index <= TempMoveRouteCount Then
+        If Index > 0 And Index <= TempMoveRouteCount Then
             For i = Index + 1 To TempMoveRouteCount
                 TempMoveRoute(i - 1) = TempMoveRoute(i)
             Next
@@ -1527,16 +1523,6 @@ Public Class frmEditor_Events
 #Region "CommandFrames"
 
 #Region "Show Text"
-
-    Private Sub NudShowTextFace_ValueChanged(sender As Object, e As EventArgs) Handles nudShowTextFace.ValueChanged
-        If nudShowTextFace.Value > 0 Then
-            If File.Exists(Paths.Graphics & "Faces\" & nudShowTextFace.Value & GfxExt) Then
-                picShowTextFace.BackgroundImage = Image.FromFile(Paths.Graphics & "Faces\" & nudShowTextFace.Value & GfxExt)
-            End If
-        Else
-            picShowTextFace.BackgroundImage = Nothing
-        End If
-    End Sub
 
     Private Sub BtnShowTextOk_Click(sender As Object, e As EventArgs) Handles btnShowTextOk.Click
         If Not IsEdit Then

@@ -72,7 +72,7 @@ Module C_Parties
         Next
 
         ' exit out if wrong data
-        If partyindex < 0 OrElse partyindex > MAX_PARTY_MEMBERS Then Exit Sub
+        If partyindex < 0 Or partyindex > MAX_PARTY_MEMBERS Then Exit Sub
 
         ' set vitals
         For i = 1 To VitalType.Count - 1
@@ -192,7 +192,7 @@ Module C_Parties
                         y = 115 + ((I - 1) * 30)
 
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, VitalType.HP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.HP) > 0 Then
+                        If GetPlayerVital(playerNum, VitalType.HP) > 0 And GetPlayerMaxVital(playerNum, VitalType.HP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(VitalType.HP) / (GetPlayerMaxVital(playerNum, VitalType.HP)) * 64))
                         End If
                         rec(1) = New Rectangle(x, y, barwidth, 6)
@@ -204,7 +204,7 @@ Module C_Parties
                         ' draw mp
                         y = 115 + ((I - 1) * 30)
                         ' make sure we actually have the data before rendering
-                        If GetPlayerVital(playerNum, VitalType.MP) > 0 AndAlso GetPlayerMaxVital(playerNum, VitalType.MP) > 0 Then
+                        If GetPlayerVital(playerNum, VitalType.MP) > 0 And GetPlayerMaxVital(playerNum, VitalType.MP) > 0 Then
                             barwidth = ((Player(playerNum).Vital(VitalType.MP) / (GetPlayerMaxVital(playerNum, VitalType.MP)) * 64))
                         End If
                         rec(1) = New Rectangle(x, y, barwidth, 6)

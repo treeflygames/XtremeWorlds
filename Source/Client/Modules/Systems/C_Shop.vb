@@ -16,7 +16,6 @@ Module C_Shops
     Sub ClearShop(index As Integer)
         Shop(index) = Nothing
         Shop(index).Name = ""
-        ReDim Shop(index).TradeItem(MAX_TRADES)
         For x = 1 To MAX_TRADES
             ReDim Shop(index).TradeItem(x)
         Next

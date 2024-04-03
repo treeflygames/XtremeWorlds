@@ -35,7 +35,7 @@ Friend Module C_Gui
         Dim i As Long
 
         For i = 1 To MAX_INV
-            If GetPlayerInvItemNum(MyIndex, i) Then
+            If GetPlayerInvItemNum(MyIndex, i) > 0 Then
                 With tempRec
                     .Top = StartY + InvTop + ((InvOffsetY + PicY) * ((i - 1) \ InvColumns))
                     .bottom = .Top + PicY

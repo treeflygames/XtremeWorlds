@@ -6,7 +6,7 @@ Partial Class frmEditor_Map
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
-            If disposing AndAlso components IsNot Nothing Then
+            If disposing And components IsNot Nothing Then
                 components.Dispose()
             End If
         Finally
@@ -94,6 +94,7 @@ Partial Class frmEditor_Map
         tsbClear = New ToolStripButton()
         tsbEyeDropper = New ToolStripButton()
         tsbCopyMap = New ToolStripButton()
+        tsbDeleteMap = New ToolStripButton()
         tsbUndo = New ToolStripButton()
         tsbRedo = New ToolStripButton()
         tsbScreenshot = New ToolStripButton()
@@ -106,6 +107,10 @@ Partial Class frmEditor_Map
         Label9 = New Label()
         cmbTileSets = New ComboBox()
         tpAttributes = New TabPage()
+        optNoXing = New RadioButton()
+        optInfo = New RadioButton()
+        Label23 = New Label()
+        cmbAttribute = New ComboBox()
         optAnimation = New RadioButton()
         optLight = New RadioButton()
         tpNpcs = New TabPage()
@@ -120,7 +125,7 @@ Partial Class frmEditor_Map
         Label22 = New Label()
         lstShop = New ComboBox()
         Label8 = New Label()
-        cmbMoral = New ComboBox()
+        lstMoral = New ComboBox()
         fraMapLinks = New GroupBox()
         txtDown = New TextBox()
         txtLeft = New TextBox()
@@ -156,7 +161,7 @@ Partial Class frmEditor_Map
         btnCopyEvent = New Button()
         Label15 = New Label()
         Label13 = New Label()
-        TabPage1 = New TabPage()
+        tpEffects = New TabPage()
         GroupBox6 = New GroupBox()
         lblMapBrightness = New Label()
         scrlMapBrightness = New HScrollBar()
@@ -214,7 +219,7 @@ Partial Class frmEditor_Map
         GroupBox2.SuspendLayout()
         tpDirBlock.SuspendLayout()
         tpEvents.SuspendLayout()
-        TabPage1.SuspendLayout()
+        tpEffects.SuspendLayout()
         GroupBox6.SuspendLayout()
         GroupBox5.SuspendLayout()
         GroupBox4.SuspendLayout()
@@ -224,7 +229,7 @@ Partial Class frmEditor_Map
         ' 
         ' btnClearAttribute
         ' 
-        btnClearAttribute.Location = New Point(489, 922)
+        btnClearAttribute.Location = New Point(492, 948)
         btnClearAttribute.Margin = New Padding(6, 5, 6, 5)
         btnClearAttribute.Name = "btnClearAttribute"
         btnClearAttribute.Size = New Size(274, 48)
@@ -856,7 +861,7 @@ Partial Class frmEditor_Map
         ' ToolStrip
         ' 
         ToolStrip.ImageScalingSize = New Size(24, 24)
-        ToolStrip.Items.AddRange(New ToolStripItem() {tsbSave, tsbDiscard, ToolStripSeparator1, tsbMapGrid, tsbOpacity, tsbLight, ToolStripSeparator2, tsbFill, tsbClear, tsbEyeDropper, tsbCopyMap, tsbUndo, tsbRedo, tsbScreenshot})
+        ToolStrip.Items.AddRange(New ToolStripItem() {tsbSave, tsbDiscard, ToolStripSeparator1, tsbMapGrid, tsbOpacity, tsbLight, ToolStripSeparator2, tsbFill, tsbClear, tsbEyeDropper, tsbCopyMap, tsbDeleteMap, tsbUndo, tsbRedo, tsbScreenshot})
         ToolStrip.Location = New Point(0, 0)
         ToolStrip.Name = "ToolStrip"
         ToolStrip.Padding = New Padding(0, 0, 3, 0)
@@ -951,6 +956,14 @@ Partial Class frmEditor_Map
         tsbCopyMap.Size = New Size(34, 28)
         tsbCopyMap.ToolTipText = "Copy"
         ' 
+        ' tsbDeleteMap
+        ' 
+        tsbDeleteMap.DisplayStyle = ToolStripItemDisplayStyle.Image
+        tsbDeleteMap.Image = My.Resources.Resources.Delete
+        tsbDeleteMap.ImageTransparentColor = Color.Magenta
+        tsbDeleteMap.Name = "tsbDeleteMap"
+        tsbDeleteMap.Size = New Size(34, 28)
+        ' 
         ' tsbUndo
         ' 
         tsbUndo.DisplayStyle = ToolStripItemDisplayStyle.Image
@@ -986,7 +999,7 @@ Partial Class frmEditor_Map
         tabpages.Controls.Add(tpSettings)
         tabpages.Controls.Add(tpDirBlock)
         tabpages.Controls.Add(tpEvents)
-        tabpages.Controls.Add(TabPage1)
+        tabpages.Controls.Add(tpEffects)
         tabpages.Location = New Point(7, 53)
         tabpages.Margin = New Padding(6, 5, 6, 5)
         tabpages.Name = "tabpages"
@@ -1048,7 +1061,7 @@ Partial Class frmEditor_Map
         ' 
         cmbLayers.DropDownStyle = ComboBoxStyle.DropDownList
         cmbLayers.FormattingEnabled = True
-        cmbLayers.Items.AddRange(New Object() {"Ground", "Mask", "Cover", "Fringe", "Roof"})
+        cmbLayers.Items.AddRange(New Object() {"Ground", "Mask", "Mask 2 Anim", "Cover", "Cover 2 Anim", "Fringe", "Fringe Anim", "Roof", "Roof Anim"})
         cmbLayers.Location = New Point(309, 943)
         cmbLayers.Margin = New Padding(6, 5, 6, 5)
         cmbLayers.Name = "cmbLayers"
@@ -1077,6 +1090,10 @@ Partial Class frmEditor_Map
         ' 
         ' tpAttributes
         ' 
+        tpAttributes.Controls.Add(optNoXing)
+        tpAttributes.Controls.Add(optInfo)
+        tpAttributes.Controls.Add(Label23)
+        tpAttributes.Controls.Add(cmbAttribute)
         tpAttributes.Controls.Add(optAnimation)
         tpAttributes.Controls.Add(optLight)
         tpAttributes.Controls.Add(btnClearAttribute)
@@ -1098,6 +1115,51 @@ Partial Class frmEditor_Map
         tpAttributes.TabIndex = 3
         tpAttributes.Text = "Attributes"
         tpAttributes.UseVisualStyleBackColor = True
+        ' 
+        ' optNoXing
+        ' 
+        optNoXing.AutoSize = True
+        optNoXing.Checked = True
+        optNoXing.Location = New Point(17, 165)
+        optNoXing.Margin = New Padding(6, 5, 6, 5)
+        optNoXing.Name = "optNoXing"
+        optNoXing.Size = New Size(102, 29)
+        optNoXing.TabIndex = 23
+        optNoXing.TabStop = True
+        optNoXing.Text = "No Xing"
+        optNoXing.UseVisualStyleBackColor = True
+        ' 
+        ' optInfo
+        ' 
+        optInfo.AutoSize = True
+        optInfo.Location = New Point(196, 958)
+        optInfo.Margin = New Padding(6, 5, 6, 5)
+        optInfo.Name = "optInfo"
+        optInfo.Size = New Size(69, 29)
+        optInfo.TabIndex = 22
+        optInfo.Text = "Info"
+        optInfo.UseVisualStyleBackColor = True
+        ' 
+        ' Label23
+        ' 
+        Label23.AutoSize = True
+        Label23.Location = New Point(12, 960)
+        Label23.Margin = New Padding(6, 0, 6, 0)
+        Label23.Name = "Label23"
+        Label23.Size = New Size(53, 25)
+        Label23.TabIndex = 21
+        Label23.Text = "Type:"
+        ' 
+        ' cmbAttribute
+        ' 
+        cmbAttribute.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbAttribute.FormattingEnabled = True
+        cmbAttribute.Items.AddRange(New Object() {"Layer 1", "Layer 2"})
+        cmbAttribute.Location = New Point(89, 957)
+        cmbAttribute.Margin = New Padding(6, 5, 6, 5)
+        cmbAttribute.Name = "cmbAttribute"
+        cmbAttribute.Size = New Size(95, 33)
+        cmbAttribute.TabIndex = 20
         ' 
         ' optAnimation
         ' 
@@ -1221,7 +1283,7 @@ Partial Class frmEditor_Map
         fraMapSettings.Controls.Add(Label22)
         fraMapSettings.Controls.Add(lstShop)
         fraMapSettings.Controls.Add(Label8)
-        fraMapSettings.Controls.Add(cmbMoral)
+        fraMapSettings.Controls.Add(lstMoral)
         fraMapSettings.Location = New Point(10, 62)
         fraMapSettings.Margin = New Padding(6, 5, 6, 5)
         fraMapSettings.Name = "fraMapSettings"
@@ -1229,7 +1291,7 @@ Partial Class frmEditor_Map
         fraMapSettings.Size = New Size(387, 132)
         fraMapSettings.TabIndex = 15
         fraMapSettings.TabStop = False
-        fraMapSettings.Text = "Map Settings"
+        fraMapSettings.Text = "Settings"
         ' 
         ' Label22
         ' 
@@ -1261,15 +1323,15 @@ Partial Class frmEditor_Map
         Label8.TabIndex = 38
         Label8.Text = "Moral:"
         ' 
-        ' cmbMoral
+        ' lstMoral
         ' 
-        cmbMoral.DropDownStyle = ComboBoxStyle.DropDownList
-        cmbMoral.FormattingEnabled = True
-        cmbMoral.Location = New Point(74, 23)
-        cmbMoral.Margin = New Padding(6, 5, 6, 5)
-        cmbMoral.Name = "cmbMoral"
-        cmbMoral.Size = New Size(298, 33)
-        cmbMoral.TabIndex = 37
+        lstMoral.DropDownStyle = ComboBoxStyle.DropDownList
+        lstMoral.FormattingEnabled = True
+        lstMoral.Location = New Point(74, 23)
+        lstMoral.Margin = New Padding(6, 5, 6, 5)
+        lstMoral.Name = "lstMoral"
+        lstMoral.Size = New Size(298, 33)
+        lstMoral.TabIndex = 37
         ' 
         ' fraMapLinks
         ' 
@@ -1285,7 +1347,7 @@ Partial Class frmEditor_Map
         fraMapLinks.Size = New Size(387, 215)
         fraMapLinks.TabIndex = 14
         fraMapLinks.TabStop = False
-        fraMapLinks.Text = "Map Links"
+        fraMapLinks.Text = "Borders"
         ' 
         ' txtDown
         ' 
@@ -1308,12 +1370,12 @@ Partial Class frmEditor_Map
         ' lblMap
         ' 
         lblMap.AutoSize = True
-        lblMap.Location = New Point(126, 97)
+        lblMap.Location = New Point(149, 96)
         lblMap.Margin = New Padding(6, 0, 6, 0)
         lblMap.Name = "lblMap"
-        lblMap.Size = New Size(130, 25)
+        lblMap.Size = New Size(67, 25)
         lblMap.TabIndex = 4
-        lblMap.Text = "Current Map: 0"
+        lblMap.Text = "Map: 0"
         ' 
         ' txtRight
         ' 
@@ -1389,9 +1451,9 @@ Partial Class frmEditor_Map
         Label5.Location = New Point(10, 30)
         Label5.Margin = New Padding(6, 0, 6, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(127, 25)
+        Label5.Size = New Size(52, 25)
         Label5.TabIndex = 4
-        Label5.Text = "Respawn Map:"
+        Label5.Text = "Map:"
         ' 
         ' txtBootY
         ' 
@@ -1408,9 +1470,9 @@ Partial Class frmEditor_Map
         Label3.Location = New Point(10, 125)
         Label3.Margin = New Padding(6, 0, 6, 0)
         Label3.Name = "Label3"
-        Label3.Size = New Size(101, 25)
+        Label3.Size = New Size(26, 25)
         Label3.TabIndex = 2
-        Label3.Text = "Respawn Y:"
+        Label3.Text = "Y:"
         ' 
         ' txtBootX
         ' 
@@ -1427,9 +1489,9 @@ Partial Class frmEditor_Map
         Label4.Location = New Point(10, 72)
         Label4.Margin = New Padding(6, 0, 6, 0)
         Label4.Name = "Label4"
-        Label4.Size = New Size(102, 25)
+        Label4.Size = New Size(27, 25)
         Label4.TabIndex = 0
-        Label4.Text = "Respawn X:"
+        Label4.Text = "X:"
         ' 
         ' fraMaxSizes
         ' 
@@ -1444,7 +1506,7 @@ Partial Class frmEditor_Map
         fraMaxSizes.Size = New Size(356, 150)
         fraMaxSizes.TabIndex = 12
         fraMaxSizes.TabStop = False
-        fraMaxSizes.Text = "Map Sizes"
+        fraMaxSizes.Text = "Size Settings"
         ' 
         ' txtMaxY
         ' 
@@ -1461,9 +1523,9 @@ Partial Class frmEditor_Map
         Label2.Location = New Point(10, 87)
         Label2.Margin = New Padding(6, 0, 6, 0)
         Label2.Name = "Label2"
-        Label2.Size = New Size(110, 25)
+        Label2.Size = New Size(64, 25)
         Label2.TabIndex = 2
-        Label2.Text = "Maximum Y:"
+        Label2.Text = "Max Y:"
         ' 
         ' txtMaxX
         ' 
@@ -1480,9 +1542,9 @@ Partial Class frmEditor_Map
         Label7.Location = New Point(10, 37)
         Label7.Margin = New Padding(6, 0, 6, 0)
         Label7.Name = "Label7"
-        Label7.Size = New Size(111, 25)
+        Label7.Size = New Size(65, 25)
         Label7.TabIndex = 0
-        Label7.Text = "Maximum X:"
+        Label7.Text = "Max X:"
         ' 
         ' GroupBox2
         ' 
@@ -1648,21 +1710,21 @@ Partial Class frmEditor_Map
         Label13.TabIndex = 0
         Label13.Text = "Click on the map where you want to add a event."
         ' 
-        ' TabPage1
+        ' tpEffects
         ' 
-        TabPage1.Controls.Add(GroupBox6)
-        TabPage1.Controls.Add(GroupBox5)
-        TabPage1.Controls.Add(GroupBox4)
-        TabPage1.Controls.Add(GroupBox3)
-        TabPage1.Controls.Add(GroupBox1)
-        TabPage1.Location = New Point(4, 34)
-        TabPage1.Margin = New Padding(6, 5, 6, 5)
-        TabPage1.Name = "TabPage1"
-        TabPage1.Padding = New Padding(6, 5, 6, 5)
-        TabPage1.Size = New Size(778, 1010)
-        TabPage1.TabIndex = 6
-        TabPage1.Text = "Map Effects"
-        TabPage1.UseVisualStyleBackColor = True
+        tpEffects.Controls.Add(GroupBox6)
+        tpEffects.Controls.Add(GroupBox5)
+        tpEffects.Controls.Add(GroupBox4)
+        tpEffects.Controls.Add(GroupBox3)
+        tpEffects.Controls.Add(GroupBox1)
+        tpEffects.Location = New Point(4, 34)
+        tpEffects.Margin = New Padding(6, 5, 6, 5)
+        tpEffects.Name = "tpEffects"
+        tpEffects.Padding = New Padding(6, 5, 6, 5)
+        tpEffects.Size = New Size(778, 1010)
+        tpEffects.TabIndex = 6
+        tpEffects.Text = "Effects"
+        tpEffects.UseVisualStyleBackColor = True
         ' 
         ' GroupBox6
         ' 
@@ -1675,7 +1737,7 @@ Partial Class frmEditor_Map
         GroupBox6.Size = New Size(393, 75)
         GroupBox6.TabIndex = 22
         GroupBox6.TabStop = False
-        GroupBox6.Text = "Map Brightness"
+        GroupBox6.Text = "Brightness"
         ' 
         ' lblMapBrightness
         ' 
@@ -1707,7 +1769,7 @@ Partial Class frmEditor_Map
         GroupBox5.Size = New Size(393, 102)
         GroupBox5.TabIndex = 21
         GroupBox5.TabStop = False
-        GroupBox5.Text = "Map Parallax"
+        GroupBox5.Text = "Parallax"
         ' 
         ' Label20
         ' 
@@ -1739,7 +1801,7 @@ Partial Class frmEditor_Map
         GroupBox4.Size = New Size(401, 102)
         GroupBox4.TabIndex = 20
         GroupBox4.TabStop = False
-        GroupBox4.Text = "Map Panorama"
+        GroupBox4.Text = "Panorama"
         ' 
         ' Label19
         ' 
@@ -1778,7 +1840,7 @@ Partial Class frmEditor_Map
         GroupBox3.Size = New Size(393, 297)
         GroupBox3.TabIndex = 19
         GroupBox3.TabStop = False
-        GroupBox3.Text = "Map Tint"
+        GroupBox3.Text = "Tint"
         ' 
         ' chkTint
         ' 
@@ -1786,9 +1848,9 @@ Partial Class frmEditor_Map
         chkTint.Location = New Point(10, 37)
         chkTint.Margin = New Padding(6, 5, 6, 5)
         chkTint.Name = "chkTint"
-        chkTint.Size = New Size(98, 29)
+        chkTint.Size = New Size(90, 29)
         chkTint.TabIndex = 18
-        chkTint.Text = "Enable?"
+        chkTint.Text = "Enable"
         chkTint.UseVisualStyleBackColor = True
         ' 
         ' lblMapAlpha
@@ -1886,7 +1948,7 @@ Partial Class frmEditor_Map
         GroupBox1.Size = New Size(401, 297)
         GroupBox1.TabIndex = 18
         GroupBox1.TabStop = False
-        GroupBox1.Text = "Map Weather"
+        GroupBox1.Text = "Weather"
         ' 
         ' scrlFogOpacity
         ' 
@@ -2041,7 +2103,7 @@ Partial Class frmEditor_Map
         tpDirBlock.PerformLayout()
         tpEvents.ResumeLayout(False)
         tpEvents.PerformLayout()
-        TabPage1.ResumeLayout(False)
+        tpEffects.ResumeLayout(False)
         GroupBox6.ResumeLayout(False)
         GroupBox6.PerformLayout()
         GroupBox5.ResumeLayout(False)
@@ -2138,7 +2200,7 @@ Partial Class frmEditor_Map
     Friend WithEvents lstMusic As System.Windows.Forms.ListBox
     Friend WithEvents fraMapSettings As System.Windows.Forms.GroupBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents cmbMoral As System.Windows.Forms.ComboBox
+    Friend WithEvents lstMoral As System.Windows.Forms.ComboBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents cmbNpcList As System.Windows.Forms.ComboBox
     Friend WithEvents lstMapNpc As System.Windows.Forms.ListBox
@@ -2165,7 +2227,7 @@ Partial Class frmEditor_Map
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents lblPasteMode As System.Windows.Forms.Label
     Friend WithEvents lblCopyMode As System.Windows.Forms.Label
-    Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
+    Friend WithEvents tpEffects As System.Windows.Forms.TabPage
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents chkTint As System.Windows.Forms.CheckBox
     Friend WithEvents lblMapAlpha As System.Windows.Forms.Label
@@ -2221,4 +2283,9 @@ Partial Class frmEditor_Map
     Friend WithEvents lstShop As ComboBox
     Friend WithEvents chkNoMapRespawn As CheckBox
     Friend WithEvents chkIndoors As CheckBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents cmbAttribute As ComboBox
+    Friend WithEvents tsbDeleteMap As ToolStripButton
+    Friend WithEvents optInfo As RadioButton
+    Friend WithEvents optNoXing As RadioButton
 End Class

@@ -72,7 +72,7 @@ Friend Module C_EventSystem
 
         If count = 0 Then Exit Sub
         For i = 0 To count
-            If Map.Events(i).X = X AndAlso Map.Events(i).Y = Y Then
+            If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                 ' copy it
                 CopyEvent = Map.Events(i)
                 Exit Sub
@@ -88,7 +88,7 @@ Friend Module C_EventSystem
 
         If count > 0 Then
             For i = 0 To count
-                If Map.Events(i).X = X AndAlso Map.Events(i).Y = Y Then
+                If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                     ' already an event - paste over it
                     EventNum = i
                 End If
@@ -118,7 +118,7 @@ Friend Module C_EventSystem
         count = Map.EventCount
 
         For i = 0 To count
-            If Map.Events(i).X = X AndAlso Map.Events(i).Y = Y Then
+            If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                 ' delete it
                 ClearEvent(i)
                 lowIndex = i
@@ -150,7 +150,7 @@ Friend Module C_EventSystem
         ' make sure there's not already an event
         If count > 0 Then
             For i = 0 To count
-                If Map.Events(i).X = X AndAlso Map.Events(i).Y = Y Then
+                If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                     ' already an event - edit it
                     If Not cancelLoad Then EventEditorInit(i)
                     Exit Sub
@@ -179,7 +179,7 @@ Friend Module C_EventSystem
     End Sub
 
     Sub ClearEvent(ByVal EventNum As Integer)
-        If EventNum > Map.EventCount OrElse EventNum > UBound(Map.Events) Then Exit Sub
+        If EventNum > Map.EventCount Or EventNum > UBound(Map.Events) Then Exit Sub
         
         With Map.Events(EventNum)
             .Name = ""
@@ -295,7 +295,7 @@ Friend Module C_EventSystem
 newlist:
             For i = 1 To TmpEvent.Pages(CurPageNum).CommandList(curlist).CommandCount
                 If listleftoff(curlist) > 0 Then
-                    If (TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.Condition OrElse TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.ShowChoices) AndAlso conditionalstage(curlist) <> 0 Then
+                    If (TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.Condition Or TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(listleftoff(curlist)).Index = EventType.ShowChoices) And conditionalstage(curlist) <> 0 Then
                         i = listleftoff(curlist)
                     ElseIf listleftoff(curlist) >= i Then
                         i = listleftoff(curlist) + 1
@@ -901,7 +901,6 @@ newlist:
                     tmptxt = tmptxt & frmEditor_Events.txtShowText.Lines(i)
                 Next
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text1 = tmptxt
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.nudShowTextFace.Value
 
             Case EventType.ShowChoices
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
@@ -1265,7 +1264,6 @@ newlist:
             Case EventType.ShowText
                 IsEdit = True
                 frmEditor_Events.txtShowText.Text = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text1
-                frmEditor_Events.nudShowTextFace.Value = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1
                 frmEditor_Events.fraDialogue.Visible = True
                 frmEditor_Events.fraShowText.Visible = True
                 frmEditor_Events.fraCommands.Visible = False
@@ -1785,7 +1783,6 @@ newlist:
                 End If
             Case EventType.ShowText
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text1 = frmEditor_Events.txtShowText.Text
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.nudShowTextFace.Value
             Case EventType.ShowChoices
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text1 = frmEditor_Events.txtChoicePrompt.Text
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text2 = frmEditor_Events.txtChoices1.Text
@@ -2374,7 +2371,7 @@ newlist:
                     'None
                     frmEditor_Events.picGraphicSel.BackgroundImage = Nothing
                 Case 1
-                    If frmEditor_Events.nudGraphic.Value > 0 AndAlso frmEditor_Events.nudGraphic.Value <= NumCharacters Then
+                    If frmEditor_Events.nudGraphic.Value > 0 And frmEditor_Events.nudGraphic.Value <= NumCharacters Then
                         'Load character from Contents into our sourceBitmap
                         sourceBitmap = New Bitmap(Paths.Graphics & "\characters\" & frmEditor_Events.nudGraphic.Value & ".png")
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
@@ -2399,12 +2396,12 @@ newlist:
                         Exit Sub
                     End If
                 Case 2
-                    If frmEditor_Events.nudGraphic.Value > 0 AndAlso frmEditor_Events.nudGraphic.Value <= NumTileSets Then
+                    If frmEditor_Events.nudGraphic.Value > 0 And frmEditor_Events.nudGraphic.Value <= NumTileSets Then
                         'Load tilesheet from Contents into our sourceBitmap
                         sourceBitmap = New Bitmap(Paths.Graphics & "\tilesets\" & frmEditor_Events.nudGraphic.Value & ".png")
                         targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                        If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 AndAlso TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
+                        If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 And TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
                             sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
                             sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
                             sRect.Bottom = sRect.Top + 32
@@ -2454,7 +2451,7 @@ newlist:
                     Case 0
                         frmEditor_Events.picGraphicSel.BackgroundImage = Nothing
                     Case 1
-                        If TmpEvent.Pages(CurPageNum).Graphic > 0 AndAlso TmpEvent.Pages(CurPageNum).Graphic <= NumCharacters Then
+                        If TmpEvent.Pages(CurPageNum).Graphic > 0 And TmpEvent.Pages(CurPageNum).Graphic <= NumCharacters Then
                             'Load character from Contents into our sourceBitmap
                             sourceBitmap = New Bitmap(Paths.Graphics & "\characters\" & TmpEvent.Pages(CurPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
@@ -2473,12 +2470,12 @@ newlist:
                             Exit Sub
                         End If
                     Case 2
-                        If TmpEvent.Pages(CurPageNum).Graphic > 0 AndAlso TmpEvent.Pages(CurPageNum).Graphic <= NumTileSets Then
+                        If TmpEvent.Pages(CurPageNum).Graphic > 0 And TmpEvent.Pages(CurPageNum).Graphic <= NumTileSets Then
                             'Load tilesheet from Contents into our sourceBitmap
                             sourceBitmap = New Bitmap(Paths.Graphics & "tilesets\" & TmpEvent.Pages(CurPageNum).Graphic & ".png")
                             targetBitmap = New Bitmap(sourceBitmap.Width, sourceBitmap.Height) 'Create our target Bitmap
 
-                            If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 AndAlso TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
+                            If TmpEvent.Pages(CurPageNum).GraphicX2 = 0 And TmpEvent.Pages(CurPageNum).GraphicY2 = 0 Then
                                 sRect.Top = TmpEvent.Pages(CurPageNum).GraphicY * 32
                                 sRect.Left = TmpEvent.Pages(CurPageNum).GraphicX * 32
                                 sRect.Bottom = sRect.Top + 32
@@ -2561,7 +2558,7 @@ newlist:
                     tY = ((y) - 7) + (PicY * 0.5)
                     RenderText("E", Window, tX, tY, (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black))
                 Case 1
-                    If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumCharacters Then
+                    If Map.Events(i).Pages(1).Graphic > 0 And Map.Events(i).Pages(1).Graphic <= NumCharacters Then
                         If CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
                             LoadTexture(Map.Events(i).Pages(1).Graphic, 2)
                         End If
@@ -2600,7 +2597,7 @@ newlist:
                         Window.Draw(rec2)
                     End If
                 Case 2
-                    If Map.Events(i).Pages(1).Graphic > 0 AndAlso Map.Events(i).Pages(1).Graphic <= NumTileSets Then
+                    If Map.Events(i).Pages(1).Graphic > 0 And Map.Events(i).Pages(1).Graphic <= NumTileSets Then
                         With rec
                             .X = Map.Events(i).Pages(1).GraphicX * 32
                             .Width = Map.Events(i).Pages(1).GraphicX2 * 32
@@ -2653,7 +2650,7 @@ nextevent:
             Case 0
                 Exit Sub
             Case 1
-                If MapEvents(id).Graphic <= 0 OrElse MapEvents(id).Graphic > NumCharacters Then Exit Sub
+                If MapEvents(id).Graphic <= 0 Or MapEvents(id).Graphic > NumCharacters Then Exit Sub
 
                 ' Reset frame
                 If MapEvents(id).Steps = 3 Then
@@ -2706,8 +2703,8 @@ nextevent:
                 ' render the actual sprite
                 DrawCharacterSprite(MapEvents(id).Graphic, x, y, sRect)
             Case 2
-                If MapEvents(id).Graphic < 1 OrElse MapEvents(id).Graphic > NumTileSets Then Exit Sub
-                If MapEvents(id).GraphicY2 > 0 OrElse MapEvents(id).GraphicX2 > 0 Then
+                If MapEvents(id).Graphic < 1 Or MapEvents(id).Graphic > NumTileSets Then Exit Sub
+                If MapEvents(id).GraphicY2 > 0 Or MapEvents(id).GraphicX2 > 0 Then
                     With sRect
                         .X = MapEvents(id).GraphicX * 32
                         .Y = MapEvents(id).GraphicY * 32
@@ -2772,8 +2769,8 @@ nextevent:
             End Select
             ' Check if completed walking over to the next tile
             If MapEvents(id).Moving > 0 Then
-                If MapEvents(id).Dir = DirectionType.Right OrElse MapEvents(id).Dir = DirectionType.Down Then
-                    If (MapEvents(id).XOffset >= 0) AndAlso (MapEvents(id).YOffset >= 0) Then
+                If MapEvents(id).Dir = DirectionType.Right Or MapEvents(id).Dir = DirectionType.Down Then
+                    If (MapEvents(id).XOffset >= 0) And (MapEvents(id).YOffset >= 0) Then
                         MapEvents(id).Moving = 0
                         If MapEvents(id).Steps = 1 Then
                             MapEvents(id).Steps = 3
@@ -2782,7 +2779,7 @@ nextevent:
                         End If
                     End If
                 Else
-                    If (MapEvents(id).XOffset <= 0) AndAlso (MapEvents(id).YOffset <= 0) Then
+                    If (MapEvents(id).XOffset <= 0) And (MapEvents(id).YOffset <= 0) Then
                         MapEvents(id).Moving = 0
                         If MapEvents(id).Steps = 1 Then
                             MapEvents(id).Steps = 3

@@ -145,7 +145,7 @@ Module S_Database
     End Function
 
     Public Function HexToNumber(hexString As String) As Int64
-        If String.IsNullOrWhiteSpace(hexString) OrElse Not Regex.IsMatch(hexString, "^[0-9a-fA-F]+$") Then
+        If String.IsNullOrWhiteSpace(hexString) Or Not Regex.IsMatch(hexString, "^[0-9a-fA-F]+$") Then
             Return 0
         End If
 
@@ -353,9 +353,9 @@ Module S_Database
         For Each line As String In File.ReadAllLines(filePath)
             If line.Trim().Equals("[" & section & "]", StringComparison.OrdinalIgnoreCase) Then
                 isInSection = True
-            ElseIf line.StartsWith("[") AndAlso line.EndsWith("]") Then
+            ElseIf line.StartsWith("[") And line.EndsWith("]") Then
                 isInSection = False
-            ElseIf isInSection AndAlso line.Contains("=") Then
+            ElseIf isInSection And line.Contains("=") Then
                 Dim parts() As String = line.Split(New Char() {"="c}, 2)
                 If parts(0).Trim().Equals(key, StringComparison.OrdinalIgnoreCase) Then
                     Return parts(1).Trim()
@@ -376,7 +376,7 @@ Module S_Database
             If lines(i).Trim().Equals("[" & section & "]", StringComparison.OrdinalIgnoreCase) Then
                 isInSection = True
                 i += 1
-                While i < lines.Count AndAlso Not lines(i).StartsWith("[")
+                While i < lines.Count And Not lines(i).StartsWith("[")
                     If lines(i).Contains("=") Then
                         Dim parts() As String = lines(i).Split(New Char() {"="c}, 2)
                         If parts(0).Trim().Equals(key, StringComparison.OrdinalIgnoreCase) Then
@@ -558,6 +558,12 @@ Module S_Database
             Exit Sub
         End If
 
+        If File.Exists(mapsDir & "\sd\map" & MapNum & ".dat" )
+            'Dim sdMap As SDMapStruct = loadsdmap(mapsDir & "\sd\map" & mapNum.ToString() & ".dat")
+            'Map(mapNum) = MapFromSDMap(sdMap)
+            Exit Sub
+        End If
+
         Dim data As JObject
 
         data = SelectRow(mapNum, "map", "data")
@@ -730,7 +736,7 @@ Module S_Database
                     For x As Integer = 0 To 15
                         xwMap.Tile(x, y).Ground = reader.ReadInt16() ' 42
                         xwMap.Tile(x, y).Mask = reader.ReadInt16() ' 44
-                        xwMap.Tile(x, y).Animation = reader.ReadInt16() ' 46
+                        xwMap.Tile(x, y).MaskAnim = reader.ReadInt16() ' 46
                         xwMap.Tile(x, y).Fringe = reader.ReadInt16() ' 48
                         xwMap.Tile(x, y).Type = CType(reader.ReadByte(), TileType) ' 50
                         xwMap.Tile(x, y).Data1 = reader.ReadInt16() ' 51
@@ -777,12 +783,20 @@ Module S_Database
                     tileNumber = xwTile.Ground
                 Case LayerType.Mask
                     tileNumber = xwTile.Mask
+                Case LayerType.MaskAnim
+                    tileNumber = xwTile.MaskAnim
                 Case LayerType.Cover
                     tileNumber = xwTile.Mask2
+                Case LayerType.CoverAnim
+                    tileNumber = xwTile.Mask2Anim
                 Case LayerType.Fringe
                     tileNumber = xwTile.Fringe
+                Case LayerType.FringeAnim
+                    tileNumber = xwTile.FringeAnim
                 Case LayerType.Roof
                     tileNumber = xwTile.Roof
+                Case LayerType.RoofAnim
+                    tileNumber = xwTile.Fringe2Anim
             End Select
 
             ' Ensure tileNumber is non-negative
@@ -841,7 +855,7 @@ Module S_Database
         End If
 
         mwMap.Weather = xwMap.Weather
-        mwMap.NoRespawn = xwMap.Respawn <> 0
+        mwMap.NoRespawn = xwMap.Respawn = 0
         mwMap.MaxX = 15
         mwMap.MaxY = 11
 
@@ -900,6 +914,25 @@ Module S_Database
         For i As Integer = 1 To 30
             mwMap.Npc(i) = csMap.MapData.Npc(i)
         Next
+
+        Return mwMap
+    End Function
+
+    Private Function MapFromSDMap(sdMap As SDMapStruct) As MapStruct
+        Dim mwMap As MapStruct
+
+        mwMap.Name = sdMap.Name
+        mwMap.Music = sdMap.Music
+        mwMap.Revision = sdMap.Revision
+
+        mwMap.Up = sdMap.Up
+        mwMap.Down = sdMap.Down
+        mwMap.Left = sdMap.Left
+        mwMap.Right = sdMap.Right
+
+        mwMap.Tileset = sdMap.Tileset
+        mwMap.MaxX = sdMap.MaxX
+        mwMap.MaxY = sdMap.MaxY
 
         Return mwMap
     End Function
@@ -1025,12 +1058,14 @@ Module S_Database
     Sub ClearShop(index As Integer)
         Shop(index) = Nothing
         Shop(index).Name = ""
+
+        For i = 1 To MAX_TRADES
+            ReDim Shop(index).TradeItem(i)
+        Next
     End Sub
 
     Sub ClearShops()
-        ReDim Shop(MAX_SHOPS).TradeItem(MAX_TRADES)
-
-        For i = 1 To MAX_SHOPS
+        For i = 1 To MAX_SHOPS      
             Call ClearShop(i)
         Next
     End Sub

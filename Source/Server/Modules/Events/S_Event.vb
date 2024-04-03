@@ -81,19 +81,19 @@ Friend Module S_Event
 
     Function CanEventMove(index As Integer, mapNum As Integer, x As Integer, y As Integer, eventId As Integer, walkThrough As Integer, dir As Byte, Optional globalevent As Boolean = False) As Boolean
         Dim i As Integer
-        Dim n As Integer, z As Integer, begineventprocessing As Boolean
+        Dim n As Integer, n2 As Integer, z As Integer, begineventprocessing As Boolean
 
         ' Check for subscript out of range
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Or dir < DirectionType.Up Or dir > DirectionType.Right Then Exit Function
 
         CanEventMove = True
 
         Select Case dir
             Case DirectionType.Up
-
                 ' Check to make sure not outside of boundries
                 If y > 0 Then
                     n = Map(mapNum).Tile(x, y - 1).Type
+                    n2 = Map(mapNum).Tile(x, y - 1).Type2
 
                     If walkThrough = 1 Then
                         CanEventMove = True
@@ -101,12 +101,12 @@ Friend Module S_Event
                     End If
 
                     ' Check to make sure that the tile is walkable
-                    If n = TileType.Blocked Then
+                    If n = TileType.Blocked Or n2 = TileType.Blocked Then
                         CanEventMove = False
                         Exit Function
                     End If
 
-                    If n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
+                    If n <> TileType.Item And n <> TileType.NpcSpawn And n2 <> TileType.Item And n2 <> TileType.NpcSpawn Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -114,7 +114,7 @@ Friend Module S_Event
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = x) AndAlso (GetPlayerY(i) = y - 1) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y - 1) Then
                                 CanEventMove = False
                                 'There IS a player in the way. But now maybe we can call the event touch thingy!
                                 If Map(mapNum).Events(eventId).Pages(TempPlayer(index).EventMap.EventPages(eventId).PageId).Trigger = 1 Then
@@ -141,15 +141,15 @@ Friend Module S_Event
                     If CanEventMove = False Then Exit Function
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).X = x) AndAlso (MapNPC(mapNum).Npc(i).Y = y - 1) Then
+                        If (MapNPC(mapNum).Npc(i).X = x) And (MapNPC(mapNum).Npc(i).Y = y - 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True AndAlso TempEventMap(mapNum).EventCount > 0 Then
+                    If globalevent = True And TempEventMap(mapNum).EventCount > 0 Then
                         For z = 0 To TempEventMap(mapNum).EventCount
-                            If (z <> eventId) AndAlso (z > 0) AndAlso (TempEventMap(mapNum).Events(z).X = x) AndAlso (TempEventMap(mapNum).Events(z).Y = y - 1) AndAlso (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
+                            If (z <> eventId) And (z > 0) And (TempEventMap(mapNum).Events(z).X = x) And (TempEventMap(mapNum).Events(z).Y = y - 1) And (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
                                 CanEventMove = False
                                 Exit Function
                             End If
@@ -157,7 +157,7 @@ Friend Module S_Event
                     Else
                         If TempPlayer(index).EventMap.CurrentEvents > 0 Then
                             For z = 0 To TempPlayer(index).EventMap.CurrentEvents
-                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) AndAlso (eventId > 0) AndAlso (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X) AndAlso (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y - 1) AndAlso (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
+                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) And (eventId > 0) And (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X) And (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y - 1) And (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
                                     CanEventMove = False
                                     Exit Function
                                 End If
@@ -175,10 +175,10 @@ Friend Module S_Event
                 End If
 
             Case DirectionType.Down
-
                 ' Check to make sure not outside of boundries
                 If y < Map(mapNum).MaxY Then
                     n = Map(mapNum).Tile(x, y + 1).Type
+                    n2 = Map(mapNum).Tile(x, y + 1).Type
 
                     If walkThrough = 1 Then
                         CanEventMove = True
@@ -186,12 +186,12 @@ Friend Module S_Event
                     End If
 
                     ' Check to make sure that the tile is walkable
-                    If n = TileType.Blocked Then
+                    If n = TileType.Blocked Or n2 = TileType.Blocked Then
                         CanEventMove = False
                         Exit Function
                     End If
 
-                    If n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
+                    If n <> TileType.Item And n <> TileType.NpcSpawn And n2 <> TileType.Item And n2 <> TileType.NpcSpawn  Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -199,7 +199,7 @@ Friend Module S_Event
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = x) AndAlso (GetPlayerY(i) = y + 1) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = x) And (GetPlayerY(i) = y + 1) Then
                                 CanEventMove = False
                                 'There IS a player in the way. But now maybe we can call the event touch thingy!
                                 If Map(mapNum).Events(eventId).Pages(TempPlayer(index).EventMap.EventPages(eventId).PageId).Trigger = 1 Then
@@ -227,15 +227,15 @@ Friend Module S_Event
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).X = x) AndAlso (MapNPC(mapNum).Npc(i).Y = y + 1) Then
+                        If (MapNPC(mapNum).Npc(i).X = x) And (MapNPC(mapNum).Npc(i).Y = y + 1) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True AndAlso TempEventMap(mapNum).EventCount > 0 Then
+                    If globalevent = True And TempEventMap(mapNum).EventCount > 0 Then
                         For z = 0 To TempEventMap(mapNum).EventCount
-                            If (z <> eventId) AndAlso (z > 0) AndAlso (TempEventMap(mapNum).Events(z).X = x) AndAlso (TempEventMap(mapNum).Events(z).Y = y + 1) AndAlso (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
+                            If (z <> eventId) And (z > 0) And (TempEventMap(mapNum).Events(z).X = x) And (TempEventMap(mapNum).Events(z).Y = y + 1) And (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
                                 CanEventMove = False
                                 Exit Function
                             End If
@@ -243,7 +243,7 @@ Friend Module S_Event
                     Else
                         If TempPlayer(index).EventMap.CurrentEvents > 0 Then
                             For z = 0 To TempPlayer(index).EventMap.CurrentEvents
-                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) AndAlso (eventId > 0) AndAlso (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X) AndAlso (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y + 1) AndAlso (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
+                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) And (eventId > 0) And (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X) And (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y + 1) And (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
                                     CanEventMove = False
                                     Exit Function
                                 End If
@@ -261,10 +261,10 @@ Friend Module S_Event
                 End If
 
             Case DirectionType.Left
-
                 ' Check to make sure not outside of boundries
                 If x > 0 Then
                     n = Map(mapNum).Tile(x - 1, y).Type
+                    n2 = Map(mapNum).Tile(x - 1, y).Type2
 
                     If walkThrough = 1 Then
                         CanEventMove = True
@@ -272,12 +272,12 @@ Friend Module S_Event
                     End If
 
                     ' Check to make sure that the tile is walkable
-                    If n = TileType.Blocked Then
+                    If n = TileType.Blocked Or n2 = TileType.Blocked Then
                         CanEventMove = False
                         Exit Function
                     End If
 
-                    If n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
+                    If n <> TileType.Item And n <> TileType.NpcSpawn And n2 <> TileType.Item And n2 <> TileType.NpcSpawn Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -285,7 +285,7 @@ Friend Module S_Event
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = x - 1) AndAlso (GetPlayerY(i) = y) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = x - 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
                                 'There IS a player in the way. But now maybe we can call the event touch thingy!
                                 If Map(mapNum).Events(eventId).Pages(TempPlayer(index).EventMap.EventPages(eventId).PageId).Trigger = 1 Then
@@ -313,15 +313,15 @@ Friend Module S_Event
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).X = x - 1) AndAlso (MapNPC(mapNum).Npc(i).Y = y) Then
+                        If (MapNPC(mapNum).Npc(i).X = x - 1) And (MapNPC(mapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True AndAlso TempEventMap(mapNum).EventCount > 0 Then
+                    If globalevent = True And TempEventMap(mapNum).EventCount > 0 Then
                         For z = 0 To TempEventMap(mapNum).EventCount
-                            If (z <> eventId) AndAlso (z > 0) AndAlso (TempEventMap(mapNum).Events(z).X = x - 1) AndAlso (TempEventMap(mapNum).Events(z).Y = y) AndAlso (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
+                            If (z <> eventId) And (z > 0) And (TempEventMap(mapNum).Events(z).X = x - 1) And (TempEventMap(mapNum).Events(z).Y = y) And (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
                                 CanEventMove = False
                                 Exit Function
                             End If
@@ -329,7 +329,7 @@ Friend Module S_Event
                     Else
                         If TempPlayer(index).EventMap.CurrentEvents > 0 Then
                             For z = 0 To TempPlayer(index).EventMap.CurrentEvents
-                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) AndAlso (eventId > 0) AndAlso (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X - 1) AndAlso (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y) AndAlso (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
+                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) And (eventId > 0) And (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X - 1) And (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y) And (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
                                     CanEventMove = False
                                     Exit Function
                                 End If
@@ -347,10 +347,10 @@ Friend Module S_Event
                 End If
 
             Case DirectionType.Right
-
                 ' Check to make sure not outside of boundries
                 If x < Map(mapNum).MaxX Then
                     n = Map(mapNum).Tile(x + 1, y).Type
+                    n2 = Map(mapNum).Tile(x + 1, y).Type2
 
                     If walkThrough = 1 Then
                         CanEventMove = True
@@ -358,12 +358,12 @@ Friend Module S_Event
                     End If
 
                     ' Check to make sure that the tile is walkable
-                    If n = TileType.Blocked Then
+                    If n = TileType.Blocked Or n2 = TileType.Blocked Then
                         CanEventMove = False
                         Exit Function
                     End If
 
-                    If n <> TileType.Item AndAlso n <> TileType.NpcSpawn Then
+                    If n <> TileType.Item And n <> TileType.NpcSpawn And n2 <> TileType.Item And n2 <> TileType.NpcSpawn Then
                         CanEventMove = False
                         Exit Function
                     End If
@@ -371,7 +371,7 @@ Friend Module S_Event
                     ' Check to make sure that there is not a player in the way
                     For i = 1 To Socket.HighIndex
                         If IsPlaying(i) Then
-                            If (GetPlayerMap(i) = mapNum) AndAlso (GetPlayerX(i) = x + 1) AndAlso (GetPlayerY(i) = y) Then
+                            If (GetPlayerMap(i) = mapNum) And (GetPlayerX(i) = x + 1) And (GetPlayerY(i) = y) Then
                                 CanEventMove = False
                                 'There IS a player in the way. But now maybe we can call the event touch thingy!
                                 If Map(mapNum).Events(eventId).Pages(TempPlayer(index).EventMap.EventPages(eventId).PageId).Trigger = 1 Then
@@ -399,15 +399,15 @@ Friend Module S_Event
 
                     ' Check to make sure that there is not another npc in the way
                     For i = 1 To MAX_MAP_NPCS
-                        If (MapNPC(mapNum).Npc(i).X = x + 1) AndAlso (MapNPC(mapNum).Npc(i).Y = y) Then
+                        If (MapNPC(mapNum).Npc(i).X = x + 1) And (MapNPC(mapNum).Npc(i).Y = y) Then
                             CanEventMove = False
                             Exit Function
                         End If
                     Next
 
-                    If globalevent = True AndAlso TempEventMap(mapNum).EventCount > 0 Then
+                    If globalevent = True And TempEventMap(mapNum).EventCount > 0 Then
                         For z = 0 To TempEventMap(mapNum).EventCount
-                            If (z <> eventId) AndAlso (z > 0) AndAlso (TempEventMap(mapNum).Events(z).X = x + 1) AndAlso (TempEventMap(mapNum).Events(z).Y = y) AndAlso (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
+                            If (z <> eventId) And (z > 0) And (TempEventMap(mapNum).Events(z).X = x + 1) And (TempEventMap(mapNum).Events(z).Y = y) And (TempEventMap(mapNum).Events(z).WalkThrough = 0) Then
                                 CanEventMove = False
                                 Exit Function
                             End If
@@ -415,7 +415,7 @@ Friend Module S_Event
                     Else
                         If TempPlayer(index).EventMap.CurrentEvents > 0 Then
                             For z = 0 To TempPlayer(index).EventMap.CurrentEvents
-                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) AndAlso (eventId > 0) AndAlso (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X + 1) AndAlso (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y) AndAlso (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
+                                If (TempPlayer(index).EventMap.EventPages(z).EventId <> eventId) And (eventId > 0) And (TempPlayer(index).EventMap.EventPages(z).X = TempPlayer(index).EventMap.EventPages(eventId).X + 1) And (TempPlayer(index).EventMap.EventPages(z).Y = TempPlayer(index).EventMap.EventPages(eventId).Y) And (TempPlayer(index).EventMap.EventPages(z).WalkThrough = 0) Then
                                     CanEventMove = False
                                     Exit Function
                                 End If
@@ -441,7 +441,7 @@ Friend Module S_Event
         Dim eventindex As Integer, i As Integer
 
         ' Check for subscript out of range
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right Then
+        If mapNum <= 0 Or mapNum > MAX_MAPS Or dir < DirectionType.Up Or dir > DirectionType.Right Then
             Exit Sub
         End If
 
@@ -456,7 +456,7 @@ Friend Module S_Event
                 Next
             End If
 
-            If eventindex = 0 OrElse eventId = 0 Then Exit Sub
+            If eventindex = 0 Or eventId = 0 Then Exit Sub
         End If
 
         If globalevent Then
@@ -485,7 +485,7 @@ Friend Module S_Event
         Dim eventindex As Integer, i As Integer
 
         ' Check for subscript out of range
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS OrElse dir < DirectionType.Up OrElse dir > DirectionType.Right Then Exit Sub
+        If mapNum <= 0 Or mapNum > MAX_MAPS Or dir < DirectionType.Up Or dir > DirectionType.Right Then Exit Sub
 
         If globalevent = False Then
             If TempPlayer(index).EventMap.CurrentEvents > 0 Then
@@ -500,7 +500,7 @@ Friend Module S_Event
                 Next
             End If
 
-            If eventindex = 0 OrElse eventId = 0 Then Exit Sub
+            If eventindex = 0 Or eventId = 0 Then Exit Sub
         Else
             eventindex = eventId
             If eventindex = 0 Then Exit Sub
@@ -657,13 +657,13 @@ Friend Module S_Event
     Function IsOneBlockAway(x1 As Integer, y1 As Integer, x2 As Integer, y2 As Integer) As Boolean
 
         If x1 = x2 Then
-            If y1 = y2 - 1 OrElse y1 = y2 + 1 Then
+            If y1 = y2 - 1 Or y1 = y2 + 1 Then
                 IsOneBlockAway = True
             Else
                 IsOneBlockAway = False
             End If
         ElseIf y1 = y2 Then
-            If x1 = x2 - 1 OrElse x1 = x2 + 1 Then
+            If x1 = x2 - 1 Or x1 = x2 + 1 Then
                 IsOneBlockAway = True
             Else
                 IsOneBlockAway = False
@@ -716,9 +716,9 @@ Friend Module S_Event
         'This Event returns a direction, 4 is not a valid direction so we assume fail unless otherwise told.
         CanEventMoveTowardsPlayer = 4
 
-        If playerId < 0 OrElse playerId > MAX_PLAYERS Then Exit Function
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Function
-        If eventId < 0 OrElse eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
+        If playerId < 0 Or playerId > MAX_PLAYERS Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Function
+        If eventId < 0 Or eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
 
         x = GetPlayerX(playerId)
         y = GetPlayerY(playerId)
@@ -735,7 +735,7 @@ Friend Module S_Event
             Select Case i
                 Case 0
                     ' Up
-                    If y1 > y AndAlso Not didwalk Then
+                    If y1 > y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
@@ -744,7 +744,7 @@ Friend Module S_Event
                     End If
 
                     ' Down
-                    If y1 < y AndAlso Not didwalk Then
+                    If y1 < y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
@@ -753,7 +753,7 @@ Friend Module S_Event
                     End If
 
                     ' Left
-                    If x1 > x AndAlso Not didwalk Then
+                    If x1 > x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
@@ -762,7 +762,7 @@ Friend Module S_Event
                     End If
 
                     ' Right
-                    If x1 < x AndAlso Not didwalk Then
+                    If x1 < x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
@@ -772,7 +772,7 @@ Friend Module S_Event
 
                 Case 1
                     ' Right
-                    If x1 < x AndAlso Not didwalk Then
+                    If x1 < x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
@@ -781,7 +781,7 @@ Friend Module S_Event
                     End If
 
                     ' Left
-                    If x1 > x AndAlso Not didwalk Then
+                    If x1 > x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
@@ -790,7 +790,7 @@ Friend Module S_Event
                     End If
 
                     ' Down
-                    If y1 < y AndAlso Not didwalk Then
+                    If y1 < y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
@@ -799,7 +799,7 @@ Friend Module S_Event
                     End If
 
                     ' Up
-                    If y1 > y AndAlso Not didwalk Then
+                    If y1 > y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
@@ -809,7 +809,7 @@ Friend Module S_Event
 
                 Case 2
                     ' Down
-                    If y1 < y AndAlso Not didwalk Then
+                    If y1 < y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
@@ -818,7 +818,7 @@ Friend Module S_Event
                     End If
 
                     ' Up
-                    If y1 > y AndAlso Not didwalk Then
+                    If y1 > y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
@@ -827,7 +827,7 @@ Friend Module S_Event
                     End If
 
                     ' Right
-                    If x1 < x AndAlso Not didwalk Then
+                    If x1 < x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
@@ -836,7 +836,7 @@ Friend Module S_Event
                     End If
 
                     ' Left
-                    If x1 > x AndAlso Not didwalk Then
+                    If x1 > x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
@@ -846,7 +846,7 @@ Friend Module S_Event
 
                 Case 3
                     ' Left
-                    If x1 > x AndAlso Not didwalk Then
+                    If x1 > x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Left
                             Exit Function
@@ -855,7 +855,7 @@ Friend Module S_Event
                     End If
 
                     ' Right
-                    If x1 < x AndAlso Not didwalk Then
+                    If x1 < x And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Right
                             Exit Function
@@ -864,7 +864,7 @@ Friend Module S_Event
                     End If
 
                     ' Up
-                    If y1 > y AndAlso Not didwalk Then
+                    If y1 > y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Up
                             Exit Function
@@ -873,7 +873,7 @@ Friend Module S_Event
                     End If
 
                     ' Down
-                    If y1 < y AndAlso Not didwalk Then
+                    If y1 < y And Not didwalk Then
                         If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                             CanEventMoveTowardsPlayer = DirectionType.Down
                             Exit Function
@@ -913,7 +913,7 @@ Friend Module S_Event
                 'we loop through all squares
                 For j = 0 To Map(mapNum).MaxY
                     For i = 0 To Map(mapNum).MaxX
-                        'If j = 10 AndAlso i = 0 Then MsgBox "hi!"
+                        'If j = 10 And i = 0 Then MsgBox "hi!"
                         'If they are to be extended, the pointer TIM is on them
                         If pos(i, j) = 100 + tim Then
                             'The part is to be extended, so do it
@@ -997,7 +997,7 @@ Friend Module S_Event
             'We are working backwards to find ONE of the shortest ways back to Start.
             'So we repeat the loop until the LastX and LastY arent in start. Look in the code to see
             'how LastX and LasY change
-            Do While lastX <> sX OrElse lastY <> sY
+            Do While lastX <> sX Or lastY <> sY
                 'We decrease tim by one, and then we are finding any adjacent square to the final one, that
                 'has that value. So lets say the tim would be 5, because it takes 5 steps to get to the target.
                 'Now everytime we decrease that, so we make it 4, and we look for any adjacent square that has
@@ -1073,9 +1073,9 @@ Friend Module S_Event
         'This Event returns a direction, 5 is not a valid direction so we assume fail unless otherwise told.
         CanEventMoveAwayFromPlayer = 5
 
-        If playerId < 0 OrElse playerId > MAX_PLAYERS Then Exit Function
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Function
-        If eventId < 0 OrElse eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
+        If playerId < 0 Or playerId > MAX_PLAYERS Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Function
+        If eventId < 0 Or eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
 
         x = GetPlayerX(playerId)
         y = GetPlayerY(playerId)
@@ -1090,7 +1090,7 @@ Friend Module S_Event
         Select Case i
             Case 0
                 ' Up
-                If y1 > y AndAlso Not didwalk Then
+                If y1 > y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
@@ -1099,7 +1099,7 @@ Friend Module S_Event
                 End If
 
                 ' Down
-                If y1 < y AndAlso Not didwalk Then
+                If y1 < y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
@@ -1108,7 +1108,7 @@ Friend Module S_Event
                 End If
 
                 ' Left
-                If x1 > x AndAlso Not didwalk Then
+                If x1 > x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
@@ -1117,7 +1117,7 @@ Friend Module S_Event
                 End If
 
                 ' Right
-                If x1 < x AndAlso Not didwalk Then
+                If x1 < x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
@@ -1127,7 +1127,7 @@ Friend Module S_Event
 
             Case 1
                 ' Right
-                If x1 < x AndAlso Not didwalk Then
+                If x1 < x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
@@ -1136,7 +1136,7 @@ Friend Module S_Event
                 End If
 
                 ' Left
-                If x1 > x AndAlso Not didwalk Then
+                If x1 > x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
@@ -1145,7 +1145,7 @@ Friend Module S_Event
                 End If
 
                 ' Down
-                If y1 < y AndAlso Not didwalk Then
+                If y1 < y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
@@ -1154,7 +1154,7 @@ Friend Module S_Event
                 End If
 
                 ' Up
-                If y1 > y AndAlso Not didwalk Then
+                If y1 > y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
@@ -1164,7 +1164,7 @@ Friend Module S_Event
 
             Case 2
                 ' Down
-                If y1 < y AndAlso Not didwalk Then
+                If y1 < y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
@@ -1173,7 +1173,7 @@ Friend Module S_Event
                 End If
 
                 ' Up
-                If y1 > y AndAlso Not didwalk Then
+                If y1 > y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
@@ -1182,7 +1182,7 @@ Friend Module S_Event
                 End If
 
                 ' Right
-                If x1 < x AndAlso Not didwalk Then
+                If x1 < x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
@@ -1191,7 +1191,7 @@ Friend Module S_Event
                 End If
 
                 ' Left
-                If x1 > x AndAlso Not didwalk Then
+                If x1 > x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
@@ -1201,7 +1201,7 @@ Friend Module S_Event
 
             Case 3
                 ' Left
-                If x1 > x AndAlso Not didwalk Then
+                If x1 > x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Right, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Right
                         Exit Function
@@ -1210,7 +1210,7 @@ Friend Module S_Event
                 End If
 
                 ' Right
-                If x1 < x AndAlso Not didwalk Then
+                If x1 < x And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Left, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Left
                         Exit Function
@@ -1219,7 +1219,7 @@ Friend Module S_Event
                 End If
 
                 ' Up
-                If y1 > y AndAlso Not didwalk Then
+                If y1 > y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Down, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Down
                         Exit Function
@@ -1228,7 +1228,7 @@ Friend Module S_Event
                 End If
 
                 ' Down
-                If y1 < y AndAlso Not didwalk Then
+                If y1 < y And Not didwalk Then
                     If CanEventMove(playerId, mapNum, x1, y1, eventId, walkThrough, DirectionType.Up, False) Then
                         CanEventMoveAwayFromPlayer = DirectionType.Up
                         Exit Function
@@ -1246,9 +1246,9 @@ Friend Module S_Event
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
-        If playerId < 0 OrElse playerId > MAX_PLAYERS Then Exit Function
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Function
-        If eventId < 0 OrElse eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
+        If playerId < 0 Or playerId > MAX_PLAYERS Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Function
+        If eventId < 0 Or eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
 
         x = GetPlayerX(playerId)
         y = GetPlayerY(playerId)
@@ -1289,9 +1289,9 @@ Friend Module S_Event
         Dim i As Integer, x As Integer, y As Integer, x1 As Integer, y1 As Integer, distance As Integer
         'This does not work for global events so this MUST be a player one....
 
-        If playerId < 0 OrElse playerId > MAX_PLAYERS Then Exit Function
-        If mapNum <= 0 OrElse mapNum > MAX_MAPS Then Exit Function
-        If eventId < 0 OrElse eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
+        If playerId < 0 Or playerId > MAX_PLAYERS Then Exit Function
+        If mapNum <= 0 Or mapNum > MAX_MAPS Then Exit Function
+        If eventId < 0 Or eventId > TempPlayer(playerId).EventMap.CurrentEvents Then Exit Function
 
         x = GetPlayerX(playerId)
         y = GetPlayerY(playerId)
@@ -1342,7 +1342,7 @@ Friend Module S_Event
 
         If TempPlayer(index).EventProcessingCount > 0 Then
             For i = 0 To TempPlayer(index).EventProcessingCount
-                If TempPlayer(index).EventProcessing(i).EventId = eventId AndAlso TempPlayer(index).EventProcessing(i).PageId = pageId Then
+                If TempPlayer(index).EventProcessing(i).EventId = eventId And TempPlayer(index).EventProcessing(i).PageId = pageId Then
                     If TempPlayer(index).EventProcessing(i).WaitingForResponse = 1 Then
                         If reply = 0 Then
                             If Map(GetPlayerMap(index)).Events(eventId).Pages(pageId).CommandList(TempPlayer(index).EventProcessing(i).CurList).Commands(TempPlayer(index).EventProcessing(i).CurSlot - 1).Index = EventType.ShowText Then

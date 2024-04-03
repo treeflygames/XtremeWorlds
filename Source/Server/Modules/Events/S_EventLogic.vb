@@ -83,7 +83,7 @@ Friend Module S_EventLogic
                                 End If
                             End If
 
-                            If Map(mapNum).Events(id).Globals = 1 AndAlso TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then TempEventMap(mapNum).Events(id).Active = 0
+                            If Map(mapNum).Events(id).Globals = 1 And TempPlayer(i).EventMap.EventPages(x).Visible = 0 Then TempEventMap(mapNum).Events(id).Active = 0
 
                             If TempPlayer(i).EventMap.EventPages(x).Visible = 0 And id > 0 Then
                                 Dim Buffer As New ByteStream(4)
@@ -378,10 +378,10 @@ Friend Module S_EventLogic
                                             eventID = x
                                             WalkThrough = TempEventMap(i).Events(x).WalkThrough
                                             If .MoveRouteCount > 0 Then
-                                                If .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 1 Then
+                                                If .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 1 Then
                                                     .MoveRouteStep = 0
                                                     .MoveRouteComplete = 1
-                                                ElseIf .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 0 Then
+                                                ElseIf .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 0 Then
                                                     donotprocessmoveroute = True
                                                     .MoveRouteComplete = 1
                                                 Else
@@ -754,10 +754,10 @@ Friend Module S_EventLogic
                                             eventID = x
                                             WalkThrough = .WalkThrough
                                             If TempPlayer(i).EventMap.EventPages(x).MoveRouteCount > 0 Then
-                                                If TempPlayer(i).EventMap.EventPages(x).MoveRouteStep >= TempPlayer(i).EventMap.EventPages(x).MoveRouteCount AndAlso TempPlayer(i).EventMap.EventPages(x).RepeatMoveRoute = 1 Then
+                                                If TempPlayer(i).EventMap.EventPages(x).MoveRouteStep >= TempPlayer(i).EventMap.EventPages(x).MoveRouteCount And TempPlayer(i).EventMap.EventPages(x).RepeatMoveRoute = 1 Then
                                                     .MoveRouteStep = 0
                                                     .MoveRouteComplete = 1
-                                                ElseIf .MoveRouteStep >= .MoveRouteCount AndAlso .RepeatMoveRoute = 0 Then
+                                                ElseIf .MoveRouteStep >= .MoveRouteCount And .RepeatMoveRoute = 0 Then
                                                     donotprocessmoveroute = True
                                                     .MoveRouteComplete = 1
                                                 Else
@@ -1137,7 +1137,7 @@ Friend Module S_EventLogic
 
         'That is it for starting parallel processes :D now we just have to make the code that actually processes the events to their fullest
         For i = 1 To Socket.HighIndex()
-            If IsPlaying(i) AndAlso TempPlayer(i).GettingMap = 0 Then
+            If IsPlaying(i) And TempPlayer(i).GettingMap = 0 Then
                 If TempPlayer(i).EventProcessingCount > 0 Then
                     If TempPlayer(i).GettingMap = False Then
                         restartloop = True
@@ -1175,7 +1175,7 @@ Friend Module S_EventLogic
                                             If .ActionTimer <= GetTimeMs() Then
                                                 restartlist = True
                                                 endprocess = False
-                                                Do While restartlist = True AndAlso endprocess = False AndAlso .WaitingForResponse = 0
+                                                Do While restartlist = True And endprocess = False And .WaitingForResponse = 0
                                                     restartlist = False
                                                     If .ListLeftOff(.CurList) > 0 Then
                                                         .CurSlot = .ListLeftOff(.CurList) + 1
@@ -1197,7 +1197,7 @@ Friend Module S_EventLogic
                                                             restartlist = True
                                                         End If
                                                     End If
-                                                    If restartlist = False AndAlso endprocess = False Then
+                                                    If restartlist = False And endprocess = False Then
                                                         'If we are still here, then we are good to process shit :D
                                                         'Debug.WriteLine(.CurSlot)
                                                         Select Case Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Index
@@ -1220,7 +1220,7 @@ Friend Module S_EventLogic
                                                                 buffer.WriteInt32(0)
 
                                                                 If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).CommandCount > .CurSlot Then
-                                                                    If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowText OrElse Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowChoices Then
+                                                                    If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowText Or Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowChoices Then
                                                                         buffer.WriteInt32(1)
                                                                     ElseIf Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.Condition Then
                                                                         buffer.WriteInt32(2)
@@ -1267,7 +1267,7 @@ Friend Module S_EventLogic
                                                                     End Select
                                                                 Next
                                                                 If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).CommandCount > .CurSlot Then
-                                                                    If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowText OrElse Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowChoices Then
+                                                                    If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowText Or Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.ShowChoices Then
                                                                         buffer.WriteInt32(1)
                                                                     ElseIf Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot + 1).Index = EventType.Condition Then
                                                                         buffer.WriteInt32(2)
@@ -1647,7 +1647,6 @@ Friend Module S_EventLogic
                                                                     Player(i).Dir = Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data4 - 1
                                                                     PlayerWarp(i, Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data1, Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data2, Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data3)
                                                                 End If
-
                                                             Case EventType.SetMoveRoute
                                                                 If Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data1 <= Map(GetPlayerMap(i)).EventCount Then
                                                                     If Map(GetPlayerMap(i)).Events(Map(GetPlayerMap(i)).Events(.EventId).Pages(.PageId).CommandList(.CurList).Commands(.CurSlot).Data1).Globals = 1 Then
@@ -1995,7 +1994,7 @@ Friend Module S_EventLogic
             'we loop through all squares
             For j = 0 To Map(mapNum).MaxY
                 For i = 0 To Map(mapNum).MaxX
-                    'If j = 10 AndAlso i = 0 Then MsgBox "hi!"
+                    'If j = 10 And i = 0 Then MsgBox "hi!"
                     'If they are to be extended, the pointer TIM is on them
                     If pos(i, j) = 100 + tim Then
                         'The part is to be extended, so do it
@@ -2079,7 +2078,7 @@ Friend Module S_EventLogic
         'We are working backwards to find ONE of the shortest ways back to Start.
         'So we repeat the loop until the LastX and LastY arent in start. Look in the code to see
         'how LastX and LasY change
-        Do While LastX <> sX OrElse LastY <> sY
+        Do While LastX <> sX Or LastY <> sY
             'We decrease tim by one, and then we are finding any adjacent square to the final one, that
             'has that value. So lets say the tim would be 5, because it takes 5 steps to get to the target.
             'Now everytime we decrease that, so we make it 4, and we look for any adjacent square that has
@@ -2301,7 +2300,7 @@ Friend Module S_EventLogic
                             End If
                         End If
 
-                        If spawncurrentevent = True OrElse (spawncurrentevent = False AndAlso z = 1) Then
+                        If spawncurrentevent = True Or (spawncurrentevent = False And z = 1) Then
                             'spawn the event... send data to player
                             TempPlayer(index).EventMap.CurrentEvents = TempPlayer(index).EventMap.CurrentEvents + 1
                             ReDim Preserve TempPlayer(index).EventMap.EventPages(TempPlayer(index).EventMap.CurrentEvents)
