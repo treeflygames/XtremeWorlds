@@ -11,6 +11,7 @@ Namespace DbContexts
         Inherits DbContext
 
         Private dbType As String
+        Private tablePrefix As String
         Private connectionString As String
         Private ReadOnly configuration As IConfigurationRoot
 
@@ -29,19 +30,27 @@ Namespace DbContexts
 
             Me.configuration = builder.Build()
 
-            If String.IsNullOrWhiteSpace(Me.dbType) Then
-                Me.dbType = Me.configuration("Database:Type")
-
-                If String.IsNullOrWhiteSpace(Me.dbType) Then
-                    Me.dbType = "Sqlite"
-                End If
-            End If
-
             If String.IsNullOrWhiteSpace(Me.connectionString) Then
                 Me.connectionString = Me.configuration("Database:ConnectionString")
 
                 If String.IsNullOrWhiteSpace(Me.connectionString) Then
                     Me.connectionString = "Data Source=Database/Mirage.db"
+                End If
+            End If
+
+            If String.IsNullOrWhiteSpace(Me.tablePrefix) Then
+                Me.tablePrefix = Me.configuration("Database:TablePrefix")
+
+                If String.IsNullOrWhiteSpace(Me.tablePrefix) Then
+                    Me.tablePrefix = "mirage_worlds"
+                End If
+            End If
+
+            If String.IsNullOrWhiteSpace(Me.dbType) Then
+                Me.dbType = Me.configuration("Database:Type")
+
+                If String.IsNullOrWhiteSpace(Me.dbType) Then
+                    Me.dbType = "Sqlite"
                 End If
             End If
 
@@ -85,6 +94,8 @@ Namespace DbContexts
                         Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
                     End If
                 Next
+
+                Call modelBuilder.Entity(entityType.ClrType).ToTable($"{Me.tablePrefix.ToLower()}_{entityType.GetTableName().ToLower()}")
             Next
         End Sub
 
@@ -125,6 +136,16 @@ Namespace DbContexts
             End If
 
             Me.dbType = dbtype
+
+            Return Me
+        End Function
+
+        Public Function UseTablePrefix(ByVal tablePrefix As String) As MirageDbContext
+            If String.IsNullOrWhiteSpace(tablePrefix) Then
+                Throw New ArgumentException($"'{NameOf(tablePrefix)}' cannot be null or whitespace.", NameOf(tablePrefix))
+            End If
+
+            Me.tablePrefix = tablePrefix
 
             Return Me
         End Function

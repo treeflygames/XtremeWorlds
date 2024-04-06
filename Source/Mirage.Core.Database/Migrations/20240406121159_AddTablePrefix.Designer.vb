@@ -8,10 +8,10 @@ Imports Mirage.Core.Database.DbContexts
 
 Namespace Global.Mirage.Core.Database.Migrations
     <DbContext(GetType(MirageDbContext))>
-    Partial Class MirageDbContextModelSnapshot
-        Inherits ModelSnapshot
-
-        Protected Overrides Sub BuildModel(modelBuilder As ModelBuilder)
+    <Migration("20240406121159_AddTablePrefix")>
+    Partial Class AddTablePrefix
+        ''' <inheritdoc />
+        Protected Overrides Sub BuildTargetModel(modelBuilder As ModelBuilder)
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3")
 
             modelBuilder.Entity("Mirage.Core.Database.Types.Account",
