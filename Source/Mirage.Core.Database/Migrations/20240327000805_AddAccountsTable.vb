@@ -11,13 +11,13 @@ Namespace Global.Mirage.Core.Database.Migrations
             migrationBuilder.CreateTable(
                 name:="Accounts",
                 columns:=Function(table) New With {
-                    .Login = table.Column(Of String)(type:="TEXT", nullable:=False),
+                    .Login = table.Column(Of String)(type:="VARCHAR(255)", nullable:=False),
                     .Password = table.Column(Of String)(type:="TEXT", nullable:=True),
                     .Banned = table.Column(Of Boolean)(type:="INTEGER", nullable:=False)
                 },
                 constraints:=Sub(table)
-                    table.PrimaryKey("PK_Accounts", Function(x) x.Login)
-                End Sub)
+                                 table.PrimaryKey("PK_Accounts", Function(x) x.Login)
+                             End Sub)
         End Sub
 
         ''' <inheritdoc />

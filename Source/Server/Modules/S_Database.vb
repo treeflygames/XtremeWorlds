@@ -26,7 +26,7 @@ Module S_Database
 
         Dim configuration = builder.Build()
 
-        Dim connectionString = configuration("Database:ConnectionString")
+        Dim connectionString = configuration("PostgreSQL:Database:ConnectionString")
 
         If String.IsNullOrWhiteSpace(connectionString) Then
             connectionString = "Data Source=Database/Mirage.db"

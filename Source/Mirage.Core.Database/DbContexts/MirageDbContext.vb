@@ -1,7 +1,10 @@
 ﻿Imports System.IO
+Imports System.Reflection
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Configuration
+Imports Mirage.Core.Database.DbContexts.Attributes
 Imports Mirage.Core.Database.Types
+Imports Pomelo.EntityFrameworkCore.MySql.Infrastructure
 
 Namespace DbContexts
     Public Class MirageDbContext
@@ -57,12 +60,32 @@ Namespace DbContexts
                     optionsBuilder = optionsBuilder.UseSqlite(Me.connectionString)
                 Case "postgresql"
                     optionsBuilder = optionsBuilder.UseNpgsql(Me.connectionString)
+                Case "mysql", "mariadb"
+                    Dim dbVersion As String = Me.configuration("Database:Version")
+                    Dim dbSqlType As ServerType = If(Me.dbType = "mariadb", ServerType.MariaDb, ServerType.MySql)
+                    optionsBuilder = optionsBuilder.UseMySql(Me.connectionString, ServerVersion.Create(Version.Parse(dbVersion), dbSqlType))
                 Case Else
                     Throw New NotSupportedException($"Database type '{Me.dbType}' is not supported.")
             End Select
 
             Console.WriteLine($"Database type '{Me.dbType}' has been configured.")
             MyBase.OnConfiguring(optionsBuilder)
+        End Sub
+
+        Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
+            For Each entityType In modelBuilder.Model.GetEntityTypes()
+                Dim indexProperties = entityType.GetIndexes().SelectMany(Function(i) i.Properties).Select(Function(p) p.PropertyInfo)
+                Dim keyProperties = entityType.GetKeys().SelectMany(Function(k) k.Properties).Select(Function(p) p.PropertyInfo)
+
+                For Each prop In entityType.GetProperties().Select(Function(p) p.PropertyInfo)
+                    Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
+                    Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
+
+                    If indexProperties.Contains(prop) OrElse keyProperties.Contains(prop) Then
+                        Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                    End If
+                Next
+            Next
         End Sub
 
         Public Function TrySaveChanges() As Boolean

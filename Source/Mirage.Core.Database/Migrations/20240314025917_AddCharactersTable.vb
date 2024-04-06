@@ -11,11 +11,11 @@ Namespace Global.Mirage.Core.Database.Migrations
             migrationBuilder.CreateTable(
                 name:="Characters",
                 columns:=Function(table) New With {
-                    .Name = table.Column(Of String)(type:="TEXT", nullable:=False)
+                    .Name = table.Column(Of String)(type:="VARCHAR(255)", nullable:=False)
                 },
                 constraints:=Sub(table)
-                    table.PrimaryKey("PK_Characters", Function(x) x.Name)
-                End Sub)
+                                 table.PrimaryKey("PK_Characters", Function(x) x.Name)
+                             End Sub)
         End Sub
 
         ''' <inheritdoc />
