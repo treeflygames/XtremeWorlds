@@ -11,7 +11,7 @@ The 2.0.0 version is all about remaking the engine using some more up to date fr
 
 The following things are important to note for users and developers to know when using the engine. These may before moved to their own wiki pages as needed at a later date, especially for the complex issues.
 
-- **Changing Database Table Prefix**
+- **Changing Database Table Prefix**  
 In order to change the database table prefix with the new entity framework powered database you need to create a migration after changing the table prefix setting in the configuration. After changing the prefix you will need to run the following dotnet command 'dotnet ef migrations add "ChangedTablePrefix"' and recompile the engine. There is no way around this at the current time, this is a limitation of the entity framework with no feasable workarounds.
 
 &nbsp;  
