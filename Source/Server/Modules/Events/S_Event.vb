@@ -1612,9 +1612,9 @@ Friend Module S_Event
         Dim petnum As Integer
 
         ' give the exp
-
         SetPlayerExp(index, GetPlayerExp(index) + exp)
         SendActionMsg(GetPlayerMap(index), "+" & exp & " Exp", ColorType.BrightGreen, 1, (GetPlayerX(index) * 32), (GetPlayerY(index) * 32))
+        
         ' check if we've leveled
         CheckPlayerLevelUp(index)
 

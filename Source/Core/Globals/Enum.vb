@@ -43,6 +43,12 @@
         Light
         Animation
         NoXing
+        Key
+        KeyOpen
+        Door
+        WalkThrough
+        Arena
+        Roof
 
         Count
     End Enum

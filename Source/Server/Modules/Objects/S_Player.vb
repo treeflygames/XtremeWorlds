@@ -811,6 +811,7 @@ Module S_Player
                 'plural
                 GlobalMsg(GetPlayerName(index) & " has gained " & level_count & " levels!")
             End If
+            SendActionMsg(GetPlayerMap(index), "Level Up", ColorType.Yellow, 1, (GetPlayerX(index) * 32), (GetPlayerY(index) * 32))
             SendExp(index)
             SendPlayerData(index)
         End If
@@ -1307,8 +1308,8 @@ Module S_Player
                                     SetPlayerInvItemValue(index, n, GetPlayerInvItemValue(index, n) + MapItem(mapNum, i).Value)
                                     Msg = MapItem(mapNum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
                                 Else
-                                    SetPlayerInvItemValue(index, n, 0)
-                                    Msg = CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, n)).Name), 1)
+                                    SetPlayerInvItemValue(index, n, 1)
+                                    Msg = Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
                                 End If
 
                                 ' Erase item from the map
@@ -1466,41 +1467,43 @@ Module S_Player
                 i = FindOpenMapItemSlot(GetPlayerMap(index))
 
                 If i <> 0 Then
-                    MapItem(GetPlayerMap(index), i).Num = GetPlayerInvItemNum(index, invNum)
-                    MapItem(GetPlayerMap(index), i).X = GetPlayerX(index)
-                    MapItem(GetPlayerMap(index), i).Y = GetPlayerY(index)
-                    MapItem(GetPlayerMap(index), i).PlayerName = Trim$(GetPlayerName(index))
-                    MapItem(GetPlayerMap(index), i).PlayerTimer = GetTimeMs() + ITEM_SPAWN_TIME
+                    With MapItem(GetPlayerMap(index), i)
+                        .Num = GetPlayerInvItemNum(index, invNum)
+                        .X = GetPlayerX(index)
+                        .Y = GetPlayerY(index)
+                        .PlayerName = Trim$(GetPlayerName(index))
+                        .PlayerTimer = GetTimeMs() + ITEM_SPAWN_TIME
 
-                    MapItem(GetPlayerMap(index), i).CanDespawn = True
-                    MapItem(GetPlayerMap(index), i).DespawnTimer = GetTimeMs() + ITEM_DESPAWN_TIME
+                        .CanDespawn = True
+                        .DespawnTimer = GetTimeMs() + ITEM_DESPAWN_TIME
 
-                    If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
-                        ' Check if its more then they have and if so drop it all
-                        If amount >= GetPlayerInvItemValue(index, invNum) Then
-                            MapItem(GetPlayerMap(index), i).Value = GetPlayerInvItemValue(index, invNum)
+                        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
+                            ' Check if its more then they have and if so drop it all
+                            If amount >= GetPlayerInvItemValue(index, invNum) Then
+                                amount = GetPlayerInvItemValue(index, invNum)
+                                .Value = amount
+                                SetPlayerInvItemNum(index, invNum, 0)
+                                SetPlayerInvItemValue(index, invNum, 0)
+                            Else
+                                .Value = amount
+                                SetPlayerInvItemValue(index, invNum, GetPlayerInvItemValue(index, invNum) - amount)
+                            End If
+                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name)), amount), ColorType.Yellow)
+                        Else
+                            ' It's not a currency object so this is easy
+                            .Value = 1
+
+                            ' send message
+                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name))), ColorType.Yellow)
                             SetPlayerInvItemNum(index, invNum, 0)
                             SetPlayerInvItemValue(index, invNum, 0)
-                            amount = GetPlayerInvItemValue(index, invNum)
-                        Else
-                            MapItem(GetPlayerMap(index), i).Value = amount
-                            SetPlayerInvItemValue(index, invNum, GetPlayerInvItemValue(index, invNum) - amount)
                         End If
-                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name)), amount), ColorType.Yellow)
-                    Else
-                        ' It's not a currency object so this is easy
-                        MapItem(GetPlayerMap(index), i).Value = 0
-                        ' send message
 
-                        MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name))), ColorType.Yellow)
-                        SetPlayerInvItemNum(index, invNum, 0)
-                        SetPlayerInvItemValue(index, invNum, 0)
-                    End If
-
-                    ' Send inventory update
-                    SendInventoryUpdate(index, invNum)
-                    ' Spawn the item before we set the num or we'll get a different free map item slot
-                    SpawnItemSlot(i, MapItem(GetPlayerMap(index), i).Num, amount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
+                        ' Send inventory update
+                        SendInventoryUpdate(index, invNum)
+                        ' Spawn the item before we set the num or we'll get a different free map item slot
+                        SpawnItemSlot(i, .Num, amount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
+                    End With
                 Else
                     PlayerMsg(index, "Too many items already on the ground.", ColorType.Yellow)
                 End If

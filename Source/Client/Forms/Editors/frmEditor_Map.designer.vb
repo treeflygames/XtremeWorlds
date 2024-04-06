@@ -163,13 +163,10 @@ Partial Class frmEditor_Map
         Label13 = New Label()
         tpEffects = New TabPage()
         GroupBox6 = New GroupBox()
-        lblMapBrightness = New Label()
         scrlMapBrightness = New HScrollBar()
         GroupBox5 = New GroupBox()
-        Label20 = New Label()
         cmbParallax = New ComboBox()
         GroupBox4 = New GroupBox()
-        Label19 = New Label()
         cmbPanorama = New ComboBox()
         GroupBox3 = New GroupBox()
         chkTint = New CheckBox()
@@ -959,10 +956,11 @@ Partial Class frmEditor_Map
         ' tsbDeleteMap
         ' 
         tsbDeleteMap.DisplayStyle = ToolStripItemDisplayStyle.Image
-        tsbDeleteMap.Image = My.Resources.Resources.Delete
+        tsbDeleteMap.Image = CType(resources.GetObject("tsbDeleteMap.Image"), Image)
         tsbDeleteMap.ImageTransparentColor = Color.Magenta
         tsbDeleteMap.Name = "tsbDeleteMap"
         tsbDeleteMap.Size = New Size(34, 28)
+        tsbDeleteMap.ToolTipText = "Delete Map"
         ' 
         ' tsbUndo
         ' 
@@ -1728,7 +1726,6 @@ Partial Class frmEditor_Map
         ' 
         ' GroupBox6
         ' 
-        GroupBox6.Controls.Add(lblMapBrightness)
         GroupBox6.Controls.Add(scrlMapBrightness)
         GroupBox6.Location = New Point(19, 432)
         GroupBox6.Margin = New Padding(6, 5, 6, 5)
@@ -1739,28 +1736,17 @@ Partial Class frmEditor_Map
         GroupBox6.TabStop = False
         GroupBox6.Text = "Brightness"
         ' 
-        ' lblMapBrightness
-        ' 
-        lblMapBrightness.AutoSize = True
-        lblMapBrightness.Location = New Point(1, 32)
-        lblMapBrightness.Margin = New Padding(6, 0, 6, 0)
-        lblMapBrightness.Name = "lblMapBrightness"
-        lblMapBrightness.Size = New Size(113, 25)
-        lblMapBrightness.TabIndex = 14
-        lblMapBrightness.Text = "Brightness: 0"
-        ' 
         ' scrlMapBrightness
         ' 
         scrlMapBrightness.LargeChange = 1
-        scrlMapBrightness.Location = New Point(140, 32)
+        scrlMapBrightness.Location = New Point(6, 32)
         scrlMapBrightness.Maximum = 255
         scrlMapBrightness.Name = "scrlMapBrightness"
-        scrlMapBrightness.Size = New Size(241, 17)
+        scrlMapBrightness.Size = New Size(375, 17)
         scrlMapBrightness.TabIndex = 10
         ' 
         ' GroupBox5
         ' 
-        GroupBox5.Controls.Add(Label20)
         GroupBox5.Controls.Add(cmbParallax)
         GroupBox5.Location = New Point(421, 320)
         GroupBox5.Margin = New Padding(6, 5, 6, 5)
@@ -1771,28 +1757,17 @@ Partial Class frmEditor_Map
         GroupBox5.TabStop = False
         GroupBox5.Text = "Parallax"
         ' 
-        ' Label20
-        ' 
-        Label20.AutoSize = True
-        Label20.Location = New Point(0, 42)
-        Label20.Margin = New Padding(6, 0, 6, 0)
-        Label20.Name = "Label20"
-        Label20.Size = New Size(74, 25)
-        Label20.TabIndex = 1
-        Label20.Text = "Parallax:"
-        ' 
         ' cmbParallax
         ' 
         cmbParallax.FormattingEnabled = True
-        cmbParallax.Location = New Point(76, 35)
+        cmbParallax.Location = New Point(13, 35)
         cmbParallax.Margin = New Padding(6, 5, 6, 5)
         cmbParallax.Name = "cmbParallax"
-        cmbParallax.Size = New Size(264, 33)
+        cmbParallax.Size = New Size(329, 33)
         cmbParallax.TabIndex = 0
         ' 
         ' GroupBox4
         ' 
-        GroupBox4.Controls.Add(Label19)
         GroupBox4.Controls.Add(cmbPanorama)
         GroupBox4.Location = New Point(10, 320)
         GroupBox4.Margin = New Padding(6, 5, 6, 5)
@@ -1803,23 +1778,13 @@ Partial Class frmEditor_Map
         GroupBox4.TabStop = False
         GroupBox4.Text = "Panorama"
         ' 
-        ' Label19
-        ' 
-        Label19.AutoSize = True
-        Label19.Location = New Point(10, 42)
-        Label19.Margin = New Padding(6, 0, 6, 0)
-        Label19.Name = "Label19"
-        Label19.Size = New Size(95, 25)
-        Label19.TabIndex = 1
-        Label19.Text = "Panorama:"
-        ' 
         ' cmbPanorama
         ' 
         cmbPanorama.FormattingEnabled = True
-        cmbPanorama.Location = New Point(117, 37)
+        cmbPanorama.Location = New Point(15, 39)
         cmbPanorama.Margin = New Padding(6, 5, 6, 5)
         cmbPanorama.Name = "cmbPanorama"
-        cmbPanorama.Size = New Size(273, 33)
+        cmbPanorama.Size = New Size(373, 33)
         cmbPanorama.TabIndex = 0
         ' 
         ' GroupBox3
@@ -2105,11 +2070,8 @@ Partial Class frmEditor_Map
         tpEvents.PerformLayout()
         tpEffects.ResumeLayout(False)
         GroupBox6.ResumeLayout(False)
-        GroupBox6.PerformLayout()
         GroupBox5.ResumeLayout(False)
-        GroupBox5.PerformLayout()
         GroupBox4.ResumeLayout(False)
-        GroupBox4.PerformLayout()
         GroupBox3.ResumeLayout(False)
         GroupBox3.PerformLayout()
         GroupBox1.ResumeLayout(False)

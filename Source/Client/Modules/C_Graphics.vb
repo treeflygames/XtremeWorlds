@@ -1010,7 +1010,7 @@ Module C_Graphics
 #End Region
 
 #Region "Drawing"
-    Friend Sub DrawEmotes(x2 As Integer, y2 As Integer, sprite As Integer)
+    Friend Sub DrawEmote(x2 As Integer, y2 As Integer, sprite As Integer)
         Dim rec As Rectangle
         Dim x As Integer, y As Integer, anim As Integer
 
@@ -1754,9 +1754,7 @@ Module C_Graphics
         DrawBars()
         DrawParty()
         DrawMapFade()
-        If Not Editor = EditorType.Map Then
-            RenderEntities()
-        End If
+        RenderEntities()
         RenderTexture(CursorSprite, Window, CurMouseX, CurMouseY, 0, 0, 16, 16, 32, 32)
 
         Window.Display()

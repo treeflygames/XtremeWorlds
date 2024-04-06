@@ -31,9 +31,9 @@ Public Class Settings
     Public Port As Integer = 7001
 
     <XmlIgnore()> Public GameName As String = "MirageWorlds"
-    <XmlIgnore()> Public Website As String = "https://web.miragesource.net/"
+    <XmlIgnore()> Public Website As String = "https://miragesource.net/"
 
-    <XmlIgnore()> Public Version As String = "1.8.4"
+    <XmlIgnore()> Public Version As String = "1.8.5"
 
     Public Welcome As String = "Welcome to MirageWorlds, enjoy your stay!"
 

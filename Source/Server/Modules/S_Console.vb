@@ -134,7 +134,7 @@ Module S_Console
                     If Not Pindex > 0 Then
                         Console.WriteLine("Player name is empty or invalid.")
                     Else
-                        AlertMsg(Pindex, DialogueMsg.KICKED)
+                        AlertMsg(Pindex, DialogueMsg.Kicked)
                         LeftGame(Pindex)
                     End If
 #End Region

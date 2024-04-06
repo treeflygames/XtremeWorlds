@@ -817,8 +817,39 @@ Module S_Database
         tile.Type = xwTile.Type
         tile.Type2 = xwTile.Type2
 
+        SetXWTileType(tile.Type)
+        SetXWTileType(tile.Type2)
+
         Return tile
     End Function
+
+    Public Sub SetXWTileType(ByRef tileType As TileType)
+        Select Case tileType
+            Case XWTileType.Warp
+                tileType = tileType.Warp
+            Case XWTileType.Damage
+                tileType = TileType.Trap
+            Case XWTileType.Heal
+                tileType = TileType.Heal
+            Case XWTileType.Shop
+                tileType = TileType.Shop
+            Case XWTileType.No_Xing
+                tileType = Tiletype.NoXing
+            Case XWTileType.Key
+                tileType = TileType.Key
+            Case XWTileType.Key_Open
+                tileType = TileType.KeyOpen
+            Case XWTileType.Door
+                tileType = TileType.Door
+            Case XWTileType.Walkthru
+                tileType = TileType.WalkThrough
+            Case XWTileType.Arena
+                tileType = TileType.Arena
+            Case XWTileType.Roof
+                tileType = TileType.Roof
+            Case XWTileType.Direction_Block
+        End Select
+    End Sub
 
     Public Function MapFromXWMap(xwMap As XWMapStruct) As MapStruct
         Dim mwMap As New MapStruct

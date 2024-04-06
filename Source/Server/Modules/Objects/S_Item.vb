@@ -372,7 +372,7 @@ Friend Module S_Item
         amount = buffer.ReadInt32
         buffer.Dispose()
 
-        If TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
+        If TempPlayer(index).InBank Or TempPlayer(index).InShop > 0 Then Exit Sub
 
         ' Prevent hacking
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub

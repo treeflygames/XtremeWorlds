@@ -121,13 +121,6 @@ Module C_Globals
     Public TmpMaxY As Byte
     Public TileHistoryHighIndex As Integer
 
-    Public ItemRarityColor0 = SFML.Graphics.Color.White ' white
-    Public ItemRarityColor1 = New SFML.Graphics.Color(102, 255, 0) ' green
-    Public ItemRarityColor2 = New SFML.Graphics.Color(73, 151, 208) ' blue
-    Public ItemRarityColor3 = New SFML.Graphics.Color(255, 0, 0) ' red
-    Public ItemRarityColor4 = New SFML.Graphics.Color(159, 0, 197) ' purple
-    Public ItemRarityColor5 = New SFML.Graphics.Color(255, 215, 0) ' gold
-
     ' Player variables
     Public MyIndex As Integer ' Index of actual player
 

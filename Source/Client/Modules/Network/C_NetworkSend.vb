@@ -361,7 +361,7 @@ Module C_NetworkSend
     Friend Sub SendDropItem(invNum As Integer, amount As Integer)
         Dim buffer As New ByteStream(4)
 
-        If InBank Or InShop Then Exit Sub
+        If InBank Or InShop > 0 Then Exit Sub
 
         ' do basic checks
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub

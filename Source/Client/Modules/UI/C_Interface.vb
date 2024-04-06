@@ -1283,7 +1283,7 @@ Module C_Interface
         CreateLabel(WindowCount, "lblHeader", 103, 41, 144, FontSize, "Header", Arial, Color.White, AlignmentType.Center)
 
         ' Input
-        CreateTextbox(WindowCount, "txtInput", 93, 75, 162, 18, , Arial, AlignmentType.Center, , , , , , , , , DesignType.TextBlack, DesignType.TextBlack, DesignType.TextBlack)
+        CreateTextbox(WindowCount, "txtInput", 93, 75, 162, 18, , Arial, AlignmentType.Center, , , , 5, 2, , , , DesignType.TextBlack, DesignType.TextBlack, DesignType.TextBlack)
 
         ' Labels
         CreateLabel(WindowCount, "lblBody_1", 15, 60, 314, FontSize, "Invalid username or password.", Arial, Color.White, AlignmentType.Center)
@@ -1303,9 +1303,9 @@ Module C_Interface
         CreateWindow("winParty", "", Georgia, zOrder_Win, 4, 78, 252, 158, 0, False, , , DesignType.Win_Desc, DesignType.Win_Desc, DesignType.Win_Desc, , , , , , , , , , False)
 
         ' Name labels
-        CreateLabel(windowCount, "lblName1", 60, 20, 173, FontSize, "Richard - Level 10", Verdana, Color.White)
-        CreateLabel(windowCount, "lblName2", 60, 60, 173, FontSize, "Anna - Level 18", Verdana, Color.White)
-        CreateLabel(windowCount, "lblName3", 60, 100, 173, FontSize, "Doleo - Level 25", Verdana, Color.White)
+        CreateLabel(windowCount, "lblName1", 60, 20, 173, FontSize, "Richard - Level 10", Georgia, Color.White)
+        CreateLabel(windowCount, "lblName2", 60, 60, 173, FontSize, "Anna - Level 18", Georgia, Color.White)
+        CreateLabel(windowCount, "lblName3", 60, 100, 173, FontSize, "Doleo - Level 25", Georgia, Color.White)
     
         ' Empty Bars - HP
         CreatePictureBox(windowCount, "picEmptyBar_HP1", 58, 34, 173, 9, , , , , InterfaceSprite(22), InterfaceSprite(22), InterfaceSprite(22))
@@ -1353,22 +1353,22 @@ Module C_Interface
         
         ' Labels
         CreatePictureBox(windowCount, "picShadow", 36, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblYourTrade", 36, 27, 142, 9, "Robin's Offer", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblYourTrade", 36, 27, 142, 9, "Robin's Offer", Georgia, Color.White, AlignmentType.Center)
         CreatePictureBox(windowCount, "picShadow", 36 + 200, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblTheirTrade", 36 + 200, 27, 142, 9, "Richard's Offer", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblTheirTrade", 36 + 200, 27, 142, 9, "Richard's Offer", Georgia, Color.White, AlignmentType.Center)
         
         ' Buttons
-        CreateButton(windowCount, "btnAccept", 134, 340, 68, 24, "Accept", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , New Action(AddressOf btnTrade_Accept))
-        CreateButton(windowCount, "btnDecline", 210, 340, 68, 24, "Decline", Verdana, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnTrade_Close))
+        CreateButton(windowCount, "btnAccept", 134, 340, 68, 24, "Accept", Georgia, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , New Action(AddressOf btnTrade_Accept))
+        CreateButton(windowCount, "btnDecline", 210, 340, 68, 24, "Decline", Georgia, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnTrade_Close))
         
         ' Labels
-        CreateLabel(windowCount, "lblStatus", 114, 322, 184, FontSize, "", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblStatus", 114, 322, 184, FontSize, "", Georgia, Color.White, AlignmentType.Center)
         
         ' Amounts
-        CreateLabel(windowCount, "lblBlank", 25, 330, 100, FontSize, "Total Value", Verdana, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblBlank", 285, 330, 100, FontSize, "Total Value", Verdana, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblYourValue", 25, 344, 100, FontSize, "52,812g", Verdana, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblTheirValue", 285, 344, 100, FontSize, "12,531g", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 25, 330, 100, FontSize, "Total Value", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 285, 330, 100, FontSize, "Total Value", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblYourValue", 25, 344, 100, FontSize, "52,812g", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblTheirValue", 285, 344, 100, FontSize, "12,531g", Georgia, Color.White, AlignmentType.Center)
         
         ' Item Containers
         CreatePictureBox(windowCount, "picYour", 14, 46, 184, 260, , , , , , , , , , , , , New Action(AddressOf TradeMouseDown_Your), New Action(AddressOf TradeMouseMove_Your), , New Action(AddressOf DrawYourTrade))
@@ -1927,7 +1927,7 @@ Module C_Interface
 
                     If Not CharSprite(I) > NumCharacters Then
                         ' render char
-                        RenderTexture(CharacterSprite(CharSprite(I)), Window, x + 24, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
+                        RenderTexture(CharacterSprite(CharSprite(I)), Window, x + 30, yO + 100, 0, 0, rect.Width, rect.Height, rect.Width, rect.Height)
                     End If
                 End If
             End If
@@ -2661,7 +2661,7 @@ Module C_Interface
                     If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).Type <> ItemType.Currency Then
                         SendDropItem(DragBox.Slot, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
                     Else
-                        Dialogue("Drop Item", "Please choose how many to drop", "", DialogueType.DropItem, DialogueStyle.Input, GetPlayerInvItemNum(MyIndex, DragBox.Slot))
+                        Dialogue("Drop Item", "Please choose how many to drop", "", DialogueType.DropItem, DialogueStyle.Input, DragBox.Slot)
                     End If
                 Case PartOriginType.Skill
                     ForgetSkill(DragBox.Slot)
@@ -2891,10 +2891,10 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picParchment", 6, 6, 198, 144, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
         
         ' Buttons
-        CreateButton(WindowCount, "btnReturn", 16, 16, 178, 28, "Return to Game", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnEscMenu_Return))
-        CreateButton(WindowCount, "btnOptions", 16, 48, 178, 28, "Options", Verdana, , , , , , , DesignType.Orange, DesignType.Orange_Hover, DesignType.Orange_Click, , , New Action(AddressOf btnEscMenu_Options))
-        CreateButton(WindowCount, "btnMainMenu", 16, 80, 178, 28, "Back to Main Menu", Verdana, , , , , , , DesignType.Blue, DesignType.Blue_Hover, DesignType.Blue_Click, , , New Action(AddressOf btnEscMenu_MainMenu))
-        CreateButton(WindowCount, "btnExit", 16, 112, 178, 28, "Exit the Game", Verdana, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnEscMenu_Exit))
+        CreateButton(WindowCount, "btnReturn", 16, 16, 178, 28, "Return to Game", Georgia, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnEscMenu_Return))
+        CreateButton(WindowCount, "btnOptions", 16, 48, 178, 28, "Options", Georgia, , , , , , , DesignType.Orange, DesignType.Orange_Hover, DesignType.Orange_Click, , , New Action(AddressOf btnEscMenu_Options))
+        CreateButton(WindowCount, "btnMainMenu", 16, 80, 178, 28, "Back to Main Menu", Georgia, , , , , , , DesignType.Blue, DesignType.Blue_Hover, DesignType.Blue_Click, , , New Action(AddressOf btnEscMenu_MainMenu))
+        CreateButton(WindowCount, "btnExit", 16, 112, 178, 28, "Exit the Game", Georgia, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnEscMenu_Exit))
     End Sub
 
     Public Sub CreateWindow_Bars()
@@ -2948,7 +2948,7 @@ Module C_Interface
         CreateButton(WindowCount, "btnChat", 296, 124 + 16, 48, 20, "Say", Arial, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnSay_Click))
 
         ' Chat Textbox
-        CreateTextbox(WindowCount, "txtChat", 12, 127 + 16, 286, 25, , Verdana)
+        CreateTextbox(WindowCount, "txtChat", 12, 127 + 16, 286, 25, , Georgia)
 
         ' buttons
         CreateButton(WindowCount, "btnUp", 328, 28, 11, 13, , , , InterfaceSprite(4), InterfaceSprite(52), InterfaceSprite(4), , , , , , , , New Action(AddressOf btnChat_Up))
@@ -2980,7 +2980,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Chat Label
-        CreateLabel(WindowCount, "lblMsg", 10, ResolutionHeight - 28, 160, FontSize, "Press 'Enter' to open chatbox.", Verdana, Color.White)
+        CreateLabel(WindowCount, "lblMsg", 10, ResolutionHeight - 28, 160, FontSize, "Press 'Enter' to open chatbox.", Georgia, Color.White)
     End Sub
 
     Public Sub CreateWindow_Hotbar()
@@ -3024,7 +3024,7 @@ Module C_Interface
 
         ' Gold amount
         CreatePictureBox(WindowCount, "picBlank", 8, 293, 186, 18, , , , , InterfaceSprite(67), InterfaceSprite(67), InterfaceSprite(67))
-        'CreateLabel(WindowCount, "lblGold", 42, 296, 100, FontSize, "Gold", Verdana, Color.Yellow)
+        'CreateLabel(WindowCount, "lblGold", 42, 296, 100, FontSize, "Gold", Georgia, Color.Yellow)
 
         ' Drop
         CreateButton(WindowCount, "btnDrop", 155, 294, 38, 16, "Drop" , , , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , , , , 5, 3)
@@ -3293,7 +3293,7 @@ Module C_Interface
                                     Color = GetSfmlColor(ColorType.BrightGreen)
                                 End If
 
-                                RenderText(ConvertCurrency(Amount), Window, x, y, Color, Color, , Verdana)
+                                RenderText(ConvertCurrency(Amount), Window, x, y, Color, Color, , Georgia)
                             End If
                         End If
                     End If
@@ -3321,8 +3321,8 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picSep", 96, 28, 1, 92, , , , , InterfaceSprite(44), InterfaceSprite(44), InterfaceSprite(44))
 
         ' Requirements
-        CreateLabel(WindowCount, "lblClass", 5, 102, 92, FontSize, "Warrior", Verdana, Color.Green, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblLevel", 5, 114, 92, FontSize, "Level 20", Verdana, Color.Red, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblClass", 5, 102, 92, FontSize, "Warrior", Georgia, Color.Green, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblLevel", 5, 114, 92, FontSize, "Level 20", Georgia, Color.Red, AlignmentType.Center)
 
         ' Bar
         CreatePictureBox(WindowCount, "picBar", 19, 114, 66, 12, False, , , , InterfaceSprite(45), InterfaceSprite(45), InterfaceSprite(45))
@@ -3388,23 +3388,23 @@ Module C_Interface
 
         ' General
         CreatePictureBox(windowCount, "picBlank", 35, 25, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblBlank", 35, 22, 140, 0, "General Options", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 35, 22, 140, 0, "General Options", Georgia, Color.White, AlignmentType.Center)
     
         ' Check boxes
-        CreateCheckbox(windowCount, "chkMusic", 35, 40, 80, , , "Music", Verdana, , , , DesignType.ChkNorm)
-        CreateCheckbox(windowCount, "chkSound", 115, 40, 80, , , "Sound", Verdana, , , , DesignType.ChkNorm)
-        CreateCheckbox(windowCount, "chkAutotile", 35, 60, 80, , , "Autotile", Verdana, , , , DesignType.ChkNorm)
-        CreateCheckbox(windowCount, "chkFullscreen", 115, 60, 80, , , "Fullscreen", Verdana, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkMusic", 35, 40, 80, , , "Music", Georgia, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkSound", 115, 40, 80, , , "Sound", Georgia, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkAutotile", 35, 60, 80, , , "Autotile", Georgia, , , , DesignType.ChkNorm)
+        CreateCheckbox(windowCount, "chkFullscreen", 115, 60, 80, , , "Fullscreen", Georgia, , , , DesignType.ChkNorm)
 
         ' Resolution
         CreatePictureBox(windowCount, "picBlank", 35, 85, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblBlank", 35, 92, 140, FontSize, "Select Resolution", Verdana, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 35, 92, 140, FontSize, "Select Resolution", Georgia, Color.White, AlignmentType.Center)
 
         ' combobox
         CreateComboBox(windowCount, "cmbRes", 30, 100, 150, 18, DesignType.ComboNorm)
 
         ' Button
-        CreateButton(windowCount, "btnConfirm", 65, 168, 80, 22, "Confirm", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , AddressOf btnOptions_Confirm)
+        CreateButton(windowCount, "btnConfirm", 65, 168, 80, 22, "Confirm", Georgia, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , AddressOf btnOptions_Confirm)
 
         ' Populate the options screen
         SetOptionsScreen
@@ -3464,19 +3464,19 @@ Module C_Interface
         CreatePictureBox(windowCount, "picItem", 15, 224, 32, 32)
         
         ' Buttons
-        CreateButton(windowCount, "btnBuy", 190, 228, 70, 24, "Buy", Verdana, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnShopBuy))
-        CreateButton(windowCount, "btnSell", 190, 228, 70, 24, "Sell", Verdana, , , , , False, , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnShopSell))
+        CreateButton(windowCount, "btnBuy", 190, 228, 70, 24, "Buy", Georgia, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnShopBuy))
+        CreateButton(windowCount, "btnSell", 190, 228, 70, 24, "Sell", Georgia, , , , , False, , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnShopSell))
         
         ' Buying/Selling
         CreateCheckbox(windowCount, "chkBuying", 173, 265, 49, 20, 1, , , , , , DesignType.ChkCustom_Buying, , , , , New Action(AddressOf chkShopBuying))
         CreateCheckbox(windowCount, "chkSelling", 222, 265, 49, 20, 0, , , , ,  , DesignType.ChkCustom_Selling, , , , , New Action(AddressOf chkShopSelling))
 
         ' Labels
-        CreateLabel(windowCount, "lblName", 56, 226, 300, FontSize, "Test Item", Verdana, Color.Black, AlignmentType.Left)
-        CreateLabel(windowCount, "lblCost", 56, 240, 300,  FontSize, "1000g", Verdana, Color.Black, AlignmentType.Left)
+        CreateLabel(windowCount, "lblName", 56, 226, 300, FontSize, "Test Item", Georgia, Color.Black, AlignmentType.Left)
+        CreateLabel(windowCount, "lblCost", 56, 240, 300,  FontSize, "1000g", Georgia, Color.Black, AlignmentType.Left)
         
         ' Gold
-        'CreateLabel(windowCount, "lblGold", 44, 269, 300, FontSize, "G", Verdana, Color.White)
+        'CreateLabel(windowCount, "lblGold", 44, 269, 300, FontSize, "G", Georgia, Color.White)
     End Sub
 
     Public Sub DrawShopBackground()
@@ -4079,13 +4079,13 @@ Module C_Interface
         CentralizeWindow(windowCount)
 
         ' Name
-        CreateButton(windowCount, "btnName", 8, 8, 94, 18, "[Name]", Verdana, , , , , , , DesignType.MenuHeader, DesignType.MenuHeader, DesignType.MenuHeader, , , New Action(AddressOf RightClick_Close))
+        CreateButton(windowCount, "btnName", 8, 8, 94, 18, "[Name]", Georgia, , , , , , , DesignType.MenuHeader, DesignType.MenuHeader, DesignType.MenuHeader, , , New Action(AddressOf RightClick_Close))
         
         ' Options
-        CreateButton(windowCount, "btnParty", 8, 26, 94, 18, "Invite to Party", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Party))
-        CreateButton(windowCount, "btnTrade", 8, 44, 94, 18, "Request Trade", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Trade))
-        CreateButton(windowCount, "btnGuild", 8, 62, 94, 18, "Invite to Guild", Verdana, , , , , , , DesignType.MenuOption, , , , , New Action(AddressOf PlayerMenu_Guild))
-        CreateButton(windowCount, "btnPM", 8, 80, 94, 18, "Private Message", Verdana, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Player))
+        CreateButton(windowCount, "btnParty", 8, 26, 94, 18, "Invite to Party", Georgia, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Party))
+        CreateButton(windowCount, "btnTrade", 8, 44, 94, 18, "Request Trade", Georgia, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Trade))
+        CreateButton(windowCount, "btnGuild", 8, 62, 94, 18, "Invite to Guild", Georgia, , , , , , , DesignType.MenuOption, , , , , New Action(AddressOf PlayerMenu_Guild))
+        CreateButton(windowCount, "btnPM", 8, 80, 94, 18, "Private Message", Georgia, , , , , , , , DesignType.MenuOption, , , , New Action(AddressOf PlayerMenu_Player))
 
     End Sub
 
