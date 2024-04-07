@@ -7,6 +7,14 @@
     <Configurations>Release;Debug</Configurations>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <UserSecretsId>ecd16973-54be-4179-b8c9-f070c282f4a9</UserSecretsId>
+
+    <Version>2.0.0.0</Version>
+    <VersionPrefix></VersionPrefix>
+    <ApplicationVersion>$(Version)</ApplicationVersion>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <MigrationVersion>$(Version.Split('.')[0]).$(Version.Split('.')[1]).$(Version.Split('.')[2])</MigrationVersion>
+    <EntityFrameworkMigrationsOutputDir>Migrations\$(MigrationVersion)</EntityFrameworkMigrationsOutputDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">

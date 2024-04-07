@@ -64,15 +64,17 @@ Namespace DbContexts
         End Sub
 
         Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
+            Dim migrationsAssembly As String = GetType(MirageDbContext).Assembly.GetName().Name
+
             Select Case Trim$(Me.dbType.ToLower())
                 Case "sqlite"
-                    optionsBuilder = optionsBuilder.UseSqlite(Me.connectionString)
+                    optionsBuilder = optionsBuilder.UseSqlite(Me.connectionString, Function(opt) opt.MigrationsAssembly(migrationsAssembly))
                 Case "postgresql"
-                    optionsBuilder = optionsBuilder.UseNpgsql(Me.connectionString)
+                    optionsBuilder = optionsBuilder.UseNpgsql(Me.connectionString, Function(opt) opt.MigrationsAssembly(migrationsAssembly))
                 Case "mysql", "mariadb"
                     Dim dbVersion As String = Me.configuration("Database:Version")
                     Dim dbSqlType As ServerType = If(Me.dbType = "mariadb", ServerType.MariaDb, ServerType.MySql)
-                    optionsBuilder = optionsBuilder.UseMySql(Me.connectionString, ServerVersion.Create(Version.Parse(dbVersion), dbSqlType))
+                    optionsBuilder = optionsBuilder.UseMySql(Me.connectionString, ServerVersion.Create(Version.Parse(dbVersion), dbSqlType), Function(opt) opt.MigrationsAssembly(migrationsAssembly))
                 Case Else
                     Throw New NotSupportedException($"Database type '{Me.dbType}' is not supported.")
             End Select

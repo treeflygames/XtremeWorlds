@@ -46,7 +46,7 @@ Namespace Global.Mirage.Core.Database.Migrations
             modelBuilder.Entity("Mirage.Core.Database.Types.Character",
                 Sub(b)
 
-                    b.OwnsOne("Mirage.Core.Database.Types.Components.Location", "Location",
+                    b.OwnsOne("Mirage.Core.Database.Types.Character.Location#Mirage.Core.Database.Types.Components.Location", "Location",
                         Sub(b1)
                             b1.Property(Of String)("CharacterName").
                                 HasColumnType("VARCHAR(255)")
@@ -65,7 +65,7 @@ Namespace Global.Mirage.Core.Database.Migrations
 
                             b1.HasKey("CharacterName")
 
-                            b1.ToTable("mirage_worlds_characters")
+                            b1.ToTable("mirage_worlds_characters", DirectCast(Nothing, String))
                             b1.WithOwner().
                                 HasForeignKey("CharacterName")
                         End Sub)
