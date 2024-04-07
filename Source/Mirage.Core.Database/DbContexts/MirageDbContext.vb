@@ -25,11 +25,8 @@ Namespace DbContexts
                 .SetBasePath(AppContext.BaseDirectory) _
                 .AddJsonFile("appsettings.database.json", optional:=False, reloadOnChange:=True) _
                 .AddJsonFile($"appsettings.database.{If(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Production")}.json", optional:=True, reloadOnChange:=True) _
+                .AddUserSecrets(Of MirageDbContext)([optional]:=True, reloadOnChange:=True) _
                 .AddEnvironmentVariables()
-
-            If Not Environment.GetCommandLineArgs().Any(Function(arg) arg.Contains("dotnet ef migrations")) Then
-                Call builder.AddUserSecrets(Of MirageDbContext)([optional]:=True, reloadOnChange:=True)
-            End If
 
             Me.configuration = builder.Build()
 
