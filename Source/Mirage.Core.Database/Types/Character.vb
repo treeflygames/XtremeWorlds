@@ -1,14 +1,17 @@
 ﻿Imports Microsoft.EntityFrameworkCore
 Imports Mirage.Core.Database.Types.Components
+Imports Mirage.Core.Database.Types.Enumerations
 
 Namespace Types
     <PrimaryKey(NameOf(Character.Name))>
     Public Class Character
         Public Property Name As String
+        Public Property Sex As Sex
         Public Property Location As Location
 
         Public Sub New()
             Me.Name = String.Empty
+            Me.Sex = Sex.None
             Me.Location = New Location()
         End Sub
 
