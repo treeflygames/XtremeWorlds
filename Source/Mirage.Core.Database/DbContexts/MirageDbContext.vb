@@ -83,21 +83,37 @@ Namespace DbContexts
 
         Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
             For Each entityType In modelBuilder.Model.GetEntityTypes()
-                Dim indexProperties = entityType.GetIndexes().SelectMany(Function(i) i.Properties).Select(Function(p) p.PropertyInfo)
-                Dim keyProperties = entityType.GetKeys().SelectMany(Function(k) k.Properties).Select(Function(p) p.PropertyInfo)
+                Dim registerMethod = entityType.ClrType.GetMethod("RegisterComplexTypes", BindingFlags.Public Or BindingFlags.Static Or BindingFlags.FlattenHierarchy)
+                Call registerMethod?.Invoke(Nothing, {modelBuilder})
+            Next
 
-                For Each prop In entityType.GetProperties().Select(Function(p) p.PropertyInfo)
-                    Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
-                    Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
+            For Each entityType In modelBuilder.Model.GetEntityTypes()
+                If Not entityType.IsOwned Then
+                    For Each key In entityType.GetKeys()
+                        For Each prop In key.Properties.Select(Function(p) p.PropertyInfo)
+                            Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
+                            Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
 
-                    If indexProperties.Contains(prop) OrElse keyProperties.Contains(prop) Then
-                        Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
-                    End If
-                Next
+                            Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                        Next
+                    Next
 
-                Call modelBuilder.Entity(entityType.ClrType).ToTable($"{Me.tablePrefix.ToLower()}_{entityType.GetTableName().ToLower()}")
+                    For Each index In entityType.GetIndexes()
+                        If Not entityType.GetKeys().Any(Function(k) index.Properties.SequenceEqual(k.Properties)) Then
+                            For Each prop In index.Properties.Select(Function(p) p.PropertyInfo)
+                                Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
+                                Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
+
+                                Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                            Next
+                        End If
+                    Next
+
+                    Call modelBuilder.Entity(entityType.ClrType).ToTable($"{Me.tablePrefix.ToLower()}_{entityType.GetTableName().ToLower()}")
+                End If
             Next
         End Sub
+
 
         Public Function TrySaveChanges() As Boolean
             Try
