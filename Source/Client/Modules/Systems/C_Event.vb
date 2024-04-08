@@ -1000,9 +1000,9 @@ newlist:
             Case EventType.ChangeSex
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
                 If frmEditor_Events.optChangeSexMale.Checked = True Then
-                    TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = 0
+                    TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = SexType.Male
                 ElseIf frmEditor_Events.optChangeSexFemale.Checked = True Then
-                    TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = 1
+                    TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = SexType.Female
                 End If
 
             Case EventType.ChangePk
