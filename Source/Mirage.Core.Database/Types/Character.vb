@@ -3,17 +3,24 @@ Imports Mirage.Core.Database.Types.Components
 Imports Mirage.Core.Database.Types.Enumerations
 
 Namespace Types
-    <PrimaryKey(NameOf(Character.Name))>
     Public Class Character
+        Public Property CharacterId As Integer
+        Public Property AccountId As Integer
         Public Property Name As String
         Public Property Sex As Sex
+        Public Property JobId As Integer
+        Public Property SpriteId As Integer
         Public Property Level As Leveling
         Public Property Vitals As Vitals
         Public Property Location As Location
 
         Public Sub New()
+            Me.CharacterId = 0
+            Me.AccountId = 0
             Me.Name = String.Empty
             Me.Sex = Sex.None
+            Me.JobId = 0
+            Me.SpriteId = 0
             Me.Level = New Leveling()
             Me.Vitals = New Vitals()
             Me.Location = New Location()

@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Reflection
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.EntityFrameworkCore.Metadata
+Imports Microsoft.EntityFrameworkCore.Metadata.Internal
 Imports Microsoft.Extensions.Configuration
 Imports Mirage.Core.Database.DbContexts.Attributes
 Imports Mirage.Core.Database.Types
@@ -93,20 +95,14 @@ Namespace DbContexts
                 If Not entityType.IsOwned Then
                     For Each key In entityType.GetKeys()
                         For Each prop In key.Properties.Select(Function(p) p.PropertyInfo)
-                            Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
-                            Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
-
-                            Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                            Call ValidatePrimaryKey(modelBuilder, entityType, prop)
                         Next
                     Next
 
                     For Each index In entityType.GetIndexes()
                         If Not entityType.GetKeys().Any(Function(k) index.Properties.SequenceEqual(k.Properties)) Then
                             For Each prop In index.Properties.Select(Function(p) p.PropertyInfo)
-                                Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
-                                Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
-
-                                Call modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                                Call ValidatePrimaryKey(modelBuilder, entityType, prop)
                             Next
                         End If
                     Next
@@ -116,6 +112,28 @@ Namespace DbContexts
             Next
         End Sub
 
+        Protected Shared Function ValidatePrimaryKey(modelBuilder As ModelBuilder, entityType As IMutableEntityType, prop As PropertyInfo)
+            Dim maxLengthAttribute = prop.GetCustomAttribute(Of MaxLengthAttribute)()
+
+            If maxLengthAttribute IsNot Nothing Then
+                Dim maxLength As Integer = If(maxLengthAttribute?.Length, 255)
+
+                Select Case prop.PropertyType
+                    Case GetType(Integer)
+                        Return modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"INTEGER({maxLength})")
+                    Case GetType(String)
+                        Return modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                    Case Else
+                        Return modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR({maxLength})")
+                End Select
+            End If
+
+            If prop.PropertyType Is GetType(String) Then
+                Return modelBuilder.Entity(entityType.ClrType).Property(prop.Name).HasColumnType($"VARCHAR(255)")
+            End If
+
+            Return False
+        End Function
 
         Public Function TrySaveChanges() As Boolean
             Try
@@ -130,7 +148,7 @@ Namespace DbContexts
             End Try
         End Function
 
-        Public Function UseConnectionString(ByVal connectionString As String) As MirageDbContext
+        Public Function UseConnectionString(connectionString As String) As MirageDbContext
             If String.IsNullOrWhiteSpace(connectionString) Then
                 Throw New ArgumentException($"'{NameOf(connectionString)}' cannot be null or whitespace.", NameOf(connectionString))
             End If
@@ -148,7 +166,7 @@ Namespace DbContexts
             Return Me
         End Function
 
-        Public Function UseDatabaseType(ByVal dbtype As String) As MirageDbContext
+        Public Function UseDatabaseType(dbtype As String) As MirageDbContext
             If String.IsNullOrWhiteSpace(dbtype) Then
                 Throw New ArgumentException($"'{NameOf(dbtype)}' cannot be null or whitespace.", NameOf(dbtype))
             End If
@@ -158,7 +176,7 @@ Namespace DbContexts
             Return Me
         End Function
 
-        Public Function UseTablePrefix(ByVal tablePrefix As String) As MirageDbContext
+        Public Function UseTablePrefix(tablePrefix As String) As MirageDbContext
             If String.IsNullOrWhiteSpace(tablePrefix) Then
                 Throw New ArgumentException($"'{NameOf(tablePrefix)}' cannot be null or whitespace.", NameOf(tablePrefix))
             End If

@@ -5,6 +5,8 @@ Imports Server.DbContexts.Extensions
 Imports Mirage.Sharp.Asfw
 Imports Mirage.Sharp.Asfw.IO
 Imports Newtonsoft.Json.Linq
+Imports Mirage.Core.Database.Types
+Imports Mirage.Core.Database.Types.Enumerations
 
 Module S_NetworkReceive
     Friend Sub PacketRouter()
@@ -381,8 +383,14 @@ Module S_NetworkReceive
             End If
 
             ' Everything went ok, add the character
-            DatabaseContext.Characters.Add(name)
-            DatabaseContext.SaveChanges()
+            Call DatabaseContext.Characters.Add(New Character With {
+                .Name = name,
+                .AccountId = Accounts(index).AccountId,
+                .Sex = If(sexNum > 0, Sex.Female, Sex.Male),
+                .JobId = jobNum,
+                .SpriteId = sprite
+            })
+            Call DatabaseContext.SaveChanges()
             AddChar(index, slot, name, sexNum, jobNum, sprite)
             Addlog("Character " & name & " added to " & GetPlayerLogin(index) & "'s account.", PLAYER_LOG)
             HandleUseChar(index)
@@ -405,8 +413,8 @@ Module S_NetworkReceive
             End If
 
             LoadCharacter(index, slot)
-            DatabaseContext.Characters.Remove(GetPlayerName(index))
-            DatabaseContext.SaveChanges()
+            Call DatabaseContext.Characters.Remove(GetPlayerName(index))
+            Call DatabaseContext.SaveChanges()
             ClearCharacter(index)
             SaveCharacter(index, slot)
 
@@ -472,7 +480,7 @@ Module S_NetworkReceive
         End If
     End Sub
 
-     Private Sub Packet_AdminMsg(index As Integer, ByRef data() As Byte)
+    Private Sub Packet_AdminMsg(index As Integer, ByRef data() As Byte)
         Dim msg As String
         Dim s As String
         Dim buffer As New ByteStream(data)
@@ -1560,7 +1568,7 @@ Module S_NetworkReceive
         buffer.Dispose()
     End Sub
 
-     Sub Packet_SwapSkillSlots(index As Integer, ByRef data() As Byte)
+    Sub Packet_SwapSkillSlots(index As Integer, ByRef data() As Byte)
         Dim oldSlot As Integer, newSlot As Integer
         Dim buffer As New ByteStream(data)
 
@@ -1745,7 +1753,7 @@ Module S_NetworkReceive
         Dim price As Integer
         Dim multiplier As Double
         Dim buffer As New ByteStream(data)
-        
+
         invSlot = buffer.ReadInt32
 
         ' if invalid, exit out
@@ -2151,7 +2159,7 @@ Module S_NetworkReceive
 
         type = buffer.ReadInt32
         newSlot = buffer.ReadInt32
-        oldslot = buffer.ReadInt32
+        oldSlot = buffer.ReadInt32
         skill = buffer.ReadInt32
 
         If newSlot < 1 Or newSlot > MAX_HOTBAR Then Exit Sub
@@ -2294,7 +2302,7 @@ Module S_NetworkReceive
     Private Sub Packet_CloseEditor(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
         If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
-        
+
         If TempPlayer(index).Editor = -1 Then Exit Sub
 
         TempPlayer(index).Editor = -1

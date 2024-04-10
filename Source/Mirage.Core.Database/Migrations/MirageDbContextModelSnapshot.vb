@@ -16,29 +16,46 @@ Namespace Global.Mirage.Core.Database.Migrations
 
             modelBuilder.Entity("Mirage.Core.Database.Types.Account",
                 Sub(b)
-                    b.Property(Of String)("Login").
-                        HasColumnType("VARCHAR(255)")
+                    b.Property(Of Integer)("AccountId").
+                        ValueGeneratedOnAdd().
+                        HasColumnType("INTEGER")
 
                     b.Property(Of Integer)("Banned").
                         HasColumnType("INTEGER")
 
+                    b.Property(Of String)("Login").
+                        HasColumnType("TEXT")
+
                     b.Property(Of String)("Password").
                         HasColumnType("TEXT")
 
-                    b.HasKey("Login")
+                    b.HasKey("AccountId")
 
                     b.ToTable("mirage_worlds_accounts", DirectCast(Nothing, String))
                 End Sub)
 
             modelBuilder.Entity("Mirage.Core.Database.Types.Character",
                 Sub(b)
+                    b.Property(Of Integer)("CharacterId").
+                        ValueGeneratedOnAdd().
+                        HasColumnType("INTEGER")
+
+                    b.Property(Of Integer)("AccountId").
+                        HasColumnType("INTEGER")
+
+                    b.Property(Of Integer)("JobId").
+                        HasColumnType("INTEGER")
+
                     b.Property(Of String)("Name").
-                        HasColumnType("VARCHAR(255)")
+                        HasColumnType("TEXT")
 
                     b.Property(Of Byte)("Sex").
                         HasColumnType("INTEGER")
 
-                    b.HasKey("Name")
+                    b.Property(Of Integer)("SpriteId").
+                        HasColumnType("INTEGER")
+
+                    b.HasKey("CharacterId")
 
                     b.ToTable("mirage_worlds_characters", DirectCast(Nothing, String))
                 End Sub)
@@ -46,10 +63,10 @@ Namespace Global.Mirage.Core.Database.Migrations
             modelBuilder.Entity("Mirage.Core.Database.Types.Character",
                 Sub(b)
 
-                    b.OwnsOne("Mirage.Core.Database.Types.Components.Leveling", "Level",
+                    b.OwnsOne("Mirage.Core.Database.Types.Character.Level#Mirage.Core.Database.Types.Components.Leveling", "Level",
                         Sub(b1)
-                            b1.Property(Of String)("CharacterName").
-                                HasColumnType("VARCHAR(255)")
+                            b1.Property(Of Integer)("CharacterId").
+                                HasColumnType("INTEGER")
 
                             b1.Property(Of Integer)("Experience").
                                 HasColumnType("INTEGER")
@@ -57,17 +74,17 @@ Namespace Global.Mirage.Core.Database.Migrations
                             b1.Property(Of Integer)("Level").
                                 HasColumnType("INTEGER")
 
-                            b1.HasKey("CharacterName")
+                            b1.HasKey("CharacterId")
 
-                            b1.ToTable("mirage_worlds_characters")
+                            b1.ToTable("mirage_worlds_characters", DirectCast(Nothing, String))
                             b1.WithOwner().
-                                HasForeignKey("CharacterName")
+                                HasForeignKey("CharacterId")
                         End Sub)
 
-                    b.OwnsOne("Mirage.Core.Database.Types.Components.Location", "Location",
+                    b.OwnsOne("Mirage.Core.Database.Types.Character.Location#Mirage.Core.Database.Types.Components.Location", "Location",
                         Sub(b1)
-                            b1.Property(Of String)("CharacterName").
-                                HasColumnType("VARCHAR(255)")
+                            b1.Property(Of Integer)("CharacterId").
+                                HasColumnType("INTEGER")
 
                             b1.Property(Of Byte)("Direction").
                                 HasColumnType("INTEGER")
@@ -81,17 +98,17 @@ Namespace Global.Mirage.Core.Database.Migrations
                             b1.Property(Of Byte)("Y").
                                 HasColumnType("INTEGER")
 
-                            b1.HasKey("CharacterName")
+                            b1.HasKey("CharacterId")
 
-                            b1.ToTable("mirage_worlds_characters")
+                            b1.ToTable("mirage_worlds_characters", DirectCast(Nothing, String))
                             b1.WithOwner().
-                                HasForeignKey("CharacterName")
+                                HasForeignKey("CharacterId")
                         End Sub)
 
-                    b.OwnsOne("Mirage.Core.Database.Types.Components.Vitals", "Vitals",
+                    b.OwnsOne("Mirage.Core.Database.Types.Character.Vitals#Mirage.Core.Database.Types.Components.Vitals", "Vitals",
                         Sub(b1)
-                            b1.Property(Of String)("CharacterName").
-                                HasColumnType("VARCHAR(255)")
+                            b1.Property(Of Integer)("CharacterId").
+                                HasColumnType("INTEGER")
 
                             b1.Property(Of Integer)("Health").
                                 HasColumnType("INTEGER")
@@ -102,11 +119,11 @@ Namespace Global.Mirage.Core.Database.Migrations
                             b1.Property(Of Integer)("Stamina").
                                 HasColumnType("INTEGER")
 
-                            b1.HasKey("CharacterName")
+                            b1.HasKey("CharacterId")
 
-                            b1.ToTable("mirage_worlds_characters")
+                            b1.ToTable("mirage_worlds_characters", DirectCast(Nothing, String))
                             b1.WithOwner().
-                                HasForeignKey("CharacterName")
+                                HasForeignKey("CharacterId")
                         End Sub)
                     b.Navigation("Level")
 
