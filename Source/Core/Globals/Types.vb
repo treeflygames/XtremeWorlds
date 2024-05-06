@@ -92,11 +92,10 @@ Public Module Types
         Dim SkillAnim As Integer
         Dim StunDuration As Integer
 
-        'projectiles
-        Dim IsProjectile As Integer '0 is no, 1 is yes
+        Dim IsProjectile As Integer
         Dim Projectile As Integer
 
-        Dim KnockBack As Byte '0 is no, 1 is yes
+        Dim KnockBack As Byte
         Dim KnockBackTiles As Byte
     End Structure
 
@@ -170,10 +169,6 @@ Public Module Types
         Dim Animation As Integer
         Dim Paperdoll As Integer
 
-        Dim Randomize As Byte
-        Dim RandomMin As Byte
-        Dim RandomMax As Byte
-
         Dim Stackable As Byte
         Dim ItemLevel As Byte
 
@@ -188,14 +183,18 @@ Public Module Types
         Dim Animation As Integer
         Dim X As Integer
         Dim Y As Integer
-        ' used for locking to players/npcs
+
+        ' Used for locking to players/npcs
         Dim lockindex As Integer
         Dim LockType As Byte
-        ' timing
+
+        ' Timing
         Dim Timer() As Integer
-        ' rendering check
+
+        ' Rendering check
         Dim Used() As Boolean
-        ' counting the loop
+
+        ' Counting the loop
         Dim LoopIndex() As Integer
         Dim FrameIndex() As Integer
     End Structure
@@ -360,7 +359,6 @@ Public Module Types
     End Structure
 
     Public Structure TempPlayerStruct
-        ' Non saved local vars
         Dim InGame As Boolean
 
         Dim AttackTimer As Integer
@@ -381,7 +379,6 @@ Public Module Types
         Dim StunDuration As Integer
         Dim InBank As Boolean
 
-        ' trade
         Dim TradeRequest As Integer
 
         Dim InTrade As Integer
@@ -395,15 +392,11 @@ Public Module Types
         Dim StopRegenTimer As Integer
         Dim StopRegen As Byte
 
-        'instance stuff
-        Dim InInstance As Byte
-
         Dim TmpInstanceNum As Integer
         Dim TmpMap As Integer
         Dim TmpX As Integer
         Dim TmpY As Integer
 
-        'pets
         Dim PetTarget As Integer
 
         Dim PetTargetType As Integer
@@ -635,20 +628,20 @@ Public Module Types
         'These are condition variables that decide if the event even appears to the player.
         Dim ChkVariable As Integer
 
-        Dim Variableindex As Integer
+        Dim VariableIndex As Integer
         Dim VariableCondition As Integer
         Dim VariableCompare As Integer
 
         Dim ChkSwitch As Integer
-        Dim Switchindex As Integer
+        Dim SwitchIndex As Integer
         Dim SwitchCompare As Integer
 
         Dim ChkHasItem As Integer
-        Dim HasItemindex As Integer
+        Dim HasItemIndex As Integer
         Dim HasItemAmount As Integer
 
         Dim ChkSelfSwitch As Integer
-        Dim SelfSwitchindex As Integer
+        Dim SelfSwitchIndex As Integer
         Dim SelfSwitchCompare As Integer
 
         'Handles the Event Sprite
@@ -865,7 +858,8 @@ Public Module Types
         Dim Min As Long
         Dim Value As Long
         Dim Text As String
-        Dim Image() As Sprite
+        Dim Image() As Long
+        Dim GfxType() as GfxType
         Dim Design() As Long
         Dim Color As Color
         Dim Alpha As Long

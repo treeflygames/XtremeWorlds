@@ -236,7 +236,7 @@ Module C_Text
 
     End Sub
 
-    Sub RenderChat()
+    Sub DrawChat()
         Dim xO As Long, yO As Long, Color As Integer, yOffset As Long, rLines As Integer, lineCount As Integer
         Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Integer, tmpArray() As String, x As Integer
         Dim Color2 As Color

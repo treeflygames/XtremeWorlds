@@ -115,7 +115,7 @@ Friend Module S_Projectile
         Dim buffer As New ByteStream(4)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
         If TempPlayer(index).Editor > -1 Then  Exit Sub
 
         Dim user As String
@@ -140,7 +140,7 @@ Friend Module S_Projectile
         Dim ProjectileNum As Integer
         Dim buffer As New ByteStream(data)
 
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         ProjectileNum = buffer.ReadInt32
 

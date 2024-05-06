@@ -92,10 +92,6 @@ Friend Module S_Item
         buffer.WriteInt32(Item(itemNum).Rarity)
         buffer.WriteInt32(Item(itemNum).Speed)
 
-        buffer.WriteInt32(Item(itemNum).Randomize)
-        buffer.WriteInt32(Item(itemNum).RandomMin)
-        buffer.WriteInt32(Item(itemNum).RandomMax)
-
         buffer.WriteInt32(Item(itemNum).Stackable)
         buffer.WriteString((Trim$(Item(itemNum).Description)))
 
@@ -270,7 +266,7 @@ Friend Module S_Item
 
     Sub Packet_EditItem(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
         If TempPlayer(index).Editor > 0 Then  Exit Sub
 
         Dim user As String
@@ -302,7 +298,7 @@ Friend Module S_Item
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         n = buffer.ReadInt32
 
@@ -330,10 +326,6 @@ Friend Module S_Item
         Item(n).Price = buffer.ReadInt32()
         Item(n).Rarity = buffer.ReadInt32()
         Item(n).Speed = buffer.ReadInt32()
-
-        Item(n).Randomize = buffer.ReadInt32()
-        Item(n).RandomMin = buffer.ReadInt32()
-        Item(n).RandomMax = buffer.ReadInt32()
 
         Item(n).Stackable = buffer.ReadInt32()
         Item(n).Description = Trim$(buffer.ReadString)
@@ -376,9 +368,9 @@ Friend Module S_Item
 
         ' Prevent hacking
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
-        If GetPlayerInvItemNum(index, invNum) < 0 Or GetPlayerInvItemNum(index, invNum) > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
-            If amount < 0 Or amount > GetPlayerInvItemValue(index, invNum) Then Exit Sub
+        If GetPlayerInv(index, invNum) < 0 Or GetPlayerInv(index, invNum) > MAX_ITEMS Then Exit Sub
+        If Item(GetPlayerInv(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInv(index, invNum)).Stackable = 1 Then
+            If amount < 0 Or amount > GetPlayerInvValue(index, invNum) Then Exit Sub
         End If
 
         ' everything worked out fine

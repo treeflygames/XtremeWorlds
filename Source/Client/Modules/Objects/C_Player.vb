@@ -33,7 +33,7 @@ Module C_Player
         Player(index).AttackTimer = 0
         Player(index).Job = 1
         Player(index).Dir = 0
-        Player(index).Access = AdminType.Player
+        Player(index).Access = AccessType.Player
 
         ReDim Player(index).Equipment(EquipmentType.Count - 1)
         For y = 0 To EquipmentType.Count - 1
@@ -391,7 +391,7 @@ Module C_Player
             End If
         End If
 
-        For i = 0 To CurrentEvents
+        For i = 1 To CurrentEvents
             If MapEvents(i).Visible = 1 Then
                 If MapEvents(i).X = x And MapEvents(i).Y = y Then
                     If MapEvents(i).WalkThrough = 0 Then
@@ -530,7 +530,7 @@ Module C_Player
         End If
 
         ' Check if player has enough MP
-        If GetPlayerVital(MyIndex, VitalType.MP) < Skill(Player(MyIndex).Skill(skillslot).Num).MpCost Then
+        If GetPlayerVital(MyIndex, VitalType.SP) < Skill(Player(MyIndex).Skill(skillslot).Num).MpCost Then
             AddText("Not enough MP to cast " & Trim$(Skill(Player(MyIndex).Skill(skillslot).Num).Name) & ".", ColorType.BrightRed)
             Exit Sub
         End If
@@ -694,19 +694,19 @@ Module C_Player
         ' Check access level
         If GetPlayerPK(index) = False Then
             Select Case GetPlayerAccess(index)
-                Case AdminType.Player
-                    color = SFML.Graphics.Color.Red
+                Case AccessType.Player
+                    color = SFML.Graphics.Color.White
                     backcolor = SFML.Graphics.Color.Black
-                Case AdminType.Moderator
-                    color = SFML.Graphics.Color.Black
-                    backcolor = SFML.Graphics.Color.White
-                Case AdminType.Mapper
+                Case AccessType.Moderator
                     color = SFML.Graphics.Color.Cyan
-                    backcolor = SFML.Graphics.Color.Black
-                Case AdminType.Developer
+                    backcolor = SFML.Graphics.Color.White
+                Case AccessType.Mapper
                     color = SFML.Graphics.Color.Green
                     backcolor = SFML.Graphics.Color.Black
-                Case AdminType.Creator
+                Case AccessType.Developer
+                    color = SFML.Graphics.Color.Magenta
+                    backcolor = SFML.Graphics.Color.Black
+                Case AccessType.Creator
                     color = SFML.Graphics.Color.Yellow
                     backcolor = SFML.Graphics.Color.Black
             End Select
@@ -750,7 +750,6 @@ Module C_Player
             BarWidth_GuiHP_Max = 0
         End If
 
-        ' Update GUI
         UpdateStats_UI()
 
         buffer.Dispose()
@@ -759,16 +758,15 @@ Module C_Player
     Sub Packet_PlayerMP(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
 
-        SetPlayerVital(MyIndex, VitalType.MP, buffer.ReadInt32)
+        SetPlayerVital(MyIndex, VitalType.SP, buffer.ReadInt32)
 
         ' set max width
-        If GetPlayerVital(MyIndex, VitalType.MP) > 0 Then
-            BarWidth_GuiSP_Max = ((GetPlayerVital(MyIndex, VitalType.MP) / 209) / (GetPlayerMaxVital(MyIndex, VitalType.MP) / 209)) * 209
+        If GetPlayerVital(MyIndex, VitalType.SP) > 0 Then
+            BarWidth_GuiSP_Max = ((GetPlayerVital(MyIndex, VitalType.SP) / 209) / (GetPlayerMaxVital(MyIndex, VitalType.SP) / 209)) * 209
         Else
             BarWidth_GuiSP_Max = 0
         End If
 
-        ' Update GUI
         UpdateStats_UI()
 
         buffer.Dispose()
@@ -941,21 +939,22 @@ Module C_Player
     End Sub
 
     Sub Packet_PlayerXY(ByRef data() As Byte)
-        Dim x As Integer, y As Integer, dir As Integer
+        Dim x As Integer, y As Integer, dir As Integer, index As Integer
         Dim buffer As New ByteStream(data)
 
+        index = buffer.ReadInt32
         x = buffer.ReadInt32
         y = buffer.ReadInt32
         dir = buffer.ReadInt32
 
-        SetPlayerX(MyIndex, x)
-        SetPlayerY(MyIndex, y)
-        SetPlayerDir(MyIndex, dir)
+        SetPlayerX(index, x)
+        SetPlayerY(index, y)
+        SetPlayerDir(index, dir)
 
         ' Make sure they aren't walking
-        Player(MyIndex).Moving = 0
-        Player(MyIndex).XOffset = 0
-        Player(MyIndex).YOffset = 0
+        Player(index).Moving = 0
+        Player(index).XOffset = 0
+        Player(index).YOffset = 0
 
         buffer.Dispose()
     End Sub

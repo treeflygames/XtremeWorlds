@@ -137,7 +137,7 @@
     End Enum
 
     ''' <Summary> Admin Constant </Summary>
-    Enum AdminType As Byte
+    Enum AccessType As Byte
         None = 0
         Player
         Moderator
@@ -201,7 +201,6 @@
     Public Enum VitalType As Byte
         None = 0
         HP
-        MP
         SP
 
         Count
@@ -214,8 +213,6 @@
         Armor
         Helmet
         Shield
-        Shoes
-        Gloves
 
         Count
     End Enum
@@ -344,7 +341,7 @@
         ChangeItems
 
         RestoreHP
-        RestoreMP
+        RestoreSP
         LevelUp
         ChangeLevel
         ChangeSkills
@@ -421,6 +418,34 @@
         Job
         Projectile
         Moral
+    End Enum
+
+    Public Enum GfxType
+        None = 0
+        Tileset
+        Character
+        Paperdoll
+        Item
+        Resource
+        Animation
+        Fog
+        Skill
+        Projectile
+        Emote
+        Panorama
+        Parallax
+        Picture
+        GUI
+        Gradient
+        Design
+    End Enum
+
+    Public Enum PictureType
+        TopLeft = 0
+        CenterScreen
+        CenterEvent
+        CenterPlayer
+        Count
     End Enum
 
     Public Enum QuadrantType

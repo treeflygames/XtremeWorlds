@@ -275,7 +275,7 @@ Public Class frmEditor_Map
 
         lstNpc.Items.Clear()
 
-        For n = 0 To MAX_MAP_NPCS
+        For n = 1 To MAX_MAP_NPCS
             If Map.Npc(n) > 0 Then
                 lstNpc.Items.Add(n & ": " & NPC(Map.Npc(n)).Name)
             Else
@@ -369,7 +369,7 @@ Public Class frmEditor_Map
     Private Sub CmbNpcList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbNpcList.SelectedIndexChanged
         If lstMapNpc.SelectedIndex > 0 Then
             lstMapNpc.Items.Item(lstMapNpc.SelectedIndex) = lstMapNpc.SelectedIndex & ": " & NPC(cmbNpcList.SelectedIndex).Name
-            Map.Npc(lstMapNpc.SelectedIndex) = cmbNpcList.SelectedIndex + 1
+            Map.Npc(lstMapNpc.SelectedIndex) = cmbNpcList.SelectedIndex
         End If
     End Sub
 
@@ -1302,15 +1302,6 @@ Public Class frmEditor_Map
             .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
         }
 
-        If TilesetGfxInfo(tileset).IsLoaded = False Then
-            LoadTexture(tileset, 1)
-        End If
-
-        ' we use it, lets update timer
-        With TilesetGfxInfo(tileset)
-            .TextureTimer = GetTickCount() + 100000
-        End With
-
         ' change selected shape for autotiles
         If Me.cmbAutoTile.SelectedIndex > 0 Then
             Select Case Me.cmbAutoTile.SelectedIndex
@@ -1336,9 +1327,9 @@ Public Class frmEditor_Map
         End If
 
         If TilesetGfxInfo(tileset).Width < picBackSelect.Width Or TilesetGfxInfo(tileset).Height < picBackSelect.Height Then
-            RenderTexture(TilesetSprite(tileset), TilesetWindow, 0, 0, 0, 0, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height)
+            RenderTexture(tileset, GfxType.Tileset, TilesetWindow, 0, 0, 0, 0, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height)
         Else
-            RenderTexture(TilesetSprite(tileset), TilesetWindow, 0, 0, 0, 0, picBackSelect.Width, picBackSelect.Height, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height)
+            RenderTexture(tileset, GfxType.Tileset, TilesetWindow, 0, 0, 0, 0, picBackSelect.Width, picBackSelect.Height, TilesetGfxInfo(tileset).Width, TilesetGfxInfo(tileset).Height)
         End If
 
         rec2.Size = New Vector2f(EditorTileWidth * PicX, EditorTileHeight * PicY)

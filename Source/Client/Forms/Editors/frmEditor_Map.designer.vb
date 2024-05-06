@@ -1930,9 +1930,9 @@ Partial Class frmEditor_Map
         lblFogOpacity.Location = New Point(10, 242)
         lblFogOpacity.Margin = New Padding(6, 0, 6, 0)
         lblFogOpacity.Name = "lblFogOpacity"
-        lblFogOpacity.Size = New Size(133, 25)
+        lblFogOpacity.Size = New Size(113, 25)
         lblFogOpacity.TabIndex = 8
-        lblFogOpacity.Text = "Fog Alpha: 255"
+        lblFogOpacity.Text = "Fog Alpha: 0"
         ' 
         ' scrlFogSpeed
         ' 

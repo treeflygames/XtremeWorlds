@@ -160,7 +160,7 @@ Module C_Maps
         MapNpc(index).TargetType = 0
         ReDim MapNpc(index).Vital(VitalType.Count - 1)
         MapNpc(index).Vital(VitalType.HP) = 0
-        MapNpc(index).Vital(VitalType.MP) = 0
+        MapNpc(index).Vital(VitalType.SP) = 0
         MapNpc(index).Vital(VitalType.SP) = 0
         MapNpc(index).X = 0
         MapNpc(index).XOffset = 0
@@ -340,20 +340,20 @@ Module C_Maps
                         For x = 0 To Map.Events(i).PageCount
                             With Map.Events(i).Pages(x)
                                 .ChkVariable = buffer.ReadInt32
-                                .Variableindex = buffer.ReadInt32
+                                .VariableIndex = buffer.ReadInt32
                                 .VariableCondition = buffer.ReadInt32
                                 .VariableCompare = buffer.ReadInt32
 
                                 .ChkSwitch = buffer.ReadInt32
-                                .Switchindex = buffer.ReadInt32
+                                .SwitchIndex = buffer.ReadInt32
                                 .SwitchCompare = buffer.ReadInt32
 
                                 .ChkHasItem = buffer.ReadInt32
-                                .HasItemindex = buffer.ReadInt32
+                                .HasItemIndex = buffer.ReadInt32
                                 .HasItemAmount = buffer.ReadInt32
 
                                 .ChkSelfSwitch = buffer.ReadInt32
-                                .SelfSwitchindex = buffer.ReadInt32
+                                .SelfSwitchIndex = buffer.ReadInt32
                                 .SelfSwitchCompare = buffer.ReadInt32
 
                                 .GraphicType = buffer.ReadByte
@@ -456,8 +456,9 @@ Module C_Maps
             MapNpc(i).X = buffer.ReadInt32()
             MapNpc(i).Y = buffer.ReadInt32()
             MapNpc(i).Dir = buffer.ReadInt32()
-            MapNpc(i).Vital(VitalType.HP) = buffer.ReadInt32()
-            MapNpc(i).Vital(VitalType.MP) = buffer.ReadInt32()
+            For n = 1 To VitalType.Count - 1
+                MapNpc(i).Vital(n) = buffer.ReadInt32()
+            Next
         Next
 
         If buffer.ReadInt32 = 1 Then
@@ -515,7 +516,6 @@ Module C_Maps
                 .Y = buffer.ReadInt32
                 .Dir = buffer.ReadInt32
                 .Vital(VitalType.HP) = buffer.ReadInt32
-                .Vital(VitalType.MP) = buffer.ReadInt32
             End With
 
         Next
@@ -534,7 +534,7 @@ Module C_Maps
             .Y = buffer.ReadInt32
             .Dir = buffer.ReadInt32
             .Vital(VitalType.HP) = buffer.ReadInt32
-            .Vital(VitalType.MP) = buffer.ReadInt32
+            .Vital(VitalType.SP) = buffer.ReadInt32
         End With
 
         buffer.Dispose()
@@ -674,17 +674,17 @@ Module C_Maps
                     For x = 0 To Map.Events(i).PageCount
                         With Map.Events(i).Pages(x)
                             buffer.WriteInt32(.ChkVariable)
-                            buffer.WriteInt32(.Variableindex)
+                            buffer.WriteInt32(.VariableIndex)
                             buffer.WriteInt32(.VariableCondition)
                             buffer.WriteInt32(.VariableCompare)
                             buffer.WriteInt32(.ChkSwitch)
-                            buffer.WriteInt32(.Switchindex)
+                            buffer.WriteInt32(.SwitchIndex)
                             buffer.WriteInt32(.SwitchCompare)
                             buffer.WriteInt32(.ChkHasItem)
-                            buffer.WriteInt32(.HasItemindex)
+                            buffer.WriteInt32(.HasItemIndex)
                             buffer.WriteInt32(.HasItemAmount)
                             buffer.WriteInt32(.ChkSelfSwitch)
-                            buffer.WriteInt32(.SelfSwitchindex)
+                            buffer.WriteInt32(.SelfSwitchIndex)
                             buffer.WriteInt32(.SelfSwitchCompare)
                             buffer.WriteByte(.GraphicType)
                             buffer.WriteInt32(.Graphic)
@@ -825,15 +825,6 @@ Module C_Maps
 
             ' skip tile if tileset isn't set
             If Map.Tile(x, y).Layer(i).Tileset > 0 And Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
-                If TilesetGfxInfo(Map.Tile(x, y).Layer(i).Tileset).IsLoaded = False Then
-                    LoadTexture(Map.Tile(x, y).Layer(i).Tileset, 1)
-                End If
-
-                ' we use it, lets update timer
-                With TilesetGfxInfo(Map.Tile(x, y).Layer(i).Tileset)
-                    .TextureTimer = GetTickCount() + 100000
-                End With
-
                 If Autotile(x, y).Layer(i).RenderState = RenderStateNormal Then
                     With rect
                         .X = Map.Tile(x, y).Layer(i).X * PicX
@@ -852,7 +843,7 @@ Module C_Maps
                         alpha = 255
                     End If
 
-                    RenderTexture(TilesetSprite(Map.Tile(x, y).Layer(i).Tileset), Window, ConvertMapX(x * PicX), ConvertMapY(y * PicY), rect.X, rect.Y, rect.Width, rect.Height, rect.Width, rect.Height, alpha)
+                    RenderTexture(Map.Tile(x, y).Layer(i).Tileset, GfxType.Tileset, Window, ConvertMapX(x * PicX), ConvertMapY(y * PicY), rect.X, rect.Y, rect.Width, rect.Height, rect.Width, rect.Height, alpha)
                 ElseIf Autotile(x, y).Layer(i).RenderState = RenderStateAutotile Then
                     If Types.Settings.Autotile Then
                         DrawAutoTile(i, ConvertMapX(x * PicX), ConvertMapY(y * PicY), 1, x, y, 0, False)
@@ -889,16 +880,6 @@ Module C_Maps
 
             ' skip tile if tileset isn't set
             If Map.Tile(x, y).Layer(i).Tileset > 0 And Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
-                If TileSetGfxInfo(Map.Tile(x, y).Layer(i).Tileset).IsLoaded = False Then
-                    LoadTexture(Map.Tile(x, y).Layer(i).Tileset, 1)
-                End If
-
-                ' we use it, lets update timer
-                With TileSetGfxInfo(Map.Tile(x, y).Layer(i).Tileset)
-                    .TextureTimer = GetTickCount() + 100000
-                End With
-
-                ' render
                 If Autotile(x, y).Layer(i).RenderState = RenderStateNormal Then
                     With rect
                         .X = Map.Tile(x, y).Layer(i).X * PicX
@@ -917,7 +898,7 @@ Module C_Maps
                         alpha = 255
                     End If
 
-                    RenderTexture(TilesetSprite(Map.Tile(x, y).Layer(i).Tileset), Window, ConvertMapX(x * PicX), ConvertMapY(y * PicY), rect.X, rect.Y, rect.Width, rect.Height, rect.Width, rect.Height, alpha)
+                    RenderTexture(Map.Tile(x, y).Layer(i).Tileset, GfxType.Tileset, Window, ConvertMapX(x * PicX), ConvertMapY(y * PicY), rect.X, rect.Y, rect.Width, rect.Height, rect.Width, rect.Height, alpha)
                 ElseIf Autotile(x, y).Layer(i).RenderState = RenderStateAutotile Then
                     If Types.Settings.Autotile Then
                         DrawAutoTile(i, ConvertMapX(x * PicX), ConvertMapY(y * PicY), 1, x, y, 0, False)

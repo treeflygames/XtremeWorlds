@@ -5716,424 +5716,424 @@
     <None Update="Contents\Graphics\Tilesets\99.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\1.png">
+    <None Update="Contents\Graphics\Gui\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\10.png">
+    <None Update="Contents\Graphics\Gui\10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\100.png">
+    <None Update="Contents\Graphics\Gui\100.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\101.png">
+    <None Update="Contents\Graphics\Gui\101.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\102.png">
+    <None Update="Contents\Graphics\Gui\102.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\103.png">
+    <None Update="Contents\Graphics\Gui\103.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\11.png">
+    <None Update="Contents\Graphics\Gui\11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\12.png">
+    <None Update="Contents\Graphics\Gui\12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\13.png">
+    <None Update="Contents\Graphics\Gui\13.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\14.png">
+    <None Update="Contents\Graphics\Gui\14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\15.png">
+    <None Update="Contents\Graphics\Gui\15.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\16.png">
+    <None Update="Contents\Graphics\Gui\16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\17.png">
+    <None Update="Contents\Graphics\Gui\17.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\18.png">
+    <None Update="Contents\Graphics\Gui\18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\19.png">
+    <None Update="Contents\Graphics\Gui\19.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\2.png">
+    <None Update="Contents\Graphics\Gui\2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\20.png">
+    <None Update="Contents\Graphics\Gui\20.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\21.png">
+    <None Update="Contents\Graphics\Gui\21.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\22.png">
+    <None Update="Contents\Graphics\Gui\22.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\23.png">
+    <None Update="Contents\Graphics\Gui\23.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\24.png">
+    <None Update="Contents\Graphics\Gui\24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\25.png">
+    <None Update="Contents\Graphics\Gui\25.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\26.png">
+    <None Update="Contents\Graphics\Gui\26.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\27.png">
+    <None Update="Contents\Graphics\Gui\27.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\28.png">
+    <None Update="Contents\Graphics\Gui\28.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\29.png">
+    <None Update="Contents\Graphics\Gui\29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\3.png">
+    <None Update="Contents\Graphics\Gui\3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\30.png">
+    <None Update="Contents\Graphics\Gui\30.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\31.png">
+    <None Update="Contents\Graphics\Gui\31.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\32.png">
+    <None Update="Contents\Graphics\Gui\32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\33.png">
+    <None Update="Contents\Graphics\Gui\33.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\34.png">
+    <None Update="Contents\Graphics\Gui\34.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\35.png">
+    <None Update="Contents\Graphics\Gui\35.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\36.png">
+    <None Update="Contents\Graphics\Gui\36.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\37.png">
+    <None Update="Contents\Graphics\Gui\37.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\38.png">
+    <None Update="Contents\Graphics\Gui\38.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\39.png">
+    <None Update="Contents\Graphics\Gui\39.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\4.png">
+    <None Update="Contents\Graphics\Gui\4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\40.png">
+    <None Update="Contents\Graphics\Gui\40.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\41.png">
+    <None Update="Contents\Graphics\Gui\41.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\42.png">
+    <None Update="Contents\Graphics\Gui\42.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\43.png">
+    <None Update="Contents\Graphics\Gui\43.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\44.png">
+    <None Update="Contents\Graphics\Gui\44.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\45.png">
+    <None Update="Contents\Graphics\Gui\45.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\46.png">
+    <None Update="Contents\Graphics\Gui\46.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\47.png">
+    <None Update="Contents\Graphics\Gui\47.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\48.png">
+    <None Update="Contents\Graphics\Gui\48.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\49.png">
+    <None Update="Contents\Graphics\Gui\49.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\5.png">
+    <None Update="Contents\Graphics\Gui\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\50.png">
+    <None Update="Contents\Graphics\Gui\50.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\51.png">
+    <None Update="Contents\Graphics\Gui\51.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\52.png">
+    <None Update="Contents\Graphics\Gui\52.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\53.png">
+    <None Update="Contents\Graphics\Gui\53.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\54.png">
+    <None Update="Contents\Graphics\Gui\54.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\55.png">
+    <None Update="Contents\Graphics\Gui\55.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\56.png">
+    <None Update="Contents\Graphics\Gui\56.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\57.png">
+    <None Update="Contents\Graphics\Gui\57.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\58.png">
+    <None Update="Contents\Graphics\Gui\58.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\59.png">
+    <None Update="Contents\Graphics\Gui\59.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\6.png">
+    <None Update="Contents\Graphics\Gui\6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\60.png">
+    <None Update="Contents\Graphics\Gui\60.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\61.png">
+    <None Update="Contents\Graphics\Gui\61.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\62.png">
+    <None Update="Contents\Graphics\Gui\62.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\63.png">
+    <None Update="Contents\Graphics\Gui\63.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\64.png">
+    <None Update="Contents\Graphics\Gui\64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\65.png">
+    <None Update="Contents\Graphics\Gui\65.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\66.png">
+    <None Update="Contents\Graphics\Gui\66.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\67.png">
+    <None Update="Contents\Graphics\Gui\67.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\68.png">
+    <None Update="Contents\Graphics\Gui\68.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\69.png">
+    <None Update="Contents\Graphics\Gui\69.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\7.png">
+    <None Update="Contents\Graphics\Gui\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\70.png">
+    <None Update="Contents\Graphics\Gui\70.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\71.png">
+    <None Update="Contents\Graphics\Gui\71.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\72.png">
+    <None Update="Contents\Graphics\Gui\72.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\73.png">
+    <None Update="Contents\Graphics\Gui\73.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\74.png">
+    <None Update="Contents\Graphics\Gui\74.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\75.png">
+    <None Update="Contents\Graphics\Gui\75.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\76.png">
+    <None Update="Contents\Graphics\Gui\76.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\77.png">
+    <None Update="Contents\Graphics\Gui\77.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\78.png">
+    <None Update="Contents\Graphics\Gui\78.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\79.png">
+    <None Update="Contents\Graphics\Gui\79.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\8.png">
+    <None Update="Contents\Graphics\Gui\8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\80.png">
+    <None Update="Contents\Graphics\Gui\80.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\81.png">
+    <None Update="Contents\Graphics\Gui\81.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\82.png">
+    <None Update="Contents\Graphics\Gui\82.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\83.png">
+    <None Update="Contents\Graphics\Gui\83.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\84.png">
+    <None Update="Contents\Graphics\Gui\84.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\85.png">
+    <None Update="Contents\Graphics\Gui\85.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\86.png">
+    <None Update="Contents\Graphics\Gui\86.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\87.png">
+    <None Update="Contents\Graphics\Gui\87.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\88.png">
+    <None Update="Contents\Graphics\Gui\88.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\89.png">
+    <None Update="Contents\Graphics\Gui\89.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\9.png">
+    <None Update="Contents\Graphics\Gui\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\90.png">
+    <None Update="Contents\Graphics\Gui\90.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\91.png">
+    <None Update="Contents\Graphics\Gui\91.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\92.png">
+    <None Update="Contents\Graphics\Gui\92.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\93.png">
+    <None Update="Contents\Graphics\Gui\93.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\94.png">
+    <None Update="Contents\Graphics\Gui\94.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\95.png">
+    <None Update="Contents\Graphics\Gui\95.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\96.png">
+    <None Update="Contents\Graphics\Gui\96.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\97.png">
+    <None Update="Contents\Graphics\Gui\97.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\98.png">
+    <None Update="Contents\Graphics\Gui\98.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\99.png">
+    <None Update="Contents\Graphics\Gui\99.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\1.png">
+    <None Update="Contents\Graphics\Gui\designs\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\10.png">
+    <None Update="Contents\Graphics\Gui\designs\10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\11.png">
+    <None Update="Contents\Graphics\Gui\designs\11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\12.png">
+    <None Update="Contents\Graphics\Gui\designs\12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\13.png">
+    <None Update="Contents\Graphics\Gui\designs\13.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\14.png">
+    <None Update="Contents\Graphics\Gui\designs\14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\15.png">
+    <None Update="Contents\Graphics\Gui\designs\15.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\16.png">
+    <None Update="Contents\Graphics\Gui\designs\16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\17.png">
+    <None Update="Contents\Graphics\Gui\designs\17.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\18.png">
+    <None Update="Contents\Graphics\Gui\designs\18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\19.png">
+    <None Update="Contents\Graphics\Gui\designs\19.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\2.png">
+    <None Update="Contents\Graphics\Gui\designs\2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\3.png">
+    <None Update="Contents\Graphics\Gui\designs\3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\4.png">
+    <None Update="Contents\Graphics\Gui\designs\4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\5.png">
+    <None Update="Contents\Graphics\Gui\designs\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\6.png">
+    <None Update="Contents\Graphics\Gui\designs\6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\7.png">
+    <None Update="Contents\Graphics\Gui\designs\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\8.png">
+    <None Update="Contents\Graphics\Gui\designs\8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\designs\9.png">
+    <None Update="Contents\Graphics\Gui\designs\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\1.png">
+    <None Update="Contents\Graphics\Gui\gradients\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\10.png">
+    <None Update="Contents\Graphics\Gui\gradients\10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\11.png">
+    <None Update="Contents\Graphics\Gui\gradients\11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\12.png">
+    <None Update="Contents\Graphics\Gui\gradients\12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\13.png">
+    <None Update="Contents\Graphics\Gui\gradients\13.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\14.png">
+    <None Update="Contents\Graphics\Gui\gradients\14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\15.png">
+    <None Update="Contents\Graphics\Gui\gradients\15.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\16.png">
+    <None Update="Contents\Graphics\Gui\gradients\16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\17.png">
+    <None Update="Contents\Graphics\Gui\gradients\17.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\2.png">
+    <None Update="Contents\Graphics\Gui\gradients\2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\3.png">
+    <None Update="Contents\Graphics\Gui\gradients\3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\4.png">
+    <None Update="Contents\Graphics\Gui\gradients\4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\5.png">
+    <None Update="Contents\Graphics\Gui\gradients\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\6.png">
+    <None Update="Contents\Graphics\Gui\gradients\6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\7.png">
+    <None Update="Contents\Graphics\Gui\gradients\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\8.png">
+    <None Update="Contents\Graphics\Gui\gradients\8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\gradients\9.png">
+    <None Update="Contents\Graphics\Gui\gradients\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Contents\Gui\icon.png">
+    <None Update="Contents\Graphics\Gui\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Contents\Music\airborne.mid">

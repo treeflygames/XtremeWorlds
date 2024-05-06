@@ -18,7 +18,6 @@ Public Class Settings
     Public Resolution As Byte = 13
     Public Vsync As Byte = 1
     Public ShowNpcBar As Byte = 1
-    Public CameraType As Byte = 0
     Public Fullscreen As Byte = 1
     Public CameraWidth As Byte = 32
     Public CameraHeight As Byte = 24
@@ -33,7 +32,7 @@ Public Class Settings
     <XmlIgnore()> Public GameName As String = "MirageWorlds"
     <XmlIgnore()> Public Website As String = "https://miragesource.net/"
 
-    <XmlIgnore()> Public Version As String = "1.8.5"
+    <XmlIgnore()> Public Version As String = "1.8.9"
 
     Public Welcome As String = "Welcome to MirageWorlds, enjoy your stay!"
 
@@ -43,44 +42,48 @@ Public Class Settings
 
     Public Autotile As Boolean = True
 
-    Public Shared Sub Load()
-        Dim cf As String = Paths.Config()
-        Dim x As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
+     Public Shared Sub Load()
+        Dim configPath As String = Paths.Config()
+        Dim configFile As String = Path.Combine(configPath, "Settings.xml")
 
-        Directory.CreateDirectory(cf)
-        cf += "Settings.xml"
+        Directory.CreateDirectory(configPath)
 
-        If Not File.Exists(cf) Then
-            File.Create(cf).Dispose()
-            Dim writer = New StreamWriter(cf)
-            x.Serialize(writer, New Settings)
-            writer.Close()
+        If Not File.Exists(configFile) Then
+            Try
+                Using writer As New StreamWriter(File.Create(configFile))
+                    Dim serializer As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
+                    serializer.Serialize(writer, New Settings()) ' Serialize default settings
+                End Using
+            Catch ex As IOException
+                Console.WriteLine(ex.Message)
+            Catch ex As UnauthorizedAccessException
+                Console.WriteLine(ex.Message)
+            End Try
         End If
 
         Try
-            Dim reader = New StreamReader(cf)
-            Types.Settings = x.Deserialize(reader)
-            reader.Close()
+            Using reader As New StreamReader(configFile)
+                Dim serializer As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
+                Types.Settings = CType(serializer.Deserialize(reader), Settings)
+            End Using
         Catch ex As Exception
-            Types.Settings = New Settings()
+            Types.Settings = New Settings() ' Default to new settings if reading fails
         End Try
     End Sub
 
     Public Shared Sub Save()
-        Dim cf As String = Paths.Config()
+        Dim configPath As String = Paths.Config()
+        Dim configFile As String = Path.Combine(configPath, "Settings.xml")
 
-        Directory.CreateDirectory(cf)
-        cf += "Settings.xml"
+        Directory.CreateDirectory(configPath)
 
-        Dim x As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
         Try
-            Using writer = New StreamWriter(cf)
-                x.Serialize(writer, Types.Settings)
-            End Using ' This ensures the writer is properly disposed and the file is closed
+            Using writer = New StreamWriter(configFile)
+                Dim serializer As New XmlSerializer(GetType(Settings), New XmlRootAttribute("Settings"))
+                serializer.Serialize(writer, Types.Settings)
+            End Using
         Catch ex As Exception
-            Threading.Thread.Sleep(1000) ' Wait for 1 second
-            File.Delete(cf)
+            Console.WriteLine(ex.Message)
         End Try
-
     End Sub
 End Class

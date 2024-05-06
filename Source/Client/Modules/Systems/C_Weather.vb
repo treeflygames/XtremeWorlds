@@ -76,30 +76,27 @@ Friend Module C_Weather
     End Sub
 
     Friend Sub DrawFog()
-        Dim fogNum As Integer
+        Dim fogNum As Integer = CurrentFog
 
-        fogNum = CurrentFog
         If fogNum <= 0 Or fogNum > NumFogs Then Exit Sub
 
-        If FogGfxInfo(fogNum).IsLoaded = False Then
-            LoadTexture(fogNum, 8)
-        End If
-
-        'seeying we still use it, lets update timer
-        With FogGfxInfo(fogNum)
-            .TextureTimer = GetTickCount() + 100000
-        End With
-
+        ' Load and prepare texture if not already set up elsewhere in your code
+        LoadTexture(fogNum, GfxType.Fog) ' Assuming LoadTexture handles setting `Repeated` and `Smooth`
         FogTexture(fogNum).Repeated = True
         FogTexture(fogNum).Smooth = True
 
-        FogSprite(fogNum).Color = New Color(255, 255, 255, CurrentFogOpacity)
-        FogSprite(fogNum).TextureRect = New IntRect(0, 0, Window.Size.X + 200, Window.Size.Y + 200)
-        FogSprite(fogNum).Position = New Vector2f((FogOffsetX * 2.5) - 50, (FogOffsetY * 3.5) - 50)
-        FogSprite(fogNum).Scale = (New Vector2f(CDbl((Window.Size.X + 200) / FogGfxInfo(fogNum).Width), CDbl((Window.Size.Y + 200) / FogGfxInfo(fogNum).Height)))
+        Dim sX As Integer = 0
+        Dim sY As Integer = 0
+        Dim sW As Integer = FogGfxInfo(fogNum).Width  ' Using the full width of the fog texture
+        Dim sH As Integer = FogGfxInfo(fogNum).Height ' Using the full height of the fog texture
 
-        Window.Draw(FogSprite(fogNum))
+        ' These should match the scale calculations for full coverage plus extra area
+        Dim dX As Integer = (FogOffsetX * 2.5) - 50
+        Dim dY As Integer = (FogOffsetY * 3.5) - 50
+        Dim dW As Integer = Window.Size.X + 200
+        Dim dH As Integer = Window.Size.Y + 200
 
+        RenderTexture(fogNum, GfxType.Fog, Window, dX, dY, sX, sY, dW, dH, sW, sH, CurrentFogOpacity)
     End Sub
 
 #End Region

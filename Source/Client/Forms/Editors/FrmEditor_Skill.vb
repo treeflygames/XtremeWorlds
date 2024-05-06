@@ -125,7 +125,6 @@ Friend Class frmEditor_Skill
 
     Private Sub frmEditor_Skill_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         nudIcon.Maximum = NumSkills
-        nudCast.Value = 1
         nudAoE.Maximum = Byte.MaxValue
         nudRange.Maximum = Byte.MaxValue
         nudMap.Maximum = MAX_MAPS

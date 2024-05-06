@@ -445,10 +445,6 @@ Module C_Pets
 
         If spriteNum < 1 Or spriteNum > NumCharacters Then Exit Sub
 
-        If CharacterGfxInfo(spriteNum).IsLoaded = False Then
-            LoadTexture(spriteNum, 2)
-        End If
-
         attackspeed = 1000
 
         ' Reset frame

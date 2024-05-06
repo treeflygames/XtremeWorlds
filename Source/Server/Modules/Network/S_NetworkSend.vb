@@ -187,8 +187,8 @@ Module S_NetworkSend
         buffer.WriteInt32(ServerPackets.SPlayerInv)
 
         For i = 1 To MAX_INV
-            buffer.WriteInt32(GetPlayerInvItemNum(index, i))
-            buffer.WriteInt32(GetPlayerInvItemValue(index, i))
+            buffer.WriteInt32(GetPlayerInv(index, i))
+            buffer.WriteInt32(GetPlayerInvValue(index, i))
         Next
 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
@@ -220,13 +220,10 @@ Module S_NetworkSend
 
         buffer.WriteInt32(ServerPackets.SMapWornEq)
         buffer.WriteInt32(index)
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Armor))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Weapon))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Helmet))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Shield))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Shoes))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Gloves))
-
+        For i = 1 To EquipmentType.Count - 1
+            buffer.WriteInt32(GetPlayerEquipment(index, i))
+        Next
+        
         SendDataToMap(GetPlayerMap(index), buffer.Data, buffer.Head)
 
         buffer.Dispose()
@@ -237,12 +234,9 @@ Module S_NetworkSend
 
         buffer.WriteInt32(ServerPackets.SMapWornEq)
         buffer.WriteInt32(PlayerNum)
-        buffer.WriteInt32(GetPlayerEquipment(PlayerNum, EquipmentType.Armor))
-        buffer.WriteInt32(GetPlayerEquipment(PlayerNum, EquipmentType.Weapon))
-        buffer.WriteInt32(GetPlayerEquipment(PlayerNum, EquipmentType.Helmet))
-        buffer.WriteInt32(GetPlayerEquipment(PlayerNum, EquipmentType.Shield))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Shoes))
-        buffer.WriteInt32(GetPlayerEquipment(index, EquipmentType.Gloves))
+        For i = 1 To EquipmentType.Count - 1
+            buffer.WriteInt32(GetPlayerEquipment(PlayerNum, i))
+        Next
 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
@@ -416,22 +410,28 @@ Module S_NetworkSend
 
     Sub SendVital(index As Integer, Vital As VitalType)
         Dim buffer As New ByteStream(4)
+        Dim amount As Integer
 
         ' Get our packet type.
         Select Case Vital
             Case VitalType.HP
                 buffer.WriteInt32(ServerPackets.SPlayerHP)
-            Case VitalType.MP
+            Case VitalType.SP
                 buffer.WriteInt32(ServerPackets.SPlayerMP)
             Case VitalType.SP
                 buffer.WriteInt32(ServerPackets.SPlayerSP)
         End Select
 
+        amount = GetPlayerVital(index, Vital)
+
         ' Set and send related data.
-        buffer.WriteInt32(GetPlayerVital(index, Vital))
+        buffer.WriteInt32(amount)
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
         buffer.Dispose()
+
+        ' send vitals to party if in one
+        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
     End Sub
 
     Sub SendWelcome(index As Integer)
@@ -450,15 +450,13 @@ Module S_NetworkSend
         Dim n As Integer
         Dim i As Integer
 
-        If GetPlayerAccess(index) < AdminType.Moderator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Moderator Then Exit Sub
 
         For i = 1 To Socket.HighIndex()
-
             If i <> index Then
                 s = s & GetPlayerName(i) & ", "
                 n = n + 1
             End If
-
         Next
 
         If n = 0 Then
@@ -563,17 +561,17 @@ Module S_NetworkSend
                         For X = 0 To Map(mapNum).Events(i).PageCount
                             With Map(mapNum).Events(i).Pages(X)
                                 buffer.WriteInt32(.ChkVariable)
-                                buffer.WriteInt32(.Variableindex)
+                                buffer.WriteInt32(.VariableIndex)
                                 buffer.WriteInt32(.VariableCondition)
                                 buffer.WriteInt32(.VariableCompare)
                                 buffer.WriteInt32(.ChkSwitch)
-                                buffer.WriteInt32(.Switchindex)
+                                buffer.WriteInt32(.SwitchIndex)
                                 buffer.WriteInt32(.SwitchCompare)
                                 buffer.WriteInt32(.ChkHasItem)
-                                buffer.WriteInt32(.HasItemindex)
+                                buffer.WriteInt32(.HasItemIndex)
                                 buffer.WriteInt32(.HasItemAmount)
                                 buffer.WriteInt32(.ChkSelfSwitch)
-                                buffer.WriteInt32(.SelfSwitchindex)
+                                buffer.WriteInt32(.SelfSwitchIndex)
                                 buffer.WriteInt32(.SelfSwitchCompare)
                                 buffer.WriteByte(.GraphicType)
                                 buffer.WriteInt32(.Graphic)
@@ -673,7 +671,7 @@ Module S_NetworkSend
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Y)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Dir)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.HP))
-            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.MP))
+            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.SP))
         Next
 
         If MapResource(GetPlayerMap(index)).ResourceCount > 0 Then
@@ -703,12 +701,11 @@ Module S_NetworkSend
         Dim data As Byte()
 
         ' Send all players on current map to index
-        For i = i To Socket.HighIndex()
-            If IsPlaying(i) Then
-                If GetPlayerMap(i) = GetPlayerMap(index) Then
-                    data = PlayerData(i)
-                    Socket.SendDataTo(index, data, data.Length)
-                End If
+        For i = 1 To Socket.HighIndex()
+            If GetPlayerMap(i) = GetPlayerMap(index) Then
+                data = PlayerData(i)
+                Socket.SendDataTo(index, data, data.Length)
+                SendPlayerXYTo(index, i)
             End If
         Next
 
@@ -716,6 +713,7 @@ Module S_NetworkSend
         data = PlayerData(index)
         SendDataToMapBut(index, GetPlayerMap(index), data, data.Length)
         SendVitals(index)
+        SendPlayerXYToMap(index)
     End Sub
 
     Function PlayerData(index As Integer) As Byte()
@@ -751,11 +749,40 @@ Module S_NetworkSend
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ServerPackets.SPlayerXY)
+        buffer.WriteInt32(index)
         buffer.WriteInt32(GetPlayerX(index))
         buffer.WriteInt32(GetPlayerY(index))
         buffer.WriteInt32(GetPlayerDir(index))
 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
+
+        buffer.Dispose()
+    End Sub
+
+    Sub SendPlayerXYTo(index As Integer, playerNum As Integer)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ServerPackets.SPlayerXY)
+        buffer.WriteInt32(playerNum)
+        buffer.WriteInt32(GetPlayerX(playerNum))
+        buffer.WriteInt32(GetPlayerY(playerNum))
+        buffer.WriteInt32(GetPlayerDir(playerNum))
+
+        Socket.SendDataTo(index, buffer.Data, buffer.Head)
+
+        buffer.Dispose()
+    End Sub
+
+    Sub SendPlayerXYToMap(index As Integer)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ServerPackets.SPlayerXY)
+        buffer.WriteInt32(index)
+        buffer.WriteInt32(GetPlayerX(index))
+        buffer.WriteInt32(GetPlayerY(index))
+        buffer.WriteInt32(GetPlayerDir(index))
+
+        SendDataToMap(GetPlayerMap(index), buffer.Data, buffer.Head)
 
         buffer.Dispose()
     End Sub
@@ -793,7 +820,7 @@ Module S_NetworkSend
         buffer.WriteString((Msg.Trim))
 
         For i = 1 To Socket.HighIndex
-            If GetPlayerAccess(i) >= AdminType.Moderator Then
+            If GetPlayerAccess(i) >= AccessType.Moderator Then
                 SendDataTo(i, buffer.Data, buffer.Head)
             End If
         Next
@@ -864,8 +891,8 @@ Module S_NetworkSend
 
         buffer.WriteInt32(InvSlot)
 
-        buffer.WriteInt32(GetPlayerInvItemNum(index, InvSlot))
-        buffer.WriteInt32(GetPlayerInvItemValue(index, InvSlot))
+        buffer.WriteInt32(GetPlayerInv(index, InvSlot))
+        buffer.WriteInt32(GetPlayerInvValue(index, InvSlot))
 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
@@ -917,20 +944,11 @@ Module S_NetworkSend
         buffer.Dispose()
     End Sub
 
-    Sub SendClearTradeTimer(index As Integer)
-        Dim buffer As New ByteStream(4)
-
-        buffer.WriteInt32(ServerPackets.SClearTradeTimer)
-        Socket.SendDataTo(index, buffer.Data, buffer.Head)
-
-        buffer.Dispose()
-    End Sub
-
-    Sub SendTradeInvite(index As Integer, Tradeindex As Integer)
+    Sub SendTradeInvite(index As Integer, TradeIndex As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ServerPackets.STradeInvite)
-        buffer.WriteInt32(Tradeindex)
+        buffer.WriteInt32(TradeIndex)
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
 
         buffer.Dispose()
@@ -955,6 +973,8 @@ Module S_NetworkSend
 
         tradeTarget = TempPlayer(index).InTrade
 
+        If tradeTarget = 0 Then Exit Sub
+
         buffer.WriteInt32(ServerPackets.STradeUpdate)
         buffer.WriteInt32(DataType)
 
@@ -969,26 +989,26 @@ Module S_NetworkSend
                     ' currency?
                     If Item(TempPlayer(index).TradeOffer(i).Num).Type = ItemType.Currency Or Item(TempPlayer(index).TradeOffer(i).Num).Stackable = 1 Then
                         If TempPlayer(index).TradeOffer(i).Value = 0 Then TempPlayer(index).TradeOffer(i).Value = 1
-                        totalWorth = totalWorth + (Item(GetPlayerInvItemNum(index, TempPlayer(index).TradeOffer(i).Num)).Price * TempPlayer(index).TradeOffer(i).Value)
+                        totalWorth = totalWorth + (Item(GetPlayerInv(index, TempPlayer(index).TradeOffer(i).Num)).Price * TempPlayer(index).TradeOffer(i).Value)
                     Else
-                        totalWorth = totalWorth + Item(GetPlayerInvItemNum(index, TempPlayer(index).TradeOffer(i).Num)).Price
+                        totalWorth = totalWorth + Item(GetPlayerInv(index, TempPlayer(index).TradeOffer(i).Num)).Price
                     End If
                 End If
             Next
         ElseIf DataType = 1 Then ' other inventory
 
             For i = 1 To MAX_INV
-                buffer.WriteInt32(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num))
+                buffer.WriteInt32(GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num))
                 buffer.WriteInt32(TempPlayer(tradeTarget).TradeOffer(i).Value)
 
                 ' add total worth
-                If GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num) > 0 Then
+                If GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num) > 0 Then
                     ' currency?
-                    If Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
+                    If Item(GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Type = ItemType.Currency Or Item(GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Stackable = 1 Then
                         If TempPlayer(tradeTarget).TradeOffer(i).Value = 0 Then TempPlayer(tradeTarget).TradeOffer(i).Value = 1
-                        totalWorth = totalWorth + (Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price * TempPlayer(tradeTarget).TradeOffer(i).Value)
+                        totalWorth = totalWorth + (Item(GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price * TempPlayer(tradeTarget).TradeOffer(i).Value)
                     Else
-                        totalWorth = totalWorth + Item(GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price
+                        totalWorth = totalWorth + Item(GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)).Price
                     End If
                 End If
             Next

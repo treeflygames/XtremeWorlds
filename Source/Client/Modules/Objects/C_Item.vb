@@ -85,10 +85,6 @@ Module C_Items
         Item(n).Rarity = buffer.ReadInt32()
         Item(n).Speed = buffer.ReadInt32()
 
-        Item(n).Randomize = buffer.ReadInt32()
-        Item(n).RandomMin = buffer.ReadInt32()
-        Item(n).RandomMax = buffer.ReadInt32()
-
         Item(n).Stackable = buffer.ReadInt32()
         Item(n).Description = Trim$(buffer.ReadString())
 

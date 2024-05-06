@@ -189,10 +189,6 @@ Module C_Animations
 
         If sprite < 1 Or sprite > NumAnimations Then Exit Sub
 
-        If AnimationGfxInfo(sprite).IsLoaded = False Then
-            LoadTexture(sprite, 6)
-        End If
-
         frameCount = Animation(AnimInstance(index).Animation).Frames(layer)
 
         If frameCount <= 0 Then Exit Sub
@@ -265,7 +261,6 @@ Module C_Animations
 
         ' Clip to screen
         If y < 0 Then
-
             With sRect
                 .Y = .Y - y
                 .Height = .Height - (y * (-1))
@@ -275,7 +270,6 @@ Module C_Animations
         End If
 
         If x < 0 Then
-
             With sRect
                 .X = .X - x
                 .Width = .Width - (y * (-1))
@@ -286,7 +280,7 @@ Module C_Animations
 
         If sRect.Width < 0 Or sRect.Height < 0 Then Exit Sub
 
-        RenderTexture(AnimationSprite(sprite), Window, x, y, sRect.X, sRect.Y, sRect.Width, sRect.Height)
+        RenderTexture(sprite, GfxType.Animation, Window, x, y, sRect.X, sRect.Y, sRect.Width, sRect.Height)
 
     End Sub
 

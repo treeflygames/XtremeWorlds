@@ -55,7 +55,6 @@ Partial Class frmEditor_Item
         DarkLabel19 = New DarkUI.Controls.DarkLabel()
         nudStrength = New DarkUI.Controls.DarkNumericUpDown()
         DarkLabel17 = New DarkUI.Controls.DarkLabel()
-        chkRandomize = New DarkUI.Controls.DarkCheckBox()
         btnBasics = New DarkUI.Controls.DarkButton()
         btnRequirements = New DarkUI.Controls.DarkButton()
         fraRequirements = New DarkUI.Controls.DarkGroupBox()
@@ -426,7 +425,6 @@ Partial Class frmEditor_Item
         DarkGroupBox2.Controls.Add(DarkLabel19)
         DarkGroupBox2.Controls.Add(nudStrength)
         DarkGroupBox2.Controls.Add(DarkLabel17)
-        DarkGroupBox2.Controls.Add(chkRandomize)
         DarkGroupBox2.ForeColor = Color.Gainsboro
         DarkGroupBox2.Location = New Point(10, 163)
         DarkGroupBox2.Margin = New Padding(5)
@@ -439,7 +437,7 @@ Partial Class frmEditor_Item
         ' 
         ' nudSpirit
         ' 
-        nudSpirit.Location = New Point(473, 85)
+        nudSpirit.Location = New Point(279, 83)
         nudSpirit.Margin = New Padding(5)
         nudSpirit.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
         nudSpirit.Name = "nudSpirit"
@@ -450,7 +448,7 @@ Partial Class frmEditor_Item
         ' 
         DarkLabel22.AutoSize = True
         DarkLabel22.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        DarkLabel22.Location = New Point(403, 88)
+        DarkLabel22.Location = New Point(209, 86)
         DarkLabel22.Margin = New Padding(5, 0, 5, 0)
         DarkLabel22.Name = "DarkLabel22"
         DarkLabel22.Size = New Size(57, 25)
@@ -459,7 +457,7 @@ Partial Class frmEditor_Item
         ' 
         ' nudIntelligence
         ' 
-        nudIntelligence.Location = New Point(278, 85)
+        nudIntelligence.Location = New Point(116, 84)
         nudIntelligence.Margin = New Padding(5)
         nudIntelligence.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
         nudIntelligence.Name = "nudIntelligence"
@@ -470,7 +468,7 @@ Partial Class frmEditor_Item
         ' 
         DarkLabel21.AutoSize = True
         DarkLabel21.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        DarkLabel21.Location = New Point(172, 88)
+        DarkLabel21.Location = New Point(10, 87)
         DarkLabel21.Margin = New Padding(5, 0, 5, 0)
         DarkLabel21.Name = "DarkLabel21"
         DarkLabel21.Size = New Size(105, 25)
@@ -479,7 +477,7 @@ Partial Class frmEditor_Item
         ' 
         ' nudVitality
         ' 
-        nudVitality.Location = New Point(78, 85)
+        nudVitality.Location = New Point(80, 35)
         nudVitality.Margin = New Padding(5)
         nudVitality.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
         nudVitality.Name = "nudVitality"
@@ -490,7 +488,7 @@ Partial Class frmEditor_Item
         ' 
         DarkLabel20.AutoSize = True
         DarkLabel20.ForeColor = Color.FromArgb(CByte(220), CByte(220), CByte(220))
-        DarkLabel20.Location = New Point(8, 88)
+        DarkLabel20.Location = New Point(10, 38)
         DarkLabel20.Margin = New Padding(5, 0, 5, 0)
         DarkLabel20.Name = "DarkLabel20"
         DarkLabel20.Size = New Size(69, 25)
@@ -536,16 +534,6 @@ Partial Class frmEditor_Item
         DarkLabel17.Size = New Size(83, 25)
         DarkLabel17.TabIndex = 1
         DarkLabel17.Text = "Strength:"
-        ' 
-        ' chkRandomize
-        ' 
-        chkRandomize.AutoSize = True
-        chkRandomize.Location = New Point(10, 37)
-        chkRandomize.Margin = New Padding(5)
-        chkRandomize.Name = "chkRandomize"
-        chkRandomize.Size = New Size(170, 29)
-        chkRandomize.TabIndex = 0
-        chkRandomize.Text = "Randomize Stats"
         ' 
         ' btnBasics
         ' 
@@ -994,7 +982,7 @@ Partial Class frmEditor_Item
         ' 
         cmbSubType.DrawMode = DrawMode.OwnerDrawFixed
         cmbSubType.FormattingEnabled = True
-        cmbSubType.Items.AddRange(New Object() {"None", "Weapon", "Armor", "Helmet", "Shield", "Shoes", "Gloves", "Add HP", "Add MP", "Add SP", "Sub HP", "Sub MP", "Sub SP", "Experience", "Common Event", "Currency", "Skill"})
+        cmbSubType.Items.AddRange(New Object() {"None", "Weapon", "Armor", "Helmet", "Shield", "Add HP", "Add MP", "Add SP", "Sub HP", "Sub MP", "Sub SP", "Experience", "Common Event", "Currency", "Skill"})
         cmbSubType.Location = New Point(122, 128)
         cmbSubType.Margin = New Padding(5)
         cmbSubType.Name = "cmbSubType"
@@ -1347,7 +1335,6 @@ Partial Class frmEditor_Item
     Friend WithEvents cmbKnockBackTiles As DarkUI.Controls.DarkComboBox
     Friend WithEvents DarkLabel16 As DarkUI.Controls.DarkLabel
     Friend WithEvents DarkGroupBox2 As DarkUI.Controls.DarkGroupBox
-    Friend WithEvents chkRandomize As DarkUI.Controls.DarkCheckBox
     Friend WithEvents DarkLabel17 As DarkUI.Controls.DarkLabel
     Friend WithEvents nudStrength As DarkUI.Controls.DarkNumericUpDown
     Friend WithEvents nudLuck As DarkUI.Controls.DarkNumericUpDown

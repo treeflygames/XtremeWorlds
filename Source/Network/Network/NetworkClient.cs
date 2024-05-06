@@ -321,26 +321,68 @@ namespace Mirage.Sharp.Asfw.Network
 
     public void SendData(byte[] data, int head)
     {
-        byte[] numArray = new byte[head + 4];
-        Buffer.BlockCopy((Array)BitConverter.GetBytes(head), 0, (Array)numArray, 0, 4);
-        Buffer.BlockCopy((Array)data, 0, (Array)numArray, 4, head);
-        this._socket?.BeginSend(numArray, 0, head + 4, SocketFlags.None, new AsyncCallback(this.DoSend), (object)null);
+        if (this._socket == null || !this._socket.Connected)
+        {
+            Console.WriteLine("Socket is not connected.");
+            return; // Exit the method if the socket is not connected
+        }
+
+        if (data == null || data.Length < head)
+        {
+            Console.WriteLine("Invalid data length.");
+            return; // Exit the method if data is null or the length is less than expected
+        }
+
+        try
+        {
+            byte[] numArray = new byte[head + 4];
+            Buffer.BlockCopy(BitConverter.GetBytes(head), 0, numArray, 0, 4);
+            Buffer.BlockCopy(data, 0, numArray, 4, head);
+            this._socket.BeginSend(numArray, 0, head + 4, SocketFlags.None, new AsyncCallback(this.DoSend), null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to send data: " + ex.Message);
+        }
     }
+
 
     private void DoSend(IAsyncResult ar)
     {
-      try
-      {
-        this._socket?.EndSend(ar);
-      }
-      catch
-      {
-        NetworkClient.CrashReportArgs crashReport = this.CrashReport;
-        if (crashReport != null)
-          crashReport("ConnectionForciblyClosedException");
-        this.Disconnect();
-      }
+        try
+        {
+            if (_socket != null)
+            {
+                _socket.EndSend(ar);
+            }
+            else
+            {
+                // Log or handle the case where the socket is null
+                Console.WriteLine("Socket is null when attempting to send data.");
+            }
+        }
+        catch (SocketException ex)
+        {
+            // Log the exception and any relevant information
+            Console.WriteLine($"SocketException occurred during send operation: {ex.Message}");
+
+            // Report the exception via crash report event
+            NetworkClient.CrashReportArgs crashReport = CrashReport;
+            if (crashReport != null)
+            {
+                crashReport("SocketException occurred during send operation: " + ex.Message);
+            }
+
+            // Disconnect the client
+            Disconnect();
+        }
+        catch (Exception ex)
+        {
+            // Handle other types of exceptions
+            Console.WriteLine($"An unexpected exception occurred during send operation: {ex.Message}");
+        }
     }
+
 
     public delegate void ConnectionArgs();
 

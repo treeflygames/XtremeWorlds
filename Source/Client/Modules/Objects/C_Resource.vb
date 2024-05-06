@@ -135,16 +135,7 @@ Module C_Resources
 
         If rec.Width < 0 Or rec.Height < 0 Then Exit Sub
 
-        If ResourceGfxInfo(resource).IsLoaded = False Then
-            LoadTexture(resource, 5)
-        End If
-
-        'seeying we still use it, lets update timer
-        With ResourceGfxInfo(resource)
-            .TextureTimer = GetTickCount() + 100000
-        End With
-
-        RenderTexture(ResourceSprite(resource), Window, x, y, rec.X, rec.Y, rec.Width, rec.Height, rec.Width, rec.Height)
+        RenderTexture(resource, GfxType.Resource, Window, x, y, rec.X, rec.Y, rec.Width, rec.Height, rec.Width, rec.Height)
     End Sub
 
     Friend Sub DrawMapResource(resourceNum As Integer)

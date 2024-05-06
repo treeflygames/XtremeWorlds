@@ -53,7 +53,7 @@ Namespace Paths
         ''' <summary> Returns gui directory </summary>
         Public ReadOnly Property Gui As String
             Get
-                Return Contents & "Gui\"
+                Return Contents & "Graphics\Gui\"
             End Get
         End Property
 

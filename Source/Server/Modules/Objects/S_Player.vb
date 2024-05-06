@@ -60,13 +60,13 @@ Module S_Player
         If GetPlayerVital(Victim, VitalType.HP) <= 0 Then Exit Function
 
         ' Check to make sure that they dont have access
-        If GetPlayerAccess(Attacker) > AdminType.Moderator Then
+        If GetPlayerAccess(Attacker) > AccessType.Moderator Then
             PlayerMsg(Attacker, "You cannot attack any player for thou art an admin!", ColorType.BrightRed)
             Exit Function
         End If
 
         ' Check to make sure the victim isn't an admin
-        If GetPlayerAccess(Victim) > AdminType.Moderator Then
+        If GetPlayerAccess(Victim) > AccessType.Moderator Then
             PlayerMsg(Attacker, "You cannot attack " & GetPlayerName(Victim) & "!", ColorType.BrightRed)
             Exit Function
         End If
@@ -149,7 +149,7 @@ Module S_Player
     End Function
 
     Function GetPlayerProtection(index As Integer) As Integer
-        Dim Armor As Integer, Helm As Integer, Shoes As Integer, Gloves As Integer
+        Dim Armor As Integer, Helm As Integer, Shield As Integer
         GetPlayerProtection = 0
 
         ' Check for subscript out of range
@@ -159,9 +159,7 @@ Module S_Player
 
         Armor = GetPlayerEquipment(index, EquipmentType.Armor)
         Helm = GetPlayerEquipment(index, EquipmentType.Helmet)
-        Shoes = GetPlayerEquipment(index, EquipmentType.Shoes)
-        Gloves = GetPlayerEquipment(index, EquipmentType.Gloves)
-        GetPlayerProtection = (GetPlayerStat(index, StatType.Luck) \ 5)
+        Shield = GetPlayerEquipment(index, EquipmentType.Shield)  
 
         If Armor > 0 Then
             GetPlayerProtection += Item(Armor).Data2
@@ -171,14 +169,12 @@ Module S_Player
             GetPlayerProtection += Item(Helm).Data2
         End If
 
-        If Shoes > 0 Then
-            GetPlayerProtection += Item(Shoes).Data2
+        If Shield > 0 Then
+            GetPlayerProtection += Item(Shield).Data2
         End If
 
-        If Gloves > 0 Then
-            GetPlayerProtection += Item(Gloves).Data2
-        End If
-
+        GetPlayerProtection /= 6
+        GetPlayerProtection += (GetPlayerStat(index, StatType.Luck) \ 5)
     End Function
 
     Sub AttackPlayer(attacker As Integer, victim As Integer, damage As Integer, Optional skillnum As Integer = 0, Optional npcnum As Integer = 0)
@@ -595,7 +591,6 @@ Module S_Player
         If Not IsPlayerDead(Victim) Then
             ' Send our player's new vitals to everyone that needs them.
             SendVital(Victim, VitalType.HP)
-            If TempPlayer(Victim).InParty > 0 Then SendPartyVitals(TempPlayer(Victim).InParty, Victim)
         Else
             ' Handle our dead player.
             HandlePlayerKillPlayer(Attacker, Victim)
@@ -732,7 +727,7 @@ Module S_Player
                 If GetPlayerLevel(victim) >= 10 Then
 
                     For z = 1 To MAX_INV
-                        If GetPlayerInvItemNum(victim, z) > 0 Then
+                        If GetPlayerInv(victim, z) > 0 Then
                             invcount += 1
                         End If
                     Next
@@ -766,15 +761,15 @@ Module S_Player
                     Else
 
                         For x = 1 To MAX_INV
-                            If GetPlayerInvItemNum(victim, x) > 0 Then
+                            If GetPlayerInv(victim, x) > 0 Then
                                 j += 1
 
                                 If j = z Then
                                     'Here it is, drop this item!
-                                    PlayerMsg(victim, "In death you lost grip on your " & Trim$(Item(GetPlayerInvItemNum(victim, x)).Name), ColorType.BrightRed)
-                                    SpawnItem(GetPlayerInvItemNum(victim, x), GetPlayerInvItemValue(victim, x), GetPlayerMap(victim), GetPlayerX(victim), GetPlayerY(victim))
-                                    SetPlayerInvItemNum(victim, x, 0)
-                                    SetPlayerInvItemValue(victim, x, 0)
+                                    PlayerMsg(victim, "In death you lost grip on your " & Trim$(Item(GetPlayerInv(victim, x)).Name), ColorType.BrightRed)
+                                    SpawnItem(GetPlayerInv(victim, x), GetPlayerInvValue(victim, x), GetPlayerMap(victim), GetPlayerX(victim), GetPlayerY(victim))
+                                    SetPlayerInv(victim, x, 0)
+                                    SetPlayerInvValue(victim, x, 0)
                                     SendInventory(victim)
                                 End If
                             End If
@@ -1158,9 +1153,6 @@ Module S_Player
                     SetPlayerVital(index, VitalType, GetPlayerVital(index, VitalType) + amount)
                     PlayerMsg(index, "You feel rejuvenating forces coursing through your body.", ColorType.BrightGreen)
                     SendVital(index, VitalType)
-
-                    ' send vitals to party if in one
-                    If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End If
                 Moved = True
             End If
@@ -1183,8 +1175,6 @@ Module S_Player
                     SetPlayerVital(index, Core.VitalType.HP, GetPlayerVital(index, Core.VitalType.HP) - amount)
                     PlayerMsg(index, "You've been injured by a trap.", ColorType.BrightRed)
                     SendVital(index, Core.VitalType.HP)
-                    ' send vitals to party if in one
-                    If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End If
                 Moved = True
             End If
@@ -1244,9 +1234,9 @@ Module S_Player
 
         For i = 1 To MAX_INV
             ' Check to see if the player has the item
-            If GetPlayerInvItemNum(index, i) = ItemNum Then
+            If GetPlayerInv(index, i) = ItemNum Then
                 If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
-                    HasItem += GetPlayerInvItemValue(index, i)
+                    HasItem += GetPlayerInvValue(index, i)
                 Else
                     HasItem += 1
                 End If
@@ -1267,7 +1257,7 @@ Module S_Player
 
         For i = 1 To MAX_INV
             ' Check to see if the player has the item
-            If GetPlayerInvItemNum(index, i) = ItemNum Then
+            If GetPlayerInv(index, i) = ItemNum Then
                 FindItemSlot = i
                 Exit Function
             End If
@@ -1302,14 +1292,14 @@ Module S_Player
                                 ' Set item in players inventor
                                 itemnum = MapItem(mapNum, i).Num
 
-                                SetPlayerInvItemNum(index, n, MapItem(mapNum, i).Num)
+                                SetPlayerInv(index, n, MapItem(mapNum, i).Num)
 
-                                If Item(GetPlayerInvItemNum(index, n)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, n)).Stackable = 1 Then
-                                    SetPlayerInvItemValue(index, n, GetPlayerInvItemValue(index, n) + MapItem(mapNum, i).Value)
-                                    Msg = MapItem(mapNum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
+                                If Item(GetPlayerInv(index, n)).Type = ItemType.Currency Or Item(GetPlayerInv(index, n)).Stackable = 1 Then
+                                    SetPlayerInvValue(index, n, GetPlayerInvValue(index, n) + MapItem(mapNum, i).Value)
+                                    Msg = MapItem(mapNum, i).Value & " " & Trim$(Item(GetPlayerInv(index, n)).Name)
                                 Else
-                                    SetPlayerInvItemValue(index, n, 1)
-                                    Msg = Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
+                                    SetPlayerInvValue(index, n, 1)
+                                    Msg = Trim$(Item(GetPlayerInv(index, n)).Name)
                                 End If
 
                                 ' Erase item from the map
@@ -1364,7 +1354,7 @@ Module S_Player
         If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
             ' If currency then check to see if they already have an instance of the item and add it to that
             For i = 1 To MAX_INV
-                If GetPlayerInvItemNum(index, i) = ItemNum Then
+                If GetPlayerInv(index, i) = ItemNum Then
                     FindOpenInvSlot = i
                     Exit Function
                 End If
@@ -1373,7 +1363,7 @@ Module S_Player
 
         For i = 1 To MAX_INV
             ' Try to find an open free slot
-            If GetPlayerInvItemNum(index, i) = 0 Then
+            If GetPlayerInv(index, i) = 0 Then
                 FindOpenInvSlot = i
                 Exit Function
             End If
@@ -1395,14 +1385,14 @@ Module S_Player
         For i = 1 To MAX_INV
 
             ' Check to see if the player has the item
-            If GetPlayerInvItemNum(index, i) = ItemNum Then
+            If GetPlayerInv(index, i) = ItemNum Then
                 If Item(ItemNum).Type = ItemType.Currency Or Item(ItemNum).Stackable = 1 Then
 
                     ' Is what we are trying to take away more then what they have?  If so just set it to zero
-                    If ItemVal >= GetPlayerInvItemValue(index, i) Then
+                    If ItemVal >= GetPlayerInvValue(index, i) Then
                         TakeInvItem = True
                     Else
-                        SetPlayerInvItemValue(index, i, GetPlayerInvItemValue(index, i) - ItemVal)
+                        SetPlayerInvValue(index, i, GetPlayerInvValue(index, i) - ItemVal)
                         SendInventoryUpdate(index, i)
                     End If
                 Else
@@ -1410,8 +1400,8 @@ Module S_Player
                 End If
 
                 If TakeInvItem Then
-                    SetPlayerInvItemNum(index, i, 0)
-                    SetPlayerInvItemValue(index, i, 0)
+                    SetPlayerInv(index, i, 0)
+                    SetPlayerInvValue(index, i, 0)
                     ' Send the inventory update
                     SendInventoryUpdate(index, i)
                     Exit Function
@@ -1435,8 +1425,8 @@ Module S_Player
 
         ' Check to see if inventory is full
         If i <> -1 Then
-            SetPlayerInvItemNum(index, i, ItemNum)
-            SetPlayerInvItemValue(index, i, GetPlayerInvItemValue(index, i) + ItemVal)
+            SetPlayerInv(index, i, ItemNum)
+            SetPlayerInvValue(index, i, GetPlayerInvValue(index, i) + ItemVal)
             If SendUpdate Then SendInventoryUpdate(index, i)
             GiveInvItem = True
         Else
@@ -1462,13 +1452,13 @@ Module S_Player
             Exit Sub
         End If
 
-        If (GetPlayerInvItemNum(index, invNum) > 0) Then
-            If (GetPlayerInvItemNum(index, invNum) <= MAX_ITEMS) Then
+        If (GetPlayerInv(index, invNum) > 0) Then
+            If (GetPlayerInv(index, invNum) <= MAX_ITEMS) Then
                 i = FindOpenMapItemSlot(GetPlayerMap(index))
 
                 If i <> 0 Then
                     With MapItem(GetPlayerMap(index), i)
-                        .Num = GetPlayerInvItemNum(index, invNum)
+                        .Num = GetPlayerInv(index, invNum)
                         .X = GetPlayerX(index)
                         .Y = GetPlayerY(index)
                         .PlayerName = Trim$(GetPlayerName(index))
@@ -1477,26 +1467,26 @@ Module S_Player
                         .CanDespawn = True
                         .DespawnTimer = GetTimeMs() + ITEM_DESPAWN_TIME
 
-                        If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, invNum)).Stackable = 1 Then
+                        If Item(GetPlayerInv(index, invNum)).Type = ItemType.Currency Or Item(GetPlayerInv(index, invNum)).Stackable = 1 Then
                             ' Check if its more then they have and if so drop it all
-                            If amount >= GetPlayerInvItemValue(index, invNum) Then
-                                amount = GetPlayerInvItemValue(index, invNum)
+                            If amount >= GetPlayerInvValue(index, invNum) Then
+                                amount = GetPlayerInvValue(index, invNum)
                                 .Value = amount
-                                SetPlayerInvItemNum(index, invNum, 0)
-                                SetPlayerInvItemValue(index, invNum, 0)
+                                SetPlayerInv(index, invNum, 0)
+                                SetPlayerInvValue(index, invNum, 0)
                             Else
                                 .Value = amount
-                                SetPlayerInvItemValue(index, invNum, GetPlayerInvItemValue(index, invNum) - amount)
+                                SetPlayerInvValue(index, invNum, GetPlayerInvValue(index, invNum) - amount)
                             End If
-                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name)), amount), ColorType.Yellow)
+                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1} ({2}x).", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInv(index, invNum)).Name)), amount), ColorType.Yellow)
                         Else
                             ' It's not a currency object so this is easy
                             .Value = 1
 
                             ' send message
-                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInvItemNum(index, invNum)).Name))), ColorType.Yellow)
-                            SetPlayerInvItemNum(index, invNum, 0)
-                            SetPlayerInvItemValue(index, invNum, 0)
+                            MapMsg(GetPlayerMap(index), String.Format("{0} has dropped {1}.", GetPlayerName(index), CheckGrammar(Trim$(Item(GetPlayerInv(index, invNum)).Name))), ColorType.Yellow)
+                            SetPlayerInv(index, invNum, 0)
+                            SetPlayerInvValue(index, invNum, 0)
                         End If
 
                         ' Send inventory update
@@ -1520,23 +1510,23 @@ Module S_Player
         ' Check for subscript out of range
         If IsPlaying(index) = False Or InvSlot < 0 Or InvSlot > MAX_ITEMS Then Exit Function
 
-        itemNum = GetPlayerInvItemNum(index, InvSlot)
+        itemNum = GetPlayerInv(index, InvSlot)
 
         If Item(itemNum).Type = ItemType.Currency Or Item(itemNum).Stackable = 1 Then
 
             ' Is what we are trying to take away more then what they have?  If so just set it to zero
-            If ItemVal >= GetPlayerInvItemValue(index, InvSlot) Then
+            If ItemVal >= GetPlayerInvValue(index, InvSlot) Then
                 TakeInvSlot = True
             Else
-                SetPlayerInvItemValue(index, InvSlot, GetPlayerInvItemValue(index, InvSlot) - ItemVal)
+                SetPlayerInvValue(index, InvSlot, GetPlayerInvValue(index, InvSlot) - ItemVal)
             End If
         Else
             TakeInvSlot = True
         End If
 
         If TakeInvSlot Then
-            SetPlayerInvItemNum(index, InvSlot, 0)
-            SetPlayerInvItemValue(index, InvSlot, 0)
+            SetPlayerInv(index, InvSlot, 0)
+            SetPlayerInvValue(index, InvSlot, 0)
             Exit Function
         End If
 
@@ -1576,32 +1566,37 @@ Module S_Player
             Exit Function
         End If
 
+        ' check the player isn't doing something
+        If TempPlayer(index).InBank Or TempPlayer(index).InShop Or TempPlayer(index).InTrade > 0 Then
+            PlayerMsg(Index, "You can't use items while in a bank, shop, or trade!", ColorType.BrightRed)
+            Exit Function
+        End If
+
         CanPlayerUseItem = True
     End Function
 
     Friend Sub UseItem(index As Integer, InvNum As Integer)
-        Dim InvItemNum As Integer, i As Integer, n As Integer, tempitem As Integer
+        Dim itemNum As Integer, i As Integer, n As Integer, tempitem As Integer
         Dim m As Integer, tempdata(StatType.Count + 3) As Integer, tempstr(2) As String
 
         ' Prevent hacking
         If InvNum <= 0 Or InvNum > MAX_INV Then Exit Sub
 
-        InvItemNum = GetPlayerInvItemNum(index, InvNum)
+        itemNum = GetPlayerInv(index, InvNum)
 
-        If InvItemnum <= 0 Or InvItemNum > MAX_ITEMS Then Exit Sub
+        If itemNum <= 0 Or itemNum > MAX_ITEMS Then Exit Sub
 
-        If CanPlayerUseItem(index, InvItemNum) = False Then Exit Sub
+        If CanPlayerUseItem(index, itemNum) = False Then Exit Sub
 
         ' Find out what kind of item it is
-        Select Case Item(InvItemNum).Type
+        Select Case Item(itemNum).Type
             Case ItemType.Equipment
-
-                Select Case Item(InvItemNum).SubType
+                Select Case Item(itemNum).SubType
                     Case EquipmentType.Weapon
 
-                        If Item(InvItemNum).TwoHanded > 0 Then
+                        If Item(itemNum).TwoHanded > 0 Then
                             If GetPlayerEquipment(index, EquipmentType.Shield) > 0 Then
-                                PlayerMsg(index, "This is a 2-Handed weapon! Please unequip shield first.", ColorType.BrightRed)
+                                PlayerMsg(index, "This is a 2-Handed weapon! Please unequip your shield first.", ColorType.BrightRed)
                                 Exit Sub
                             End If
                         End If
@@ -1610,23 +1605,17 @@ Module S_Player
                             tempitem = GetPlayerEquipment(index, EquipmentType.Weapon)
                         End If
 
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Weapon)
+                        SetPlayerEquipment(index, itemNum, EquipmentType.Weapon)
 
-                        If Item(InvItemNum).Randomize <> 0 Then
-                            PlayerMsg(index, "You equip " & tempstr(1) & " " & CheckGrammar(Item(InvItemNum).Name) & " " & tempstr(2), ColorType.BrightGreen)
-                        Else
-                            PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        End If
+                        PlayerMsg(index, "You equip " & CheckGrammar(Item(itemNum).Name), ColorType.BrightGreen)
 
-                        SetPlayerInvItemNum(index, InvNum, 0)
-                        SetPlayerInvItemValue(index, InvNum, 0)
+                        SetPlayerInv(index, InvNum, 0)
+                        SetPlayerInvValue(index, InvNum, 0)
 
                         If tempitem > 0 Then ' give back the stored item
                             m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
+                            SetPlayerInv(index, m, tempitem)
+                            SetPlayerInvValue(index, m, 0)
                         End If
 
                         SendWornEquipment(index)
@@ -1638,26 +1627,20 @@ Module S_Player
                         ' send vitals
                         SendVitals(index)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
                     Case EquipmentType.Armor
-
                         If GetPlayerEquipment(index, EquipmentType.Armor) > 0 Then
                             tempitem = GetPlayerEquipment(index, EquipmentType.Armor)
                         End If
 
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Armor)
+                        SetPlayerEquipment(index, itemNum, EquipmentType.Armor)
 
-                        PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        TakeInvItem(index, InvItemNum, 0)
+                        PlayerMsg(index, "You equip " & CheckGrammar(Item(itemNum).Name), ColorType.BrightGreen)
+                        TakeInvItem(index, itemNum, 0)
 
                         If tempitem > 0 Then ' Return their old equipment to their inventory.
                             m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
+                            SetPlayerInv(index, m, tempitem)
+                            SetPlayerInvValue(index, m, 0)
                         End If
 
                         SendWornEquipment(index)
@@ -1669,26 +1652,20 @@ Module S_Player
                         ' send vitals
                         SendVitals(index)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
                     Case EquipmentType.Helmet
-
                         If GetPlayerEquipment(index, EquipmentType.Helmet) > 0 Then
                             tempitem = GetPlayerEquipment(index, EquipmentType.Helmet)
                         End If
 
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Helmet)
+                        SetPlayerEquipment(index, itemNum, EquipmentType.Helmet)
 
-                        PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        TakeInvItem(index, InvItemNum, 1)
+                        PlayerMsg(index, "You equip " & CheckGrammar(Item(itemNum).Name), ColorType.BrightGreen)
+                        TakeInvItem(index, itemNum, 1)
 
                         If tempitem > 0 Then ' give back the stored item
                             m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
+                            SetPlayerInv(index, m, tempitem)
+                            SetPlayerInvValue(index, m, 0)
                         End If
 
                         SendWornEquipment(index)
@@ -1699,12 +1676,9 @@ Module S_Player
                         ' send vitals
                         SendVitals(index)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
                     Case EquipmentType.Shield
                         If Item(GetPlayerEquipment(index, EquipmentType.Weapon)).TwoHanded > 0 Then
-                            PlayerMsg(index, "Please unequip your 2handed weapon first.", ColorType.BrightRed)
+                            PlayerMsg(index, "Please unequip your 2-handed weapon first.", ColorType.BrightRed)
                             Exit Sub
                         End If
 
@@ -1712,17 +1686,15 @@ Module S_Player
                             tempitem = GetPlayerEquipment(index, EquipmentType.Shield)
                         End If
 
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Shield)
+                        SetPlayerEquipment(index, itemNum, EquipmentType.Shield)
 
-                        PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        TakeInvItem(index, InvItemNum, 1)
+                        PlayerMsg(index, "You equip " & CheckGrammar(Item(itemNum).Name), ColorType.BrightGreen)
+                        TakeInvItem(index, itemNum, 1)
 
                         If tempitem > 0 Then ' give back the stored item
                             m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
+                            SetPlayerInv(index, m, tempitem)
+                            SetPlayerInvValue(index, m, 0)
                         End If
 
                         SendWornEquipment(index)
@@ -1733,128 +1705,58 @@ Module S_Player
                         ' send vitals
                         SendVitals(index)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
-                    Case EquipmentType.Shoes
-                        If GetPlayerEquipment(index, EquipmentType.Shoes) > 0 Then
-                            tempitem = GetPlayerEquipment(index, EquipmentType.Shoes)
-                        End If
-
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Shoes)
-
-                        PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        TakeInvItem(index, InvItemNum, 1)
-
-                        If tempitem > 0 Then ' give back the stored item
-                            m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
-                        End If
-
-                        SendWornEquipment(index)
-                        SendMapEquipment(index)
-                        SendInventory(index)
-                        SendStats(index)
-
-                        ' send vitals
-                        SendVitals(index)
-
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
-                    Case EquipmentType.Gloves
-                        If GetPlayerEquipment(index, EquipmentType.Gloves) > 0 Then
-                            tempitem = GetPlayerEquipment(index, EquipmentType.Gloves)
-                        End If
-
-                        SetPlayerEquipment(index, InvItemNum, EquipmentType.Gloves)
-
-                        PlayerMsg(index, "You equip " & CheckGrammar(Item(InvItemNum).Name), ColorType.BrightGreen)
-                        TakeInvItem(index, InvItemNum, 1)
-
-                        If tempitem > 0 Then ' give back the stored item
-                            m = FindOpenInvSlot(index, tempitem)
-                            SetPlayerInvItemNum(index, m, tempitem)
-                            SetPlayerInvItemValue(index, m, 0)
-
-                            tempitem = 0
-                        End If
-
-                        SendWornEquipment(index)
-                        SendMapEquipment(index)
-                        SendInventory(index)
-                        SendStats(index)
-
-                        ' send vitals
-                        SendVitals(index)
-
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End Select
 
             Case ItemType.Consumable
-                Select Case Item(InvItemNum).SubType
+                Select Case Item(itemNum).SubType
                     Case ConsumableType.HP
-                        SendActionMsg(GetPlayerMap(index), "+" & Item(InvItemNum).Data1, ColorType.BrightGreen, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
-                        SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                        SetPlayerVital(index, VitalType.HP, GetPlayerVital(index, VitalType.HP) + Item(InvItemNum).Data1)
-                        If Item(InvItemNum).Stackable = 1 Then
-                            TakeInvItem(index, InvItemNum, 1)
+                        SendActionMsg(GetPlayerMap(index), "+" & Item(itemNum).Data1, ColorType.BrightGreen, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
+                        SendAnimation(GetPlayerMap(index), Item(itemNum).Animation, 0, 0, TargetType.Player, index)
+                        SetPlayerVital(index, VitalType.HP, GetPlayerVital(index, VitalType.HP) + Item(itemNum).Data1)
+                        If Item(itemNum).Stackable = 1 Then
+                            TakeInvItem(index, itemNum, 1)
                         Else
-                            TakeInvItem(index, InvItemNum, 0)
+                            TakeInvItem(index, itemNum, 0)
                         End If
                         SendVital(index, VitalType.HP)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
                     Case ConsumableType.MP
-                        SendActionMsg(GetPlayerMap(index), "+" & Item(InvItemNum).Data1, ColorType.BrightBlue, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
-                        SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                        SetPlayerVital(index, VitalType.MP, GetPlayerVital(index, VitalType.MP) + Item(InvItemNum).Data1)
-                        If Item(InvItemNum).Stackable = 1 Then
-                            TakeInvItem(index, InvItemNum, 1)
+                        SendActionMsg(GetPlayerMap(index), "+" & Item(itemNum).Data1, ColorType.BrightBlue, ActionMsgType.Scroll, GetPlayerX(index) * 32, GetPlayerY(index) * 32)
+                        SendAnimation(GetPlayerMap(index), Item(itemNum).Animation, 0, 0, TargetType.Player, index)
+                        SetPlayerVital(index, VitalType.SP, GetPlayerVital(index, VitalType.SP) + Item(itemNum).Data1)
+                        If Item(itemNum).Stackable = 1 Then
+                            TakeInvItem(index, itemNum, 1)
                         Else
-                            TakeInvItem(index, InvItemNum, 0)
-                        End If
-                        SendVital(index, VitalType.MP)
-
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
-                    Case ConsumableType.SP
-                        SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                        SetPlayerVital(index, VitalType.SP, GetPlayerVital(index, VitalType.SP) + Item(InvItemNum).Data1)
-                        If Item(InvItemNum).Stackable = 1 Then
-                            TakeInvItem(index, InvItemNum, 1)
-                        Else
-                            TakeInvItem(index, InvItemNum, 0)
+                            TakeInvItem(index, itemNum, 0)
                         End If
                         SendVital(index, VitalType.SP)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
+                    Case ConsumableType.SP
+                        SendAnimation(GetPlayerMap(index), Item(itemNum).Animation, 0, 0, TargetType.Player, index)
+                        SetPlayerVital(index, VitalType.SP, GetPlayerVital(index, VitalType.SP) + Item(itemNum).Data1)
+                        If Item(itemNum).Stackable = 1 Then
+                            TakeInvItem(index, itemNum, 1)
+                        Else
+                            TakeInvItem(index, itemNum, 0)
+                        End If
+                        SendVital(index, VitalType.SP)
 
                     Case ConsumableType.Exp
-                        SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                        SetPlayerExp(index, GetPlayerExp(index) + Item(InvItemNum).Data1)
-                        If Item(InvItemNum).Stackable = 1 Then
-                            TakeInvItem(index, InvItemNum, 1)
+                        SendAnimation(GetPlayerMap(index), Item(itemNum).Animation, 0, 0, TargetType.Player, index)
+                        SetPlayerExp(index, GetPlayerExp(index) + Item(itemNum).Data1)
+                        If Item(itemNum).Stackable = 1 Then
+                            TakeInvItem(index, itemNum, 1)
                         Else
-                            TakeInvItem(index, InvItemNum, 0)
+                            TakeInvItem(index, itemNum, 0)
                         End If
+                        SendExp(index)
 
-                        ' send vitals to party if in one
-                        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
                 End Select
 
             Case ItemType.Projectile
-                If Item(InvItemNum).Ammo > 0 Then
-                    If HasItem(index, Item(InvItemNum).Ammo) Then
-                        TakeInvItem(index, Item(InvItemNum).Ammo, 1)
+                If Item(itemNum).Ammo > 0 Then
+                    If HasItem(index, Item(itemNum).Ammo) Then
+                        TakeInvItem(index, Item(itemNum).Ammo, 1)
                         PlayerFireProjectile(index)
                     Else
                         PlayerMsg(index, "No More " & Item(Item(GetPlayerEquipment(index, EquipmentType.Weapon)).Ammo).Name & " !", ColorType.BrightRed)
@@ -1866,41 +1768,41 @@ Module S_Player
                 End If
 
             Case ItemType.CommonEvent
-                n = Item(InvItemNum).Data1
+                n = Item(itemNum).Data1
 
-                Select Case Item(InvItemNum).SubType
+                Select Case Item(itemNum).SubType
                     Case CommonEventType.Variable
-                        Player(index).Variables(n) = Item(InvItemNum).Data2
+                        Player(index).Variables(n) = Item(itemNum).Data2
                     Case CommonEventType.Switch
-                        Player(index).Switches(n) = Item(InvItemNum).Data2
+                        Player(index).Switches(n) = Item(itemNum).Data2
                     Case CommonEventType.Key
                         TriggerEvent(index, 1, 0, GetPlayerX(index), GetPlayerY(index))
                     Case CommonEventType.CustomScript
-                        CustomScript(index, Item(InvItemNum).Data2, GetPlayerMap(index), n)
+                        CustomScript(index, Item(itemNum).Data2, GetPlayerMap(index), n)
                 End Select
 
             Case ItemType.Skill
-                PlayerLearnSkill(index, InvItemNum)
+                PlayerLearnSkill(index, itemNum)
 
             Case ItemType.Pet
-                If Item(InvItemNum).Stackable = 1 Then
-                    TakeInvItem(index, InvItemNum, 1)
+                If Item(itemNum).Stackable = 1 Then
+                    TakeInvItem(index, itemNum, 1)
                 Else
-                    TakeInvItem(index, InvItemNum, 0)
+                    TakeInvItem(index, itemNum, 0)
                 End If
-                n = Item(InvItemNum).Data1
+                n = Item(itemNum).Data1
                 AdoptPet(index, n)
         End Select
     End Sub
 
-    Sub PlayerLearnSkill(Index As Integer, InvItemNum As Integer, Optional SkillNum As Integer = 0)
+    Sub PlayerLearnSkill(Index As Integer, itemNum As Integer, Optional SkillNum As Integer = 0)
         Dim n As Integer, i As Integer
 
         ' Get the skill num
         If SkillNum > 0 Then
             n = SkillNum
         Else
-            n = Item(InvItemNum).Data1
+            n = Item(itemNum).Data1
         End If
 
         If n < 1 Or n > MAX_SKILLS Then Exit Sub
@@ -1920,8 +1822,8 @@ Module S_Player
                         ' Make sure they dont already have the skill
                         If Not HasSkill(index, n) Then
                             SetPlayerSkill(index, i, n)
-                            SendAnimation(GetPlayerMap(index), Item(InvItemNum).Animation, 0, 0, TargetType.Player, index)
-                            TakeInvItem(index, InvItemNum, 0)
+                            SendAnimation(GetPlayerMap(index), Item(itemNum).Animation, 0, 0, TargetType.Player, index)
+                            TakeInvItem(index, itemNum, 0)
                             PlayerMsg(index, "You study the skill carefully.", ColorType.Yellow)
                             PlayerMsg(index, "You have learned a new skill!", ColorType.BrightGreen)
                             SendPlayerSkills(Index)
@@ -1950,21 +1852,21 @@ Module S_Player
 
         If OldSlot = 0 Or NewSlot = 0 Then Exit Sub
 
-        OldNum = GetPlayerInvItemNum(index, OldSlot)
-        OldValue = GetPlayerInvItemValue(index, OldSlot)
-        NewNum = GetPlayerInvItemNum(index, NewSlot)
-        NewValue = GetPlayerInvItemValue(index, NewSlot)
+        OldNum = GetPlayerInv(index, OldSlot)
+        OldValue = GetPlayerInvValue(index, OldSlot)
+        NewNum = GetPlayerInv(index, NewSlot)
+        NewValue = GetPlayerInvValue(index, NewSlot)
 
         If OldNum = NewNum And Item(NewNum).Stackable = 1 Then ' same item, if we can stack it, lets do that :P
-            SetPlayerInvItemNum(index, NewSlot, NewNum)
-            SetPlayerInvItemValue(index, NewSlot, OldValue + NewValue)
-            SetPlayerInvItemNum(index, OldSlot, 0)
-            SetPlayerInvItemValue(index, OldSlot, 0)
+            SetPlayerInv(index, NewSlot, NewNum)
+            SetPlayerInvValue(index, NewSlot, OldValue + NewValue)
+            SetPlayerInv(index, OldSlot, 0)
+            SetPlayerInvValue(index, OldSlot, 0)
         Else
-            SetPlayerInvItemNum(index, NewSlot, OldNum)
-            SetPlayerInvItemValue(index, NewSlot, OldValue)
-            SetPlayerInvItemNum(index, OldSlot, NewNum)
-            SetPlayerInvItemValue(index, OldSlot, NewValue)
+            SetPlayerInv(index, NewSlot, OldNum)
+            SetPlayerInvValue(index, NewSlot, OldValue)
+            SetPlayerInv(index, OldSlot, NewNum)
+            SetPlayerInvValue(index, OldSlot, NewValue)
         End If
 
         SendInventory(index)
@@ -2025,12 +1927,6 @@ Module S_Player
                     Case EquipmentType.Shield
 
                         If Item(itemNum).SubType <> EquipmentType.Shield Then SetPlayerEquipment(index, 0, i)
-                    Case EquipmentType.Shoes
-
-                        If Item(itemNum).SubType <> EquipmentType.Shoes Then SetPlayerEquipment(index, 0, i)
-                    Case EquipmentType.Gloves
-
-                        If Item(itemNum).SubType <> EquipmentType.Gloves Then SetPlayerEquipment(index, 0, i)
                 End Select
             Else
                 SetPlayerEquipment(index, 0, i)
@@ -2049,8 +1945,8 @@ Module S_Player
             itemnum = GetPlayerEquipment(index, EqSlot)
 
             m = FindOpenInvSlot(index, Player(index).Equipment(EqSlot))
-            SetPlayerInvItemNum(index, m, Player(index).Equipment(EqSlot))
-            SetPlayerInvItemValue(index, m, 0)
+            SetPlayerInv(index, m, Player(index).Equipment(EqSlot))
+            SetPlayerInvValue(index, m, 0)
 
             PlayerMsg(index, "You unequip " & CheckGrammar(Item(GetPlayerEquipment(index, EqSlot)).Name), ColorType.Yellow)
 
@@ -2063,9 +1959,6 @@ Module S_Player
 
             ' send vitals
             SendVitals(index)
-
-            ' send vitals to party if in one
-            If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
         Else
             PlayerMsg(index, "Your inventory is full.", ColorType.BrightRed)
         End If
@@ -2172,8 +2065,6 @@ Module S_Player
     End Sub
 
     Sub OnDeath(index As Integer)
-        'Dim i As Integer
-
         ' Set HP to nothing
         SetPlayerVital(index, VitalType.HP, 0)
 
@@ -2200,11 +2091,8 @@ Module S_Player
         Next
         SendVitals(index)
 
-        ' send vitals to party if in one
-        If TempPlayer(index).InParty > 0 Then SendPartyVitals(TempPlayer(index).InParty, index)
-
         ' If the player the attacker killed was a pk then take it away
-        If GetPlayerPK(index) = True Then
+        If GetPlayerPK(index) Then
             SetPlayerPK(index, False)
             SendPlayerData(index)
         End If
@@ -2223,7 +2111,7 @@ Module S_Player
         Select Case Vital
             Case VitalType.HP
                 i = (GetPlayerStat(index, StatType.Vitality) \ 2)
-            Case VitalType.MP
+            Case VitalType.SP
                 i = (GetPlayerStat(index, StatType.Spirit) \ 2)
             Case VitalType.SP
                 i = (GetPlayerStat(index, StatType.Spirit) \ 2)
@@ -2311,7 +2199,7 @@ Module S_Player
         MPCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If GetPlayerVital(index, VitalType.MP) < MPCost Then
+        If GetPlayerVital(index, VitalType.SP) < MPCost Then
             PlayerMsg(index, "Not enough mana!", ColorType.Yellow)
             Exit Sub
         End If
@@ -2424,30 +2312,30 @@ Module S_Player
 
         If InvSlot <= 0 Or InvSlot > MAX_INV Then Exit Sub
 
-        If GetPlayerInvItemValue(index, InvSlot) < 0 Then Exit Sub
-        If GetPlayerInvItemValue(index, InvSlot) < Amount And GetPlayerInvItemNum(index, InvSlot) = 0 Then Exit Sub
+        If GetPlayerInvValue(index, InvSlot) < 0 Then Exit Sub
+        If GetPlayerInvValue(index, InvSlot) < Amount And GetPlayerInv(index, InvSlot) = 0 Then Exit Sub
 
-        BankSlot = FindOpenBankSlot(index, GetPlayerInvItemNum(index, InvSlot))
-        itemnum = GetPlayerInvItemNum(index, InvSlot)
+        BankSlot = FindOpenBankSlot(index, GetPlayerInv(index, InvSlot))
+        itemnum = GetPlayerInv(index, InvSlot)
 
         If BankSlot > 0 Then
-            If Item(GetPlayerInvItemNum(index, InvSlot)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(index, InvSlot)).Stackable = 1 Then
-                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, InvSlot) Then
+            If Item(GetPlayerInv(index, InvSlot)).Type = ItemType.Currency Or Item(GetPlayerInv(index, InvSlot)).Stackable = 1 Then
+                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInv(index, InvSlot) Then
                     SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) + Amount)
-                    TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), Amount)
+                    TakeInvItem(index, GetPlayerInv(index, InvSlot), Amount)
                 Else
-                    SetPlayerBankItemNum(index, BankSlot, GetPlayerInvItemNum(index, InvSlot))
+                    SetPlayerBankItemNum(index, BankSlot, GetPlayerInv(index, InvSlot))
                     SetPlayerBankItemValue(index, BankSlot, Amount)
-                    TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), Amount)
+                    TakeInvItem(index, GetPlayerInv(index, InvSlot), Amount)
                 End If
             Else
-                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, InvSlot) And Item(itemnum).Randomize = 0 Then
+                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInv(index, InvSlot) Then
                     SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) + 1)
-                    TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), 0)
+                    TakeInvItem(index, GetPlayerInv(index, InvSlot), 0)
                 Else
                     SetPlayerBankItemNum(index, BankSlot, itemnum)
                     SetPlayerBankItemValue(index, BankSlot, 1)
-                    TakeInvItem(index, GetPlayerInvItemNum(index, InvSlot), 0)
+                    TakeInvItem(index, GetPlayerInv(index, InvSlot), 0)
                 End If
             End If
 
@@ -2516,7 +2404,7 @@ Module S_Player
                     SetPlayerBankItemValue(index, BankSlot, 0)
                 End If
             Else
-                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInvItemNum(index, invSlot) And Item(GetPlayerBankItemNum(index, BankSlot)).Randomize = 0 Then
+                If GetPlayerBankItemNum(index, BankSlot) = GetPlayerInv(index, invSlot) Then
                     If GetPlayerBankItemValue(index, BankSlot) > 1 Then
                         GiveInvItem(index, GetPlayerBankItemNum(index, BankSlot), 0)
                         SetPlayerBankItemValue(index, BankSlot, GetPlayerBankItemValue(index, BankSlot) - 1)

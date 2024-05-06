@@ -93,27 +93,27 @@ Module S_Console
                         Console.WriteLine("Player name is empty or invalid. [Name not found]")
                     Else
                         Select Case Access
-                            Case Core.AdminType.Player
+                            Case Core.AccessType.Player
                                 SetPlayerAccess(Pindex, Access)
                                 SendPlayerData(Pindex)
                                 PlayerMsg(Pindex, "Your access has been set to Player!", ColorType.BrightCyan)
                                 Console.WriteLine("Successfully set the access level to " & Access & " for player " & Name)
-                            Case AdminType.Moderator
+                            Case AccessType.Moderator
                                 SetPlayerAccess(Pindex, Access)
                                 SendPlayerData(Pindex)
                                 PlayerMsg(Pindex, "Your access has been set to Moderator!", ColorType.BrightCyan)
                                 Console.WriteLine("Successfully set the access level to " & Access & " for player " & Name)
-                            Case AdminType.Mapper
+                            Case AccessType.Mapper
                                 SetPlayerAccess(Pindex, Access)
                                 SendPlayerData(Pindex)
                                 PlayerMsg(Pindex, "Your access has been set to Mapper!", ColorType.BrightCyan)
                                 Console.WriteLine("Successfully set the access level to " & Access & " for player " & Name)
-                            Case AdminType.Developer
+                            Case AccessType.Developer
                                 SetPlayerAccess(Pindex, Access)
                                 SendPlayerData(Pindex)
                                 PlayerMsg(Pindex, "Your access has been set to Developer!", ColorType.BrightCyan)
                                 Console.WriteLine("Successfully set the access level to " & Access & " for player " & Name)
-                            Case AdminType.Creator
+                            Case AccessType.Creator
                                 SetPlayerAccess(Pindex, Access)
                                 SendPlayerData(Pindex)
                                 PlayerMsg(Pindex, "Your access has been set to Creator!", ColorType.BrightCyan)

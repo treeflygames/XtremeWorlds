@@ -298,6 +298,16 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
+    Friend Sub SendPlayerInfo(name As String)
+        Dim buffer As New ByteStream(4)
+
+        buffer.WriteInt32(ClientPackets.CPlayerInfoRequest)
+        buffer.WriteString(name)
+
+        Socket.SendData(buffer.Data, buffer.Head)
+        buffer.Dispose()
+    End Sub
+
     Friend Sub SendMotdChange(welcome As String)
         Dim buffer As New ByteStream(4)
 
@@ -366,7 +376,7 @@ Module C_NetworkSend
         ' do basic checks
         If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
         If Player(MyIndex).Inv(invNum).Num <= 0 Or Player(MyIndex).Inv(invNum).Num > MAX_ITEMS Then Exit Sub
-        If Item(GetPlayerInvItemNum(MyIndex, invNum)).Type = ItemType.Currency Or Item(GetPlayerInvItemNum(MyIndex, invNum)).Stackable = 1 Then
+        If Item(GetPlayerInv(MyIndex, invNum)).Type = ItemType.Currency Or Item(GetPlayerInv(MyIndex, invNum)).Stackable = 1 Then
             If amount <= 0 Or amount > Player(MyIndex).Inv(invNum).Value Then Exit Sub
         End If
 
@@ -638,29 +648,29 @@ Module C_NetworkSend
         buffer.Dispose()
     End Sub
 
-    Friend Sub SendSaveAnimation(Animationnum As Integer)
+    Friend Sub SendSaveAnimation(animationNum As Integer)
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CSaveAnimation)
-        buffer.WriteInt32(Animationnum)
+        buffer.WriteInt32(animationNum)
 
-        For i = 0 To UBound(Animation(Animationnum).Frames)
-            buffer.WriteInt32(Animation(Animationnum).Frames(i))
+        For i = 0 To UBound(Animation(animationNum).Frames)
+            buffer.WriteInt32(Animation(animationNum).Frames(i))
         Next
 
-        For i = 0 To UBound(Animation(Animationnum).LoopCount)
-            buffer.WriteInt32(Animation(Animationnum).LoopCount(i))
+        For i = 0 To UBound(Animation(animationNum).LoopCount)
+            buffer.WriteInt32(Animation(animationNum).LoopCount(i))
         Next
 
-        For i = 0 To UBound(Animation(Animationnum).LoopTime)
-            buffer.WriteInt32(Animation(Animationnum).LoopTime(i))
+        For i = 0 To UBound(Animation(animationNum).LoopTime)
+            buffer.WriteInt32(Animation(animationNum).LoopTime(i))
         Next
 
-        buffer.WriteString((Trim$(Animation(Animationnum).Name)))
-        buffer.WriteString((Trim$(Animation(Animationnum).Sound)))
+        buffer.WriteString((Trim$(Animation(animationNum).Name)))
+        buffer.WriteString((Trim$(Animation(animationNum).Sound)))
 
-        For i = 0 To UBound(Animation(Animationnum).Sprite)
-            buffer.WriteInt32(Animation(Animationnum).Sprite(i))
+        For i = 0 To UBound(Animation(animationNum).Sprite)
+            buffer.WriteInt32(Animation(animationNum).Sprite(i))
         Next
 
         Socket.SendData(buffer.Data, buffer.Head)
@@ -742,10 +752,6 @@ Module C_NetworkSend
         buffer.WriteInt32(Item(itemNum).Price)
         buffer.WriteInt32(Item(itemNum).Rarity)
         buffer.WriteInt32(Item(itemNum).Speed)
-
-        buffer.WriteInt32(Item(itemNum).Randomize)
-        buffer.WriteInt32(Item(itemNum).RandomMin)
-        buffer.WriteInt32(Item(itemNum).RandomMax)
 
         buffer.WriteInt32(Item(itemNum).Stackable)
         buffer.WriteString((Trim$(Item(itemNum).Description)))

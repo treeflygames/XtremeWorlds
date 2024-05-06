@@ -1223,7 +1223,7 @@ Module S_Database
     End Sub
 
     Sub ClearPlayer(index As Integer)
-        Player(index).Access = AdminType.Player
+        Player(index).Access = AccessType.Player
         ReDim TempPlayer(MAX_PLAYERS)
 
         For i = 1 To MAX_PLAYERS

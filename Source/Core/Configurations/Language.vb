@@ -100,6 +100,7 @@ Public Class LanguageDef
         Public Emote As String = "Usage : /emote [1-11]"
         Public Info As String = "Usage : /info [player]"
         Public Party As String = "Usage : /party [player]"
+        Public Trade As String = "Usage : /trade [player]"
         Public PlayerMsg As String = "Usage : ![player] [message]"
         Public HouseInvite As String = "Usage : /houseinvite [player]"
         Public InvalidCmd As String = "Not a valid command!"

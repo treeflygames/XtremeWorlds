@@ -31,7 +31,7 @@ Friend Module S_NetworkConfig
     End Function
 
     Function IsMultiAccounts(Index As Integer, Login As String) As Boolean
-        For i As Integer = 1 To Socket.HighIndex()
+        For i = 1 To Socket.HighIndex()
             If i <> Index then
                 If Accounts(i).Login.Trim.ToLower() = Login.Trim.ToLower() Then
                     Return True
@@ -42,13 +42,13 @@ Friend Module S_NetworkConfig
     End Function
 
     Friend Sub SendDataToAll(ByRef data() As Byte, head As Integer)
-        For i As Integer = 1 To Socket.HighIndex()
+        For i = 1 To Socket.HighIndex()
             Socket.SendDataTo(i, data, head)
         Next
     End Sub
 
     Sub SendDataToAllBut(index As Integer, ByRef data() As Byte, head As Integer)
-        For i As Integer = 1 To Socket.HighIndex()
+        For i = 1 To Socket.HighIndex()
             If i <> index Then
                 Socket.SendDataTo(i, data, head)
             End If
@@ -56,7 +56,7 @@ Friend Module S_NetworkConfig
     End Sub
 
     Sub SendDataToMapBut(index As Integer, mapNum As Integer, ByRef data() As Byte, head As Integer)
-        For i As Integer = 1 To Socket.HighIndex()
+        For i = 1 To Socket.HighIndex()
             If GetPlayerMap(i) = mapNum And i <> index Then
                 Socket.SendDataTo(i, data, head)
             End If

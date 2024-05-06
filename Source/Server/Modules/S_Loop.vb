@@ -158,15 +158,12 @@ Module S_Loop
         Dim i As Integer
 
         For i = 1 To Socket.HighIndex()
-            For x = 0 To [Enum].VitalType.Count - 1
+            For x = 1 To VitalType.Count - 1
                 If GetPlayerVital(i, x) <> GetPlayerMaxVital(i, x) Then
                     SetPlayerVital(i, x, GetPlayerVital(i, x) + GetPlayerVitalRegen(i, x))
                     SendVital(i, x)
                 End If
             Next
-
-            ' send vitals to party if in one
-            If TempPlayer(i).InParty > 0 Then SendPartyVitals(TempPlayer(i).InParty, i)
         Next
 
     End Sub
@@ -259,7 +256,7 @@ Module S_Loop
 
                                     For i = 1 To Socket.HighIndex()
                                         If IsPlaying(i) Then
-                                            If GetPlayerMap(i) = mapNum And MapNPC(mapNum).Npc(x).Target = 0 And GetPlayerAccess(i) <= AdminType.Moderator Then
+                                            If GetPlayerMap(i) = mapNum And MapNPC(mapNum).Npc(x).Target = 0 And GetPlayerAccess(i) <= AccessType.Moderator Then
                                                 If PetAlive(i) Then
                                                     n = NPC(npcNum).Range
                                                     distanceX = MapNPC(mapNum).Npc(x).X - Player(i).Pet.X
@@ -504,12 +501,12 @@ Module S_Loop
                         End If
                     End If
 
-                    If MapNPC(mapNum).Npc(x).Num > 0 And tickCount > GiveNPCMPTimer + 10000 And MapNPC(mapNum).Npc(x).Vital(VitalType.MP) > 0 Then
-                        MapNPC(mapNum).Npc(x).Vital(VitalType.MP) = MapNPC(mapNum).Npc(x).Vital(VitalType.MP) + GetNpcVitalRegen(npcNum, VitalType.MP)
+                    If MapNPC(mapNum).Npc(x).Num > 0 And tickCount > GiveNPCMPTimer + 10000 And MapNPC(mapNum).Npc(x).Vital(VitalType.SP) > 0 Then
+                        MapNPC(mapNum).Npc(x).Vital(VitalType.SP) = MapNPC(mapNum).Npc(x).Vital(VitalType.SP) + GetNpcVitalRegen(npcNum, VitalType.SP)
 
                         ' Check if they have more then they should and if so just set it to max
-                        If MapNPC(mapNum).Npc(x).Vital(VitalType.MP) > GetNpcMaxVital(npcNum, VitalType.MP) Then
-                            MapNPC(mapNum).Npc(x).Vital(VitalType.MP) = GetNpcMaxVital(npcNum, VitalType.MP)
+                        If MapNPC(mapNum).Npc(x).Vital(VitalType.SP) > GetNpcMaxVital(npcNum, VitalType.SP) Then
+                            MapNPC(mapNum).Npc(x).Vital(VitalType.SP) = GetNpcMaxVital(npcNum, VitalType.SP)
                         End If
                     End If
 
@@ -562,7 +559,7 @@ Module S_Loop
 
                 If i < 0 Then i = 1
                 GetNpcVitalRegen = i
-            Case VitalType.MP
+            Case VitalType.SP
                 i = NPC(npcNum).Stat(StatType.Intelligence) \ 3
 
                 If i < 0 Then i = 1
@@ -614,7 +611,7 @@ Module S_Loop
         If Not IsPlaying(index) Or skillSlot < 0 Or skillSlot > MAX_PLAYER_SKILLS Or Not HasSkill(index, skillId) Then Exit Sub
 
         ' Check if the player is able to cast the Skill.
-        If GetPlayerVital(index, VitalType.MP) < Skill(skillId).MpCost Then
+        If GetPlayerVital(index, VitalType.SP) < Skill(skillId).MpCost Then
             PlayerMsg(index, "Not enough mana!", ColorType.BrightRed)
             Exit Sub
         ElseIf GetPlayerLevel(index) < Skill(skillId).LevelReq Then
@@ -700,7 +697,7 @@ Module S_Loop
             Case SkillType.HealHp
                 SkillPlayer_Effect(VitalType.HP, True, index, Skill(skillId).Vital, skillId)
             Case SkillType.HealMp
-                SkillPlayer_Effect(VitalType.MP, True, index, Skill(skillId).Vital, skillId)
+                SkillPlayer_Effect(VitalType.SP, True, index, Skill(skillId).Vital, skillId)
             Case SkillType.Warp
                 SendAnimation(GetPlayerMap(index), Skill(skillId).SkillAnim, 0, 0, TargetType.Player, index)
                 PlayerWarp(index, Skill(skillId).Map, Skill(skillId).X, Skill(skillId).Y)
@@ -724,7 +721,7 @@ Module S_Loop
                 dealsDamage = True
 
             Case SkillType.DamageMp
-                vital = VitalType.MP
+                vital = VitalType.SP
                 dealsDamage = True
 
             Case SkillType.HealHp
@@ -732,7 +729,7 @@ Module S_Loop
                 dealsDamage = False
 
             Case SkillType.HealMp
-                vital = VitalType.MP
+                vital = VitalType.SP
                 dealsDamage = False
 
             Case Else
@@ -791,7 +788,7 @@ Module S_Loop
                 dealsDamage = True
 
             Case SkillType.DamageMp
-                vital = VitalType.MP
+                vital = VitalType.SP
                 dealsDamage = True
 
             Case SkillType.HealHp
@@ -799,7 +796,7 @@ Module S_Loop
                 dealsDamage = False
 
             Case SkillType.HealMp
-                vital = VitalType.MP
+                vital = VitalType.SP
                 dealsDamage = False
 
             Case Else
@@ -851,8 +848,8 @@ Module S_Loop
     End Sub
 
     Private Sub FinalizeCast(index As Integer, skillSlot As Integer, skillCost As Integer)
-        SetPlayerVital(index, VitalType.MP, GetPlayerVital(index, VitalType.MP) - skillCost)
-        SendVital(index, VitalType.MP)
+        SetPlayerVital(index, VitalType.SP, GetPlayerVital(index, VitalType.SP) - skillCost)
+        SendVital(index, VitalType.SP)
         TempPlayer(index).SkillCd(skillSlot) = GetTimeMs() + (Skill(skillSlot).CdTime * 1000)
         SendCooldown(index, skillSlot)
     End Sub
@@ -900,7 +897,7 @@ Module S_Loop
         mpCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.MP) < mpCost Then Exit Sub
+        If MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.SP) < mpCost Then Exit Sub
 
         ' find out what kind of skill it is! self cast, target or AOE
         If Skill(skillnum).IsProjectile = 1 Then
@@ -932,7 +929,7 @@ Module S_Loop
                 '        SkillPlayer_Effect(VitalType.HP, True, NpcNum, Vital, skillnum)
                 '        DidCast = True
                 '    Case SkillType.HEALMP
-                '        SkillPlayer_Effect(VitalType.MP, True, NpcNum, Vital, skillnum)
+                '        SkillPlayer_Effect(VitalType.SP, True, NpcNum, Vital, skillnum)
                 '        DidCast = True
                 '    Case SkillType.WARP
                 '        SendAnimation(MapNum, Skill(skillnum).SkillAnim, 0, 0, TargetType.PLAYER, NpcNum)
@@ -1001,10 +998,10 @@ Module S_Loop
                             vital = Core.VitalType.HP
                             increment = True
                         ElseIf Skill(skillnum).Type = SkillType.HealMp Then
-                            vital = Core.VitalType.MP
+                            vital = Core.VitalType.SP
                             increment = True
                         ElseIf Skill(skillnum).Type = SkillType.DamageMp Then
-                            vital = Core.VitalType.MP
+                            vital = Core.VitalType.SP
                             increment = False
                         End If
 
@@ -1066,10 +1063,10 @@ Module S_Loop
 
                     Case SkillType.DamageMp, SkillType.HealMp, SkillType.HealHp
                         If Skill(skillnum).Type = SkillType.DamageMp Then
-                            vital = Core.VitalType.MP
+                            vital = Core.VitalType.SP
                             increment = False
                         ElseIf Skill(skillnum).Type = SkillType.HealMp Then
-                            vital = Core.VitalType.MP
+                            vital = Core.VitalType.SP
                             increment = True
                         ElseIf Skill(skillnum).Type = SkillType.HealHp Then
                             vital = Core.VitalType.HP
@@ -1101,7 +1098,7 @@ Module S_Loop
         End Select
 
         If didCast Then
-            MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.MP) = MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.MP) - mpCost
+            MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.SP) = MapNPC(mapNum).Npc(npcNum).Vital(Core.VitalType.SP) - mpCost
             SendMapNpcVitals(mapNum, npcNum)
             MapNPC(mapNum).Npc(npcNum).SkillCd(skillslot) = GetTimeMs() + (Skill(skillnum).CdTime * 1000)
         End If
@@ -1118,7 +1115,7 @@ Module S_Loop
             If increment Then
                 sSymbol = "+"
                 If vital = VitalType.HP Then Color = ColorType.BrightGreen
-                If vital = VitalType.MP Then Color = ColorType.BrightBlue
+                If vital = VitalType.SP Then Color = ColorType.BrightBlue
             Else
                 sSymbol = "-"
                 Color = ColorType.BrightRed
@@ -1144,7 +1141,7 @@ Module S_Loop
             If increment Then
                 sSymbol = "+"
                 If vital = VitalType.HP Then color = ColorType.BrightGreen
-                If vital = VitalType.MP Then color = ColorType.BrightBlue
+                If vital = VitalType.SP Then color = ColorType.BrightBlue
             Else
                 sSymbol = "-"
                 color = ColorType.BrightRed

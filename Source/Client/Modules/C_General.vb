@@ -96,6 +96,11 @@ Module C_General
 
         ClearAnimInstances()
         ClearAutotiles()
+
+        ' clear chat
+        For i = 1 To ChatLines
+            Chat(i).text = vbNullString
+        Next
     End Sub
 
     Friend Sub CheckPaths()

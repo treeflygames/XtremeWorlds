@@ -78,7 +78,7 @@ Module S_NetworkReceive
         Socket.PacketId(ClientPackets.CAdminWarp) = AddressOf Packet_AdminWarp
 
         Socket.PacketId(ClientPackets.CTradeInvite) = AddressOf Packet_TradeInvite
-        Socket.PacketId(ClientPackets.CTradeInviteAccept) = AddressOf Packet_TradeInviteAccept
+        Socket.PacketId(ClientPackets.CHandleTradeInvite) = AddressOf Packet_HandleTradeInvite
         Socket.PacketId(ClientPackets.CAcceptTrade) = AddressOf Packet_AcceptTrade
         Socket.PacketId(ClientPackets.CDeclineTrade) = AddressOf Packet_DeclineTrade
         Socket.PacketId(ClientPackets.CTradeItem) = AddressOf Packet_TradeItem
@@ -677,10 +677,10 @@ Module S_NetworkReceive
         If i > 0 Then
             PlayerMsg(index, "Account:  " & GetPlayerLogin(i) & ", Name: " & GetPlayerName(i), ColorType.Yellow)
 
-            If GetPlayerAccess(index) > AdminType.Moderator Then
+            If GetPlayerAccess(index) > AccessType.Moderator Then
                 PlayerMsg(index, " Stats for " & GetPlayerName(i) & " ", ColorType.Yellow)
                 PlayerMsg(index, "Level: " & GetPlayerLevel(i) & "  Exp: " & GetPlayerExp(i) & "/" & GetPlayerNextLevel(i), ColorType.Yellow)
-                PlayerMsg(index, "HP: " & GetPlayerVital(i, VitalType.HP) & "/" & GetPlayerMaxVital(i, VitalType.HP) & "  MP: " & GetPlayerVital(i, VitalType.MP) & "/" & GetPlayerMaxVital(i, VitalType.MP) & "  SP: " & GetPlayerVital(i, VitalType.SP) & "/" & GetPlayerMaxVital(i, VitalType.SP), ColorType.Yellow)
+                PlayerMsg(index, "HP: " & GetPlayerVital(i, VitalType.HP) & "/" & GetPlayerMaxVital(i, VitalType.HP) & "  MP: " & GetPlayerVital(i, VitalType.SP) & "/" & GetPlayerMaxVital(i, VitalType.SP) & "  SP: " & GetPlayerVital(i, VitalType.SP) & "/" & GetPlayerMaxVital(i, VitalType.SP), ColorType.Yellow)
                 PlayerMsg(index, "Strength: " & GetPlayerStat(i, StatType.Strength) & "  Defense: " & GetPlayerStat(i, StatType.Luck) & "  Magic: " & GetPlayerStat(i, StatType.Intelligence) & "  Speed: " & GetPlayerStat(i, StatType.Spirit), ColorType.Yellow)
                 n = (GetPlayerStat(i, StatType.Strength) \ 2) + (GetPlayerLevel(i) \ 2)
                 i = (GetPlayerStat(i, StatType.Luck) \ 2) + (GetPlayerLevel(i) \ 2)
@@ -701,7 +701,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         ' The player
         n = FindPlayer(buffer.ReadString)
@@ -727,7 +727,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         ' The player
         n = FindPlayer(buffer.ReadString)
@@ -753,7 +753,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         ' The map
         n = buffer.ReadInt32
@@ -772,7 +772,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         ' The sprite
         n = buffer.ReadInt32
@@ -790,7 +790,7 @@ Module S_NetworkReceive
 
         PlayerMsg(index, "Stats: " & GetPlayerName(index), ColorType.Yellow)
         PlayerMsg(index, "Level: " & GetPlayerLevel(index) & "  Exp: " & GetPlayerExp(index) & "/" & GetPlayerNextLevel(index), ColorType.Yellow)
-        PlayerMsg(index, "HP: " & GetPlayerVital(index, VitalType.HP) & "/" & GetPlayerMaxVital(index, VitalType.HP) & "  MP: " & GetPlayerVital(index, VitalType.MP) & "/" & GetPlayerMaxVital(index, VitalType.MP) & "  SP: " & GetPlayerVital(index, VitalType.SP) & "/" & GetPlayerMaxVital(index, VitalType.SP), ColorType.Yellow)
+        PlayerMsg(index, "HP: " & GetPlayerVital(index, VitalType.HP) & "/" & GetPlayerMaxVital(index, VitalType.HP) & "  MP: " & GetPlayerVital(index, VitalType.SP) & "/" & GetPlayerMaxVital(index, VitalType.SP) & "  SP: " & GetPlayerVital(index, VitalType.SP) & "/" & GetPlayerMaxVital(index, VitalType.SP), ColorType.Yellow)
         PlayerMsg(index, "STR: " & GetPlayerStat(index, StatType.Strength) & "  DEF: " & GetPlayerStat(index, StatType.Luck) & "  MAGI: " & GetPlayerStat(index, StatType.Intelligence) & "  Speed: " & GetPlayerStat(index, StatType.Spirit), ColorType.Yellow)
         n = (GetPlayerStat(index, StatType.Strength) \ 2) + (GetPlayerLevel(index) \ 2)
         i = (GetPlayerStat(index, StatType.Luck) \ 2) + (GetPlayerLevel(index) \ 2)
@@ -818,7 +818,7 @@ Module S_NetworkReceive
         Dim y As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         Dim buffer As New ByteStream(Compression.DecompressBytes(data))
 
@@ -909,20 +909,20 @@ Module S_NetworkReceive
                     For x = 0 To Map(mapNum).Events(i).PageCount
                         With Map(mapNum).Events(i).Pages(x)
                             .ChkVariable = buffer.ReadInt32
-                            .Variableindex = buffer.ReadInt32
+                            .VariableIndex = buffer.ReadInt32
                             .VariableCondition = buffer.ReadInt32
                             .VariableCompare = buffer.ReadInt32
 
                             .ChkSwitch = buffer.ReadInt32
-                            .Switchindex = buffer.ReadInt32
+                            .SwitchIndex = buffer.ReadInt32
                             .SwitchCompare = buffer.ReadInt32
 
                             .ChkHasItem = buffer.ReadInt32
-                            .HasItemindex = buffer.ReadInt32
+                            .HasItemIndex = buffer.ReadInt32
                             .HasItemAmount = buffer.ReadInt32
 
                             .ChkSelfSwitch = buffer.ReadInt32
-                            .SelfSwitchindex = buffer.ReadInt32
+                            .SelfSwitchIndex = buffer.ReadInt32
                             .SelfSwitchCompare = buffer.ReadInt32
 
                             .GraphicType = buffer.ReadByte
@@ -1081,7 +1081,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         ' Clear out it all
         For i = 1 To MAX_MAP_ITEMS
@@ -1097,6 +1097,9 @@ Module S_NetworkReceive
             SpawnNpc(i, GetPlayerMap(index))
         Next
 
+        SpawnMapEventsFor(index, GetPlayerMap(index))
+        SpawnGlobalEvents(GetPlayerMap(index))
+
         CacheResources(GetPlayerMap(index))
         PlayerMsg(index, "Map respawned.", ColorType.BrightGreen)
         Addlog(GetPlayerName(index) & " has respawned map #" & GetPlayerMap(index), ADMIN_LOG)
@@ -1109,7 +1112,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Moderator Then
+        If GetPlayerAccess(index) < AccessType.Moderator Then
             Exit Sub
         End If
 
@@ -1136,7 +1139,7 @@ Module S_NetworkReceive
 
     Sub Packet_Banlist(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Moderator Then
+        If GetPlayerAccess(index) < AccessType.Moderator Then
             Exit Sub
         End If
 
@@ -1147,7 +1150,7 @@ Module S_NetworkReceive
         Dim filename As String
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Creator Then Exit Sub
 
         filename = Paths.Database & "banlist.txt"
 
@@ -1161,7 +1164,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Moderator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Moderator Then Exit Sub
 
         ' The player index
         n = FindPlayer(buffer.ReadString)
@@ -1185,7 +1188,7 @@ Module S_NetworkReceive
 
     Private Sub Packet_EditMapRequest(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
         If TempPlayer(index).Editor > 0 Then Exit Sub
 
         If GetPlayerMap(index) > MAX_MAPS Then
@@ -1221,7 +1224,7 @@ Module S_NetworkReceive
 
     Sub Packet_EditShop(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
         If TempPlayer(index).Editor > 0 Then Exit Sub
 
         Dim user As String
@@ -1250,7 +1253,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         ShopNum = buffer.ReadInt32()
 
@@ -1278,7 +1281,7 @@ Module S_NetworkReceive
 
     Sub Packet_EditSkill(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
         If TempPlayer(index).Editor > 0 Then Exit Sub
 
         Dim user As String
@@ -1357,7 +1360,7 @@ Module S_NetworkReceive
         Dim i As Integer
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Creator Then Exit Sub
 
         ' The index
         n = FindPlayer(buffer.ReadString)
@@ -1402,7 +1405,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         Types.Settings.Welcome = Trim$(buffer.ReadString)
         Settings.Save()
@@ -1414,7 +1417,7 @@ Module S_NetworkReceive
     End Sub
 
     Sub Packet_PlayerSearch(index As Integer, ByRef data() As Byte)
-        Dim TargetFound As Byte, rclick As Byte
+        Dim rclick As Byte
         Dim x As Integer, y As Integer, i As Integer
         Dim buffer As New ByteStream(data)
 
@@ -1428,53 +1431,50 @@ Module S_NetworkReceive
         ' Check for a player
         For i = 1 To Socket.HighIndex()
 
-            If IsPlaying(i) Then
-                If GetPlayerMap(index) = GetPlayerMap(i) Then
-                    If GetPlayerX(i) = x Then
-                        If GetPlayerY(i) = y Then
+            If GetPlayerMap(index) = GetPlayerMap(i) Then
+                If GetPlayerX(i) = x Then
+                    If GetPlayerY(i) = y Then
 
-                            ' Consider the player
-                            If i <> index Then
-                                If GetPlayerLevel(i) >= GetPlayerLevel(index) + 5 Then
-                                    PlayerMsg(index, "You wouldn't stand a chance.", ColorType.BrightRed)
+                        ' Consider the player
+                        If i <> index Then
+                            If GetPlayerLevel(i) >= GetPlayerLevel(index) + 5 Then
+                                PlayerMsg(index, "You wouldn't stand a chance.", ColorType.BrightRed)
+                            Else
+
+                                If GetPlayerLevel(i) > GetPlayerLevel(index) Then
+                                    PlayerMsg(index, "This one seems to have an advantage over you.", ColorType.Yellow)
                                 Else
 
-                                    If GetPlayerLevel(i) > GetPlayerLevel(index) Then
-                                        PlayerMsg(index, "This one seems to have an advantage over you.", ColorType.Yellow)
+                                    If GetPlayerLevel(i) = GetPlayerLevel(index) Then
+                                        PlayerMsg(index, "This would be an even fight.", ColorType.White)
                                     Else
 
-                                        If GetPlayerLevel(i) = GetPlayerLevel(index) Then
-                                            PlayerMsg(index, "This would be an even fight.", ColorType.White)
+                                        If GetPlayerLevel(index) >= GetPlayerLevel(i) + 5 Then
+                                            PlayerMsg(index, "You could slaughter that player.", ColorType.BrightBlue)
                                         Else
 
-                                            If GetPlayerLevel(index) >= GetPlayerLevel(i) + 5 Then
-                                                PlayerMsg(index, "You could slaughter that player.", ColorType.BrightBlue)
-                                            Else
-
-                                                If GetPlayerLevel(index) > GetPlayerLevel(i) Then
-                                                    PlayerMsg(index, "You would have an advantage over that player.", ColorType.BrightCyan)
-                                                End If
+                                            If GetPlayerLevel(index) > GetPlayerLevel(i) Then
+                                                PlayerMsg(index, "You would have an advantage over that player.", ColorType.BrightCyan)
                                             End If
                                         End If
                                     End If
                                 End If
                             End If
-
-                            ' Change target
-                            If TempPlayer(index).Target = 0 Then
-                                TempPlayer(index).Target = i
-                                TempPlayer(index).TargetType = TargetType.Player
-                            Else
-                                TempPlayer(index).Target = 0
-                                TempPlayer(index).TargetType = 0
-                            End If
-
-                            PlayerMsg(index, "Your target is now " & GetPlayerName(i) & ".", ColorType.Yellow)
-                            SendTarget(index, TempPlayer(index).Target, TempPlayer(index).TargetType)
-                            TargetFound = 1
-                            If rclick = 1 Then SendRightClick(index)
-                            Exit Sub
                         End If
+
+                        ' Change target
+                        If TempPlayer(index).Target = 0 Or i <> TempPlayer(index).Target Then
+                            TempPlayer(index).Target = i
+                            TempPlayer(index).TargetType = TargetType.Player
+                        Else
+                            TempPlayer(index).Target = 0
+                            TempPlayer(index).TargetType = 0
+                        End If
+
+                        PlayerMsg(index, "Your target is now " & GetPlayerName(i) & ".", ColorType.Yellow)
+                        SendTarget(index, TempPlayer(index).Target, TempPlayer(index).TargetType)
+                        If rclick = 1 Then SendRightClick(index)
+                        Exit Sub
                     End If
                 End If
             End If
@@ -1488,7 +1488,7 @@ Module S_NetworkReceive
                 If Item(MapItem(GetPlayerMap(index), i).Num).Name <> "" Then
                     If MapItem(GetPlayerMap(index), i).X = x Then
                         If MapItem(GetPlayerMap(index), i).Y = y Then
-                            PlayerMsg(index, "You see " & CheckGrammar(Trim$(Item(MapItem(GetPlayerMap(index), i).Num).Name)) & ".", ColorType.White)
+                            PlayerMsg(index, "You see " & CheckGrammar(Trim$(Item(MapItem(GetPlayerMap(index), i).Num).Name)) & ".", ColorType.BrightGreen)
                             Exit Sub
                         End If
                     End If
@@ -1512,17 +1512,12 @@ Module S_NetworkReceive
                         End If
                         PlayerMsg(index, "Your target is now " & CheckGrammar(Trim$(NPC(MapNPC(GetPlayerMap(index)).Npc(i).Num).Name)) & ".", ColorType.Yellow)
                         SendTarget(index, TempPlayer(index).Target, TempPlayer(index).TargetType)
-                        TargetFound = 1
                         Exit Sub
                     End If
                 End If
             End If
 
         Next
-
-        If TargetFound = 0 Then
-            SendTarget(index, 0, 0)
-        End If
 
         buffer.Dispose()
     End Sub
@@ -1625,7 +1620,7 @@ Module S_NetworkReceive
         tmpItem = buffer.ReadInt32
         tmpAmount = buffer.ReadInt32
 
-        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         SpawnItem(tmpItem, tmpAmount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
         buffer.Dispose()
@@ -1674,7 +1669,7 @@ Module S_NetworkReceive
 
     Sub Packet_RequestLevelUp(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Creator Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         SetPlayerExp(index, GetPlayerNextLevel(index))
         CheckPlayerLevelUp(index)
@@ -1760,10 +1755,10 @@ Module S_NetworkReceive
         If invSlot < 0 Or invSlot > MAX_INV Then Exit Sub
 
         ' has item?
-        If GetPlayerInvItemNum(index, invSlot) < 0 Or GetPlayerInvItemNum(index, invSlot) > MAX_ITEMS Then Exit Sub
+        If GetPlayerInv(index, invSlot) < 0 Or GetPlayerInv(index, invSlot) > MAX_ITEMS Then Exit Sub
 
         ' seems to be valid
-        itemNum = GetPlayerInvItemNum(index, invSlot)
+        itemNum = GetPlayerInv(index, invSlot)
 
         ' work out price
         multiplier = Shop(TempPlayer(index).InShop).BuyRate / 100
@@ -1781,7 +1776,7 @@ Module S_NetworkReceive
         GiveInvItem(index, 1, price)
 
         ' send confirmation message & reset their shop action
-        PlayerMsg(index, "Sold the " & Trim(Item(GetPlayerInvItemNum(index, invSlot)).Name) & " !", ColorType.BrightGreen)
+        PlayerMsg(index, "Sold the " & Trim(Item(GetPlayerInv(index, invSlot)).Name) & " !", ColorType.BrightGreen)
         ResetShopAction(index)
 
         buffer.Dispose()
@@ -1834,7 +1829,7 @@ Module S_NetworkReceive
         x = buffer.ReadInt32
         y = buffer.ReadInt32
 
-        If GetPlayerAccess(index) >= AdminType.Mapper Then
+        If GetPlayerAccess(index) >= AccessType.Mapper Then
             'Set the  Information
             SetPlayerX(index, x)
             SetPlayerY(index, y)
@@ -1855,15 +1850,13 @@ Module S_NetworkReceive
         buffer.Dispose()
 
         ' Check for a player
-
         tradetarget = FindPlayer(Name)
 
-        ' make sure we don't error
-        If tradetarget < 0 Or tradetarget > MAX_PLAYERS Then Exit Sub
+        If tradetarget <= 0 Or tradetarget > MAX_PLAYERS Then Exit Sub
 
         ' can't trade with yourself..
         If tradetarget = index Then
-            PlayerMsg(index, "You can't trade with yourself.", ColorType.BrightRed)
+            PlayerMsg(index, "You can't trade with yourself!", ColorType.BrightRed)
             Exit Sub
         End If
 
@@ -1871,14 +1864,13 @@ Module S_NetworkReceive
         TempPlayer(index).TradeRequest = tradetarget
         TempPlayer(tradetarget).TradeRequest = index
 
-        PlayerMsg(tradetarget, Trim$(GetPlayerName(index)) & " has invited you to trade.", ColorType.Yellow)
-        PlayerMsg(index, "You have invited " & Trim$(GetPlayerName(tradetarget)) & " to trade.", ColorType.BrightGreen)
-        SendClearTradeTimer(index)
+        PlayerMsg(tradetarget, GetPlayerName(index) & " has invited you to trade.", ColorType.Yellow)
+        PlayerMsg(index, "You have invited " & GetPlayerName(tradetarget) & " to trade.", ColorType.BrightGreen)
 
         SendTradeInvite(tradetarget, index)
     End Sub
 
-    Sub Packet_TradeInviteAccept(index As Integer, ByRef data() As Byte)
+    Sub Packet_HandleTradeInvite(index As Integer, ByRef data() As Byte)
         Dim tradetarget As Integer, status As Byte
         Dim buffer As New ByteStream(data)
 
@@ -1886,17 +1878,20 @@ Module S_NetworkReceive
 
         buffer.Dispose()
 
-        If status = 0 Then Exit Sub
-
         tradetarget = TempPlayer(index).TradeRequest
+
+        If status = 0 Then
+            PlayerMsg(tradetarget, GetPlayerName(index) & " has declined your trade request.", ColorType.BrightRed)
+            PlayerMsg(index,"You have declined the trade with " & GetPlayerName(tradetarget) & ".", ColorType.BrightRed)
+            TempPlayer(index).TradeRequest = 0
+            Exit Sub
+        End If
 
         ' Let them trade!
         If TempPlayer(tradetarget).TradeRequest = index Then
             ' let them know they're trading
-            PlayerMsg(index, "You have accepted " & Trim$(GetPlayerName(tradetarget)) & "'s trade request.", ColorType.Yellow)
-            PlayerMsg(tradetarget, Trim$(GetPlayerName(index)) & " has accepted your trade request.", ColorType.BrightGreen)
-            ' clear the trade timeout clientside
-            SendClearTradeTimer(index)
+            PlayerMsg(index, "You have accepted " & GetPlayerName(tradetarget) & "'s trade request.", ColorType.Yellow)
+            PlayerMsg(tradetarget, GetPlayerName(index) & " has accepted your trade request.", ColorType.BrightGreen)
 
             ' clear the tradeRequest server-side
             TempPlayer(index).TradeRequest = 0
@@ -1915,6 +1910,7 @@ Module S_NetworkReceive
                 TempPlayer(tradetarget).TradeOffer(i).Num = 0
                 TempPlayer(tradetarget).TradeOffer(i).Value = 0
             Next
+
             ' Used to init the trade window clientside
             SendTrade(index, tradetarget)
             SendTrade(tradetarget, index)
@@ -1924,8 +1920,11 @@ Module S_NetworkReceive
             SendTradeUpdate(index, 1)
             SendTradeUpdate(tradetarget, 0)
             SendTradeUpdate(tradetarget, 1)
-            Exit Sub
         End If
+    End Sub
+
+     Sub Packet_TradeInviteDecline(index As Integer, ByRef data() As Byte)
+        TempPlayer(index).TradeRequest = 0
     End Sub
 
     Sub Packet_AcceptTrade(index As Integer, ByRef data() As Byte)
@@ -1960,7 +1959,7 @@ Module S_NetworkReceive
             End If
             ' target
             If TempPlayer(tradeTarget).TradeOffer(i).Num > 0 Then
-                itemNum = GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
+                itemNum = GetPlayerInv(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
                 If itemNum > 0 Then
                     ' store temp
                     tmpTradeItem2(i).Num = itemNum
@@ -2021,7 +2020,7 @@ Module S_NetworkReceive
         TempPlayer(index).InTrade = 0
         TempPlayer(tradeTarget).InTrade = 0
 
-        PlayerMsg(index, "You declined the trade.", ColorType.Yellow)
+        PlayerMsg(index, "You declined the trade.", ColorType.BrightRed)
         PlayerMsg(tradeTarget, GetPlayerName(index) & " has declined the trade.", ColorType.BrightRed)
 
         SendCloseTrade(index)
@@ -2038,14 +2037,14 @@ Module S_NetworkReceive
 
         buffer.Dispose()
 
-        If invslot < 0 Or invslot > MAX_INV Then Exit Sub
+        If invslot <= 0 Or invslot > MAX_INV Then Exit Sub
 
-        itemnum = GetPlayerInvItemNum(index, invslot)
+        itemnum = GetPlayerInv(index, invslot)
 
         If itemnum <= 0 Or itemnum > MAX_ITEMS Then Exit Sub
 
         ' make sure they have the amount they offer
-        If amount < 0 Or amount > GetPlayerInvItemValue(index, invslot) Then Exit Sub
+        If amount < 0 Or amount > GetPlayerInvValue(index, invslot) Then Exit Sub
 
         If Item(itemnum).Type = ItemType.Currency Or Item(itemnum).Stackable = 1 Then
 
@@ -2057,8 +2056,8 @@ Module S_NetworkReceive
                     TempPlayer(index).TradeOffer(i).Value = TempPlayer(index).TradeOffer(i).Value + amount
 
                     ' clamp to limits
-                    If TempPlayer(index).TradeOffer(i).Value > GetPlayerInvItemValue(index, invslot) Then
-                        TempPlayer(index).TradeOffer(i).Value = GetPlayerInvItemValue(index, invslot)
+                    If TempPlayer(index).TradeOffer(i).Value > GetPlayerInvValue(index, invslot) Then
+                        TempPlayer(index).TradeOffer(i).Value = GetPlayerInvValue(index, invslot)
                     End If
 
                     ' cancel any trade agreement
@@ -2070,7 +2069,6 @@ Module S_NetworkReceive
 
                     SendTradeUpdate(index, 0)
                     SendTradeUpdate(TempPlayer(index).InTrade, 1)
-                    ' exit early
                     Exit Sub
                 End If
             Next
@@ -2113,7 +2111,7 @@ Module S_NetworkReceive
 
         buffer.Dispose()
 
-        If tradeslot < 0 Or tradeslot > MAX_INV Then Exit Sub
+        If tradeslot <= 0 Or tradeslot > MAX_INV Then Exit Sub
         If TempPlayer(index).TradeOffer(tradeslot).Num <= 0 Then Exit Sub
 
         TempPlayer(index).TradeOffer(tradeslot).Num = 0
@@ -2141,14 +2139,14 @@ Module S_NetworkReceive
 
     Sub Packet_MapReport(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         SendMapReport(index)
     End Sub
 
     Sub Packet_Admin(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
 
         SendAdminPanel(index)
     End Sub
@@ -2220,7 +2218,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         SkillNum = buffer.ReadInt32()
 
@@ -2229,7 +2227,7 @@ Module S_NetworkReceive
 
     Sub Packet_RequestEditJob(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
         If TempPlayer(index).Editor > 0 Then Exit Sub
 
         Dim user As String
@@ -2256,7 +2254,7 @@ Module S_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         jobNum = buffer.ReadInt32
 
@@ -2301,8 +2299,8 @@ Module S_NetworkReceive
 
     Private Sub Packet_CloseEditor(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Mapper Then Exit Sub
-
+        If GetPlayerAccess(index) < AccessType.Mapper Then Exit Sub
+        
         If TempPlayer(index).Editor = -1 Then Exit Sub
 
         TempPlayer(index).Editor = -1

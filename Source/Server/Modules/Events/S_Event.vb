@@ -1497,20 +1497,20 @@ Friend Module S_Event
                     For x = 0 To Map(mapNum).Events(i).PageCount
                         With Map(mapNum).Events(i).Pages(x)
                             buffer.WriteInt32(.ChkVariable)
-                            buffer.WriteInt32(.Variableindex)
+                            buffer.WriteInt32(.VariableIndex)
                             buffer.WriteInt32(.VariableCondition)
                             buffer.WriteInt32(.VariableCompare)
 
                             buffer.WriteInt32(.ChkSwitch)
-                            buffer.WriteInt32(.Switchindex)
+                            buffer.WriteInt32(.SwitchIndex)
                             buffer.WriteInt32(.SwitchCompare)
 
                             buffer.WriteInt32(.ChkHasItem)
-                            buffer.WriteInt32(.HasItemindex)
+                            buffer.WriteInt32(.HasItemIndex)
                             buffer.WriteInt32(.HasItemAmount)
 
                             buffer.WriteInt32(.ChkSelfSwitch)
-                            buffer.WriteInt32(.SelfSwitchindex)
+                            buffer.WriteInt32(.SelfSwitchIndex)
                             buffer.WriteInt32(.SelfSwitchCompare)
 
                             buffer.WriteByte(.GraphicType)

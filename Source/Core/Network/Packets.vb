@@ -65,7 +65,7 @@
         CCloseBank
         CAdminWarp
         CTradeInvite
-        CTradeInviteAccept
+        CHandleTradeInvite
         CAcceptTrade
         CDeclineTrade
         CTradeItem
@@ -208,7 +208,6 @@
         SMapWornEq
         SBank
         SLeftGame
-        SClearTradeTimer
         STradeInvite
         STrade
         SCloseTrade

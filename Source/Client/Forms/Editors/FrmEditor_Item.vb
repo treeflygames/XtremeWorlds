@@ -112,12 +112,11 @@ Friend Class frmEditor_Item
             ' Build subtype cmb
             cmbSubType.Items.Clear()
 
+            cmbSubType.Items.Add("None")
             cmbSubType.Items.Add("Weapon")
             cmbSubType.Items.Add("Armor")
             cmbSubType.Items.Add("Helmet")
             cmbSubType.Items.Add("Shield")
-            cmbSubType.Items.Add("Shoes")
-            cmbSubType.Items.Add("Gloves")
 
             cmbSubType.Enabled = True
             cmbSubType.SelectedIndex = Item(EditorIndex).SubType
@@ -333,14 +332,6 @@ Friend Class frmEditor_Item
 
     Private Sub CmbKnockBackTiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbKnockBackTiles.SelectedIndexChanged
         Item(EditorIndex).KnockBackTiles = cmbKnockBackTiles.SelectedIndex
-    End Sub
-
-    Private Sub ChkRandomize_CheckedChanged(sender As Object, e As EventArgs) Handles chkRandomize.CheckedChanged
-        If chkRandomize.Checked = True Then
-            Item(EditorIndex).Randomize = 1
-        Else
-            Item(EditorIndex).Randomize = 0
-        End If
     End Sub
 
     Private Sub CmbProjectile_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbProjectile.SelectedIndexChanged

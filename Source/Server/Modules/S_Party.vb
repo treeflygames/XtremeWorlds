@@ -41,7 +41,11 @@ Module S_Party
         Dim buffer As New ByteStream(4)
         buffer.WriteInt32(ServerPackets.SPartyUpdate)
 
-        buffer.WriteInt32(1)
+        If Party(partyNum).Leader = 0 Then
+            buffer.WriteInt32(0)
+        Else
+            buffer.WriteInt32(1)
+        End If
         buffer.WriteInt32(Party(partyNum).Leader)
         For i = 1 To MAX_PARTY_MEMBERS
             buffer.WriteInt32(Party(partyNum).Member(i))
@@ -98,11 +102,11 @@ Module S_Party
     Friend Sub Packet_PartyRquest(index As Integer, ByRef data() As Byte)
         ' Prevent partying with self
         If TempPlayer(index).Target = index Then Exit Sub
+
         ' make sure it's a valid target
         If TempPlayer(index).TargetType <> TargetType.Player Then Exit Sub
 
         ' make sure they're connected and on the same map
-        If Not Socket.IsConnected(TempPlayer(index).Target) Or Not IsPlaying(TempPlayer(index).Target) Then Exit Sub
         If GetPlayerMap(TempPlayer(index).Target) <> GetPlayerMap(index) Then Exit Sub
 
         ' init the request
@@ -154,9 +158,7 @@ Module S_Party
             ' exist?
             If Party(partyNum).Member(i) > 0 Then
                 ' make sure they're logged on
-                If Socket.IsConnected(Party(partyNum).Member(i)) And IsPlaying(Party(partyNum).Member(i)) Then
-                    PlayerMsg(Party(partyNum).Member(i), msg, ColorType.BrightBlue)
-                End If
+                PlayerMsg(Party(partyNum).Member(i), msg, ColorType.BrightBlue)
             End If
         Next
     End Sub
@@ -170,6 +172,7 @@ Module S_Party
                 Exit For
             End If
         Next
+
         Party_CountMembers(partyNum)
         SendPartyUpdate(partyNum)
         SendPartyUpdateTo(index)
@@ -183,6 +186,7 @@ Module S_Party
         If partyNum > 0 Then
             ' find out how many members we have
             Party_CountMembers(partyNum)
+
             ' make sure there's more than 2 people
             If Party(partyNum).MemberCount > 2 Then
 
@@ -205,10 +209,11 @@ Module S_Party
                     Party_RemoveFromParty(index, partyNum)
                 End If
             Else
-                ' find out how many members we have
-                Party_CountMembers(partyNum)
                 ' only 2 people, disband
                 PartyMsg(partyNum, "The party has been disbanded.")
+
+                ' remove leader
+                Party_RemoveFromParty(Party(partyNum).Leader, partyNum)
 
                 ' clear out everyone's party
                 For i = 1 To MAX_PARTY_MEMBERS
@@ -218,6 +223,7 @@ Module S_Party
                         Party_RemoveFromParty(index, partyNum)
                     End If
                 Next
+
                 ' clear out the party itself
                 ClearParty(partyNum)
             End If
@@ -227,21 +233,17 @@ Module S_Party
     Friend Sub Party_Invite(index As Integer, target As Integer)
         Dim partyNum As Integer, i As Integer
 
-        ' check if the person is a valid target
-        If Not Socket.IsConnected(target) Or Not IsPlaying(target) Then Exit Sub
-
         ' make sure they're not busy
         If TempPlayer(target).PartyInvite > 0 Or TempPlayer(target).TradeRequest > 0 Then
             ' they've already got a request for trade/party
             PlayerMsg(index, "This player is busy.", ColorType.BrightRed)
-            ' exit out early
             Exit Sub
         End If
+
         ' make syure they're not in a party
         If TempPlayer(target).InParty > 0 Then
             ' they're already in a party
             PlayerMsg(index, "This player is already in a party.", ColorType.BrightRed)
-            'exit out early
             Exit Sub
         End If
 
@@ -255,10 +257,12 @@ Module S_Party
                     If Party(partyNum).Member(i) = 0 Then
                         ' send the invitation
                         SendPartyInvite(target, index)
+
                         ' set the invite target
                         TempPlayer(target).PartyInvite = index
+
                         ' let them know
-                        PlayerMsg(index, "Invitation sent.", ColorType.Yellow)
+                        PlayerMsg(index, "Party invitation sent.", ColorType.Pink)
                         Exit Sub
                     End If
                 Next
@@ -273,10 +277,12 @@ Module S_Party
         Else
             ' not in a party - doesn't matter!
             SendPartyInvite(target, index)
+
             ' set the invite target
             TempPlayer(target).PartyInvite = index
+
             ' let them know
-            PlayerMsg(index, "Invitation sent.", ColorType.Yellow)
+            PlayerMsg(index, "Party invitation sent.", ColorType.Pink)
             Exit Sub
         End If
     End Sub
@@ -344,6 +350,7 @@ Module S_Party
     Friend Sub Party_InviteDecline(index As Integer, target As Integer)
         PlayerMsg(index, String.Format("{0} has declined to join your party.", GetPlayerName(target)), ColorType.BrightRed)
         PlayerMsg(target, "You declined to join the party.", ColorType.Yellow)
+
         ' clear the invitation
         TempPlayer(target).PartyInvite = 0
     End Sub
@@ -358,6 +365,7 @@ Module S_Party
                 Exit For
             End If
         Next
+
         ' count the members
         For i = 1 To MAX_PARTY_MEMBERS
             ' we've got a blank member
@@ -375,6 +383,7 @@ Module S_Party
                     Exit Sub
                 End If
             End If
+
             ' check if we've reached the max
             If i = MAX_PARTY_MEMBERS Then
                 If highindex = i Then
@@ -383,6 +392,7 @@ Module S_Party
                 End If
             End If
         Next
+
         ' if we're here it means that we need to re-count again
         Party_CountMembers(partyNum)
     End Sub

@@ -35,7 +35,7 @@ Friend Module C_EventSystem
     Friend EventChatFace As Integer
 
     Friend RenameType As Integer
-    Friend Renameindex As Integer
+    Friend RenameIndex As Integer
     Friend EventChatTimer As Integer
 
     Friend EventChat As Boolean
@@ -109,38 +109,38 @@ Friend Module C_EventSystem
         Map.Events(EventNum).Y = Y
     End Sub
 
-    Sub DeleteEvent(ByVal X As Integer, ByVal Y As Integer)
-        Dim count As Integer, i As Integer, lowIndex As Integer
+   Sub DeleteEvent(ByVal X As Integer, ByVal Y As Integer)
+    Dim i As Integer
+    Dim lowIndex As Integer = -1
+    Dim shifted As Boolean = False
 
-        If Editor <> EditorType.Map Then Exit Sub
-        If frmEditor_Events.Visible = True Then Exit Sub
+    If Editor <> EditorType.Map Then Exit Sub
+    If frmEditor_Events.Visible = True Then Exit Sub
 
-        count = Map.EventCount
+    ' First pass: find all events to delete and shift others down
+    For i = 1 To Map.EventCount
+        If Map.Events(i).X = X And Map.Events(i).Y = Y Then
+            ' Clear the event
+            ClearEvent(i)
+            lowIndex = i
+            shifted = True
+        ElseIf shifted Then
+            ' Shift this event down to fill the gap
+            Map.Events(lowIndex) = Map.Events(i)
+            lowIndex = lowIndex + 1
+        End If
+    Next
 
-        For i = 0 To count
-            If Map.Events(i).X = X And Map.Events(i).Y = Y Then
-                ' delete it
-                ClearEvent(i)
-                lowIndex = i
-                count = count - 1
-                Exit For
-            End If
-        Next
-        ' not found anything
-        If lowIndex = 0 Then Exit Sub
-
-        ' move everything down an index
-        For i = lowIndex To count
-            Map.Events(i) = Map.Events(i)
-        Next
-
-        ' set the new count
-        Map.EventCount = count
-        CurrentEvents = count
-        ReDim Preserve MapEvents(count)
-        ReDim Preserve Map.Events(count)
+    ' Adjust the event count if anything was deleted
+    If lowIndex <> -1 Then
+        ' Set the new count
+        Map.EventCount = lowIndex - 1
+        ReDim Preserve MapEvents(Map.EventCount)
+        ReDim Preserve Map.Events(Map.EventCount)
         TmpEvent = Nothing
-    End Sub
+    End If
+End Sub
+
 
     Sub AddEvent(ByVal X As Integer, ByVal Y As Integer, Optional ByVal cancelLoad As Boolean = False)
         Dim count As Integer, pageCount As Integer, i As Integer
@@ -210,7 +210,7 @@ Friend Module C_EventSystem
             GraphicSelX2 = .GraphicX2
             GraphicSelY2 = .GraphicY2
             frmEditor_Events.cmbGraphic.SelectedIndex = .GraphicType
-            frmEditor_Events.cmbHasItem.SelectedIndex = .HasItemindex
+            frmEditor_Events.cmbHasItem.SelectedIndex = .HasItemIndex
             If .HasItemAmount = 0 Then
                 frmEditor_Events.nudCondition_HasItem.Value = 1
             Else
@@ -219,8 +219,8 @@ Friend Module C_EventSystem
             frmEditor_Events.cmbMoveFreq.SelectedIndex = .MoveFreq
             frmEditor_Events.cmbMoveSpeed.SelectedIndex = .MoveSpeed
             frmEditor_Events.cmbMoveType.SelectedIndex = .MoveType
-            frmEditor_Events.cmbPlayerVar.SelectedIndex = .Variableindex
-            frmEditor_Events.cmbPlayerSwitch.SelectedIndex = .Switchindex
+            frmEditor_Events.cmbPlayerVar.SelectedIndex = .VariableIndex
+            frmEditor_Events.cmbPlayerSwitch.SelectedIndex = .SwitchIndex
             frmEditor_Events.cmbSelfSwitchCompare.SelectedIndex = .SelfSwitchCompare
             frmEditor_Events.cmbPlayerSwitchCompare.SelectedIndex = .SwitchCompare
             frmEditor_Events.cmbPlayervarCompare.SelectedIndex = .VariableCompare
@@ -440,11 +440,7 @@ newlist:
                                 ReDim Preserve EventList(X)
                                 EventList(X).CommandList = curlist
                                 EventList(X).CommandNum = i
-                                If TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data5 > 0 Then
-                                    frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Choices - Prompt: " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20) & "... - Face: " & TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data5)
-                                Else
-                                    frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Choices - Prompt: " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20) & "... - No Face")
-                                End If
+                                frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Choices - Prompt: " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20))
                                 indent = indent & "       "
                                 listleftoff(curlist) = i
                                 conditionalstage(curlist) = 1
@@ -546,11 +542,7 @@ newlist:
                                         frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Add Text - " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20) & "... - Color: " & GetColorString(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data1) & " - Chat Type: Global")
                                 End Select
                             Case EventType.ShowText
-                                If TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data1 = 0 Then
-                                    frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Text - " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20) & "... - No Face")
-                                Else
-                                    frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Text - " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20) & "... - Face: " & TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data1)
-                                End If
+                                frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Show Text - " & Mid(TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Text1, 1, 20))
                             Case EventType.PlayerVar
                                 Select Case TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(i).Data2
                                     Case 0
@@ -607,7 +599,7 @@ newlist:
                                 End If
                             Case EventType.RestoreHP
                                 frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Restore Player HP")
-                            Case EventType.RestoreMP
+                            Case EventType.RestoreSP
                                 frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Restore Player MP")
                             Case EventType.LevelUp
                                 frmEditor_Events.lstCommands.Items.Add(indent & "@>" & "Level Up Player")
@@ -909,7 +901,6 @@ newlist:
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text3 = frmEditor_Events.txtChoices2.Text
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text4 = frmEditor_Events.txtChoices3.Text
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text5 = frmEditor_Events.txtChoices4.Text
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data5 = frmEditor_Events.nudShowChoicesFace.Value
                 TmpEvent.Pages(CurPageNum).CommandListCount = TmpEvent.Pages(CurPageNum).CommandListCount + 4
                 ReDim Preserve TmpEvent.Pages(CurPageNum).CommandList(TmpEvent.Pages(CurPageNum).CommandListCount)
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = TmpEvent.Pages(CurPageNum).CommandListCount - 3
@@ -970,7 +961,7 @@ newlist:
             Case EventType.RestoreHP
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
 
-            Case EventType.RestoreMP
+            Case EventType.RestoreSP
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
 
             Case EventType.LevelUp
@@ -1075,7 +1066,7 @@ newlist:
 
             Case EventType.SetAccess
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.cmbSetAccess.SelectedIndex
+                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.cmbSetAccess.SelectedIndex + 1
 
             Case EventType.GiveExp
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
@@ -1084,7 +1075,7 @@ newlist:
             Case EventType.ShowChatBubble
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Index = Index
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text1 = frmEditor_Events.txtChatbubbleText.Text
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.cmbChatBubbleTargetType.SelectedIndex
+                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.cmbChatBubbleTargetType.SelectedIndex + 1
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data2 = frmEditor_Events.cmbChatBubbleTarget.SelectedIndex
 
             Case EventType.Label
@@ -1274,7 +1265,6 @@ newlist:
                 frmEditor_Events.txtChoices2.Text = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text3
                 frmEditor_Events.txtChoices3.Text = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text4
                 frmEditor_Events.txtChoices4.Text = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text5
-                frmEditor_Events.nudShowChoicesFace.Value = TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data5
                 frmEditor_Events.fraDialogue.Visible = True
                 frmEditor_Events.fraShowChoices.Visible = True
                 frmEditor_Events.fraCommands.Visible = False
@@ -1789,7 +1779,6 @@ newlist:
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text3 = frmEditor_Events.txtChoices2.Text
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text4 = frmEditor_Events.txtChoices3.Text
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Text5 = frmEditor_Events.txtChoices4.Text
-                TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data5 = frmEditor_Events.nudShowChoicesFace.Value
             Case EventType.PlayerVar
                 TmpEvent.Pages(CurPageNum).CommandList(curlist).Commands(curslot).Data1 = frmEditor_Events.cmbVariable.SelectedIndex 
                 If frmEditor_Events.optVariableAction0.Checked = True Then i = 0
@@ -2068,17 +2057,17 @@ newlist:
                     For x = 0 To Map.Events(i).PageCount
                         With Map.Events(i).Pages(x)
                             .ChkVariable = buffer.ReadInt32
-                            .Variableindex = buffer.ReadInt32
+                            .VariableIndex = buffer.ReadInt32
                             .VariableCondition = buffer.ReadInt32
                             .VariableCompare = buffer.ReadInt32
                             .ChkSwitch = buffer.ReadInt32
-                            .Switchindex = buffer.ReadInt32
+                            .SwitchIndex = buffer.ReadInt32
                             .SwitchCompare = buffer.ReadInt32
                             .ChkHasItem = buffer.ReadInt32
-                            .HasItemindex = buffer.ReadInt32
+                            .HasItemIndex = buffer.ReadInt32
                             .HasItemAmount = buffer.ReadInt32
                             .ChkSelfSwitch = buffer.ReadInt32
-                            .SelfSwitchindex = buffer.ReadInt32
+                            .SelfSwitchIndex = buffer.ReadInt32
                             .SelfSwitchCompare = buffer.ReadInt32
                             .GraphicType = buffer.ReadByte
                             .Graphic = buffer.ReadInt32
@@ -2525,7 +2514,7 @@ newlist:
         Dim tY As Integer
 
         If Map.EventCount <= 0 Then Exit Sub
-        For i = 0 To Map.EventCount
+        For i = 1 To Map.EventCount
             width = 32
             height = 32
             x = Map.Events(i).X * 32
@@ -2559,26 +2548,25 @@ newlist:
                     RenderText("E", Window, tX, tY, (SFML.Graphics.Color.Green), (SFML.Graphics.Color.Black))
                 Case 1
                     If Map.Events(i).Pages(1).Graphic > 0 And Map.Events(i).Pages(1).Graphic <= NumCharacters Then
-                        If CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
-                            LoadTexture(Map.Events(i).Pages(1).Graphic, 2)
-                        End If
+                        Dim gfxIndex As Integer = Map.Events(i).Pages(1).Graphic
+                        Dim gfxInfo As GraphicInfo = CharacterGfxInfo(gfxIndex)
+                        Dim gfxType As GfxType = GfxType.Character  ' Assuming the type here
 
-                        'seeying we still use it, lets update timer
-                        With CharacterGfxInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
-                        End With
-                        With rec
-                            .Y = (Map.Events(i).Pages(1).GraphicY * (CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).Height / 4))
-                            .Height = .Y + PicY
-                            .X = (Map.Events(i).Pages(1).GraphicX * (CharacterGfxInfo(Map.Events(i).Pages(1).Graphic).Width / 4))
-                            .Width = .X + PicX
-                        End With
+                        ' Calculate source rectangle based on character graphics properties
+                        Dim sX As Integer = Map.Events(i).Pages(1).GraphicX * (gfxInfo.Width / 4)
+                        Dim sY As Integer = Map.Events(i).Pages(1).GraphicY * (gfxInfo.Height / 4)
+                        Dim sW As Integer = gfxInfo.Width / 4
 
-                        Dim tmpSprite As Sprite = New Sprite(CharacterTexture(Map.Events(i).Pages(1).Graphic)) With {
-                            .TextureRect = New IntRect(rec.X, rec.Y, rec.Width, rec.Height),
-                            .Position = New Vector2f(ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY))
-                        }
-                        Window.Draw(tmpSprite)
+                        ' Adjust sH to capture more of the sprite, excluding the lower part, like the legs
+                        Dim sH As Integer = (gfxInfo.Height / 4) * 3 / 4  ' Taking about 3/4 of the top part
+
+                        ' Destination coordinates and dimensions to fit into a 32x32 square
+                        Dim dX As Integer = ConvertMapX(Map.Events(i).X * PicX)
+                        Dim dY As Integer = ConvertMapY(Map.Events(i).Y * PicY)
+                        Dim dW As Integer = 32
+                        Dim dH As Integer = 32
+
+                        RenderTexture(gfxIndex, gfxType, Window, dX, dY, sX, sY, dW, dH, sW, sH)
                     Else
                         With rec
                             .Y = 0
@@ -2605,18 +2593,10 @@ newlist:
                             .Height = Map.Events(i).Pages(1).GraphicY2 * 32
                         End With
 
-                        If TilesetGfxInfo(Map.Events(i).Pages(1).Graphic).IsLoaded = False Then
-                            LoadTexture(Map.Events(i).Pages(1).Graphic, 1)
-                        End If
-                        ' we use it, lets update timer
-                        With TilesetGfxInfo(Map.Events(i).Pages(1).Graphic)
-                            .TextureTimer = GetTickCount() + 100000
-                        End With
-
                         If rec.Height > 32 Then
-                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY) - PicY, rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderTexture(Map.Events(i).Pages(1).Graphic, GfxType.Tileset, Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY) - PicY, rec.X, rec.Y, rec.Width, rec.Height)
                         Else
-                            RenderTexture(TilesetSprite(Map.Events(i).Pages(1).Graphic), Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY), rec.X, rec.Y, rec.Width, rec.Height)
+                            RenderTexture(Map.Events(i).Pages(1).Graphic, GfxType.Tileset, Window, ConvertMapX(Map.Events(i).X * PicX), ConvertMapY(Map.Events(i).Y * PicY), rec.X, rec.Y, rec.Width, rec.Height)
                         End If
                     Else
                         With rec
@@ -2721,12 +2701,8 @@ nextevent:
                 End If
 
                 If TilesetGfxInfo(MapEvents(id).Graphic).IsLoaded = False Then
-                    LoadTexture(MapEvents(id).Graphic, 1)
+                    LoadTexture(MapEvents(id).Graphic, GfxType.Tileset)
                 End If
-                ' we use it, lets update timer
-                With TilesetGfxInfo(MapEvents(id).Graphic)
-                    .TextureTimer = GetTickCount() + 100000
-                End With
 
                 x = MapEvents(id).X * 32
                 y = MapEvents(id).Y * 32
@@ -2734,9 +2710,9 @@ nextevent:
                 y = y - (sRect.Bottom - sRect.Top) + 32
 
                 If MapEvents(id).GraphicY2 > 1 Then
-                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY) - PicY, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderTexture(MapEvents(id).Graphic, GfxType.Tileset, Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY) - PicY, sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 Else
-                    RenderTexture(TilesetSprite(MapEvents(id).Graphic), Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
+                    RenderTexture(MapEvents(id).Graphic, GfxType.Tileset, Window, ConvertMapX(MapEvents(id).X * PicX), ConvertMapY(MapEvents(id).Y * PicY), sRect.Left, sRect.Top, sRect.Width, sRect.Height)
                 End If
         End Select
 

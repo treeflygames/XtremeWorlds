@@ -623,9 +623,6 @@ Module S_Npc
             SendVital(Victim, VitalType.HP)
             SendAnimation(mapNum, NPC(MapNPC(GetPlayerMap(Victim)).Npc(MapNpcNum).Num).Animation, 0, 0, TargetType.Player, Victim)
 
-            ' send vitals to party if in one
-            If TempPlayer(Victim).InParty > 0 Then SendPartyVitals(TempPlayer(Victim).InParty, Victim)
-
             ' send the sound
             'SendMapSound Victim, GetPlayerX(Victim), GetPlayerY(Victim), SoundEntity.seNpc, MapNpc(MapNum).Npc(MapNpcNum).Num
 
@@ -775,7 +772,7 @@ Module S_Npc
         MPCost = Skill(skillnum).MpCost
 
         ' Check if they have enough MP
-        If MapNPC(mapNum).Npc(MapNpcNum).Vital(VitalType.MP) < MPCost Then Exit Sub
+        If MapNPC(mapNum).Npc(MapNpcNum).Vital(VitalType.SP) < MPCost Then Exit Sub
 
         ' find out what kind of skill it is! self cast, target or AOE
         If Skill(skillnum).Range > 0 Then
@@ -931,7 +928,7 @@ Module S_Npc
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Y)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Dir)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.HP))
-            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.MP))
+            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.SP))
         Next
 
         SendDataToMap(mapNum, buffer.Data, buffer.Head)
@@ -945,7 +942,7 @@ Module S_Npc
 
     Sub Packet_EditNpc(index As Integer, ByRef data() As Byte)
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
         If TempPlayer(index).Editor > 0 Then Exit Sub
 
         Dim user As String
@@ -976,7 +973,7 @@ Module S_Npc
         Dim buffer As New ByteStream(data)
 
         ' Prevent hacking
-        If GetPlayerAccess(index) < AdminType.Developer Then Exit Sub
+        If GetPlayerAccess(index) < AccessType.Developer Then Exit Sub
 
         NpcNum = buffer.ReadInt32
 
@@ -1125,7 +1122,7 @@ Module S_Npc
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Y)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Dir)
             buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.HP))
-            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.MP))
+            buffer.WriteInt32(MapNPC(mapNum).Npc(i).Vital(VitalType.SP))
         Next
 
         Socket.SendDataTo(index, buffer.Data, buffer.Head)
@@ -1147,7 +1144,7 @@ Module S_Npc
             buffer.WriteInt32(.Y)
             buffer.WriteInt32(.Dir)
             buffer.WriteInt32(.Vital(VitalType.HP))
-            buffer.WriteInt32(.Vital(VitalType.MP))
+            buffer.WriteInt32(.Vital(VitalType.SP))
         End With
 
         SendDataToMap(mapNum, buffer.Data, buffer.Head)

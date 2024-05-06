@@ -8,7 +8,7 @@ Module C_NetworkReceive
     Sub PacketRouter()
         Socket.PacketId(ServerPackets.SAlertMsg) = AddressOf Packet_AlertMsg
         Socket.PacketId(ServerPackets.SKeyPair) = AddressOf Packet_KeyPair
-        Socket.PacketId(ServerPackets.SLoginOK) = AddressOf HandleLoginOk
+        Socket.PacketId(ServerPackets.SLoginOK) = AddressOf Packet_LoginOk
         Socket.PacketId(ServerPackets.SPlayerChars) = AddressOf Packet_PlayerChars
         Socket.PacketId(ServerPackets.SUpdateJob) = AddressOf Packet_UpdateJob
         Socket.PacketId(ServerPackets.SJobData) = AddressOf Packet_JobData
@@ -33,10 +33,10 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SMapNpcData) = AddressOf Packet_MapNPCData
         Socket.PacketId(ServerPackets.SMapNpcUpdate) = AddressOf Packet_MapNPCUpdate
         Socket.PacketId(ServerPackets.SMapDone) = AddressOf Packet_MapDone
-        Socket.PacketId(ServerPackets.SGlobalMsg) = AddressOf Packet_GlobalMessage
+        Socket.PacketId(ServerPackets.SGlobalMsg) = AddressOf Packet_GlobalMsg
         Socket.PacketId(ServerPackets.SAdminMsg) = AddressOf Packet_AdminMsg
         Socket.PacketId(ServerPackets.SPlayerMsg) = AddressOf Packet_PlayerMsg
-        Socket.PacketId(ServerPackets.SMapMsg) = AddressOf Packet_MapMessage
+        Socket.PacketId(ServerPackets.SMapMsg) = AddressOf Packet_MapMsg
         Socket.PacketId(ServerPackets.SSpawnItem) = AddressOf Packet_SpawnItem
         Socket.PacketId(ServerPackets.SUpdateItem) = AddressOf Packet_UpdateItem
         Socket.PacketId(ServerPackets.SSpawnNpc) = AddressOf Packet_SpawnNPC
@@ -66,7 +66,6 @@ Module C_NetworkReceive
         Socket.PacketId(ServerPackets.SBank) = AddressOf Packet_OpenBank
         Socket.PacketId(ServerPackets.SLeftGame) = AddressOf Packet_LeftGame
 
-        Socket.PacketId(ServerPackets.SClearTradeTimer) = AddressOf Packet_ClearTradeTimer
         Socket.PacketId(ServerPackets.STradeInvite) = AddressOf Packet_TradeInvite
         Socket.PacketId(ServerPackets.STrade) = AddressOf Packet_Trade
         Socket.PacketId(ServerPackets.SCloseTrade) = AddressOf Packet_CloseTrade
@@ -184,7 +183,7 @@ Module C_NetworkReceive
         buffer.Dispose()
     End Sub
 
-    Private Sub HandleLoginOk(ByRef data() As Byte)
+    Private Sub Packet_LoginOk(ByRef data() As Byte)
         Dim buffer As New ByteStream(data)
 
         ' Now we can receive game data
@@ -338,8 +337,8 @@ Module C_NetworkReceive
         For i = 1 To MAX_INV
             invNum = buffer.ReadInt32
             amount = buffer.ReadInt32
-            SetPlayerInvItemNum(MyIndex, i, invNum)
-            SetPlayerInvItemValue(MyIndex, i, amount)
+            SetPlayerInv(MyIndex, i, invNum)
+            SetPlayerInvValue(MyIndex, i, amount)
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -355,8 +354,8 @@ Module C_NetworkReceive
 
         n = buffer.ReadInt32()
 
-        SetPlayerInvItemNum(MyIndex, n, buffer.ReadInt32)
-        SetPlayerInvItemValue(MyIndex, n, buffer.ReadInt32)
+        SetPlayerInv(MyIndex, n, buffer.ReadInt32)
+        SetPlayerInvValue(MyIndex, n, buffer.ReadInt32)
 
         ' changes, clear drop menu
         TmpCurrencyItem = 0
@@ -370,7 +369,8 @@ Module C_NetworkReceive
         Dim buffer As New ByteStream(data)
 
         For i = 1 To EquipmentType.Count - 1
-            SetPlayerEquipment(MyIndex, buffer.ReadInt32, i)
+            n = buffer.ReadInt32
+            SetPlayerEquipment(MyIndex, n, i)
         Next
 
         ' changes to inventory, need to clear any drop menu
@@ -457,7 +457,7 @@ Module C_NetworkReceive
         buffer.Dispose()
     End Sub
 
-    Private Sub Packet_GlobalMessage(ByRef data() As Byte)
+    Private Sub Packet_GlobalMsg(ByRef data() As Byte)
         Dim msg As String
         Dim buffer As New ByteStream(data)
 
@@ -468,7 +468,7 @@ Module C_NetworkReceive
         AddText(msg, ColorType.Yellow, , ChatChannel.Broadcast)
     End Sub
 
-    Private Sub Packet_MapMessage(ByRef data() As Byte)
+    Private Sub Packet_MapMsg(ByRef data() As Byte)
         Dim msg As String
         Dim buffer As New ByteStream(data)
 
@@ -492,14 +492,15 @@ Module C_NetworkReceive
     End Sub
 
     Private Sub Packet_PlayerMsg(ByRef data() As Byte)
-        Dim msg As String
+        Dim msg As String, color As Integer
         Dim buffer As New ByteStream(data)
 
         msg = Trim(buffer.ReadString)
+        color = buffer.ReadInt32
 
         buffer.Dispose()
 
-        AddText(msg, ColorType.Pink, , ChatChannel.Player)
+        AddText(msg, color, , ChatChannel.Player)
     End Sub
 
     Private Sub Packet_SpawnItem(ByRef data() As Byte)
@@ -724,7 +725,7 @@ Module C_NetworkReceive
 
     Private Sub Packet_SayMessage(ByRef data() As Byte)
         Dim access As Integer, name As String, message As String
-        Dim header As String, pk As Integer, channelType As Byte, colorNum As Byte
+        Dim header As String, pk As Integer, channelType As Byte, color As Byte
         Dim buffer As New ByteStream(data)
 
         name = buffer.ReadString
@@ -734,10 +735,22 @@ Module C_NetworkReceive
         header = buffer.ReadString
 
         ' Check access level
-        colorNum = ColorType.White
+        Select Case access
+            Case AccessType.Player
+                color = ColorType.White
+            Case AccessType.Moderator
+                color = ColorType.Cyan
+            Case AccessType.Mapper
+                color = ColorType.Green
+            Case AccessType.Developer
+                color = ColorType.Magenta
+            Case AccessType.Creator
+                color = ColorType.Yellow
+            Case Else
+                color = ColorType.White
+        End Select
 
-        If access > 0 Then colorNum = ColorType.Pink
-        If pk > 0 Then colorNum = ColorType.BrightRed
+        If pk > 0 Then color = ColorType.BrightRed
 
         ' find channel
         channelType = 0
@@ -749,7 +762,7 @@ Module C_NetworkReceive
         End Select
 
         ' add to the chat box
-        AddText(header & name & ": " & message, colorNum, , channelType)
+        AddText(header & name & ": " & message, color, , channelType)
 
         buffer.Dispose()
     End Sub
@@ -763,16 +776,14 @@ Module C_NetworkReceive
     End Sub
 
     Private Sub Packet_MapWornEquipment(ByRef data() As Byte)
-        Dim playernum As Integer
+        Dim playernum As Integer, n As Integer
         Dim buffer As New ByteStream(data)
 
         playernum = buffer.ReadInt32
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Armor)
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Weapon)
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Helmet)
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Shield)
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Shoes)
-        SetPlayerEquipment(playernum, buffer.ReadInt32, EquipmentType.Gloves)
+        For i = 1 To EquipmentType.Count - 1
+            n = buffer.ReadInt32
+            SetPlayerEquipment(playernum, n, i)
+        Next
 
         buffer.Dispose()
     End Sub
@@ -841,10 +852,6 @@ Module C_NetworkReceive
             Item(n).Price = buffer.ReadInt32()
             Item(n).Rarity = buffer.ReadInt32()
             Item(n).Speed = buffer.ReadInt32()
-
-            Item(n).Randomize = buffer.ReadInt32()
-            Item(n).RandomMin = buffer.ReadInt32()
-            Item(n).RandomMax = buffer.ReadInt32()
 
             Item(n).Stackable = buffer.ReadInt32()
             Item(n).Description = Trim$(buffer.ReadString())
@@ -1169,15 +1176,15 @@ Module C_NetworkReceive
 
         Select Case Time.Instance.TimeOfDay
             Case TimeOfDay.Dawn
-                AddText("A chilling, refreshing, breeze has come with the morning.", ColorType.BrightBlue)
+                AddText("A chilling, refreshing, breeze has come with the morning.", ColorType.DarkGray)
                 Exit Select
 
             Case TimeOfDay.Day
-                AddText("Day has dawned in this region.", ColorType.Yellow)
+                AddText("Day has dawned in this region.", ColorType.DarkGray)
                 Exit Select
 
             Case TimeOfDay.Dusk
-                AddText("Dusk has begun darkening the skies...", ColorType.BrightRed)
+                AddText("Dusk has begun darkening the skies...", ColorType.DarkGray)
                 Exit Select
 
             Case Else

@@ -467,13 +467,6 @@ Module C_Editors
                     frmEditor_Item.chkKnockBack.Checked = False
                 End If
                 frmEditor_Item.cmbKnockBackTiles.SelectedIndex = .KnockBackTiles
-
-                If .Randomize = 1 Then
-                    frmEditor_Item.chkRandomize.Checked = True
-                Else
-                    frmEditor_Item.chkRandomize.Checked = False
-                End If
-
                 frmEditor_Item.nudPaperdoll.Value = .Paperdoll
 
                 If .SubType = EquipmentType.Weapon Then

@@ -151,34 +151,43 @@ Public Class Inputs
     End Function
 
      Public Shared Sub Load()
-        Dim cf As String = Paths.Config()
-        Dim x As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
+        Try
+            Dim configPath As String = Paths.Config()
+            Directory.CreateDirectory(configPath) ' Ensure directory exists
 
-        Directory.CreateDirectory(cf)
-        cf += "Inputs.xml"
+            Dim configFile As String = Path.Combine(configPath, "Inputs.xml")
 
-        If Not File.Exists(cf) Then
-            File.Create(cf).Dispose()
-            Dim writer = New StreamWriter(cf)
-            x.Serialize(writer, Inputs)
-            writer.Close()
-        End If
-
-        Dim reader = New StreamReader(cf)
-        Inputs = x.Deserialize(reader)
-        reader.Close()
+            If Not File.Exists(configFile) Then
+                ' Create a new file and serialize the default Inputs
+                Using writer As New StreamWriter(File.Create(configFile))
+                    Dim serializer As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
+                    serializer.Serialize(writer, Inputs)
+                End Using
+            Else
+                ' Deserialize the existing configuration
+                Using reader As New StreamReader(configFile)
+                    Dim serializer As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
+                    Inputs = CType(serializer.Deserialize(reader), Inputs)
+                End Using
+            End If
+        Catch ex As Exception
+            Console.WriteLine("Error loading input configuration: " & ex.Message)
+        End Try
     End Sub
 
     Public Shared Sub Save()
-        Dim cf As String = Paths.Config()
+        Try
+            Dim configPath As String = Paths.Config()
+            Directory.CreateDirectory(configPath) ' Ensure directory exists
 
-        Directory.CreateDirectory(cf)
-        cf += "Inputs.xml"
+            Dim configFile As String = Path.Combine(configPath, "Inputs.xml")
 
-        Dim x As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
-        Dim writer = New StreamWriter(cf)
-
-        x.Serialize(writer, Inputs)
-        writer.Close()
+            Using writer As New StreamWriter(configFile)
+                Dim serializer As New XmlSerializer(GetType(Inputs), New XmlRootAttribute("Inputs"))
+                serializer.Serialize(writer, Inputs)
+            End Using
+        Catch ex As Exception
+            Console.WriteLine("Error saving input configuration: " & ex.Message)
+        End Try
     End Sub
 End Class  

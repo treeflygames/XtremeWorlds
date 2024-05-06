@@ -247,15 +247,6 @@ Friend Module C_Projectiles
         sprite = Projectile(MapProjectile(Player(MyIndex).Map, projectileNum).ProjectileNum).Sprite
         If sprite < 1 Or sprite > NumProjectiles Then Exit Sub
 
-        If ProjectileGfxInfo(sprite).IsLoaded = False Then
-            LoadTexture(sprite, 10)
-        End If
-
-        'seeying we still use it, lets update timer
-        With ProjectileGfxInfo(sprite)
-            .TextureTimer = GetTickCount() + 100000
-        End With
-
         ' src rect
         With rec
             .Top = 0
@@ -276,14 +267,12 @@ Friend Module C_Projectiles
                 xOffset = -((MapProjectile(Player(MyIndex).Map, projectileNum).TravelTime - GetTickCount()) / Projectile(MapProjectile(Player(MyIndex).Map, projectileNum).ProjectileNum).Speed) * PicX
         End Select
 
+        ' Convert coordinates
         x = ConvertMapX(x * PicX)
         y = ConvertMapY(y * PicY)
 
-        Dim tmpSprite As Sprite = New Sprite(ProjectileTexture(sprite)) With {
-            .TextureRect = New IntRect(rec.Left, rec.Top, 32, 32),
-            .Position = New Vector2f(x, y)
-        }
-        Window.Draw(tmpSprite)
+        ' Render texture
+        RenderTexture(sprite, GfxType.Projectile, Window, x, y, rec.Left, rec.Top, 32, 32)
 
     End Sub
 

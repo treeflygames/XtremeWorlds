@@ -6,8 +6,6 @@ Module C_Trade
 
 #Region "Globals & Types"
 
-    Friend TradeTimer As Integer
-    Friend TradeRequest As Boolean
     Friend InTrade As Integer
     Friend TradeX As Integer
     Friend TradeY As Integer
@@ -17,25 +15,12 @@ Module C_Trade
 #End Region
 
 #Region "Incoming Packets"
-
-    Sub Packet_ClearTradeTimer(ByRef data() As Byte)
-        Dim buffer As New ByteStream(data)
-        TradeRequest = False
-        TradeTimer = 0
-
-        buffer.Dispose()
-    End Sub
-
     Sub Packet_TradeInvite(ByRef data() As Byte)
         Dim requester As Integer
         Dim buffer As New ByteStream(data)
+
         requester = buffer.ReadInt32
-
-        'DialogType = DialogueTypeTrade
-
-        DialogMsg1 = String.Format(Language.Trade.Request, Trim$((Player(requester).Name)))
-
-        UpdateDialog = True
+        Dialogue("Trade Invite", String.Format(Language.Trade.Request, Trim$((Player(requester).Name))), "", DialogueType.Trade, DialogueStyle.YesNo)
 
         buffer.Dispose()
     End Sub
@@ -119,18 +104,18 @@ Module C_Trade
         Dim buffer As New ByteStream(4)
 
         buffer.WriteInt32(ClientPackets.CTradeInvite)
-        buffer.WriteString((name))
+        buffer.WriteString(name)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()
 
     End Sub
 
-    Sub SendTradeInviteAccept(awnser As Byte)
+    Sub SendHandleTradeInvite(answer As Byte)
         Dim buffer As New ByteStream(4)
 
-        buffer.WriteInt32(ClientPackets.CTradeInviteAccept)
-        buffer.WriteInt32(awnser)
+        buffer.WriteInt32(ClientPackets.CHandleTradeInvite)
+        buffer.WriteInt32(answer)
 
         Socket.SendData(buffer.Data, buffer.Head)
         buffer.Dispose()

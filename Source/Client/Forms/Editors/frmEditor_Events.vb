@@ -15,7 +15,7 @@ Public Class frmEditor_Events
         cmbCondition_PlayerVarIndex.Enabled = False
         cmbCondition_PlayerVarIndex.Items.Clear()
 
-       For i = 1 To NAX_VARIABLES
+        For i = 1 To NAX_VARIABLES
             cmbCondition_PlayerVarIndex.Items.Add(i & ". " & Variables(i))
         Next
         cmbCondition_PlayerVarIndex.SelectedIndex = 0
@@ -26,7 +26,7 @@ Public Class frmEditor_Events
         cmbCondition_PlayerSwitch.Enabled = False
         cmbCondition_PlayerSwitch.Items.Clear()
 
-       For i = 1 To MAX_SWITCHES
+        For i = 1 To MAX_SWITCHES
             cmbCondition_PlayerSwitch.Items.Add(i & ". " & Switches(i))
         Next
         cmbCondition_PlayerSwitch.SelectedIndex = 0
@@ -35,7 +35,7 @@ Public Class frmEditor_Events
         cmbCondition_HasItem.Enabled = False
         cmbCondition_HasItem.Items.Clear()
 
-       For i = 1 To MAX_ITEMS
+        For i = 1 To MAX_ITEMS
             cmbCondition_HasItem.Items.Add(i & ". " & Trim$(Item(i).Name))
         Next
         cmbCondition_HasItem.SelectedIndex = 0
@@ -44,14 +44,14 @@ Public Class frmEditor_Events
         cmbCondition_JobIs.Enabled = False
         cmbCondition_JobIs.Items.Clear()
 
-       For i = 1 To MAX_JOBS
+        For i = 1 To MAX_JOBS
             cmbCondition_JobIs.Items.Add(i & ". " & CStr(Job(i).Name))
         Next
         cmbCondition_JobIs.SelectedIndex = 0
         cmbCondition_LearntSkill.Enabled = False
         cmbCondition_LearntSkill.Items.Clear()
 
-       For i = 1 To MAX_SKILLS
+        For i = 1 To MAX_SKILLS
             cmbCondition_LearntSkill.Items.Add(i & ". " & Trim$(Skill(i).Name))
         Next
         cmbCondition_LearntSkill.SelectedIndex = 0
@@ -80,20 +80,22 @@ Public Class frmEditor_Events
         Dim i As Integer
 
         cmbSwitch.Items.Clear()
-
-       For i = 1 To MAX_SWITCHES
+        cmbSwitch.Items.Add("None")
+        For i = 1 To MAX_SWITCHES
             cmbSwitch.Items.Add(i & ". " & Switches(i))
         Next
         cmbSwitch.SelectedIndex = 0
         cmbVariable.Items.Clear()
+        cmbVariable.Items.Add("None")
 
-       For i = 1 To NAX_VARIABLES
+        For i = 1 To NAX_VARIABLES
             cmbVariable.Items.Add(i & ". " & Variables(i))
         Next
         cmbVariable.SelectedIndex = 0
         cmbChangeItemIndex.Items.Clear()
+        cmbChangeItemIndex.Items.Add("None")
 
-       For i = 1 To MAX_ITEMS
+        For i = 1 To MAX_ITEMS
             cmbChangeItemIndex.Items.Add(Trim$(Item(i).Name))
         Next
         cmbChangeItemIndex.SelectedIndex = 0
@@ -101,12 +103,14 @@ Public Class frmEditor_Events
         nudChangeLevel.Maximum = MAX_LEVEL
         nudChangeLevel.Value = 1
         cmbChangeSkills.Items.Clear()
+        cmbChangeSkills.Items.Add("None")
 
-       For i = 1 To MAX_SKILLS
+        For i = 1 To MAX_SKILLS
             cmbChangeSkills.Items.Add(Trim$(Skill(i).Name))
         Next
         cmbChangeSkills.SelectedIndex = 0
         cmbChangeJob.Items.Clear()
+        cmbChangeJob.Items.Add("None")
 
         For i = 1 To MAX_JOBS
             cmbChangeJob.Items.Add(Trim$(Job(i).Name))
@@ -114,8 +118,9 @@ Public Class frmEditor_Events
         cmbChangeJob.SelectedIndex = 0
         nudChangeSprite.Maximum = NumCharacters
         cmbPlayAnim.Items.Clear()
+        cmbPlayAnim.Items.Add("None")
 
-       For i = 1 To MAX_ANIMATIONS
+        For i = 1 To MAX_ANIMATIONS
             cmbPlayAnim.Items.Add(i & ". " & Trim$(Animation(i).Name))
         Next
         cmbPlayAnim.SelectedIndex = 0
@@ -135,12 +140,14 @@ Public Class frmEditor_Events
         Next
         cmbPlaySound.SelectedIndex = 0
         cmbOpenShop.Items.Clear()
+        cmbOpenShop.Items.Add("None")
 
         For i = 1 To MAX_SHOPS
             cmbOpenShop.Items.Add(i & ". " & Trim$(Shop(i).Name))
         Next
         cmbOpenShop.SelectedIndex = 0
         cmbSpawnNpc.Items.Clear()
+        cmbSpawnNpc.Items.Add("None")
 
         For i = 1 To MAX_MAP_NPCS
             If Map.Npc(i) > 0 Then
@@ -178,16 +185,20 @@ Public Class frmEditor_Events
 
         ' items
         cmbHasItem.Items.Clear()
+        cmbHasItem.Items.Add("None")
         For i = 1 To MAX_ITEMS
             cmbHasItem.Items.Add(i & ": " & Trim$(Item(i).Name))
         Next
+
         ' variables
         cmbPlayerVar.Items.Clear()
+        cmbPlayerVar.Items.Add("None")
         For i = 1 To NAX_VARIABLES
             cmbPlayerVar.Items.Add(i & ". " & Variables(i))
         Next
         ' switches
         cmbPlayerSwitch.Items.Clear()
+        cmbPlayerSwitch.Items.Add("None")
         For i = 1 To MAX_SWITCHES
             cmbPlayerSwitch.Items.Add(i & ". " & Switches(i))
         Next
@@ -209,12 +220,12 @@ Public Class frmEditor_Events
 
         If tabPages.SelectedIndex = 0 Then tabPages.Selectedindex = 1
 
-         ' Load page 1 to start off with
+        ' Load page 1 to start off with
         CurPageNum = 1
         If TmpEvent.Name = Nothing Then TmpEvent.Name = ""
-        txtName.Text = TmpEvent.Name 
+        txtName.Text = TmpEvent.Name
 
-        EventEditorLoadPage(CurPageNum) 
+        EventEditorLoadPage(CurPageNum)
         EditorEvent_DrawGraphic()
     End Sub
 
@@ -276,7 +287,7 @@ Public Class frmEditor_Events
                 txtChoices2.Text = ""
                 txtChoices3.Text = ""
                 txtChoices4.Text = ""
-                nudShowChoicesFace.Value = 0
+
                 fraDialogue.Visible = True
                 fraShowChoices.Visible = True
                 fraCommands.Visible = False
@@ -368,7 +379,7 @@ Public Class frmEditor_Events
                 fraDialogue.Visible = False
             'Restore MP
             Case "Restore MP"
-                AddCommand(EventType.RestoreMP)
+                AddCommand(EventType.RestoreSP)
                 fraCommands.Visible = False
                 fraDialogue.Visible = False
             'Level Up
@@ -394,7 +405,7 @@ Public Class frmEditor_Events
                     If cmbChangeJob.Items.Count = 0 Then
                         cmbChangeJob.Items.Clear()
 
-                       For i = 1 To MAX_JOBS
+                        For i = 1 To MAX_JOBS
                             cmbChangeJob.Items.Add(Trim$(Job(i).Name))
                         Next
                         cmbChangeJob.SelectedIndex = 0
@@ -443,8 +454,8 @@ Public Class frmEditor_Events
                 fraMoveRoute.Visible = True
                 lstMoveRoute.Items.Clear()
                 ReDim ListOfEvents(0 To Map.EventCount)
-                ListOfEvents(0) = EditorEvent              
-               For i = 0 To Map.EventCount
+                ListOfEvents(0) = EditorEvent
+                For i = 0 To Map.EventCount
                     If i <> EditorEvent Then
                         cmbEvent.Items.Add(Trim$(Map.Events(i).Name))
                         x = x + 1
@@ -467,7 +478,7 @@ Public Class frmEditor_Events
                 cmbMoveWait.Items.Add("This Event")
                 cmbMoveWait.SelectedIndex = 0
                 cmbMoveWait.Enabled = True
-               For i = 0 To Map.EventCount
+                For i = 0 To Map.EventCount
                     If i <> EditorEvent Then
                         cmbMoveWait.Items.Add(Trim$(Map.Events(i).Name))
                         x = x + 1
@@ -481,7 +492,7 @@ Public Class frmEditor_Events
             Case "Force Spawn Npc"
                 'lets populate the combobox
                 cmbSpawnNpc.Items.Clear()
-               For i = 1 To MAX_NPCS
+                For i = 1 To MAX_NPCS
                     cmbSpawnNpc.Items.Add(Trim(NPC(i).Name))
                 Next
                 cmbSpawnNpc.SelectedIndex = 0
@@ -504,7 +515,7 @@ Public Class frmEditor_Events
             Case "Play Animation"
                 cmbPlayAnimEvent.Items.Clear()
 
-               For i = 0 To Map.EventCount
+                For i = 0 To Map.EventCount
                     cmbPlayAnimEvent.Items.Add(i & ". " & Trim$(Map.Events(i).Name))
                 Next
                 cmbPlayAnimEvent.SelectedIndex = 0
@@ -672,7 +683,7 @@ Public Class frmEditor_Events
         ' set the tabs
         tabPages.TabPages.Clear()
 
-       For i = 0 To TmpEvent.PageCount
+        For i = 0 To TmpEvent.PageCount
             tabPages.TabPages.Add(Str(i))
         Next
         btnDeletePage.Enabled = True
@@ -690,17 +701,21 @@ Public Class frmEditor_Events
 
     Private Sub BtnDeletePage_Click(sender As Object, e As EventArgs) Handles btnDeletePage.Click
         TmpEvent.Pages(CurPageNum) = Nothing
+
         ' move everything else down a notch
         If CurPageNum < TmpEvent.PageCount Then
             For i = CurPageNum To TmpEvent.PageCount
                 TmpEvent.Pages(i) = TmpEvent.Pages(i)
             Next
         End If
-        TmpEvent.PageCount = TmpEvent.PageCount
+        TmpEvent.PageCount = TmpEvent.PageCount - 1
+        CurPageNum = TmpEvent.PageCount
+        EventEditorLoadPage(CurPageNum)
+
         ' set the tabs
         tabPages.TabPages.Clear()
 
-       For i = 0 To TmpEvent.PageCount
+        For i = 0 To TmpEvent.PageCount
             tabPages.TabPages.Add("0", Str(i), "")
         Next
         ' set the tab back
@@ -730,21 +745,21 @@ Public Class frmEditor_Events
 
     Private Sub ChkPlayerVar_CheckedChanged(sender As Object, e As EventArgs) Handles chkPlayerVar.CheckedChanged
         If chkPlayerVar.Checked = True Then
-            cmbPlayerVar.Enabled = False
-            nudPlayerVariable.Enabled = False
-            cmbPlayervarCompare.Enabled = False
-            TmpEvent.Pages(CurPageNum).ChkVariable = 0
-        Else
             cmbPlayerVar.Enabled = True
             nudPlayerVariable.Enabled = True
             cmbPlayervarCompare.Enabled = True
             TmpEvent.Pages(CurPageNum).ChkVariable = 1
+        Else
+            cmbPlayerVar.Enabled = False
+            nudPlayerVariable.Enabled = False
+            cmbPlayervarCompare.Enabled = False
+            TmpEvent.Pages(CurPageNum).ChkVariable = 0
         End If
     End Sub
 
     Private Sub CmbPlayerVar_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPlayerVar.SelectedIndexChanged
         If cmbPlayerVar.SelectedIndex = -1 Then Exit Sub
-        TmpEvent.Pages(CurPageNum).Variableindex = cmbPlayerVar.SelectedIndex
+        TmpEvent.Pages(CurPageNum).VariableIndex = cmbPlayerVar.SelectedIndex
     End Sub
 
     Private Sub CmbPlayervarCompare_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPlayervarCompare.SelectedIndexChanged
@@ -770,7 +785,7 @@ Public Class frmEditor_Events
 
     Private Sub CmbPlayerSwitch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPlayerSwitch.SelectedIndexChanged
         If cmbPlayerSwitch.SelectedIndex = -1 Then Exit Sub
-        TmpEvent.Pages(CurPageNum).Switchindex = cmbPlayerSwitch.SelectedIndex
+        TmpEvent.Pages(CurPageNum).SwitchIndex = cmbPlayerSwitch.SelectedIndex
     End Sub
 
     Private Sub CmbPlayerSwitchCompare_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPlayerSwitchCompare.SelectedIndexChanged
@@ -791,7 +806,7 @@ Public Class frmEditor_Events
 
     Private Sub CmbHasItem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbHasItem.SelectedIndexChanged
         If cmbHasItem.SelectedIndex = -1 Then Exit Sub
-        TmpEvent.Pages(CurPageNum).HasItemindex = cmbHasItem.SelectedIndex
+        TmpEvent.Pages(CurPageNum).HasItemIndex = cmbHasItem.SelectedIndex
         TmpEvent.Pages(CurPageNum).HasItemAmount = nudCondition_HasItem.Value
     End Sub
 
@@ -809,7 +824,7 @@ Public Class frmEditor_Events
 
     Private Sub CmbSelfSwitch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSelfSwitch.SelectedIndexChanged
         If cmbSelfSwitch.SelectedIndex = -1 Then Exit Sub
-        TmpEvent.Pages(CurPageNum).SelfSwitchindex = cmbSelfSwitch.SelectedIndex
+        TmpEvent.Pages(CurPageNum).SelfSwitchIndex = cmbSelfSwitch.SelectedIndex
     End Sub
 
     Private Sub CmbSelfSwitchCompare_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSelfSwitchCompare.SelectedIndexChanged
@@ -854,7 +869,7 @@ Public Class frmEditor_Events
         EditorEvent_DrawGraphic()
     End Sub
 
-    Private Sub NudGraphic_ValueChanged(sender As Object, e As EventArgs) 
+    Private Sub NudGraphic_ValueChanged(sender As Object, e As EventArgs)
         EditorEvent_DrawGraphic()
     End Sub
 
@@ -926,7 +941,7 @@ Public Class frmEditor_Events
 
         'Will it let me do this?
         TempMoveRoute = TmpEvent.Pages(CurPageNum).MoveRoute
-       For i = 1 To TempMoveRouteCount
+        For i = 1 To TempMoveRouteCount
             Select Case TempMoveRoute(i).Index
                 Case 1
                     lstMoveRoute.Items.Add("Move Up")
@@ -1069,7 +1084,7 @@ Public Class frmEditor_Events
         CurPageNum = 1
         Me.tabPages.TabPages.Clear()
 
-       For i = 0 To TmpEvent.PageCount
+        For i = 0 To TmpEvent.PageCount
             Me.tabPages.TabPages.Add("0", Str(i), "0")
         Next
         EventEditorLoadPage(CurPageNum)
@@ -1136,7 +1151,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub BtnDeleteComand_Click(sender As Object, e As EventArgs) Handles btnDeleteCommand.Click
-         DeleteEventCommand()
+        DeleteEventCommand()
     End Sub
 
     Private Sub BtnClearCommand_Click(sender As Object, e As EventArgs) Handles btnClearCommand.Click
@@ -1158,11 +1173,13 @@ Public Class frmEditor_Events
         pnlVariableSwitches.Width = Width
         pnlVariableSwitches.Height = Height
         lstSwitches.Items.Clear()
+        lstSwitches.Items.Add("None")
 
         For i = 1 To MAX_SWITCHES
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstVariables.Items.Clear()
+        lstVariables.Items.Add("None")
 
         For i = 1 To NAX_VARIABLES
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
@@ -1177,32 +1194,33 @@ Public Class frmEditor_Events
         Select Case RenameType
             Case 1
                 'Variable
-                If Renameindex > 0 And Renameindex <= NAX_VARIABLES + 1 Then
-                    Variables(Renameindex) = txtRename.Text
+                If RenameIndex > 0 And RenameIndex <= NAX_VARIABLES + 1 Then
+                    Variables(RenameIndex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
                     RenameType = 0
-                    Renameindex = 0
+                    RenameIndex = 0
                 End If
             Case 2
                 'Switch
-                If Renameindex > 0 And Renameindex <= MAX_SWITCHES + 1 Then
-                    Switches(Renameindex) = txtRename.Text
+                If RenameIndex > 0 And RenameIndex <= MAX_SWITCHES + 1 Then
+                    Switches(RenameIndex) = txtRename.Text
                     FraRenaming.Visible = False
                     fraLabeling.Visible = True
                     RenameType = 0
-                    Renameindex = 0
+                    RenameIndex = 0
                 End If
         End Select
         lstSwitches.Items.Clear()
-
-       For i = 1 To MAX_SWITCHES
+        lstSwitches.Items.Add("None")
+        For i = 1 To MAX_SWITCHES
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
+        lstVariables.Items.Add("None")
 
-       For i = 1 To NAX_VARIABLES
+        For i = 1 To NAX_VARIABLES
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
@@ -1213,16 +1231,18 @@ Public Class frmEditor_Events
         fraLabeling.Visible = True
 
         RenameType = 0
-        Renameindex = 0
+        RenameIndex = 0
         lstSwitches.Items.Clear()
+        lstSwitches.Items.Add("None")
 
-       For i = 1 To MAX_SWITCHES
+        For i = 1 To MAX_SWITCHES
             lstSwitches.Items.Add(CStr(i) & ". " & Trim$(Switches(i)))
         Next
         lstSwitches.SelectedIndex = 0
         lstVariables.Items.Clear()
+        lstVariables.Items.Add("None")
 
-       For i = 1 To NAX_VARIABLES
+        For i = 1 To NAX_VARIABLES
             lstVariables.Items.Add(CStr(i) & ". " & Trim$(Variables(i)))
         Next
         lstVariables.SelectedIndex = 0
@@ -1233,7 +1253,7 @@ Public Class frmEditor_Events
     End Sub
 
     Private Sub lstVariables_Click(sender As Object, e As EventArgs) Handles lstVariables.Click
-        If lstVariables.SelectedIndex = 0 Then  lstVariables.SelectedIndex = 1
+        If lstVariables.SelectedIndex = 0 Then lstVariables.SelectedIndex = 1
     End Sub
 
     Private Sub LstVariables_DoubleClick(sender As Object, e As EventArgs) Handles lstVariables.DoubleClick
@@ -1243,12 +1263,12 @@ Public Class frmEditor_Events
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex)
             txtRename.Text = Variables(lstVariables.SelectedIndex)
             RenameType = 1
-            Renameindex = lstVariables.SelectedIndex
+            RenameIndex = lstVariables.SelectedIndex
         End If
     End Sub
 
     Private Sub lstSwitches_Click(sender As Object, e As EventArgs) Handles lstSwitches.Click
-        If lstSwitches.SelectedIndex = 0 Then  lstSwitches.SelectedIndex = 1
+        If lstSwitches.SelectedIndex = 0 Then lstSwitches.SelectedIndex = 1
     End Sub
 
     Private Sub LstSwitches_DoubleClick(sender As Object, e As EventArgs) Handles lstSwitches.DoubleClick
@@ -1258,7 +1278,7 @@ Public Class frmEditor_Events
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex)
             txtRename.Text = Switches(lstSwitches.SelectedIndex)
             RenameType = 2
-            Renameindex = lstSwitches.SelectedIndex
+            RenameIndex = lstSwitches.SelectedIndex
         End If
     End Sub
 
@@ -1269,7 +1289,7 @@ Public Class frmEditor_Events
             lblEditing.Text = "Editing Variable #" & CStr(lstVariables.SelectedIndex)
             txtRename.Text = Variables(lstVariables.SelectedIndex)
             RenameType = 1
-            Renameindex = lstVariables.SelectedIndex
+            RenameIndex = lstVariables.SelectedIndex
         End If
     End Sub
 
@@ -1279,7 +1299,7 @@ Public Class frmEditor_Events
             lblEditing.Text = "Editing Switch #" & CStr(lstSwitches.SelectedIndex)
             txtRename.Text = Switches(lstSwitches.SelectedIndex)
             RenameType = 2
-            Renameindex = lstSwitches.SelectedIndex
+            RenameIndex = lstSwitches.SelectedIndex
         End If
     End Sub
 
@@ -1384,7 +1404,7 @@ Public Class frmEditor_Events
 
         lstMoveRoute.Items.Clear()
 
-       For i = 0 To TempMoveRouteCount
+        For i = 0 To TempMoveRouteCount
             Select Case TempMoveRoute(i).Index
                 Case 1
                     lstMoveRoute.Items.Add("Move Up")
@@ -1568,18 +1588,6 @@ Public Class frmEditor_Events
 #End Region
 
 #Region "Show Choices"
-
-    Private Sub NudShowChoicesFace_ValueChanged(sender As Object, e As EventArgs) Handles nudShowChoicesFace.ValueChanged
-        If nudShowChoicesFace.Value > 0 Then
-            If File.Exists(Paths.Graphics & "Faces\" & nudShowChoicesFace.Value & GfxExt) Then
-                picShowChoicesFace.BackgroundImage = Image.FromFile(Paths.Graphics & "Faces\" & nudShowChoicesFace.Value & GfxExt)
-            End If
-        Else
-            picShowChoicesFace.Text = "Face: None"
-            picShowChoicesFace.BackgroundImage = Nothing
-        End If
-    End Sub
-
     Private Sub BtnShowChoicesOk_Click(sender As Object, e As EventArgs) Handles btnShowChoicesOk.Click
         If Not IsEdit Then
             AddCommand(EventType.ShowChoices)
@@ -1603,13 +1611,13 @@ Public Class frmEditor_Events
 #Region "Show Chatbubble"
 
     Private Sub CmbChatBubbleTargetType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbChatBubbleTargetType.SelectedIndexChanged
-        If cmbChatBubbleTargetType.SelectedIndex = 0 Then
+        If cmbChatBubbleTargetType.SelectedIndex = TargetType.None Then
             cmbChatBubbleTarget.Visible = False
-        ElseIf cmbChatBubbleTargetType.SelectedIndex = 1 Then
+        ElseIf cmbChatBubbleTargetType.SelectedIndex = TargetType.Player Then
             cmbChatBubbleTarget.Visible = True
             cmbChatBubbleTarget.Items.Clear()
 
-           For i = 1 To MAX_MAP_NPCS
+            For i = 1 To MAX_MAP_NPCS
                 If Map.Npc(i) < 0 Then
                     cmbChatBubbleTarget.Items.Add(i & ". ")
                 Else
@@ -1617,11 +1625,11 @@ Public Class frmEditor_Events
                 End If
             Next
             cmbChatBubbleTarget.SelectedIndex = 0
-        ElseIf cmbChatBubbleTargetType.SelectedIndex = 2 Then
+        ElseIf cmbChatBubbleTargetType.SelectedIndex = TargetType.Npc Then
             cmbChatBubbleTarget.Visible = True
             cmbChatBubbleTarget.Items.Clear()
 
-           For i = 0 To Map.EventCount
+            For i = 0 To Map.EventCount
                 cmbChatBubbleTarget.Items.Add(i & ". " & Trim$(Map.Events(i).Name))
             Next
             cmbChatBubbleTarget.SelectedIndex = 0

@@ -99,11 +99,4 @@ Public Module C_Constants
 
     ' Map
     Public Const MaxTileHistory As Byte = 50
-
-    ' Dialog types
-    Public Const DialogueTypeBuyhome As Byte = 1
-    Public Const DialogueTypeVisit As Byte = 2
-    Public Const DialogueTypeParty As Byte = 3
-    Public Const DialogueTypeQuest As Byte = 4
-    Public Const DialogueTypeTrade As Byte = 5
 End Module
