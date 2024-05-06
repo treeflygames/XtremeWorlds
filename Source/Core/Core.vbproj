@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Mirage.Core.Database\Mirage.Core.Database.vbproj" />
     <ProjectReference Include="..\Mirage.Core\Mirage.Core.vbproj" />
-    <ProjectReference Include="..\..\..\Sanford.Multimedia.Midi\Source\Sanford.Multimedia.Midi.Core.csproj" />
   </ItemGroup>
 
 </Project>
