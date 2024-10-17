@@ -95,11 +95,7 @@ Module C_Graphics
     Friend GradientTexture() As Texture
     Friend GradientSprite() As Sprite
     Friend GradientGfxInfo() As GraphicInfo
-
-    Friend EventChatGfx As Texture
-    Friend EventChatSprite As Sprite
-    Friend EventChatGfxInfo As GraphicInfo
-
+    
     Friend TargetGfx As Texture
     Friend TargetSprite As Sprite
     Friend TargetGfxInfo As GraphicInfo
@@ -1747,7 +1743,6 @@ Module C_Graphics
         If Not DirectionTexture Is Nothing Then DirectionTexture.Dispose()
         If Not TargetGfx Is Nothing Then TargetGfx.Dispose()
         If Not WeatherTexture Is Nothing Then WeatherTexture.Dispose()
-        If Not EventChatGfx Is Nothing Then EventChatGfx.Dispose()
         If Not ChatBubbleGfx Is Nothing Then ChatBubbleGfx.Dispose()
 
         If Not LightGfx Is Nothing Then LightGfx.Dispose()
