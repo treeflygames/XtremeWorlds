@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Drawing
+Imports System.IO
 Imports System.Runtime.InteropServices
 Imports SFML.Graphics
 Imports SFML.System
@@ -359,10 +360,6 @@ Module C_Graphics
                     PlayerSearch(CurX, CurY, 1)
                 End If
             End If
-
-            If Editor = EditorType.Map Then
-                frmEditor_Map.MapEditorMouseDown(e.Button, e.X, e.Y, False)
-            End If
         End If
 
         HandleInterfaceEvents(EntState.MouseDown)
@@ -376,32 +373,6 @@ Module C_Graphics
 
     Private Sub Window_MouseWheelScrolled(ByVal sender As Object, ByVal e As SFML.Window.MouseWheelScrollEventArgs)
         Console.WriteLine("Mouse Wheel Scrolled: " & e.Delta.ToString())
-
-        If Editor = EditorType.Map Then
-            If e.Delta > 0 Then
-                If Control.ModifierKeys = Keys.Shift Then
-                    If frmEditor_Map.cmbLayers.SelectedIndex + 1 < LayerType.Count - 1 Then
-                        frmEditor_Map.cmbLayers.SelectedIndex = frmEditor_Map.cmbLayers.SelectedIndex + 1
-                    End If
-
-                Else
-                    If frmEditor_Map.cmbTileSets.SelectedIndex > 0 Then
-                        frmEditor_Map.cmbTileSets.SelectedIndex = frmEditor_Map.cmbTileSets.SelectedIndex - 1
-                    End If
-                End If
-
-            Else
-                If Control.ModifierKeys = Keys.Shift Then
-                    If frmEditor_Map.cmbLayers.SelectedIndex > 0 Then
-                        frmEditor_Map.cmbLayers.SelectedIndex = frmEditor_Map.cmbLayers.SelectedIndex - 1
-                    End If
-                Else
-                    If frmEditor_Map.cmbTileSets.SelectedIndex + 1 < NumTileSets Then
-                        frmEditor_Map.cmbTileSets.SelectedIndex = frmEditor_Map.cmbTileSets.SelectedIndex + 1
-                    End If
-                End If
-            End If
-        End If
 
         If e.Delta > 0 Then
             ScrollChatBox(0)
@@ -420,17 +391,6 @@ Module C_Graphics
         ' Store raw mouse coordinates for interface interactions
         CurMouseX = e.X
         CurMouseY = e.Y
-
-        ' Editor interactions
-        If Editor = EditorType.Map Then
-            If Mouse.IsButtonPressed(Mouse.Button.Left) Then
-                frmEditor_Map.MapEditorMouseDown(Mouse.Button.Left, CurMouseX, CurMouseY, True)
-            End If
-
-            If Mouse.IsButtonPressed(Mouse.Button.Right) Then
-                frmEditor_Map.MapEditorMouseDown(Mouse.Button.Right, CurMouseX, CurMouseY, True)
-            End If
-        End If
 
         HandleInterfaceEvents(EntState.MouseMove)
     End Sub
@@ -468,40 +428,41 @@ Module C_Graphics
         DestroyGame()
         Window.Close()
     End Sub
+    
+    ''' <summary>
+    ''' Loads a texture, sprite, and graphic info if the file exists.
+    ''' </summary>
+    Private Function LoadGraphic(filePath As String) As (Texture, Sprite, GraphicInfo)
+        Dim texture As Texture = Nothing
+        Dim sprite As Sprite = Nothing
+        Dim gfxInfo As New GraphicInfo()
 
-    Private Sub Window_Resized(sender As Object, e As SizeEventArgs)
-        ResolutionWidth = e.Width - (e.Width Mod PicX)
-        ResolutionHeight = e.Height - (e.Height Mod PicY)
-        Types.Settings.CameraWidth = ResolutionWidth / PicX
-        Types.Settings.CameraHeight = ResolutionHeight / PicY
-        Types.Settings.Resolution = 14
-        Settings.Save()
+        If File.Exists(filePath) Then
+            Try
+                texture = New Texture(filePath)
+                sprite = New Sprite(texture)
+                gfxInfo.Width = texture.Size.X
+                gfxInfo.Height = texture.Size.Y
+            Catch ex As Exception
+                Console.WriteLine($"Failed to load texture: {filePath}, Error: {ex.Message}")
+            End Try
+        Else
+            Console.WriteLine($"File not found: {filePath}")
+        End If
 
-        RefreshWindow = True
-    End Sub
-
-    Public Sub CenterWindow(ByVal window As RenderWindow)
-        ' Get the working area of the primary screen (excluding taskbar)
-        Dim workingArea As Rectangle = Screen.PrimaryScreen.WorkingArea
-
-        ' Calculate the position to center the window within the working area
-        Dim windowPosX As Integer = workingArea.Left + (workingArea.Width - window.Size.X) \ 2
-        Dim windowPosY As Integer = (workingArea.Top + (workingArea.Height - window.Size.Y) \ 2) - GetTitleBarHeight / 2
-
-        ' Set the window's position
-        window.Position = New Vector2i(windowPosX, windowPosY)
-    End Sub
-
-    Public Function GetTitleBarHeight() As Integer
-        Return SystemInformation.CaptionHeight
+        Return (texture, sprite, gfxInfo)
     End Function
-
+    
     Sub InitGraphics()
         GetResolutionSize(Types.Settings.Resolution, ResolutionWidth, ResolutionHeight)
+        
+        ' Get the path to your custom Fonts folder within the Contents directory.
+        Dim fontsPath As String = Path.Combine(Paths.Contents, "Fonts")
 
-        Fonts(0) = New Font(Environment.GetFolderPath(Environment.SpecialFolder.Fonts) + "\" + Georgia)
-        Fonts(1) = New Font(Environment.GetFolderPath(Environment.SpecialFolder.Fonts) + "\" + Arial)
-        Fonts(2) = New Font(Environment.GetFolderPath(Environment.SpecialFolder.Fonts) + "\" + Verdana)
+        ' Load the fonts from your custom directory.
+        Fonts(0) = New Font(Path.Combine(fontsPath, "georgia.ttf"))
+        Fonts(1) = New Font(Path.Combine(fontsPath, "arial.ttf"))
+        Fonts(2) = New Font(Path.Combine(fontsPath, "verdana.ttf"))
 
         RefreshWindow = True
         UpdateWindow()
@@ -569,86 +530,60 @@ Module C_Graphics
         ReDim GradientTexture(NumGradients)
         ReDim GradientSprite(NumGradients)
         ReDim GradientGfxInfo(NumGradients)
+        
+        ' Load all graphics using the reusable function
+        Dim result As (Texture, Sprite, GraphicInfo)
 
-        BloodGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Blood" & GfxExt) Then
-            BloodTexture = New Texture(Paths.Graphics & "Misc\Blood" & GfxExt)
-            BloodSprite = New Sprite(BloodTexture)
-            BloodGfxInfo.Width = BloodTexture.Size.X
-            BloodGfxInfo.Height = BloodTexture.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Blood" & GfxExt))
+        BloodTexture = result.Item1
+        BloodSprite = result.Item2
+        BloodGfxInfo = result.Item3
 
-        DirectionGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Direction" & GfxExt) Then
-            DirectionTexture = New Texture(Paths.Graphics & "Misc\Direction" & GfxExt)
-            DirectionSprite = New Sprite(DirectionTexture)
-            DirectionGfxInfo.Width = DirectionTexture.Size.X
-            DirectionGfxInfo.Height = DirectionTexture.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Direction" & GfxExt))
+        DirectionTexture = result.Item1
+        DirectionSprite = result.Item2
+        DirectionGfxInfo = result.Item3
 
-        WeatherGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Weather" & GfxExt) Then
-            WeatherTexture = New Texture(Paths.Graphics & "Misc\Weather" & GfxExt)
-            WeatherSprite = New Sprite(WeatherTexture)
-            WeatherGfxInfo.Width = WeatherTexture.Size.X
-            WeatherGfxInfo.Height = WeatherTexture.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Weather" & GfxExt))
+        WeatherTexture = result.Item1
+        WeatherSprite = result.Item2
+        WeatherGfxInfo = result.Item3
 
-        EventChatGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Gui & "Main\EventChat" & GfxExt) Then
-            EventChatGfx = New Texture(Paths.Gui & "Main\EventChat" & GfxExt)
-            EventChatSprite = New Sprite(EventChatGfx)
-            EventChatGfxInfo.Width = EventChatGfx.Size.X
-            EventChatGfxInfo.Height = EventChatGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Gui, "Main", "EventChat" & GfxExt))
+        EventChatGfx = result.Item1
+        EventChatSprite = result.Item2
+        EventChatGfxInfo = result.Item3
 
-        TargetGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Target" & GfxExt) Then
-            TargetGfx = New Texture(Paths.Graphics & "Misc\Target" & GfxExt)
-            TargetSprite = New Sprite(TargetGfx)
-            TargetGfxInfo.Width = TargetGfx.Size.X
-            TargetGfxInfo.Height = TargetGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Target" & GfxExt))
+        TargetGfx = result.Item1
+        TargetSprite = result.Item2
+        TargetGfxInfo = result.Item3
 
-        ChatBubbleGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\ChatBubble" & GfxExt) Then
-            ChatBubbleGfx = New Texture(Paths.Graphics & "Misc\ChatBubble" & GfxExt)
-            ChatBubbleSprite = New Sprite(ChatBubbleGfx)
-            ChatBubbleGfxInfo.Width = ChatBubbleGfx.Size.X
-            ChatBubbleGfxInfo.Height = ChatBubbleGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "ChatBubble" & GfxExt))
+        ChatBubbleGfx = result.Item1
+        ChatBubbleSprite = result.Item2
+        ChatBubbleGfxInfo = result.Item3
 
-        LightGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Light" & GfxExt) Then
-            LightGfx = New Texture(Paths.Graphics & "Misc\Light" & GfxExt)
-            LightSprite = New Sprite(LightGfx)
-            LightGfxInfo.Width = LightGfx.Size.X
-            LightGfxInfo.Height = LightGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Light" & GfxExt))
+        LightGfx = result.Item1
+        LightSprite = result.Item2
+        LightGfxInfo = result.Item3
 
-        CursorGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Cursor" & GfxExt) Then
-            CursorGfx = New Texture(Paths.Graphics & "Misc\Cursor" & GfxExt)
-            CursorSprite = New Sprite(CursorGfx)
-            CursorGfxInfo.Width = CursorGfx.Size.X
-            CursorGfxInfo.Height = CursorGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Cursor" & GfxExt))
+        CursorGfx = result.Item1
+        CursorSprite = result.Item2
+        CursorGfxInfo = result.Item3
 
-        ShadowGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Shadow" & GfxExt) Then
-            ShadowGfx = New Texture(Paths.Graphics & "Misc\Shadow" & GfxExt)
-            ShadowSprite = New Sprite(ShadowGfx)
-            ShadowGfxInfo.Width = ShadowGfx.Size.X
-            ShadowGfxInfo.Height = ShadowGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Shadow" & GfxExt))
+        ShadowGfx = result.Item1
+        ShadowSprite = result.Item2
+        ShadowGfxInfo = result.Item3
 
-        BarGfxInfo = New GraphicInfo
-        If File.Exists(Paths.Graphics & "Misc\Bars" & GfxExt) Then
-            BarGfx = New Texture(Paths.Graphics & "Misc\Bars" & GfxExt)
-            BarSprite = New Sprite(BarGfx)
-            BarGfxInfo.Width = BarGfx.Size.X
-            BarGfxInfo.Height = BarGfx.Size.Y
-        End If
+        result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Bars" & GfxExt))
+        BarGfx = result.Item1
+        BarSprite = result.Item2
+        BarGfxInfo = result.Item3
+
     End Sub
 
     Public Sub UpdateWindow()
@@ -666,8 +601,6 @@ Module C_Graphics
             End If
 
             Window = New RenderWindow(New VideoMode(ResolutionWidth, ResolutionHeight), Types.Settings.GameName, Styles.Close, WindowSettings)
-
-            CenterWindow(Window)
             Window.SetVerticalSyncEnabled(Types.Settings.Vsync)
             If Types.Settings.Vsync = 0 Then
                 Window.SetFramerateLimit(Types.Settings.MaxFps)
@@ -695,7 +628,6 @@ Module C_Graphics
         AddHandler Window.MouseMoved, AddressOf Window_MouseMoved
         AddHandler Window.TextEntered, AddressOf Window_TextEntered
         AddHandler Window.MouseWheelScrolled, AddressOf Window_MouseWheelScrolled
-        AddHandler Window.Resized, AddressOf Window_Resized
     End Sub
 
     Friend Sub LoadTexture(index As Integer, texType As GfxType)
@@ -707,98 +639,97 @@ Module C_Graphics
         Dim spriteArray() As Sprite = Nothing
         Dim gfxInfoArray() As GraphicInfo = Nothing
 
-        ' Setup parameters based on GfxType
         Select Case texType
             Case GfxType.Tileset
                 numAssets = NumTileSets
                 textureArray = TilesetTexture
                 spriteArray = TilesetSprite
                 gfxInfoArray = TilesetGfxInfo
-                basePath = Paths.Graphics & "tilesets\"
+                basePath = Path.Combine(Paths.Graphics, "Tilesets")
 
             Case GfxType.Character
                 numAssets = NumCharacters
                 textureArray = CharacterTexture
                 spriteArray = CharacterSprite
                 gfxInfoArray = CharacterGfxInfo
-                basePath = Paths.Graphics & "characters\"
+                basePath = Path.Combine(Paths.Graphics, "Characters")
 
             Case GfxType.Paperdoll
                 numAssets = NumPaperdolls
                 textureArray = ItemTexture
                 spriteArray = ItemSprite
                 gfxInfoArray = ItemGfxInfo
-                basePath = Paths.Graphics & "paperdolls\"
+                basePath = Path.Combine(Paths.Graphics, "Paperdolls")
 
             Case GfxType.Item
                 numAssets = NumItems
                 textureArray = ItemTexture
                 spriteArray = ItemSprite
                 gfxInfoArray = ItemGfxInfo
-                basePath = Paths.Graphics & "items\"
+                basePath = Path.Combine(Paths.Graphics, "Items")
 
             Case GfxType.Resource
                 numAssets = NumResources
                 textureArray = ResourceTexture
                 spriteArray = ResourceSprite
                 gfxInfoArray = ResourceGfxInfo
-                basePath = Paths.Graphics & "resources\"
+                basePath = Path.Combine(Paths.Graphics, "Resources")
 
             Case GfxType.Animation
                 numAssets = NumAnimations
                 textureArray = AnimationTexture
                 spriteArray = AnimationSprite
                 gfxInfoArray = AnimationGfxInfo
-                basePath = Paths.Graphics & "animations\"
+                basePath = Path.Combine(Paths.Graphics, "Animations")
 
             Case GfxType.Fog
                 numAssets = NumFogs
                 textureArray = FogTexture
                 spriteArray = FogSprite
                 gfxInfoArray = FogGfxInfo
-                basePath = Paths.Graphics & "fogs\"
+                basePath = Path.Combine(Paths.Graphics, "Fogs")
 
             Case GfxType.Skill
                 numAssets = NumSkills
                 textureArray = SkillTexture
                 spriteArray = SkillSprite
                 gfxInfoArray = SkillGfxInfo
-                basePath = Paths.Graphics & "skills\"
+                basePath = Path.Combine(Paths.Graphics, "Skills")
 
             Case GfxType.Projectile
                 numAssets = NumProjectiles
                 textureArray = ProjectileTexture
                 spriteArray = ProjectileSprite
                 gfxInfoArray = ProjectileGfxInfo
-                basePath = Paths.Graphics & "projectiles\"
+                basePath = Path.Combine(Paths.Graphics, "Projectiles")
 
             Case GfxType.Emote
                 numAssets = NumEmotes
                 textureArray = EmoteTexture
                 spriteArray = EmoteSprite
                 gfxInfoArray = EmoteGfxInfo
-                basePath = Paths.Graphics & "emotes\"
+                basePath = Path.Combine(Paths.Graphics, "Emotes")
 
             Case GfxType.Panorama
                 numAssets = NumPanorama
                 textureArray = PanoramaTexture
                 spriteArray = PanoramaSprite
                 gfxInfoArray = PanoramaGfxInfo
-                basePath = Paths.Graphics & "panoramas\"
+                basePath = Path.Combine(Paths.Graphics, "Panoramas")
 
             Case GfxType.Parallax
                 numAssets = NumParallax
                 textureArray = ParallaxTexture
                 spriteArray = ParallaxSprite
                 gfxInfoArray = ParallaxGfxInfo
-                basePath = Paths.Graphics & "parallax\"
+                basePath = Path.Combine(Paths.Graphics, "Parallax")
 
             Case GfxType.Picture
                 numAssets = NumPictures
                 textureArray = PictureTexture
                 spriteArray = PictureSprite
                 gfxInfoArray = PictureGfxInfo
-                basePath = Paths.Graphics & "pictures\"
+                basePath = Path.Combine(Paths.Graphics, "Pictures")
 
             Case GfxType.GUI
                 numAssets = NumInterface
@@ -812,24 +743,20 @@ Module C_Graphics
                 textureArray = GradientTexture
                 spriteArray = GradientSprite
                 gfxInfoArray = GradientGfxInfo
-                basePath = Paths.Gui & "gradients\"
+                basePath = Path.Combine(Paths.Gui, "Gradients")
 
             Case GfxType.Design
                 numAssets = NumDesigns
                 textureArray = DesignTexture
                 spriteArray = DesignSprite
                 gfxInfoArray = DesignGfxInfo
-                basePath = Paths.Gui & "designs\"
-
-            Case Else
-                ' Log unrecognized type or handle accordingly
-                Exit Sub
+                basePath = Path.Combine(Paths.Gui, "Designs")
         End Select
 
         If index > numAssets Then Exit Sub ' Validate index range
 
         ' Load the texture and create the sprite
-        textureArray(index) = New Texture(basePath & index & GfxExt)
+        textureArray(index) = New Texture(Path.Combine(basePath, $"{index}{GfxExt}"))
         spriteArray(index) = New Sprite(textureArray(index))
 
         ' Cache the width, height, and other properties
@@ -878,7 +805,7 @@ Module C_Graphics
         tmpSprite.TextureRect = New IntRect(sX, sY, sW, sH)
         tmpSprite.Scale = New Vector2f(dW / sW, dH / sH)
         tmpSprite.Position = New Vector2f(dX, dY)
-        tmpSprite.Color = New Color(red, green, blue, alpha)
+        tmpSprite.Color = New SFML.Graphics.Color(red, green, blue, alpha)
 
         target.Draw(tmpSprite)
     End Sub
@@ -914,7 +841,7 @@ Module C_Graphics
         tmpSprite.TextureRect = New IntRect(sX, sY, sW, sH)
         tmpSprite.Scale = New Vector2f(dW / sW, dH / sH)
         tmpSprite.Position = New Vector2f(dX, dY)
-        tmpSprite.Color = New Color(red, green, blue, alpha)
+        tmpSprite.Color = New SFML.Graphics.Color(red, green, blue, alpha)
 
         target.Draw(tmpSprite)
     End Sub
@@ -1002,36 +929,6 @@ Module C_Graphics
                 spriteArray = DesignSprite
                 gfxInfoArray = DesignGfxInfo
         End Select
-    End Sub
-
-    Friend Sub DrawDirections(x As Integer, y As Integer)
-        Dim rec As Rectangle, i As Integer
-
-        ' render grid
-        rec.Y = 24
-        rec.X = 0
-        rec.Width = 32
-        rec.Height = 32
-
-        RenderTexture(DirectionSprite, Window, ConvertMapX(x * PicX), ConvertMapY(y * PicY), rec.X, rec.Y, rec.Width,
-                     rec.Height, rec.Width, rec.Height)
-
-        ' render dir blobs
-        For i = 1 To 4
-            rec.X = (i - 1) * 8
-            rec.Width = 8
-
-            ' find out whether render blocked or not
-            If Not IsDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
-                rec.Y = 8
-            Else
-                rec.Y = 16
-            End If
-            rec.Height = 8
-
-            RenderTexture(DirectionSprite, Window, ConvertMapX(x * PicX) + DirArrowX(i),
-                         ConvertMapY(y * PicY) + DirArrowY(i), rec.X, rec.Y, rec.Width, rec.Height, rec.Width, rec.Height)
-        Next
     End Sub
 
     Friend Function ConvertMapX(x As Integer) As Integer
@@ -1304,7 +1201,7 @@ Module C_Graphics
         If GettingMap Then Exit Sub
 
         UpdateCamera()
-        Window.Clear(Color.Black)
+        Window.Clear(SFML.Graphics.Color.Black)
 
         If NumPanorama > 0 And Map.Panorama > 0 Then
             DrawPanorama(Map.Panorama)
@@ -1484,14 +1381,7 @@ Module C_Graphics
         If MapGrid = True And Editor = EditorType.Map Then
             DrawGrid()
         End If
-
-        If Editor = EditorType.Map Then
-            DrawTileOutline()
-            If EyeDropper = True Then
-                DrawEyeDropper()
-            End If
-        End If
-
+        
         For i = 1 To MAX_PLAYERS
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
                 DrawPlayerName(i)
@@ -1523,21 +1413,7 @@ Module C_Graphics
         For i = 1 To Byte.MaxValue
             DrawActionMsg(i)
         Next
-
-        If Editor = EditorType.Map Then
-            If frmEditor_Map.tabpages.SelectedTab Is frmEditor_Map.tpDirBlock Then
-                For x = TileView.Left - 1 To TileView.Right + 1
-                    For y = TileView.Top - 1 To TileView.Bottom + 1
-                        If IsValidMapPoint(x, y) Then
-                            Call DrawDirections(x, y)
-                        End If
-                    Next
-                Next
-            End If
-
-            DrawMapAttributes()
-        End If
-
+        
         For i = 1 To Byte.MaxValue
             If chatBubble(i).active Then
                 DrawChatBubble(i)
@@ -1546,7 +1422,7 @@ Module C_Graphics
 
         If Bfps Then
             Dim fps As String = Trim$("FPS: " & GameFps)
-            Call RenderText(fps, Window, Camera.Left - 24, Camera.Top + 60, Color.Yellow, Color.Black)
+            Call RenderText(fps, Window, Camera.Left - 24, Camera.Top + 60, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
         End If
 
         ' draw cursor, player X and Y locations
@@ -1555,22 +1431,12 @@ Module C_Graphics
             Dim Loc As String = Trim$("loc X: " & GetPlayerX(MyIndex) & " Y: " & GetPlayerY(MyIndex))
             Dim Map As String = Trim$(" (Map #" & GetPlayerMap(MyIndex) & ")")
 
-            Call RenderText(Cur, Window, DrawLocX, DrawLocY + 105, Color.Yellow, Color.Black)
-            Call RenderText(Loc, Window, DrawLocX,  DrawLocY + 120, Color.Yellow, Color.Black)
-            Call RenderText(Map, Window, DrawLocX, DrawLocY + 135, Color.Yellow, Color.Black)
+            Call RenderText(Cur, Window, DrawLocX, DrawLocY + 105, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
+            Call RenderText(Loc, Window, DrawLocX,  DrawLocY + 120, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
+            Call RenderText(Map, Window, DrawLocX, DrawLocY + 135, SFML.Graphics.Color.Yellow, SFML.Graphics.Color.Black)
         End If
 
         DrawMapName()
-
-        If Editor = EditorType.Map And frmEditor_Map.tabpages.SelectedTab Is frmEditor_Map.tpEvents Then
-            DrawEvents()
-            EditorEvent_DrawGraphic()
-        End If
-
-        If Editor = EditorType.Projectile Then
-            EditorProjectile_DrawProjectile()
-        End If
-
         DrawBars()
         DrawMapFade()
         RenderEntities()
@@ -1580,7 +1446,7 @@ Module C_Graphics
     End Sub
 
     Friend Sub Render_Menu()
-        Window.Clear(Color.Black)
+        Window.Clear(SFML.Graphics.Color.Black)
 
         DrawMenuBG()
         RenderEntities()
@@ -1765,7 +1631,7 @@ Module C_Graphics
     End Sub
 
     Sub DrawMapName()
-        RenderText(Language.Game.MapName & Map.Name, Window, ResolutionWidth / 2 - TextWidth(Map.Name), FontSize, DrawMapNameColor, Color.Black)
+        RenderText(Language.Game.MapName & Map.Name, Window, ResolutionWidth / 2 - TextWidth(Map.Name), FontSize, DrawMapNameColor, SFML.Graphics.Color.Black)
     End Sub
 
     Friend Sub DrawGrid()
@@ -1774,9 +1640,9 @@ Module C_Graphics
                 If IsValidMapPoint(x, y) Then
 
                     Dim rec As New RectangleShape With {
-                            .OutlineColor = New Color(Color.White),
+                            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.White),
                             .OutlineThickness = 0.6,
-                            .FillColor = New Color(Color.Transparent),
+                            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent),
                             .Size = New Vector2f((x * PicX), (y * PicX)),
                             .Position = New Vector2f(ConvertMapX((x - 1) * PicX), ConvertMapY((y - 1) * PicY))
                             }
@@ -1787,68 +1653,12 @@ Module C_Graphics
         Next
     End Sub
 
-    Friend Sub DrawTileOutline()
-        Dim rec As Rectangle
-
-        If frmEditor_Map.tabpages.SelectedTab Is frmEditor_Map.tpDirBlock Then Exit Sub
-
-        With rec
-            .Y = 0
-            .Height = PicY
-            .X = 0
-            .Width = PicX
-        End With
-
-        Dim rec2 As New RectangleShape With {
-            .OutlineColor = New SFML.Graphics.Color(SFML.Graphics.Color.Blue),
-            .OutlineThickness = 0.6,
-            .FillColor = New SFML.Graphics.Color(SFML.Graphics.Color.Transparent)
-        }
-
-        If frmEditor_Map.tabpages.SelectedTab Is frmEditor_Map.tpAttributes Then
-            rec2.Size = New Vector2f(rec.Width, rec.Height)
-        Else
-            If EditorTileWidth = 1 And EditorTileHeight = 1 Then
-                RenderTexture(frmEditor_Map.cmbTileSets.SelectedIndex + 1, GfxType.Tileset, Window, ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY), EditorTileSelStart.X * PicX, EditorTileSelStart.Y * PicY, rec.Width, rec.Height, rec.Width, rec.Height)
-
-                rec2.Size = New Vector2f(rec.Width, rec.Height)
-            Else
-                If frmEditor_Map.cmbAutoTile.SelectedIndex > 0 Then
-                    RenderTexture(frmEditor_Map.cmbTileSets.SelectedIndex + 1, GfxType.Tileset, Window, ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY), EditorTileSelStart.X * PicX, EditorTileSelStart.Y * PicY, rec.Width, rec.Height, rec.Width, rec.Height)
-
-                    rec2.Size = New Vector2f(rec.Width, rec.Height)
-                Else
-                    RenderTexture(frmEditor_Map.cmbTileSets.SelectedIndex + 1, GfxType.Tileset, Window, ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY), EditorTileSelStart.X * PicX, EditorTileSelStart.Y * PicY, EditorTileSelEnd.X * PicX, EditorTileSelEnd.Y * PicY, EditorTileSelEnd.X * PicX, EditorTileSelEnd.Y * PicY)
-
-                    rec2.Size = New Vector2f(EditorTileSelEnd.X * PicX, EditorTileSelEnd.Y * PicY)
-                End If
-
-            End If
-
-        End If
-
-        rec2.Position = New Vector2f(ConvertMapX(CurX * PicX), ConvertMapY(CurY * PicY))
-        Window.Draw(rec2)
-    End Sub
-
-    Friend Sub DrawEyeDropper()
-        Dim rec As New RectangleShape With {
-        .OutlineColor = New Color(Color.Cyan),
-        .OutlineThickness = 0.6,
-        .FillColor = New Color(Color.Transparent),
-        .Size = New Vector2f((PicX), (PicX)),
-        .Position = New Vector2f(ConvertMapX((CurX) * PicX), ConvertMapY((CurY) * PicY))
-        }
-
-        Window.Draw(rec)
-    End Sub
-
     Friend Sub DrawMapTint()
 
         If Map.MapTint = 0 Then Exit Sub
 
-        MapTintSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, Color.Black))) With {
-            .Color = New Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA),
+        MapTintSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
+            .Color = New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA),
             .TextureRect = New IntRect(0, 0, Window.Size.X, Window.Size.Y),
             .Position = New Vector2f(0, 0)
             }
@@ -1859,8 +1669,8 @@ Module C_Graphics
     Friend Sub DrawMapFade()
         If UseFade = False Then Exit Sub
 
-        MapFadeSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, Color.Black))) With {
-            .Color = New Color(0, 0, 0, FadeAmount),
+        MapFadeSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
+            .Color = New SFML.Graphics.Color(0, 0, 0, FadeAmount),
             .TextureRect = New IntRect(0, 0, Window.Size.X, Window.Size.Y),
             .Position = New Vector2f(0, 0)
             }
@@ -1946,8 +1756,8 @@ Module C_Graphics
         If Not CursorGfx Is Nothing Then CursorGfx.Dispose()
     End Sub
 
-    Friend Function ToSfmlColor(toConvert As Drawing.Color) As Color
-        Return New Color(toConvert.R, toConvert.G, toConvert.B, toConvert.A)
+    Friend Function ToSfmlColor(toConvert As Drawing.Color) As SFML.Graphics.Color
+        Return New SFML.Graphics.Color(toConvert.R, toConvert.G, toConvert.B, toConvert.A)
     End Function
 
     Friend Sub DrawTarget(x2 As Integer, y2 As Integer)
@@ -1989,107 +1799,7 @@ Module C_Graphics
 
         RenderTexture(TargetSprite, Window, x, y, rec.X, rec.Y, rec.Width, rec.Height, rec.Width, rec.Height)
     End Sub
-
-    Friend Sub EditorItem_DrawIcon()
-        Dim itemnum As Integer
-        itemnum = frmEditor_Item.nudIcon.Value
-
-        If itemnum < 1 Or itemnum > NumItems Then
-            frmEditor_Item.picItem.BackgroundImage = Nothing
-            Exit Sub
-        End If
-
-        If File.Exists(Paths.Graphics & "items\" & itemnum & GfxExt) Then
-            frmEditor_Item.picItem.BackgroundImage = Drawing.Image.FromFile(Paths.Graphics & "items\" & itemnum & GfxExt)
-        Else
-            frmEditor_Item.picItem.BackgroundImage = Nothing
-        End If
-    End Sub
-
-    Friend Sub EditorItem_DrawPaperdoll()
-        Dim Sprite As Integer
-
-        Sprite = frmEditor_Item.nudPaperdoll.Value
-
-        If Sprite < 1 Or Sprite > NumPaperdolls Then
-            frmEditor_Item.picPaperdoll.BackgroundImage = Nothing
-            Exit Sub
-        End If
-
-        If File.Exists(Paths.Graphics & "paperdolls\" & Sprite & GfxExt) Then
-            frmEditor_Item.picPaperdoll.BackgroundImage =
-                Drawing.Image.FromFile(Paths.Graphics & "paperdolls\" & Sprite & GfxExt)
-        End If
-    End Sub
-
-    Friend Sub EditorNpc_DrawSprite()
-        Dim Sprite As Integer
-
-        Sprite = frmEditor_NPC.nudSprite.Value
-
-        If Sprite < 1 Or Sprite > NumCharacters Then
-            frmEditor_NPC.picSprite.BackgroundImage = Nothing
-            Exit Sub
-        End If
-
-        If File.Exists(Paths.Graphics & "characters\" & Sprite & GfxExt) Then
-            frmEditor_NPC.picSprite.Width =
-                Drawing.Image.FromFile(Paths.Graphics & "characters\" & Sprite & GfxExt).Width / 4
-            frmEditor_NPC.picSprite.Height =
-                Drawing.Image.FromFile(Paths.Graphics & "characters\" & Sprite & GfxExt).Height / 4
-            frmEditor_NPC.picSprite.BackgroundImage =
-                Drawing.Image.FromFile(Paths.Graphics & "characters\" & Sprite & GfxExt)
-        End If
-    End Sub
-
-    Friend Sub EditorResource_DrawSprite()
-        Dim Sprite As Integer
-
-        ' normal sprite
-        Sprite = frmEditor_Resource.nudNormalPic.Value
-
-        If Sprite < 1 Or Sprite > NumResources Then
-            frmEditor_Resource.picNormalpic.BackgroundImage = Nothing
-        Else
-            If File.Exists(Paths.Graphics & "resources\" & Sprite & GfxExt) Then
-                frmEditor_Resource.picNormalpic.BackgroundImage =
-                    Drawing.Image.FromFile(Paths.Graphics & "resources\" & Sprite & GfxExt)
-            End If
-        End If
-
-        ' exhausted sprite
-        Sprite = frmEditor_Resource.nudExhaustedPic.Value
-
-        If Sprite < 1 Or Sprite > NumResources Then
-            frmEditor_Resource.picExhaustedPic.BackgroundImage = Nothing
-        Else
-            If File.Exists(Paths.Graphics & "resources\" & Sprite & GfxExt) Then
-                frmEditor_Resource.picExhaustedPic.BackgroundImage =
-                    Drawing.Image.FromFile(Paths.Graphics & "resources\" & Sprite & GfxExt)
-            End If
-        End If
-    End Sub
-
-    Friend Sub EditorEvent_DrawPicture()
-        Dim Sprite As Integer
-
-        Sprite = frmEditor_Events.nudShowPicture.Value
-
-        If Sprite < 1 Or Sprite > NumPictures Then
-            frmEditor_Events.picShowPic.BackgroundImage = Nothing
-            Exit Sub
-        End If
-
-        If File.Exists(Paths.Graphics & "pictures\" & Sprite & GfxExt) Then
-            frmEditor_Events.picShowPic.Width =
-                Drawing.Image.FromFile(Paths.Graphics & "pictures\" & Sprite & GfxExt).Width
-            frmEditor_Events.picShowPic.Height =
-                Drawing.Image.FromFile(Paths.Graphics & "pictures\" & Sprite & GfxExt).Height
-            frmEditor_Events.picShowPic.BackgroundImage =
-                Drawing.Image.FromFile(Paths.Graphics & "pictures\" & Sprite & GfxExt)
-        End If
-    End Sub
-
+    
     Public Sub DrawNight()
         Dim x = 0
         Dim y = 0
@@ -2135,7 +1845,7 @@ Module C_Graphics
                                                 (ConvertMapX(tile.X * 32) - (LightGfx.Size.X / 2 * LightSprite.Scale.X) + 16),
                                                 (ConvertMapY(tile.Y * 32) - (LightGfx.Size.Y / 2 * LightSprite.Scale.Y) + 16))
                                         Dim dist = CByte(((Math.Abs(x - tile.X) + Math.Abs(y - tile.Y))))
-                                        LightSprite.Color = New Color(0, 0, 0, 255)
+                                        LightSprite.Color = New SFML.Graphics.Color(0, 0, 0, 255)
                                         Window.Draw(LightSprite, New RenderStates(BlendMode.Multiply))
                                     Next
 
@@ -2158,7 +1868,7 @@ Module C_Graphics
                                         LightDynamicSprite.Position = New Vector2f((ConvertMapX(tile.X * 32)),
                                                                                    (ConvertMapY(tile.Y * 32)))
                                         Dim dist = CByte(((Math.Abs(x - tile.X) + Math.Abs(y - tile.Y))))
-                                        LightDynamicSprite.Color = New Color(0, 0, 0,
+                                        LightDynamicSprite.Color = New SFML.Graphics.Color(0, 0, 0,
                                                                              CByte(Clamp((alphaBump * dist), 0, 255)))
                                         Window.Draw(LightDynamicSprite, New RenderStates(BlendMode.Multiply))
                                     Next
@@ -2170,7 +1880,7 @@ Module C_Graphics
                                                             })
                                 End If
                             Else
-                                LightSprite.Color = Color.Red
+                                LightSprite.Color = SFML.Graphics.Color.Red
                                 Dim scale = New Vector2f()
 
                                 If Map.Tile(x, y).Data2 = 1 Then
@@ -2211,7 +1921,7 @@ Module C_Graphics
                             New Vector2f((ConvertMapX(tile.X * 32) - (LightGfx.Size.X / 2 * LightSprite.Scale.X) + 16),
                                          (ConvertMapY(tile.Y * 32) - (LightGfx.Size.Y / 2 * LightSprite.Scale.Y) + 16))
                         Dim dist = CByte(((Math.Abs(x - tile.X) + Math.Abs(y - tile.Y))))
-                        LightSprite.Color = New Color(0, 0, 0, 255)
+                        LightSprite.Color = New SFML.Graphics.Color(0, 0, 0, 255)
                         Window.Draw(LightSprite, New RenderStates(BlendMode.Multiply))
                     Else
                         Dim alphaBump As Byte
@@ -2226,7 +1936,7 @@ Module C_Graphics
                         LightDynamicSprite.Scale = scale
                         LightDynamicSprite.Position = New Vector2f((ConvertMapX(tile.X * 32)), (ConvertMapY(tile.Y * 32)))
                         Dim dist = CByte(((Math.Abs(x - tile.X) + Math.Abs(y - tile.Y))))
-                        LightDynamicSprite.Color = New Color(0, 0, 0, CByte(Clamp((alphaBump * dist), 0, 255)))
+                        LightDynamicSprite.Color = New SFML.Graphics.Color(0, 0, 0, CByte(Clamp((alphaBump * dist), 0, 255)))
                         Window.Draw(LightDynamicSprite, New RenderStates(BlendMode.Multiply))
                     End If
                 Next
@@ -2236,101 +1946,13 @@ Module C_Graphics
         Dim x2 = ConvertMapX(Player(MyIndex).X * 32) + 56 + Player(MyIndex).XOffset - CDbl(LightGfxInfo.Width) / 2
         Dim y2 = ConvertMapY(Player(MyIndex).Y * 32) + 56 + Player(MyIndex).YOffset - CDbl(LightGfxInfo.Height) / 2
         LightSprite.Position = New Vector2f(CSng(x2), CSng(y2))
-        LightSprite.Color = Color.Red
+        LightSprite.Color = SFML.Graphics.Color.Red
         LightSprite.Scale = New Vector2f(0.7F, 0.7F)
         Window.Draw(LightSprite, New RenderStates(BlendMode.Multiply))
         NightSprite = New Sprite(NightGfx)
         Window.Draw(NightSprite)
     End Sub
-
-    Friend Sub EditorSkill_DrawIcon()
-        Dim skillNum As Integer
-        skillNum = frmEditor_Skill.nudIcon.Value
-
-        If skillNum < 1 Or skillNum > NumItems Then
-            frmEditor_Skill.picSprite.BackgroundImage = Nothing
-            Exit Sub
-        End If
-
-        If File.Exists(Paths.Graphics & "Skills\" & skillNum & GfxExt) Then
-            frmEditor_Skill.picSprite.BackgroundImage = Drawing.Image.FromFile(Paths.Graphics & "Skills\" & skillNum & GfxExt)
-        Else
-            frmEditor_Skill.picSprite.BackgroundImage = Nothing
-        End If
-    End Sub
-
-    Friend Sub EditorAnim_DrawSprite()
-        With frmEditor_Animation
-            ProcessAnimation(.nudSprite0, .nudFrameCount0, .nudLoopTime0, 0, EditorAnimation_Anim1, .picSprite0)
-            ProcessAnimation(.nudSprite1, .nudFrameCount1, .nudLoopTime1, 1, EditorAnimation_Anim2, .picSprite1)
-        End With
-    End Sub
-
-    Public Sub ProcessAnimation(animationControl As NumericUpDown, 
-                            frameCountControl As NumericUpDown,
-                            loopCountControl As NumericUpDown,
-                            animationTimerIndex As Integer, 
-                            animationDisplay As RenderWindow, 
-                            backgroundColorControl As PictureBox)
     
-        ' Retrieve the animation number and check its validity
-        Dim animationNum As Integer = animationControl.Value
-        If animationNum <= 0 Or animationNum > NumAnimations Then
-            animationDisplay.Clear(ToSfmlColor(backgroundColorControl.BackColor))
-            animationDisplay.Display()
-            Exit Sub
-        End If
-
-        ' Get dimensions and column count from controls and graphic info
-        Dim totalWidth As Integer = AnimationGfxInfo(animationNum).Width
-        Dim totalHeight As Integer = AnimationGfxInfo(animationNum).Height
-        Dim columns As Integer = frameCountControl.Value
-
-        ' Validate columns to avoid division by zero
-        If columns <= 0 Then Exit Sub
-
-        ' Calculate frame dimensions
-        Dim frameWidth As Integer = totalWidth / columns
-
-        ' Assuming square frames for simplicity (adjust if frames are not square)
-        Dim frameHeight As Integer = frameWidth
-
-        Dim rows As Integer 
-
-        ' Calculate the number of rows and total frame count
-        If frameHeight > 0 Then
-            rows = totalHeight / frameHeight
-
-        End If
-
-        Dim frameCount As Integer = rows * columns
-
-        ' Retrieve loop timing and check frame rendering necessity
-        Dim looptime As Integer = loopCountControl.Value
-        If AnimEditorTimer(animationTimerIndex) + looptime <= GetTickCount() Then
-            If AnimEditorFrame(animationTimerIndex) >= frameCount Then
-                AnimEditorFrame(animationTimerIndex) = 1 ' Reset to the first frame if it exceeds the count
-            Else
-                AnimEditorFrame(animationTimerIndex) += 1
-            End If
-            AnimEditorTimer(animationTimerIndex) = GetTickCount()
-
-            ' Render the frame if necessary
-            If frameCountControl.Value > 0 Then
-                Dim frameIndex As Integer = AnimEditorFrame(animationTimerIndex) - 1
-                Dim column As Integer = frameIndex Mod columns
-                Dim row As Integer = frameIndex \ columns
-
-                ' Calculate the source rectangle for the texture
-                Dim sRECT As New Rectangle(column * frameWidth, row * frameHeight, frameWidth, frameHeight)
-
-                animationDisplay.Clear(ToSfmlColor(backgroundColorControl.BackColor))
-                RenderTexture(animationNum, GfxType.Animation, animationDisplay, 0, 0, sRECT.X, sRECT.Y, frameWidth, frameHeight, frameWidth, frameHeight)
-                animationDisplay.Display()
-            End If
-        End If
-    End Sub
-
     Public flickerRandom As Random = New Random()
 
     Private Function RandomNumberBetween(minValue As Double, maxValue As Double) As Double
@@ -2582,7 +2204,7 @@ Module C_Graphics
             ' Draw the numbers
             sS = Str(i)
             If i = MAX_HOTBAR Then sS = "0"
-            RenderText(sS, Window, xO + 4, yO + 19, Color.White, Color.White)
+            RenderText(sS, Window, xO + 4, yO + 19, SFML.Graphics.Color.White, SFML.Graphics.Color.White)
         Next
     End Sub
 

@@ -5,17 +5,6 @@ Imports Core
 Module C_Items
 
 #Region "Database"
-
-    Friend Sub CheckItems()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Items\" & i & GfxExt)
-            NumItems = NumItems + 1
-            i = i + 1
-        End While
-    End Sub
-
     Friend Sub ClearItem(index As Integer)
         Item(index) = Nothing
         For X = 0 To StatType.Count - 1

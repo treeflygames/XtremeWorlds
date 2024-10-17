@@ -1,4 +1,5 @@
-﻿Imports Core
+﻿Imports System.Drawing
+Imports Core
 Imports Mirage.Sharp.Asfw.IO.Encryption
 
 Module C_Globals
@@ -198,6 +199,17 @@ Module C_Globals
     Public MapEditorHealType As Integer
     Public MapEditorHealAmount As Integer
     Public MapEditorSlideDir As Integer
+    
+    Public GameDestroyed As Boolean
+
+    Public VbKeyRight As Boolean
+    Public VbKeyLeft As Boolean
+    Public VbKeyUp As Boolean
+    Public VbKeyDown As Boolean
+    Public VbKeyShift As Boolean
+    Public VbKeyControl As Boolean
+    Public VbKeyAlt As Boolean
+    Public VbKeyEnter As Boolean
 
     Public Camera As Rectangle
     Public TileView As RectStruct

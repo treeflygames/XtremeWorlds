@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Forms
+Imports SFML.Window
 
 Public Structure ChatCursor
     Friend X As Integer
@@ -15,20 +16,21 @@ Public Structure ChatData
     Friend CurrentMessage As String
     Friend Cursor As ChatCursor
 
-    Friend Function ProcessCharacter(ByRef evt As KeyPressEventArgs) As Boolean
+    Friend Function ProcessCharacter(ByRef evt As SFML.Window.TextEventArgs) As Boolean
         If Not Active Then
             Return False
         End If
 
-        If CurrentMessage = Nothing Then CurrentMessage = ""
+        If CurrentMessage Is Nothing Then CurrentMessage = ""
 
-        Select Case evt.KeyChar
-            Case vbBack
+        Select Case evt.Unicode
+            Case ChrW(&H8) ' Backspace key
+                ' Ignore backspace in this function, handle it in ProcessKey
                 Exit Select
 
             Case Else
-                CurrentMessage = CurrentMessage + evt.KeyChar
-                If (CurrentMessage.Length > MessageLimit) Then
+                CurrentMessage += evt.Unicode
+                If CurrentMessage.Length > MessageLimit Then
                     CurrentMessage = CurrentMessage.Substring(0, MessageLimit)
                 End If
         End Select
@@ -36,78 +38,64 @@ Public Structure ChatData
         Return True
     End Function
 
+
     Friend Function ProcessKey(ByRef e As SFML.Window.KeyEventArgs) As Boolean
         If Not Active Then
-            If (e.Code = Keys.Enter) Then
+            If e.Code = SFML.Window.Keyboard.Key.Enter Then
                 Active = True
                 Return True
             End If
-
             Return False
         End If
 
-        If CurrentMessage = Nothing Then CurrentMessage = ""
+        If CurrentMessage Is Nothing Then CurrentMessage = ""
 
         Select Case e.Code
-            Case Keys.Enter
+            Case SFML.Window.Keyboard.Key.Enter
                 History.Add(CurrentMessage)
-                If (History.Count > HistoryLimit) Then
+                If History.Count > HistoryLimit Then
                     History.RemoveRange(0, History.Count - HistoryLimit)
                 End If
                 Cursor.Y = History.Count
                 Active = False
-                Exit Select
 
-            Case Keys.Back
+            Case SFML.Window.Keyboard.Key.Backspace
                 If CurrentMessage.Length > 0 Then
                     CurrentMessage = CurrentMessage.Remove(CurrentMessage.Length - 1)
                 End If
-                Exit Select
 
-            Case Keys.Left
+            Case SFML.Window.Keyboard.Key.Left
                 Cursor.X = Math.Max(0, Cursor.X - 1)
-                Exit Select
 
-            Case Keys.Right
+            Case SFML.Window.Keyboard.Key.Right
                 Cursor.X = Math.Min(CurrentMessage.Length, Cursor.X + 1)
-                Exit Select
 
-            Case Keys.Down
+            Case SFML.Window.Keyboard.Key.Down
                 If History.Count = 0 Then Exit Select
                 Cursor.Y = Math.Min(History.Count, Cursor.Y + 1)
-                If (Cursor.Y = History.Count) Then
-                    CurrentMessage = CachedMessage
-                Else
-                    CurrentMessage = History(Cursor.Y)
-                End If
-                Exit Select
+                CurrentMessage = If(Cursor.Y = History.Count, CachedMessage, History(Cursor.Y))
 
-            Case Keys.Up
+            Case SFML.Window.Keyboard.Key.Up
                 If History.Count = 0 Then Exit Select
-                If (Cursor.Y = History.Count) Then
+                If Cursor.Y = History.Count Then
                     CachedMessage = CurrentMessage
                 End If
-
                 Cursor.Y = Math.Max(0, Cursor.Y - 1)
                 CurrentMessage = History(Cursor.Y)
-                Exit Select
+
+            Case SFML.Window.Keyboard.Key.V
+                If SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl) OrElse
+                   SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.RControl) Then
+                    CurrentMessage += Clipboard.Contents()
+                End If
 
             Case Else
-                If e.Code = Keys.V And e.Control = Keys.Control Then
-                    CurrentMessage = CurrentMessage + Clipboard.GetText
-                End If
-
-                Dim keyName = [Enum].GetName(GetType(Keys), e.Code)
-                If (keyName.Length = 1) Then
-                    Cursor.Y = History.Count
-                End If
-
-                CachedMessage = CurrentMessage
-                Exit Select
+                ' Handle other keys if needed
         End Select
 
         Return True
     End Function
+
 
 End Structure
 

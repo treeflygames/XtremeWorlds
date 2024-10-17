@@ -1,5 +1,6 @@
 ﻿
 Imports System.Diagnostics.Eventing.Reader
+Imports System.Drawing
 Imports System.Management
 Imports System.Reflection.Metadata.Ecma335
 Imports System.Runtime.Versioning
@@ -9,7 +10,7 @@ Imports System.Windows.Forms.Design.AxImporter
 Imports Core
 Imports Core.Enum
 Imports Core.Types
-Imports SFML.Graphics
+
 Module C_Interface
     ' GUI
     Public Windows() As WindowStruct
@@ -23,7 +24,7 @@ Module C_Interface
     Private zOrder_Win As Long
     Private zOrder_Con As Long
 
-    Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, color As Color, tType As EntityType, ByRef design() As Long, ByRef image() As Long, ByRef type() As GfxType, ByRef callback() As Action,
+    Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, color As SFML.Graphics.Color, tType As EntityType, ByRef design() As Long, ByRef image() As Long, ByRef type() As GfxType, ByRef callback() As Action,
        Optional left As Long = 0, Optional top As Long = 0, Optional width As Long = 0, Optional height As Long = 0, Optional visible As Boolean = True, Optional canDrag As Boolean = False, Optional Max As Long = 0, Optional Min As Long = 0, Optional value As Long = 0, Optional text As String = "",
        Optional align As Byte = 0, Optional font As String = "Georgia.ttf", Optional alpha As Long = 255, Optional clickThrough As Boolean = False, Optional xOffset As Long = 0, Optional yOffset As Long = 0, Optional zChange As Byte = 0, Optional censor As Boolean = False, Optional icon As Long = 0,
        Optional onDraw As Action = Nothing, Optional isActive As Boolean = True, Optional tooltip As String = "", Optional group As Long = 0, Optional locked As Boolean = False, Optional length As Byte = NAME_LENGTH)
@@ -228,9 +229,9 @@ Module C_Interface
 
                     ' render text
                     If Not .Censor Then
-                        RenderText(.Text & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, .Color, Color.Black)
+                        RenderText(.Text & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, .Color, SFML.Graphics.Color.Black)
                     Else
-                        RenderText(CensorText(.Text) & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, Color.White, Color.Black)
+                        RenderText(CensorText(.Text) & taddText, Window, .Left + xO + .xOffset, .Top + yO + .yOffset, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
                     End If
 
                 ' buttons
@@ -274,7 +275,7 @@ Module C_Interface
                         hor_centre = .Left + xO + xOffset + ((.Width - width - xOffset) \ 2) - 2
                     End If
 
-                    RenderText(.Text, Window, hor_centre, ver_centre, .Color, Color.Black)
+                    RenderText(.Text, Window, hor_centre, ver_centre, .Color, SFML.Graphics.Color.Black)
 
                 ' labels
                 Case EntityType.Label
@@ -290,12 +291,12 @@ Module C_Interface
                                     count = UBound(textArray)
 
                                     For i = 1 To count
-                                        RenderText(textArray(i), Window, .Left - xO, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, .Left - xO, .Top + yO + yOffset, .Color, SFML.Graphics.Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' just one line
-                                    RenderText(.Text, Window, .Left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, .Left + xO, .Top + yO, .Color, SFML.Graphics.Color.Black)
                                 End If
 
                             Case AlignmentType.Right
@@ -309,13 +310,13 @@ Module C_Interface
 
                                     For i = 1 To count
                                         left = .Left + .Width - TextWidth(textArray(i))
-                                        RenderText(textArray(i), Window, left + xO - FontSize, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, left + xO - FontSize, .Top + yO + yOffset, .Color, SFML.Graphics.Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' just one line
                                     left = .Left + .Width - TextWidth(.Text)
-                                    RenderText(.Text, Window, left + xO - FontSize, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, left + xO - FontSize, .Top + yO, .Color, SFML.Graphics.Color.Black)
                                 End If
 
                             Case AlignmentType.Center
@@ -329,13 +330,13 @@ Module C_Interface
 
                                     For i = 1 To count
                                         left = .Left + (.Width \ 2) - (TextWidth(textArray(i)) \ 2) - 4
-                                        RenderText(textArray(i), Window, left + xO, .Top + yO + yOffset, .Color, Color.Black)
+                                        RenderText(textArray(i), Window, left + xO, .Top + yO + yOffset, .Color, SFML.Graphics.Color.Black)
                                         yOffset = yOffset + 14
                                     Next
                                 Else
                                     ' Just one line
                                     left = .Left + (.Width \ 2) - (TextWidth(.Text) \ 2) - FontSize
-                                    RenderText(.Text, Window, left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.Text, Window, left + xO, .Top + yO, .Color, SFML.Graphics.Color.Black)
                                 End If
                         End Select
                     End If
@@ -361,7 +362,7 @@ Module C_Interface
                             End Select
 
                             ' render text
-                            RenderText(.Text, Window, left, .Top + yO, .Color, Color.Black)
+                            RenderText(.Text, Window, left, .Top + yO, .Color, SFML.Graphics.Color.Black)
 
                         Case DesignType.ChkChat
                             If .Value = 0 Then .Alpha = 150 Else .Alpha = 255
@@ -371,7 +372,7 @@ Module C_Interface
 
                             ' render text
                             left = .Left + 22 - (TextWidth(.Text) / 2) + xO
-                            RenderText(.Text, Window, left, .Top + yO + 4, .Color, Color.Black)
+                            RenderText(.Text, Window, left, .Top + yO + 4, .Color, SFML.Graphics.Color.Black)
 
                         Case DesignType.ChkBuying
                             If .Value = 0 Then sprite = 58 Else sprite = 56
@@ -392,7 +393,7 @@ Module C_Interface
                             ' render the text
                             If .Value > 0 Then
                                 If .Value <= UBound(.List) Then
-                                    RenderText(.List(.Value), Window, .Left + xO, .Top + yO, .Color, Color.Black)
+                                    RenderText(.List(.Value), Window, .Left + xO, .Top + yO, .Color, SFML.Graphics.Color.Black)
                                 End If
                             End If
 
@@ -441,9 +442,9 @@ Module C_Interface
                             left = x + (.Width \ 2) - (TextWidth(.List(i)) \ 2)
 
                             If i = .Value Or i = .Group Then
-                                RenderText(.List(i), Window, left, y, Color.White, Color.Black)
+                                RenderText(.List(i), Window, left, y, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
                             Else
-                                RenderText(.List(i), Window, left, y, Color.White, Color.Black)
+                                RenderText(.List(i), Window, left, y, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
                             End If
                             y = y + 16
                         Next
@@ -465,7 +466,7 @@ Module C_Interface
                     RenderTexture(.Icon, GfxType.Item, Window, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
 
                     ' render the caption
-                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, Color.White, Color.Black)
+                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
 
                 Case DesignType.Win_NoBar
                     ' render window
@@ -480,7 +481,7 @@ Module C_Interface
                     RenderTexture(.Icon, GfxType.Item, Window, .Left + .xOffset, .Top - 16 + .yOffset, 0, 0, .Width, .Height, .Width, .Height)
 
                     ' render the caption
-                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, Color.White, Color.Black)
+                    RenderText(Trim$(.Text), Window, .Left + 32, .Top + 4, SFML.Graphics.Color.White, SFML.Graphics.Color.Black)
 
                 Case DesignType.Win_Desc
                     RenderDesign(DesignType.Win_Desc, .Left, .Top, .Width, .Height)
@@ -834,7 +835,7 @@ Module C_Interface
         callback(EntState.Enter) = callback_enter
 
         ' create the textbox
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.TextBox, design, image, type, callback, left, top, width, height, visible, , , , , text, align, font, alpha, , xOffset, yOffset,  , censor, icon, , isActive, , , , length)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.TextBox, design, image, type, callback, left, top, width, height, visible, , , , , text, align, font, alpha, , xOffset, yOffset,  , censor, icon, , isActive, , , , length)
     End Sub
 
     Public Sub CreatePictureBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long,
@@ -865,7 +866,7 @@ Module C_Interface
         callback(EntState.DblClick) = callback_dblclick
 
         ' create the box
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.PictureBox, design, image, type, callback, left, top, width, height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.PictureBox, design, image, type, callback, left, top, width, height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw)
     End Sub
 
     Public Sub CreateButton(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long,
@@ -902,10 +903,10 @@ Module C_Interface
         callback(EntState.DblClick) = callback_dblclick
 
         ' create the button 
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.Button, design, image, type, callback, left, top, width, height, visible, , , , , text, , font, , alpha, xOffset, yOffset, , censor, icon, , , tooltip, , locked)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.Button, design, image, type, callback, left, top, width, height, visible, , , , , text, , font, , alpha, xOffset, yOffset, , censor, icon, , , tooltip, , locked)
     End Sub
 
-    Public Sub CreateLabel(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, text As String, font As String, color As Color,
+    Public Sub CreateLabel(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, text As String, font As String, color As SFML.Graphics.Color,
        Optional align As Byte = AlignmentType.Left, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional clickThrough As Boolean = False, Optional censor As Boolean = False,
        Optional ByRef callback_norm As Action = Nothing, Optional ByRef callback_hover As Action = Nothing, Optional ByRef callback_mousedown As Action = Nothing, Optional ByRef callback_mousemove As Action = Nothing, Optional ByRef callback_dblclick As Action = Nothing, Optional locked As Boolean = True)
 
@@ -922,7 +923,7 @@ Module C_Interface
         callback(EntState.DblClick) = callback_dblclick
 
         ' create the label
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.Label, design, image, type, callback, left, top, width, height, visible, , , , , text, align, font, , alpha, clickThrough, , , censor, , , , , , locked)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.Label, design, image, type, callback, left, top, width, height, visible, , , , , text, align, font, , alpha, clickThrough, , , censor, , , , , , locked)
     End Sub
 
     Public Sub CreateCheckbox(winNum As Long, name As String, left As Long, top As Long, width As Long, Optional height As Long = 15, Optional value As Long = 0, Optional text As String = "", Optional font As String = Georgia,
@@ -946,7 +947,7 @@ Module C_Interface
         callback(EntState.DblClick) = callback_dblclick
 
         ' create the box
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.Checkbox, design, image, type, callback, left, top, width, height, visible, , , , value, text, align, font, , alpha, , , , censor, , , , , group)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.Checkbox, design, image, type, callback, left, top, width, height, visible, , , , value, text, align, font, , alpha, , , , censor, , , , , group)
     End Sub
 
     Public Sub CreateComboBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, design As Long)
@@ -959,7 +960,7 @@ Module C_Interface
         type(0) = GfxType.Design
 
         ' create the box
-        CreateEntity(winNum, zOrder_Con, name, Color.White, EntityType.Combobox, theDesign, image, type, callback, left, top, width, height)
+        CreateEntity(winNum, zOrder_Con, name, SFML.Graphics.Color.White, EntityType.Combobox, theDesign, image, type, callback, left, top, width, height)
     End Sub
 
     Public Function GetWindowIndex(winName As String) As Long
@@ -1109,8 +1110,8 @@ Module C_Interface
         CreateButton(WindowCount, "btnExit", 142, 134, 67, 22, "Exit", Arial, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf DestroyGame))
 
         ' Labels
-        CreateLabel(WindowCount, "lblUsername", 72, 39, 142, FontSize, "Username", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblPassword", 72, 75, 142, FontSize, "Password", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblUsername", 72, 39, 142, FontSize, "Username", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblPassword", 72, 75, 142, FontSize, "Password", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Textboxes
         If Types.Settings.SaveUsername Then
@@ -1163,9 +1164,9 @@ Module C_Interface
         CreateButton(WindowCount, "btnExit", 142, 152, 67, 22, "Back", Arial, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnReturnMain_Click))
 
         ' Labels
-        CreateLabel(WindowCount, "lblUsername", 66, 39, 142, FontSize, "Username", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblPassword", 66, 75, 142, FontSize, "Password", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblRetypePassword", 66, 111, 142, FontSize, "Retype Password", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblUsername", 66, 39, 142, FontSize, "Username", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblPassword", 66, 75, 142, FontSize, "Password", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblRetypePassword", 66, 111, 142, FontSize, "Retype Password", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
         'CreateLabel(WindowCount, "lblCode", 66, 147, 142, FontSize, "Secret Code", Arial, AlignmentType.Center)
         'CreateLabel(WindowCount, "lblCaptcha", 66, 183, 142, FontSize, "Captcha", Arial, AlignmentType.Center)
 
@@ -1199,14 +1200,14 @@ Module C_Interface
 
         ' Name
         CreatePictureBox(WindowCount, "picShadow_1", 29, 42, 124, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblName", 29, 39, 124, FontSize, "Name", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblName", 29, 39, 124, FontSize, "Name", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Textbox
         CreateTextbox(WindowCount, "txtName", 29, 55, 124, 19, , Arial, AlignmentType.Left, , , , 5, 3, , , , DesignType.TextWhite, DesignType.TextWhite, DesignType.TextWhite)
 
         ' Sex
         CreatePictureBox(WindowCount, "picShadow_2", 29, 85, 124, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblGender", 29, 82, 124, FontSize, "Gender", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblGender", 29, 82, 124, FontSize, "Gender", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Checkboxes
         CreateCheckbox(WindowCount, "chkMale", 29, 103, 55, , 1, "Male", Arial, AlignmentType.Center, , , DesignType.ChkNorm, , , , , New Action(AddressOf chkNewChar_Male))
@@ -1218,7 +1219,7 @@ Module C_Interface
 
         ' Sprite
         CreatePictureBox(WindowCount, "picShadow_3", 175, 42, 76, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblSprite", 175, 39, 76, FontSize, "Sprite", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblSprite", 175, 39, 76, FontSize, "Sprite", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Scene
         CreatePictureBox(WindowCount, "picScene", 165, 55, 96, 96, , , , , 11, 11, 11, , , , , , , , , , New Action(AddressOf NewChar_OnDraw))
@@ -1249,11 +1250,11 @@ Module C_Interface
 
         ' Names
         CreatePictureBox(WindowCount, "picShadow_1", 22, 41, 98, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblCharName_1", 22, 37, 98, FontSize, "Blank Slot", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblCharName_1", 22, 37, 98, FontSize, "Blank Slot", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
         CreatePictureBox(WindowCount, "picShadow_2", 132, 41, 98, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblCharName_2", 132, 37, 98, FontSize, "Blank Slot", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblCharName_2", 132, 37, 98, FontSize, "Blank Slot", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
         CreatePictureBox(WindowCount, "picShadow_3", 242, 41, 98, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblCharName_3", 242, 37, 98, FontSize, "Blank Slot", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblCharName_3", 242, 37, 98, FontSize, "Blank Slot", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Scenery Boxes
         CreatePictureBox(WindowCount, "picScene_1", 23, 55, 96, 96, , , , , 11, 11, 11)
@@ -1286,11 +1287,11 @@ Module C_Interface
         CreateButton(WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 5, 16, 16, , , , 8, 9, 10, , , , , , , , New Action(AddressOf btnJobs_Close))
 
         ' Parchment
-        CreatePictureBox(WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment, , , , , , , New Action(AddressOf Jobs_DrawFace))
+        CreatePictureBox(WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment, , , , , , , New Action(AddressOf Jobs_DrawCharacter))
 
         ' Job Name
         CreatePictureBox(WindowCount, "picShadow", 183, 42, 98, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblClassName", 183, 39, 98, FontSize, "Warrior", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblClassName", 183, 39, 98, FontSize, "Warrior", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Select Buttons
         CreateButton(WindowCount, "btnLeft", 171, 40, 11, 13, , , , 12, 14, 16, , , , , , , , New Action(AddressOf btnJobs_Left))
@@ -1324,14 +1325,14 @@ Module C_Interface
 
         ' Header
         CreatePictureBox(WindowCount, "picShadow", 103, 44, 144, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblHeader", 103, 41, 144, FontSize, "Header", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblHeader", 103, 41, 144, FontSize, "Header", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Input
         CreateTextbox(WindowCount, "txtInput", 93, 75, 162, 18, , Arial, AlignmentType.Center, , , , 5, 2, , , , DesignType.TextBlack, DesignType.TextBlack, DesignType.TextBlack)
 
         ' Labels
-        CreateLabel(WindowCount, "lblBody_1", 15, 60, 314, FontSize, "Invalid username or password.", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblBody_2", 15, 75, 314, FontSize, "Please try again!", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblBody_1", 15, 60, 314, FontSize, "Invalid username or password.", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblBody_2", 15, 75, 314, FontSize, "Please try again!", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Buttons
         CreateButton(WindowCount, "btnYes", 104, 98, 68, 24, "Yes", Arial, , , , , False, , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf Dialogue_Yes))
@@ -1397,22 +1398,22 @@ Module C_Interface
         
         ' Labels
         CreatePictureBox(windowCount, "picShadow", 36, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblYourTrade", 36, 27, 142, 9, "Robin's Offer", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblYourTrade", 36, 27, 142, 9, "Robin's Offer", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
         CreatePictureBox(windowCount, "picShadow", 36 + 200, 30, 142, 9, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblTheirTrade", 36 + 200, 27, 142, 9, "Richard's Offer", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblTheirTrade", 36 + 200, 27, 142, 9, "Richard's Offer", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
         
         ' Buttons
         CreateButton(windowCount, "btnAccept", 134, 340, 68, 24, "Accept", Georgia, , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , New Action(AddressOf btnTrade_Accept))
         CreateButton(windowCount, "btnDecline", 210, 340, 68, 24, "Decline", Georgia, , , , , , , DesignType.Red, DesignType.Red_Hover, DesignType.Red_Click, , , New Action(AddressOf btnTrade_Close))
         
         ' Labels
-        CreateLabel(windowCount, "lblStatus", 114, 322, 184, FontSize, "", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblStatus", 114, 322, 184, FontSize, "", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
         
         ' Amounts
-        CreateLabel(windowCount, "lblBlank", 25, 330, 100, FontSize, "Total Value", Georgia, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblBlank", 285, 330, 100, FontSize, "Total Value", Georgia, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblYourValue", 25, 344, 100, FontSize, "52,812g", Georgia, Color.White, AlignmentType.Center)
-        CreateLabel(windowCount, "lblTheirValue", 285, 344, 100, FontSize, "12,531g", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 25, 330, 100, FontSize, "Total Value", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 285, 330, 100, FontSize, "Total Value", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblYourValue", 25, 344, 100, FontSize, "52,812g", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblTheirValue", 285, 344, 100, FontSize, "12,531g", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
         
         ' Item Containers
         CreatePictureBox(windowCount, "picYour", 14, 46, 184, 260, , , , , , , , , , , , , , New Action(AddressOf TradeMouseMove_Your), New Action(AddressOf TradeMouseMove_Your), New Action(AddressOf TradeDblClick_Your), New Action(AddressOf DrawYourTrade))
@@ -2041,7 +2042,7 @@ Module C_Interface
     ' ####################
     ' ## Jobs Window ##
     ' ####################
-    Public Sub Jobs_DrawFace()
+    Public Sub Jobs_DrawCharacter()
         Dim imageChar As Long, xO As Long, yO As Long
 
         xO = Windows(GetWindowIndex("winJob")).Window.Left
@@ -2088,7 +2089,7 @@ Module C_Interface
         y = yO + 60
         For I = 1 To count
             x = xO + 118 + (200 \ 2) - (TextWidth(textArray(I)) \ 2)
-            RenderText(textArray(I), Window, x, y, Color.White, Color.White)
+            RenderText(textArray(I), Window, x, y, SFML.Graphics.Color.White, SFML.Graphics.Color.White)
             y = y + 14
         Next
     End Sub
@@ -2975,9 +2976,9 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picExperience", 16, 45, 74, 14, , , , , 23, 23, 23)
 
         ' Labels
-        CreateLabel(WindowCount, "lblHP", 15, 14, 209, FontSize, "999/999", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblMP", 15, 31, 209, FontSize, "999/999", Arial, Color.White, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblEXP", 15, 48, 209, FontSize, "999/999", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblHP", 15, 14, 209, FontSize, "999/999", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblMP", 15, 31, 209, FontSize, "999/999", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblEXP", 15, 48, 209, FontSize, "999/999", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
     End Sub
 
     Public Sub CreateWindow_Chat()
@@ -3034,7 +3035,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Chat Label
-        CreateLabel(WindowCount, "lblMsg", 12, 140, 286, 25, "Press 'Enter' to open chatbox.", Georgia, Color.White)
+        CreateLabel(WindowCount, "lblMsg", 12, 140, 286, 25, "Press 'Enter' to open chatbox.", Georgia, SFML.Graphics.Color.White)
     End Sub
 
     Public Sub CreateWindow_Hotbar()
@@ -3078,7 +3079,7 @@ Module C_Interface
 
         ' Gold amount
         CreatePictureBox(WindowCount, "picBlank", 8, 293, 186, 18, , , , , 67, 67, 67)
-        CreateLabel(WindowCount, "lblGold", 42, 296, 100, FontSize, "g", Georgia, Color.Yellow)
+        CreateLabel(WindowCount, "lblGold", 42, 296, 100, FontSize, "g", Georgia, SFML.Graphics.Color.Yellow)
 
         ' Drop
         CreateButton(WindowCount, "btnDrop", 155, 294, 38, 16, "Drop" , , , , , , , , DesignType.Green, DesignType.Green_Hover, DesignType.Green_Click, , , , , , 5, 3)
@@ -3110,24 +3111,24 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picWhiteBox", 13, 154, 148, 19, , , , , , , , DesignType.TextWhite, DesignType.TextWhite, DesignType.TextWhite)
 
         ' Labels
-        CreateLabel(WindowCount, "lblName", 18, 36, 147, FontSize, "Name", Arial, Color.White)
-        CreateLabel(WindowCount, "lblJob", 18, 56, 147, FontSize, "Job", Arial, Color.White)
-        CreateLabel(WindowCount, "lblLevel", 18, 76, 147, FontSize, "Level", Arial, Color.White)
-        CreateLabel(WindowCount, "lblGuild", 18, 96, 147, FontSize, "Guild", Arial, Color.White)
-        CreateLabel(WindowCount, "lblHealth", 18, 116, 147, FontSize, "Health", Arial, Color.White)
-        CreateLabel(WindowCount, "lblSpirit", 18, 136, 147, FontSize, "Spirit", Arial, Color.White)
-        CreateLabel(WindowCount, "lblExperience", 18, 156, 147, FontSize, "Experience", Arial, Color.White)
-        CreateLabel(WindowCount, "lblName2", 13, 36, 147, FontSize, "Name", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblJob2", 13, 56, 147, FontSize, "", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblLevel2", 13, 76, 147, FontSize, "Level", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblGuild2", 13, 96, 147, FontSize, "Guild", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblHealth2", 13, 116, 147, FontSize, "Health", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblSpirit2", 13, 136, 147, FontSize, "Spirit", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblExperience2", 13, 156, 147, FontSize, "Experience", Arial, Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblName", 18, 36, 147, FontSize, "Name", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblJob", 18, 56, 147, FontSize, "Job", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblLevel", 18, 76, 147, FontSize, "Level", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblGuild", 18, 96, 147, FontSize, "Guild", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblHealth", 18, 116, 147, FontSize, "Health", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblSpirit", 18, 136, 147, FontSize, "Spirit", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblExperience", 18, 156, 147, FontSize, "Experience", Arial, SFML.Graphics.Color.White)
+        CreateLabel(WindowCount, "lblName2", 13, 36, 147, FontSize, "Name", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblJob2", 13, 56, 147, FontSize, "", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblLevel2", 13, 76, 147, FontSize, "Level", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblGuild2", 13, 96, 147, FontSize, "Guild", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblHealth2", 13, 116, 147, FontSize, "Health", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblSpirit2", 13, 136, 147, FontSize, "Spirit", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblExperience2", 13, 156, 147, FontSize, "Experience", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
 
         ' Attributes
         CreatePictureBox(WindowCount, "picShadow", 18, 176, 138, 9, , , , , , , , DesignType.BlackOval, DesignType.BlackOval, DesignType.BlackOval)
-        CreateLabel(WindowCount, "lblLabel", 18, 173, 138, FontSize, "Attributes", Arial, Color.White, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblLabel", 18, 173, 138, FontSize, "Attributes", Arial, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' Black boxes
         CreatePictureBox(WindowCount, "picBlackBox", 13, 186, 148, 19, , , , , , , , DesignType.TextBlack, DesignType.TextBlack, DesignType.TextBlack)
@@ -3138,12 +3139,12 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picBlackBox", 13, 286, 148, 19, , , , , , , , DesignType.TextBlack, DesignType.TextBlack, DesignType.TextBlack)
 
         ' Labels
-        CreateLabel(WindowCount, "lblLabel", 18, 188, 138, FontSize, "Strength", Arial, Color.Yellow)
-        CreateLabel(WindowCount, "lblLabel", 18, 208, 138, FontSize, "Vitality", Arial, Color.Yellow)
-        CreateLabel(WindowCount, "lblLabel", 18, 228, 138, FontSize, "Intelligence", Arial, Color.Yellow)
-        CreateLabel(WindowCount, "lblLabel", 18, 248, 138, FontSize, "Luck", Arial, Color.Yellow)
-        CreateLabel(WindowCount, "lblLabel", 18, 268, 138, FontSize, "Spirit", Arial, Color.Yellow)
-        CreateLabel(WindowCount, "lblLabel", 18, 288, 138, FontSize, "Stat Points", Arial, Color.Green)
+        CreateLabel(WindowCount, "lblLabel", 18, 188, 138, FontSize, "Strength", Arial, SFML.Graphics.Color.Yellow)
+        CreateLabel(WindowCount, "lblLabel", 18, 208, 138, FontSize, "Vitality", Arial, SFML.Graphics.Color.Yellow)
+        CreateLabel(WindowCount, "lblLabel", 18, 228, 138, FontSize, "Intelligence", Arial, SFML.Graphics.Color.Yellow)
+        CreateLabel(WindowCount, "lblLabel", 18, 248, 138, FontSize, "Luck", Arial, SFML.Graphics.Color.Yellow)
+        CreateLabel(WindowCount, "lblLabel", 18, 268, 138, FontSize, "Spirit", Arial, SFML.Graphics.Color.Yellow)
+        CreateLabel(WindowCount, "lblLabel", 18, 288, 138, FontSize, "Stat Points", Arial, SFML.Graphics.Color.Green)
 
         ' Buttons
         CreateButton(WindowCount, "btnStat_1", 144, 188, 15, 15, , , , 48, 49, 50, , , , , , , , New Action(AddressOf Character_SpendPoint1))
@@ -3160,12 +3161,12 @@ Module C_Interface
         CreatePictureBox(WindowCount, "btnGreyStat_5", 144, 268, 15, 15, , , , , 47, 47, 47)
 
         ' Labels
-        CreateLabel(WindowCount, "lblStat_1", 50, 188, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblStat_2", 50, 208, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblStat_3", 50, 228, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblStat_4", 50, 248, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblStat_5", 50, 268, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
-        CreateLabel(WindowCount, "lblPoints", 65, 288, 100, 15, "255", Arial, Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblStat_1", 50, 188, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblStat_2", 50, 208, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblStat_3", 50, 228, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblStat_4", 50, 248, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblStat_5", 50, 268, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
+        CreateLabel(WindowCount, "lblPoints", 65, 288, 100, 15, "255", Arial, SFML.Graphics.Color.White, AlignmentType.Right)
     End Sub
 
 
@@ -3277,7 +3278,7 @@ Module C_Interface
 
     Public Sub DrawInventory()
         Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, itemNum As Long, ItemIcon As Long, x As Long, Top As Long, Left As Long, Amount As String
-        Dim Color As Color, skipItem As Boolean, amountModifier As Long, tmpItem As Long
+        Dim Color As SFML.Graphics.Color, skipItem As Boolean, amountModifier As Long, tmpItem As Long
 
         xO = Windows(GetWindowIndex("winInventory")).Window.Left
         yO = Windows(GetWindowIndex("winInventory")).Window.Top
@@ -3379,7 +3380,7 @@ Module C_Interface
         zOrder_Con = 1
 
         ' Name
-        CreateLabel(WindowCount, "lblName", 8, 12, 177, FontSize, "Flame Sword", Arial, Color.Blue, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblName", 8, 12, 177, FontSize, "Flame Sword", Arial, SFML.Graphics.Color.Blue, AlignmentType.Center)
 
         ' Sprite box
         CreatePictureBox(WindowCount, "picSprite", 18, 32, 68, 68, , , , , , , , DesignType.DescPic, DesignType.DescPic, DesignType.DescPic, , , , , , , New Action(AddressOf Description_OnDraw))
@@ -3388,8 +3389,8 @@ Module C_Interface
         CreatePictureBox(WindowCount, "picSep", 96, 28, 1, 92, , , , , 44, 44, 44)
 
         ' Requirements
-        CreateLabel(WindowCount, "lblClass", 5, 102, 92, FontSize, "Warrior", Georgia, Color.Green, AlignmentType.Center)
-        CreateLabel(WindowCount, "lblLevel", 5, 114, 92, FontSize, "Level 20", Georgia, Color.Red, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblClass", 5, 102, 92, FontSize, "Warrior", Georgia, SFML.Graphics.Color.Green, AlignmentType.Center)
+        CreateLabel(WindowCount, "lblLevel", 5, 114, 92, FontSize, "Level 20", Georgia, SFML.Graphics.Color.Red, AlignmentType.Center)
 
         ' Bar
         CreatePictureBox(WindowCount, "picBar", 19, 114, 66, 12, False, , , , 45, 45, 45)
@@ -3432,7 +3433,7 @@ Module C_Interface
         y = 18
         count = UBound(descText)
         For I = 1 To count
-            RenderText(descText(I).Text, Window, xO + 141 - (TextWidth(descText(I).Text) \ 2), yO + y, descText(I).Color, Color.Black)
+            RenderText(descText(I).Text, Window, xO + 141 - (TextWidth(descText(I).Text) \ 2), yO + y, descText(I).Color, SFML.Graphics.Color.Black)
             y = y + 12
         Next
     End Sub
@@ -3459,7 +3460,7 @@ Module C_Interface
 
         ' General
         CreatePictureBox(windowCount, "picBlank", 35, 25, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblBlank", 35, 22, 140, 0, "General Options", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 35, 22, 140, 0, "General Options", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
     
         ' Check boxes
         CreateCheckbox(windowCount, "chkMusic", 35, 40, 80, , , "Music", Georgia, , , , DesignType.ChkNorm)
@@ -3469,7 +3470,7 @@ Module C_Interface
 
         ' Resolution
         CreatePictureBox(windowCount, "picBlank", 35, 85, 140, FontSize, , , , , , , , DesignType.Parchment, DesignType.Parchment, DesignType.Parchment)
-        CreateLabel(windowCount, "lblBlank", 35, 92, 140, FontSize, "Select Resolution", Georgia, Color.White, AlignmentType.Center)
+        CreateLabel(windowCount, "lblBlank", 35, 92, 140, FontSize, "Select Resolution", Georgia, SFML.Graphics.Color.White, AlignmentType.Center)
 
         ' combobox
         CreateComboBox(windowCount, "cmbRes", 30, 100, 150, 18, DesignType.ComboNorm)
@@ -3543,11 +3544,11 @@ Module C_Interface
         CreateCheckbox(windowCount, "chkSelling", 222, 265, 49, 20, 0, , , , ,  , DesignType.ChkSelling, , , , , New Action(AddressOf chkShopSelling))
 
         ' Labels
-        CreateLabel(windowCount, "lblName", 56, 226, 300, FontSize, "Test Item", Arial, Color.Black, AlignmentType.Left)
-        CreateLabel(windowCount, "lblCost", 56, 240, 300,  FontSize, "1000g", Arial, Color.Black, AlignmentType.Left)
+        CreateLabel(windowCount, "lblName", 56, 226, 300, FontSize, "Test Item", Arial, SFML.Graphics.Color.Black, AlignmentType.Left)
+        CreateLabel(windowCount, "lblCost", 56, 240, 300,  FontSize, "1000g", Arial, SFML.Graphics.Color.Black, AlignmentType.Left)
         
         ' Gold
-        CreateLabel(windowCount, "lblGold", 44, 269, 300, FontSize, "g", Georgia, Color.White)
+        CreateLabel(windowCount, "lblGold", 44, 269, 300, FontSize, "g", Georgia, SFML.Graphics.Color.White)
     End Sub
 
     Public Sub DrawShopBackground()

@@ -21,136 +21,65 @@ Module C_Database
     End Function
 
 #Region "Assets Check"
+    Friend Sub CheckFiles(basePath As String, ByRef numAssets As Integer)
+        Dim i As Integer = 1
+
+        While File.Exists(Path.Combine(basePath, $"{i}{GfxExt}"))
+            numAssets += 1
+            i += 1
+        End While
+    End Sub
+    
+    Friend Sub CheckItems()
+        CheckFiles(Path.Combine(Paths.Graphics, "Items"), NumItems)
+    End Sub
 
     Friend Sub CheckCharacters()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "characters\" & i & GfxExt)
-            NumCharacters = NumCharacters + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Characters"), NumCharacters)
     End Sub
 
     Friend Sub CheckPaperdolls()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "paperdolls\" & i & GfxExt)
-            NumPaperdolls = NumPaperdolls + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Paperdolls"), NumPaperdolls)
     End Sub
 
     Friend Sub CheckAnimations()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "animations\" & i & GfxExt)
-            NumAnimations = NumAnimations + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Animations"), NumAnimations)
     End Sub
 
     Friend Sub CheckSkills()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Skills\" & i & GfxExt)
-            NumSkills = NumSkills + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Skills"), NumSkills)
     End Sub
 
     Friend Sub CheckFog()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Fogs\" & i & GfxExt)
-            NumFogs = NumFogs + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Fogs"), NumFogs)
     End Sub
 
     Friend Sub CheckEmotes()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Emotes\" & i & GfxExt)
-            NumEmotes = NumEmotes + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Emotes"), NumEmotes)
     End Sub
 
     Friend Sub CheckPanoramas()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Panoramas\" & i & GfxExt)
-            NumPanorama = NumPanorama + 1
-            i = i + 1
-        End While
+        CheckFiles(Path.Combine(Paths.Graphics, "Panoramas"), NumPanorama)
     End Sub
 
     Friend Sub CheckParallax()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Parallax\" & i & GfxExt)
-            NumParallax = NumParallax + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Parallax"), NumParallax)
     End Sub
 
     Friend Sub CheckPictures()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Graphics & "Pictures\" & i & GfxExt)
-            NumPictures = NumPictures + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Graphics, "Pictures"), NumPictures)
     End Sub
 
-    Friend Sub ChecKInterface()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Gui & i & GfxExt)
-            NumInterface = NumInterface + 1
-            i = i + 1
-        End While
-
+    Friend Sub CheckInterface()
+        CheckFiles(Paths.Gui, NumInterface)
     End Sub
 
     Friend Sub CheckGradients()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Gui & "gradients\" & i & GfxExt)
-            NumGradients = NumGradients + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Gui, "gradients"), NumGradients)
     End Sub
 
     Friend Sub CheckDesigns()
-        Dim i As Integer
-        i = 1
-
-        While File.Exists(Paths.Gui & "designs\" & i & GfxExt)
-            NumDesigns = NumDesigns + 1
-            i = i + 1
-        End While
-
+        CheckFiles(Path.Combine(Paths.Gui, "designs"), NumDesigns)
     End Sub
 
     Friend Sub CacheMusic()
@@ -164,7 +93,6 @@ Module C_Database
             ReDim Preserve MusicCache(counter)
 
             MusicCache(counter) = System.IO.Path.GetFileName(FileName)
-            Application.DoEvents()
         Next
 
     End Sub
@@ -180,7 +108,6 @@ Module C_Database
             ReDim Preserve SoundCache(counter)
 
             SoundCache(counter) = System.IO.Path.GetFileName(FileName)
-            Application.DoEvents()
         Next
 
     End Sub

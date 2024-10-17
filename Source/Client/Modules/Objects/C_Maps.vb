@@ -831,7 +831,7 @@ Module C_Maps
 
                     ' Set transparency for layers if editing
                     If Editor = EditorType.Map AndAlso HideLayers Then
-                        alpha = If(i = frmEditor_Map.cmbLayers.SelectedIndex, 255, 127)
+                        'alpha = If(i = frmEditor_Map.cmbLayers.SelectedIndex, 255, 127)
                     Else
                         alpha = 255
                     End If
@@ -890,7 +890,7 @@ Module C_Maps
 
                     ' Adjust alpha transparency based on whether layers are hidden in editor mode
                     If Editor = EditorType.Map AndAlso HideLayers Then
-                        alpha = If(i = frmEditor_Map.cmbLayers.SelectedIndex, 255, 127)
+                        'alpha = If(i = frmEditor_Map.cmbLayers.SelectedIndex, 255, 127)
                     Else
                         alpha = 255
                     End If

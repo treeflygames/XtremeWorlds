@@ -1,4 +1,5 @@
-﻿Imports Mirage.Sharp.Asfw
+﻿Imports System.Drawing
+Imports Mirage.Sharp.Asfw
 Imports Core
 Imports SFML.Graphics
 Imports SFML.System

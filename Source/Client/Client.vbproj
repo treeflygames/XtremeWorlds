@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <OutputType>WinExe</OutputType>
-    <StartupObject>Client.FrmGame</StartupObject>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <MyType>WindowsForms</MyType>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ManifestCertificateThumbprint>181BBD77C201FB969E61DF100063FD42A08B2BE6</ManifestCertificateThumbprint>
-    <ManifestKeyFile>MirageWorlds.pfx</ManifestKeyFile>
+    <ManifestKeyFile>XtremeWorlds.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
     <SignManifests>false</SignManifests>
@@ -29,10 +25,6 @@
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>false</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-	<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -49,63 +41,42 @@
     <DefineConstants>CLIENT</DefineConstants>
     <DefineDebug>false</DefineDebug>
   </PropertyGroup>
+
+  <!-- Windows-Specific Properties -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <MyType>WindowsForms</MyType>
+    <OutputType>WinExe</OutputType>
+  </PropertyGroup>
+
+  <!-- Fallback Properties for macOS and Linux -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux')) Or $([MSBuild]::IsOSPlatform('OSX'))">
+    <OutputType>Exe</OutputType>
+    <DefineConstants>UNIX</DefineConstants>
+    <TargetFramework>net8.0</TargetFramework>
+    <MyType>Empty</MyType>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Remove="Embedded\**" />
     <EmbeddedResource Remove="Embedded\**" />
     <None Remove="Embedded\**" />
+    <None Update="Contents\Fonts\arial.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Contents\Fonts\georgia.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Contents\Fonts\verdana.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Remove="My Project\app.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Import Include="System.Drawing" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="My Project\Resources.Designer.vb">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Animation.Designer.vb">
-      <DependentUpon>frmEditor_Animation.vb</DependentUpon>
-    </Compile>
-	  <Compile Update="Forms\Editors\frmEditor_Job.Designer.vb">
-      <DependentUpon>frmEditor_Job.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Events.Designer.vb">
-      <DependentUpon>frmEditor_Events.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Item.Designer.vb">
-      <DependentUpon>frmEditor_Item.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Map.designer.vb">
-      <DependentUpon>frmEditor_Map.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_NPC.Designer.vb">
-      <DependentUpon>frmEditor_NPC.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Pet.Designer.vb">
-      <DependentUpon>frmEditor_Pet.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Projectile.Designer.vb">
-      <DependentUpon>frmEditor_Projectile.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Resource.Designer.vb">
-      <DependentUpon>frmEditor_Resource.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Shop.Designer.vb">
-      <DependentUpon>frmEditor_Shop.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Editors\frmEditor_Skill.Designer.vb">
-      <DependentUpon>frmEditor_Skill.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Game\frmAdmin.Designer.vb">
-      <DependentUpon>frmAdmin.vb</DependentUpon>
-    </Compile>
-    <Compile Update="Forms\Game\frmGame.Designer.vb">
-      <DependentUpon>FrmGame.vb</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.client.json">
@@ -7927,18 +7898,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vbproj" />
-    <ProjectReference Include="..\DarkUI\DarkUI\DarkUI.csproj" />
     <ProjectReference Include="..\Network\Asfw.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="My Project\Resources.resx">
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Contents\Graphics\Paperdolls\" />
   </ItemGroup>
   <ItemGroup>

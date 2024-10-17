@@ -338,19 +338,9 @@ Module C_GameLogic
                 Fps += 1
             End If
 
-            If Editor = EditorType.Map Then
-                frmEditor_Map.DrawTileset()
-            End If
-
-            If Editor = EditorType.Animation Then
-                EditorAnim_DrawSprite()
-            End If
-
             Window.DispatchEvents()
             UpdateWindow()
-            Application.DoEvents()
             ResizeGUI()
-            UpdateUi()
         End While
     End Sub
 
@@ -1754,36 +1744,6 @@ Continue1:
     End Sub
 
     Public Sub LogoutGame()
-        Dim I As Long
-
-        Select Case Editor
-            Case EditorType.Item
-                frmEditor_Item.Dispose()
-            Case EditorType.Job
-                frmEditor_Job.Dispose()
-            Case EditorType.Map
-                frmEditor_Map.Dispose()
-                frmEditor_Events.Dispose()
-            Case EditorType.NPC
-                frmEditor_NPC.Dispose()
-            Case EditorType.Pet
-                frmEditor_Pet.Dispose()
-            Case EditorType.Projectile
-                frmEditor_Projectile.Dispose()
-            Case EditorType.Resource
-                frmEditor_Resource.Dispose()
-            Case EditorType.Shop
-                frmEditor_Shop.Dispose()
-            Case EditorType.Skill
-                frmEditor_Skill.Dispose()
-            Case EditorType.Animation
-                frmEditor_Animation.Dispose()
-            Case EditorType.Moral
-                frmEditor_Moral.Dispose()
-        End Select
-
-        frmAdmin.Dispose()
-
         isLogging = True
         InGame = False
         InMenu = True

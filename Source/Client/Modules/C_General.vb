@@ -151,12 +151,7 @@ Module C_General
         until = GetTickCount() + 3500
 
         Connect()
-
-        ' Wait until connected or a few seconds have passed and report the server being down
-        Do While (Not Socket.IsConnected()) And (GetTickCount() <= until)
-            Application.DoEvents()
-        Loop
-
+        
         ' return value
         If Socket.IsConnected() Then
             ConnectToServer = True
@@ -172,7 +167,6 @@ Module C_General
         ' break out of GameLoop
         InGame = False
         FreeBASS
-        Application.Exit()
         End
     End Sub
 
