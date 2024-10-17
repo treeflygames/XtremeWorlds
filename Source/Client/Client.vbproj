@@ -25,6 +25,7 @@
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>false</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<MyType>Empty</MyType>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -49,7 +50,6 @@
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <MyType>WindowsForms</MyType>
     <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
@@ -58,7 +58,6 @@
     <OutputType>Exe</OutputType>
     <DefineConstants>UNIX</DefineConstants>
     <TargetFramework>net8.0</TargetFramework>
-    <MyType>Empty</MyType>
   </PropertyGroup>
   
   <ItemGroup>

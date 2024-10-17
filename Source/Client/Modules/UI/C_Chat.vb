@@ -86,7 +86,7 @@ Public Structure ChatData
             Case SFML.Window.Keyboard.Key.V
                 If SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl) OrElse
                    SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.RControl) Then
-                    CurrentMessage += Clipboard.Contents()
+                    CurrentMessage += SFML.Window.Clipboard.Contents()
                 End If
 
             Case Else

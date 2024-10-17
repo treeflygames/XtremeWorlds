@@ -20,7 +20,7 @@ Module C_Graphics
     Friend EditorAnimation_Anim1 As RenderWindow
     Friend EditorAnimation_Anim2 As RenderWindow
 
-    Friend Fonts([Enum].FontType.Count - 1) As Font
+    Friend Fonts([Enum].FontType.Count - 1) As SFML.Graphics.Font
 
     Friend TilesetTexture() As Texture
     Friend TilesetSprite() As Sprite
@@ -460,9 +460,9 @@ Module C_Graphics
         Dim fontsPath As String = Path.Combine(Paths.Contents, "Fonts")
 
         ' Load the fonts from your custom directory.
-        Fonts(0) = New Font(Path.Combine(fontsPath, "georgia.ttf"))
-        Fonts(1) = New Font(Path.Combine(fontsPath, "arial.ttf"))
-        Fonts(2) = New Font(Path.Combine(fontsPath, "verdana.ttf"))
+        Fonts(0) = New SFML.Graphics.Font(Path.Combine(fontsPath, "georgia.ttf"))
+        Fonts(1) = New SFML.Graphics.Font(Path.Combine(fontsPath, "arial.ttf"))
+        Fonts(2) = New SFML.Graphics.Font(Path.Combine(fontsPath, "verdana.ttf"))
 
         RefreshWindow = True
         UpdateWindow()
@@ -608,7 +608,7 @@ Module C_Graphics
 
             Window.SetMouseCursorVisible(False)
 
-            Dim iconImage As New Image(Paths.Gui + "icon.png")
+            Dim iconImage As New SFML.Graphics.Image(Paths.Gui + "icon.png")
             Window.SetIcon(iconImage.Size.X, iconImage.Size.Y, iconImage.Pixels)
 
             Window.SetActive(True)
@@ -1657,7 +1657,7 @@ Module C_Graphics
 
         If Map.MapTint = 0 Then Exit Sub
 
-        MapTintSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
+        MapTintSprite = New Sprite(New Texture(New SFML.Graphics.Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
             .Color = New SFML.Graphics.Color(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA),
             .TextureRect = New IntRect(0, 0, Window.Size.X, Window.Size.Y),
             .Position = New Vector2f(0, 0)
@@ -1669,7 +1669,7 @@ Module C_Graphics
     Friend Sub DrawMapFade()
         If UseFade = False Then Exit Sub
 
-        MapFadeSprite = New Sprite(New Texture(New Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
+        MapFadeSprite = New Sprite(New Texture(New SFML.Graphics.Image(Window.Size.X, Window.Size.Y, SFML.Graphics.Color.Black))) With {
             .Color = New SFML.Graphics.Color(0, 0, 0, FadeAmount),
             .TextureRect = New IntRect(0, 0, Window.Size.X, Window.Size.Y),
             .Position = New Vector2f(0, 0)
