@@ -922,7 +922,6 @@ Module S_NetworkReceive
                     Next
                     .Tile(x, y).Type = buffer.ReadInt32
                     .Tile(x, y).Type2 = buffer.ReadInt32
-
                 Next
             Next
 

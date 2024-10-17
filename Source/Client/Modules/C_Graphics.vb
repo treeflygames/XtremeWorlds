@@ -1141,7 +1141,7 @@ Module C_Graphics
 
     Friend Sub UpdateCamera()
         Dim tileSize As Integer = 32 ' Tile size is 32x32 pixels
-        Dim lerpSpeed As Double = 0.1 ' Lerp speed for smooth camera movement
+        Dim lerpSpeed As Double = 0.05 ' Lerp speed for smooth camera movement
         Dim mapMaxWidth As Double = Map.MaxX * tileSize
         Dim mapMaxHeight As Double = Map.MaxY * tileSize
 
@@ -1180,7 +1180,7 @@ Module C_Graphics
 
         ' Update the Camera properties
         With Camera
-            .Y = CurrentCameraX
+            .Y = CurrentCameraY
             .X = currentCameraX
             .Height = Types.Settings.CameraHeight * PicY
             .Width = Types.Settings.CameraWidth * PicX

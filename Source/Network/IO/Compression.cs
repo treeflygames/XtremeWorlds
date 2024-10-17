@@ -53,16 +53,14 @@ namespace Mirage.Sharp.Asfw.IO
       return array;
     }
 
-    public static byte[] CompressFile(string path)
+    public static void CompressFile(string srcPath, string dstPath)
     {
-      byte[] buffer = File.ReadAllBytes(path);
-      int length = buffer.Length;
-      using (MemoryStream memoryStream = new MemoryStream())
-      {
-        using (GZipStream gzipStream = new GZipStream((Stream) memoryStream, CompressionMode.Compress))
-          gzipStream.Write(buffer, 0, length);
-        return memoryStream.ToArray();
-      }
+        using (FileStream sourceStream = new FileStream(srcPath, FileMode.Open, FileAccess.Read))
+        using (FileStream destinationStream = new FileStream(dstPath, FileMode.Create, FileAccess.Write))
+        using (GZipStream gzipStream = new GZipStream(destinationStream, CompressionMode.Compress))
+        {
+            sourceStream.CopyTo(gzipStream);
+        }
     }
 
     public static async Task<byte[]> CompressFileAsync(string path)
@@ -79,8 +77,6 @@ namespace Mirage.Sharp.Asfw.IO
       return array;
     }
 
-    public static void CompressFile(string srcFile, string dstFile) => File.WriteAllBytes(dstFile, Asfw.IO.Compression.CompressFile(srcFile));
-
     public static async Task CompressFileAsync(string srcFile, string dstFile)
     {
       string path = dstFile;
@@ -90,17 +86,32 @@ namespace Mirage.Sharp.Asfw.IO
 
     public static byte[] DecompressBytes(byte[] value)
     {
-      int int32 = BitConverter.ToInt32(value, value.Length - 4);
-      byte[] buffer = new byte[int32];
-      using (MemoryStream memoryStream = new MemoryStream(value))
-      {
-        using (GZipStream gzipStream = new GZipStream((Stream) memoryStream, CompressionMode.Decompress))
-          gzipStream.Read(buffer, 0, int32);
-      }
-      return buffer;
+        int int32 = BitConverter.ToInt32(value, value.Length - 4);
+        byte[] buffer = new byte[int32];
+
+        using (MemoryStream memoryStream = new MemoryStream(value))
+        using (GZipStream gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+        {
+            int bytesRead;
+            int offset = 0;
+
+            // Read in a loop to ensure all data is decompressed.
+            while ((bytesRead = gzipStream.Read(buffer, offset, buffer.Length - offset)) > 0)
+            {
+                offset += bytesRead;
+            }
+
+            if (offset != int32)
+            {
+                throw new InvalidOperationException("Decompressed data size does not match the expected size.");
+            }
+        }
+
+        return buffer;
     }
 
-    public static async Task<byte[]> DecompressBytesAsync(byte[] value)
+
+        public static async Task<byte[]> DecompressBytesAsync(byte[] value)
     {
       int int32 = BitConverter.ToInt32(value, value.Length - 4);
       byte[] buffer = new byte[int32];

@@ -814,6 +814,8 @@ Module C_Maps
         ' Ensure x and y are within the bounds of the map
         If x < 0 OrElse y < 0 OrElse x > Map.MaxX OrElse y > Map.MaxY Then Exit Sub
 
+        on Error GoTo mapSync
+
         For i = LayerType.Ground To LayerType.CoverAnim
             ' Check if the tile's layer array is initialized
             If Map.Tile(x, y).Layer Is Nothing Then Exit Sub
@@ -850,6 +852,8 @@ Module C_Maps
                 End If
             End If
         Next
+
+        mapsync:
     End Sub
 
      Friend Sub DrawMapUpperTile(x As Integer, y As Integer)
@@ -861,6 +865,8 @@ Module C_Maps
 
         ' Ensure x and y are within valid map bounds
         If x < 0 OrElse y < 0 OrElse x > Map.MaxX OrElse y > Map.MaxY Then Exit Sub
+
+        on Error GoTo mapSync
 
         ' Loop through the layers from Fringe to RoofAnim
         For i = LayerType.Fringe To LayerType.RoofAnim
@@ -910,6 +916,8 @@ Module C_Maps
                 End If
             End If
         Next
+
+        mapsync:
     End Sub
 
 #End Region
