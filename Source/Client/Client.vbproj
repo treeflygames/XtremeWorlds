@@ -45,12 +45,9 @@
 
   <!-- Windows-Specific Properties -->
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <OutputType>WinExe</OutputType>
+	  <OutputType>WinExe</OutputType>
+	  <DefineConstants>WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <!-- Fallback Properties for macOS and Linux -->
