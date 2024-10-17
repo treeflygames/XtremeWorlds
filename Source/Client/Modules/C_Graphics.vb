@@ -545,11 +545,6 @@ Module C_Graphics
         WeatherSprite = result.Item2
         WeatherGfxInfo = result.Item3
 
-        result = LoadGraphic(Path.Combine(Paths.Gui, "Main", "EventChat" & GfxExt))
-        EventChatGfx = result.Item1
-        EventChatSprite = result.Item2
-        EventChatGfxInfo = result.Item3
-
         result = LoadGraphic(Path.Combine(Paths.Graphics, "Misc", "Target" & GfxExt))
         TargetGfx = result.Item1
         TargetSprite = result.Item2
