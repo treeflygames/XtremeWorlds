@@ -34,6 +34,12 @@
     <DefineDebug>false</DefineDebug>
     <Optimize>True</Optimize>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+	<OutputPath>..\..\Build\Server\</OutputPath>
+	<DefineConstants>SERVER</DefineConstants>
+	<DefineDebug>true</DefineDebug>
+	<Optimize>false</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Newtonsoft.Json" />
   </ItemGroup>

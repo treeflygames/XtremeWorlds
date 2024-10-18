@@ -251,7 +251,7 @@ Module S_General
                     S_NetworkSend.GlobalMsg("Server shutdown in " & (shutDownDuration - time) & " seconds!")
                     Console.WriteLine("Server shutdown in " & (shutDownDuration - time) & " seconds!")
 
-                    If (shutDownDuration - time) <= 0 Then
+                    If shutDownDuration - time <= 1 Then
                         DestroyServer()
                     End If
                 End If

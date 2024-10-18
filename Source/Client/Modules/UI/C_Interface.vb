@@ -3770,15 +3770,15 @@ Module C_Interface
         Dim Top As Long
 
         ' move hotbar
-        Windows(GetWindowIndex("winHotbar")).Window.Left = Window.Size.X - 462
+        Windows(GetWindowIndex("winHotbar")).Window.Left = Window.Size.X - 432
 
         ' move chat
         Windows(GetWindowIndex("winChat")).Window.Top = ResolutionHeight - 178
         Windows(GetWindowIndex("winChatSmall")).Window.Top = ResolutionHeight - 162
 
         ' move menu
-        Windows(GetWindowIndex("winMenu")).Window.Left = Window.Size.X - 264
-        Windows(GetWindowIndex("winMenu")).Window.Top = Window.Size.Y - 48
+        Windows(GetWindowIndex("winMenu")).Window.Left = Window.Size.X - 242
+        Windows(GetWindowIndex("winMenu")).Window.Top = Window.Size.Y - 42
 
         ' move invitations
         Windows(GetWindowIndex("winInvite_Party")).Window.Left = Window.Size.X - 234

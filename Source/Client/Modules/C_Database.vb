@@ -75,11 +75,11 @@ Module C_Database
     End Sub
 
     Friend Sub CheckGradients()
-        CheckFiles(Path.Combine(Paths.Gui, "gradients"), NumGradients)
+        CheckFiles(Path.Combine(Paths.Gui, "Gradients"), NumGradients)
     End Sub
 
     Friend Sub CheckDesigns()
-        CheckFiles(Path.Combine(Paths.Gui, "designs"), NumDesigns)
+        CheckFiles(Path.Combine(Paths.Gui, "Designs"), NumDesigns)
     End Sub
 
     Friend Sub CacheMusic()

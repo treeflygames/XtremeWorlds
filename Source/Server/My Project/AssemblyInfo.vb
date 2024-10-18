@@ -8,7 +8,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("XtremeWorlds Server")>
-<Assembly: AssemblyDescription("2D MMORPG Game Engine")>
+<Assembly: AssemblyDescription("2-D MMORPG Game Engine")>
 <Assembly: AssemblyCompany("Treefly Games")>
 <Assembly: AssemblyProduct("Game Server")>
 <Assembly: AssemblyCopyright("Copyright © 2024")>
